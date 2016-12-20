@@ -1,0 +1,32 @@
+<style>
+    .table {
+        border: 0;
+    }
+    .table th, .table td {
+        padding: 8px;
+        line-height: 20px;
+        text-align: left;
+        vertical-align: middle;
+        border: 0;
+    }
+    .table th {
+        background-color: #dddddd !important;
+    }
+</style>
+
+<div ng-controller="selfiesIndexCtrl">
+    <div class="card">
+
+        <h3 class="card-heading simple">Selfies <a href="/selfies/nuevo" class="btn btn-link pull-right" ng-show="hasPermission('selfies.editar')" ><i class="icon-plus"></i></a></h3>
+        
+        <div class="card-body">
+            <div ng-repeat="f in fotos | orderBy:'fecha':reverse" style="display:inline-block; margin-right:5px; margin-bottom:0px;"><!--| orderBy:'f.fecha'-->
+               
+                <a href="#" ng-click="abrirModalImagen(f)" data-toggle="modal" class="thumbnail">
+                    <img src="/file/{{f.imagenes}}" width="120" height="120">
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</div>

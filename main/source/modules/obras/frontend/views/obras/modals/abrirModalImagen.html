@@ -1,0 +1,50 @@
+<div class='modal-header'>
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+</div>
+<div class='modal-content'>
+    <img ng-src="/file/{{foto.fotoId}}">
+    <br/>
+    <div class="btn-group" style="margin-bottom: 8px" data-toggle="buttons-radio">
+        <button class="btn" ng-if="(foto.tipoFoto == 'antes')" ng-class="(foto.tipoFoto == 'antes') && 'active btn-info'" ng-click="foto.tipoFoto = 'antes'">Antes</button>
+        <button class="btn" ng-if="(foto.tipoFoto == 'durante')" ng-class="(foto.tipoFoto == 'durante') && 'active btn-info'" ng-click="foto.tipoFoto = 'durante'">Durante</button>
+        <button class="btn" ng-if="(foto.tipoFoto == 'despues')" ng-class="(foto.tipoFoto == 'despues') && 'active btn-info'" ng-click="foto.tipoFoto = 'despues'">Despues</button>
+        <button class="btn" ng-if="(foto.tipoFoto == 'maqueta')" ng-class="(foto.tipoFoto == 'maqueta') && 'active btn-info'" ng-click="foto.tipoFoto = 'maqueta'">Maqueta</button>
+        <button class="btn" ng-if="(foto.tipoFoto == 'render')" ng-class="(foto.tipoFoto == 'render') && 'active btn-info'" ng-click="foto.tipoFoto = 'render'">Render</button>
+        <button class="btn" ng-if="(foto.tipoFoto == 'dibujo')" ng-class="(foto.tipoFoto == 'dibujo') && 'active btn-info'" ng-click="foto.tipoFoto = 'dibujo'">Dibujo</button>
+    </div>
+    
+    <div ng-if="foto.nombre"><b>Nombre:</b> {{foto.nombre}}
+        <br/>
+    </div>
+    <span ng-if="foto.fecha"><b>Fecha:</b> {{foto.fecha}}
+        <br/>
+    </span>
+    <span ng-if="foto.resolucion"><b>Resolucion:</b> {{foto.resolucion}}px por {{foto.resolucion2}}px
+        <br/>
+    </span>
+    <span ng-if="foto.fuente"><b>Fuente:</b> {{foto.fuente.apellidos}} {{foto.fuente.nombre}}
+        <br/>
+    </span>
+    <span ng-if="foto.tags"><b>Tags:</b> {{foto.tags}}
+        <br/>
+    </span>
+    <span ng-if="foto.descripcion"><b>Descripción:</b> {{foto.descripcion}}
+        <br/>
+    </span>
+    
+    <div ng-show="parametro == 'comunicacion'" style="margin-top:5px">
+        <!--<label style="width:20px" class="checkbox"></label>-->
+        <input ng-disabled="!editando" style="margin-top:-2px" type="checkbox" ng-model="foto.fichaRelevamiento">Ficha de relevamiento
+        <input ng-disabled="!editando" style="margin-top:-2px" type="checkbox" ng-model="foto.presentacion">Presentación de obra
+        <br/>
+    </div>
+    
+    <div ng-show="parametro == 'comunicacion' && foto.presentacion">
+        <!--<label>Presentación de obra</label>-->
+        <button ng-disabled="!editando" style="margin-bottom: 2px" ng-class="{'btn-info active': foto.foto1}" ng-click="foto.foto1 = !foto.foto1;data.foto1=true" type="button" class="btn">1</button>
+        <button ng-disabled="!editando" style="margin-bottom: 2px" ng-class="{'btn-info active': foto.foto2}" ng-click="foto.foto2 = !foto.foto2;data.foto2=true" type="button" class="btn">2</button>
+        <br>
+        <button ng-disabled="!editando" style="margin-bottom: 2px" ng-class="{'btn-info active': foto.foto3}" ng-click="foto.foto3 = !foto.foto3;data.foto3=true" type="button" class="btn">3</button>
+        <button ng-disabled="!editando" style="margin-bottom: 2px" ng-class="{'btn-info active': foto.foto4}" ng-click="foto.foto4 = !foto.foto4;data.foto4=true" type="button" class="btn">4</button>
+    </div>
+</div>

@@ -1,0 +1,131 @@
+<style>
+    .special{
+        margin:0 !important;
+        border-radius:4px !important;
+    }
+    .special:focus{
+        border-color: #74B9EF !important;
+        box-shadow: 0 0 10px #D0E7FA !important;
+    }
+    .select2-focusser, .select2-offscreen{
+        display:none !important;
+    }
+</style>
+<div class="card" ng-controller="ORMListaCompromisosCtrl">
+    <div class="card-heading simple" style="overflow:hidden">
+        <div class="span1" style="padding-top:3px">Compromisos</div>
+        <div style="font-size:0.6em !important">
+            <div class="span12 pull-right">
+                <div class="container-fluid"> 
+                    <div class="row-fluid pull-right" style="overflow:hidden; padding-bottom:5px" ng-init="todosEstados = !todosEstados">
+                        <!--
+                        <div data-toggle="multiselect buttons-radio" class="control-group span4">
+                            <span>Estado:</span>
+                            <div class="btn-group">
+                                <a class="btn" ng-class="{'active btn-info': estadoVigente || todosEstados}" ng-click="estadoVigente = !estadoVigente">Vigente</a>
+                                <a class="btn" ng-class="{'active btn-info': estadoCumplido || todosEstados }" ng-click="estadoCumplido = !estadoCumplido">Cumplida</a>
+                                <a class="btn" ng-class="{'active btn-info': estadoVencido || todosEstados }" ng-click="estadoVencido = !estadoVencido">Vencida</a>
+                                <a class="btn" ng-class="{'active btn-info': estadoATema || todosEstados }" ng-click="estadoATema = !estadoATema">A Tema</a>
+                                <a class="btn" ng-class="{'active btn-info': todosEstados }" ng-click="todosEstados = !todosEstados">Todos</a>
+                            </div>
+                        </div>
+                        -->
+                        <div class="span3">
+                            
+                        </div>
+                        <span>
+                            <div class="span3">
+                                <input type="text" class="special input-block-level" ng-model="filtroGeneral" placeholder="Filtro general" autofocus/>
+                            </div>
+                            <!--Todas las reuniones-->
+                            <div class="span3">
+                                <select ui-select2 style="width:100%" type="text" ng-model="reunionFilto">
+                                    <option value="">Todas las reuniones</option>
+                                    <option ng-repeat="e in reuniones" value="{{e._id}}">{{e.nombre}} ({{e.tipo}})</option>
+                                </select>
+                            </div>
+                            <!--Todas las jurisdicciones-->
+                            <div class="span3">
+                                <select ui-select2 style="width:100%" type="text" ng-model="juris">
+                                    <option value="">Todas las jurisdicciones</option>
+                                    <option ng-repeat="i in jurisdicciones" value="{{i._id}}">{{i.nombreCompleto}}</option>
+                                </select>
+                            </div>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-body" style="margin:0">
+        <table border="0" class="table">
+            <tr bgcolor= "#FFFFFF">
+                <th><a ng-click="" href="#" style="display: inline-block; color:#404040;">TIPO</a></th>
+                <th><a ng-click="" href="#" style="display: inline-block; color:#404040;">JURISDICCIÓN</a></th>
+                <th><a ng-click="orden = 'fechaMili'"  href="#" style="display: inline-block; color:#404040;">FECHA</a></th>
+                <th><a ng-click="orden = 'tema'"  href="#" style="display: inline-block; color:#404040;">TEMA / TÍTULO</a></th>
+                <th><a ng-click="orden = 'tarea'"  href="#" style="display: inline-block; color:#404040;">TAREA</a></th>
+                <th><a ng-click="orden = 'responsable'"  href="#" style="display: inline-block; color:#404040;">RESPONSABLES</a></th>
+                <th><a ng-click="orden = 'estado'"  href="#" style="display: inline-block; color:#404040;">ESTADO</a></th>
+                <th></th>
+            </tr>
+            <tr ng-repeat="h in compromisos | orderBy:orden | filter:filtro | filter:filtroEstados | filter:valorFiltro |filter:jurisdic |filter:reunionFiltoFunc" bgcolor= "#FFFFFF">
+                <td style="text-transform: capitalize;">{{h.reunion.tipo || "Sin Tipo"}}</td>
+                <td>{{h.jurisdiccion}}</td>
+                <td>{{h.fecha}}</td>
+                <td>
+                    <span ng-show="h.tema">{{temaPorId(h.tema).nombre}}</span>
+                    <span ng-show="h.proyecto">{{proyectoPorId(h.proyecto).nombre}}</span>
+                    <span ng-show="h.titulo">{{h.titulo}}</span>
+                </td>
+                <td>{{h.tarea}}</td>
+                <td>
+                    <div ng-repeat="u in h.responsables" style="display:inline-block; margin-top: 0px; margin-bottom: 0px">
+                        {{contactoPorId(u).apellidos}} {{contactoPorId(u).nombre}},&nbsp
+                    </div>
+                </td>
+                <td>
+                    <span ng-if="(h.estado=='') && (h.fechaMili > hoy)">Vigente</span>
+                    <span ng-if="(h.estado=='') && (h.fechaMili < hoy)">Vencido</span>
+                    <span ng-if="h.estado!=''">{{h.estado}}</span>
+                </td>
+                <td>
+                    <div class="btn-group">
+                        <a type="button" ng-disabled="h.estado=='Cumplido'"  class="btn no-print" href="" ng-click="cambioEstado(h,'Cumplido')"><i class="icon-ok"></i></a>
+                       <!--<a type="button" ng-disabled="h.estado=='A Tema'" class="btn no-print" href="" ng-click="cambioEstado(h,'A Tema')"><i class="icon-arrow-up"></i> A Tema</a>-->
+                        <a type="button"class="btn no-print" href="/orm/reuniones/{{h.instancia}}/minuta"><i class="icon-list-alt"></i> Minuta</a>
+                    </div>
+                </td>
+            </tr>
+            <!--
+            <tr ng-repeat="h in compromisos | orderBy:orden | filter:filtro | filter:filtroEstados | filter:valorFiltro" bgcolor= "#FFFFFF" ng-init="cambiarCantidad(h, $first)">
+                <td style="text-transform: capitalize;">{{h.reunion.tipo || "Sin Tipo"}}</td>
+                <td>{{h.jurisdiccion}}</td>
+                <td>{{h.fecha}}</td>
+                <td>
+                    <span ng-show="h.tema">{{temaPorId(h.tema).nombre}}</span>
+                    <span ng-show="h.proyecto">{{proyectoPorId(h.proyecto).nombre}}</span>
+                    <span ng-show="h.titulo">{{h.titulo}}</span>
+                </td>
+                <td>{{h.tarea}}</td>
+                <td>
+                    <div ng-repeat="u in h.responsables" style="display:inline-block; margin-top: 0px; margin-bottom: 0px">
+                        {{contactoPorId(u).apellidos}} {{contactoPorId(u).nombre}},&nbsp
+                    </div>
+                </td>
+                <td>
+                    <span ng-if="(h.estado=='') && (h.fechaMili > hoy)">Vigente</span>
+                    <span ng-if="(h.estado=='') && (h.fechaMili < hoy)">Vencido</span>
+                    <span ng-if="h.estado!=''">{{h.estado}}</span>
+                </td>
+                <td>
+                    <div class="btn-group">
+                        <a type="button" ng-disabled="h.estado=='Cumplido'"  class="btn no-print" href="" ng-click="cambioEstado(h,'Cumplido')"><i class="icon-ok"></i></a>
+                        <a type="button" ng-disabled="h.estado=='A Tema'" class="btn no-print" href="" ng-click="cambioEstado(h,'A Tema')"><i class="icon-arrow-up"></i> A Tema</a>
+                        <a type="button"class="btn no-print" href="/orm/reuniones/{{h.instancia}}/minuta"><i class="icon-list-alt"></i> Minuta</a>
+                    </div>
+                </td>
+            </tr>-->
+        </table>
+    </div>
+</div>

@@ -1,0 +1,71 @@
+
+
+<center><span class="no-print" style="padding: 10px; margin-left: 5px;" ng-style="{'background-color': '#a6eca6'}">Piense antes de imprimir. Ahorrar papel es cuidar nuestro Medio Ambiente. Ley Nº 2736.</span></center>
+<div class="form-horizontal card" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px;">
+    <h3>
+        <a href="/preguntas/buscar" style="color:#404040">Pregunta:</a> {{pregunta.pregunta}}
+        <a style="margin-left: 10px" href="/preguntas/{{pregunta._id}}" class="btn pull-right no-print"><i class="icon-arrow-left"></i> Volver</a>
+        <a style="margin-left: 10px" ng-click="imprimir()" class="btn pull-right no-print"><i class="icon-print"></i> Imprimir</a>
+	</h3>
+        
+    <div class="container-fluid" style="clear: both; margin-top: 16px; display: block;">
+        <table border="0" cellspacing="1">
+            <tr>
+                <td width = "25%"><b>Evento: </b></td>
+                <td>{{eventoPorId(pregunta.evento).nombre}}</td>
+            </tr>
+            <tr>
+                <td><b>Cuestionario: </b></td>
+                <td>{{cuestionarioPorId(pregunta.cuestionario).nombre}}</td>
+            </tr>
+            <tr>
+                <td><b>Nro de orden: </b></td>
+                <td>{{pregunta.nro_orden}}</td>
+            </tr>
+            <tr>
+                <td><b>Contexto: </b></td>
+                <td>{{pregunta.contexto}}</td>
+            </tr>
+            <tr>
+                <td><b>Pregunta: </b></td>
+                <td>{{pregunta.pregunta}}</td>
+            </tr>
+            <tr>
+                <td><b>Respuesta: </b></td>
+                <td>{{pregunta.respuesta}}</td>
+            </tr>
+            <tr>
+                <td><b>Elaborada por: </b></td>
+                <td>{{contactoPorId(pregunta.persona_respuesta).apellidos}} {{contactoPorId(pregunta.persona_respuesta).nombre}}</td>
+            </tr>
+            <tr>
+                <td><b>Adjuntos: </b></td>
+                <td>{{pregunta.adjuntos}}</td>
+            </tr>
+            <tr>
+                <td><b>Tematica: </b></td>
+                <td>{{pregunta.tematica}}</td>
+            </tr>
+            <tr>
+                <td><b>Jurisdicción: </b></td>
+                <td>{{organigramaPorId(pregunta.jurisdiccionNueva).nombreCompleto}}</td>
+            </tr>
+            <tr>
+                <td><b>Eje Temático: </b></td>
+                <td>{{pregunta.eje_tematico.nombre}}</td>
+            </tr>
+            <tr>
+                <td><b>Tema Particular: </b></td>
+                <td>{{pregunta.tema_particular}}</td>
+            </tr>
+            <tr>
+                <td><b>Proyecto: </b></td>
+                <td>{{pregunta.proyecto}}</td>
+            </tr>
+            <tr>
+                <td><b>Estado: </b></td>
+                <td>{{pregunta.estado.nombre}}</td>
+            </tr>
+        </table>
+    </div>
+</div>

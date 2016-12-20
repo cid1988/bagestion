@@ -1,0 +1,56 @@
+<script>
+    $(document).ready(function() { $("#e10").select2(); });
+</script>
+
+<div class="card span12" style="padding-top: 10px; margin-top: 0px;">
+  <h3 class="card-heading simple">
+  <span class="btn-group pull-right">
+    <a ng-click="volver()" class="btn btn-default"><i class="icon icon-arrow-up"></i> Volver</a>
+  </span>
+  <span class="pull-right" style="margin-right: 10px;margin-left: 20px;">Hito / Actividad</span>
+  <strong style="margin-right: 1em">{{tabCtrl.filtro.actividad.nombre}}</strong></h3>
+  <div class="card-body">
+    <form class="form-inline">
+      <label style="width: 162px; text-align: right; padding-right: 14px;">Nombre:</label>
+      <input type="text" ng-disabled="!activada" ng-model="actividad.nombre" style="width: 600px;" />
+      <label style="width: 100px; text-align: right; padding-right: 14px;">Cumplida:</label>
+      <input type="checkbox" ng-disabled="!activada" ng-model="actividad.cumplida" />
+      <label style="width: 100px; text-align: right; padding-right: 14px;">Cancelada:</label>
+      <input type="checkbox" ng-disabled="!activada" ng-model="actividad.cancelada" />
+    </form>
+    <form class="form-inline" ng-hide="hasPermission('poa.administrador')">
+      <label style="width: 162px; text-align: right; padding-right: 14px;">Fecha Inicio:</label>
+      <input type="text" ng-model="actividad.fechas[0].fechaInicio" ng-disabled="!activada" date style="width: 100px;" />
+      <label style="width: 100px; text-align: right; padding-right: 14px;">Fecha Fin:</label>
+      <input type="text" ng-model="actividad.fechas[0].fechaFin" ng-disabled="!activada" date style="width: 100px;" />
+    </form>
+    <form class="form-inline" ng-show="activada && hasPermission('poa.administrador')">
+      <label style="width: 162px; text-align: right; padding-right: 14px;">Fecha Inicio:</label>
+      <input type="text" ng-model="data.fechaInicio" date style="width: 90px;" />
+      <label style="width: 100px; text-align: right; padding-right: 14px;">Fecha Fin:</label>
+      <input type="text" ng-model="data.fechaFin" date style="width: 90px;" />
+      <label style="width: 100px; text-align: right; padding-right: 14px;">Avance (%):</label>
+      <input type="text" ng-model="data.avance" style="width: 90px;" />
+      <a class="btn" ng-click="agregarFecha(data)" title="Agregar..." style="padding-left: 0px; padding-right: 0px;margin-left: 10px;"><i class="icon-save"></i></a>
+      <br>
+      <label style="width: 162px; text-align: right; padding-right: 14px;">Comentario:</label>
+      <input type="text" ng-model="data.comentario" style="width: 550px;margin-top: 10px;" />
+    </form>
+    <form class="form-inline" ng-repeat-start="i in reverse(actividad.fechas)" ng-show="hasPermission('poa.administrador')">
+      <label style="width: 162px; text-align: right; padding-right: 14px;">Fecha Inicio:</label>
+      <input type="text" ng-disabled="true" ng-model="i.fechaInicio" date style="width: 90px;" />
+      <label style="width: 100px; text-align: right; padding-right: 14px;">Fecha Fin:</label>
+      <input type="text" ng-disabled="true" ng-model="i.fechaFin" date style="width: 90px;" />
+      <label style="width: 100px; text-align: right; padding-right: 14px;">Avance (%):</label>
+      <input type="text" ng-disabled="true" ng-model="i.avance" style="width: 90px;" />
+      <br>
+      <label style="width: 162px; text-align: right; padding-right: 14px;">Comentario:</label>
+      <input type="text" ng-disabled="true" ng-model="i.comentario" style="width: 550px;margin-top: 10px;" />
+    </form>
+    <hr ng-repeat-end ng-show="$index==0" />
+    <div id="ganttChart"></div>
+	<br/><br/>
+	<div id="eventMessage"></div>
+  </div>
+</div>
+

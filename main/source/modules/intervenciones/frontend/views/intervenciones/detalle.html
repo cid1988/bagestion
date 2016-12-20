@@ -1,0 +1,35 @@
+
+<div style="margin-bottom: 20px; position: relative;">
+    <div class="card span8" style="padding-top: 0px; padding-left: 25px; margin-top: 0px;">
+        <h3>{{intervencion.titulo}}</h3>
+    </div>
+    <div class="card span4" style="padding-top: 0px; padding-left: 25px; margin-top: 0px;">
+        <h3>{{intervencion.comuna.nombre}}</h3>
+    </div>
+    <div class="card span6" style="padding-top: 0px; margin-top: 0px;">
+        <h3 class="card-heading simple" style="font-size:16px">Ubicación de Intervención: </h3>
+        <p style="padding-left: 20px;">{{intervencion.calle}} {{intervencion.altura}}</p>
+    </div>
+    <div class="card span2" style="padding-top: 0px; margin-top: 0px;">
+        <h3 class="card-heading simple" style="font-size:16px">Plazo:</h3>
+        <p style="padding-left: 20px;">{{intervencion.plazo}}</p>
+    </div>
+    <div class="card span2" style="padding-top: 0px; margin-top: 0px;">
+        <h3 class="card-heading simple" style="font-size:16px">Monto:</h3>
+        <p style="padding-left: 20px;">{{intervencion.monto}}</p>
+    </div>
+    <div class="card span2" style="padding-top: 0px; margin-top: 0px;">
+        <h3 class="card-heading simple" style="font-size:16px">Categoria: </h3>
+        <p style="padding-left: 20px;">{{intervencion.categoria}}</p>
+    </div>
+    <div class="card span6" style="padding-top: 0px; margin-top: 0px;">
+        <img ng-if="intervencion.mapa" src="/file/{{intervencion.mapa}}" width="100%">
+    </div>
+    <div class="card span6" style="padding-top: 0px; margin-top: 0px;">
+        <h3 class="card-heading simple" style="font-size:16px">Detalle de Intervención: </h3>
+        <p style="padding-left: 20px;"> {{intervencion.detalle}}</p>
+    </div>
+    <div class="card span6" style="padding-top: 0px; margin-top: 0px;">
+        <img src="/file/{{intervencion.fotos[intervencion.fotos.length - 1]}}" width="100%">
+    </div>
+</div>

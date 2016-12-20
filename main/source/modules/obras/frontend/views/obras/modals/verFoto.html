@@ -1,0 +1,199 @@
+<div class="modal" style="top: 0px;left: initial;width: 900px;max-width:900px; height: 100%">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <a href="#" style="margin-right:20px" class="pull-right" ng-click="printDiv('printableArea')">Imprimir</a>
+    <h3 class="card-heading simple" style="padding-left: 0px; font-size:14px;padding-right: 0px;height: 45px; margin-bottom: 0px;margin-top: 0px;">
+        <ul id="myTab" style="margin-bottom: 0px" class="nav nav-pills">
+            <li ng-class="{'active': tabFoto == 'ppt'}"><a href="#" ng-click="tabFoto='ppt'" data-toggle="tabFoto">Presentación de obra</a></li>
+            <li ng-show="comprobarFicha(obraPresentacion.fotos)" ng-class="{'active': tabFoto == 'relevamientos'}"><a href="#" ng-click="tabFoto='relevamientos'" data-toggle="tab">Relevamiento de obra</a></li>
+        </ul>
+    </h3>
+    <hr style="margin-top:0px; margin-bottom:0px">
+    <div ng-show="tabFoto == 'ppt'" id="printableArea">
+        <div ng-repeat="f in reverse(obraPresentacion.fotos) | filter:{presentacion:true} | limitTo:1" id="muestra">
+			<div style="background-color:#FFD300; border-style:solid; border-color:#FFD300; margin-left:0px; margin-bottom:20px; margin-right:5px; min-height:5px; border-radius: 15px 15px 15px 15px"><h4 style="font-weight: bold">{{obraPresentacion.nombre}}</h4></div>
+			<div class="span4" style="border-width: 2px; border-style:solid;border-color:#FFD300; margin-left:0px; margin-right: 20px; min-height:524px; height:auto; width: 390px;border-radius: 15px 15px 15px 15px;">
+				<div style="margin-left:5px; margin-top:5px">
+					<table>
+						<tr>
+							<td valign="top" style="border-right-color: #FFD300;border-right-width: 1px;border-right-style: solid;font-size: 11px;padding-bottom: 15px">Detalle</td>
+							<td style="padding-bottom: 15px">
+								<table>
+									<tr>
+										<td style="width:10px;color:#FFD300;vertical-align:top;padding-right: 0px;padding-left: -1;padding-left: 0px;">►</td>
+										<td ng-show="!mostrarLetras">{{detalleComunicacion | limitTo:500}}<a href="#" ng-show="detalleComunicacion.length > '500'" ng-click="mostrarLetras = true">...<i class="icon-plus"></i></a></td>
+										<td ng-show="mostrarLetras">{{detalleComunicacion}}<a href="#" ng-click="mostrarLetras = false">...<i class="icon-minus"></i></a></td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td valign="top" style="border-right-color: #FFD300;border-right-width: 1px;border-right-style: solid;font-size: 11px;padding-bottom: 15px">Comuna</td>
+							<td style="padding-bottom: 15px">
+								<table>
+									<tr>
+										<td style="width:10px;color:#FFD300;vertical-align:top;padding-right: 0px;padding-left: -1;padding-left: 0px;">►</td>
+										<td ng-repeat="c in obraPresentacion.comuna">{{comunaPorId(c).nombre}}</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td valign="top" style="border-right-color: #FFD300;border-right-width: 1px;border-right-style: solid;font-size: 11px;padding-bottom: 15px">Barrio</td>
+							<td style="padding-bottom: 15px">
+								<table>
+									<tr>
+										<td style="width:10px;color:#FFD300;vertical-align:top;padding-right: 0px;padding-left: -1;padding-left: 0px;">►</td>
+										<td>{{obraPresentacion.barrio}}</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td valign="top" style="border-right-color: #FFD300;border-right-width: 1px;border-right-style: solid;font-size: 11px;padding-bottom: 15px">Ubicación</td>
+							<td style="padding-bottom: 15px">
+								<!--<table>-->
+								<!--	<tr>-->
+								<!--		<td style="width:10px;color:#FFD300;vertical-align:top;padding-right: 0px;padding-left: -1;padding-left: 0px;">►</td>-->
+								<!--		<td>{{ubicacion}}</td>-->
+								<!--	</tr>-->
+								<!--</table>-->
+								<table>
+									<tr>
+										<td style="width:10px;color:#FFD300;vertical-align:top;padding-right: 0px;padding-left: -1;padding-left: 0px;">►</td>
+										<td ng-show="!mostrarLetrasUbi">{{ubicacion | limitTo:112}}<a href="#" ng-show="ubicacion.length > '112'" ng-click="mostrarLetrasUbi = true">...<i class="icon-plus"></i></a></td>
+										<td ng-show="mostrarLetrasUbi">{{ubicacion}}<a href="#" ng-click="mostrarLetrasUbi = false">...<i class="icon-minus"></i></a></td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td valign="top" style="border-right-color: #FFD300;border-right-width: 1px;border-right-style: solid;font-size: 11px;padding-bottom: 15px">Monto</td>
+							<td style="padding-bottom: 15px">
+								<table>
+									<tr>
+										<td style="width:10px;color:#FFD300;vertical-align:top;padding-right: 0px;padding-left: -1;padding-left: 0px;">►</td>
+										<td ng-show="monto">${{formatoMontoTooltips(monto)}}</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td valign="top" style="border-right-color: #FFD300;border-right-width: 1px;border-right-style: solid;font-size: 11px;padding-bottom: 15px">Área</td>
+							<td style="padding-bottom: 15px">
+								<table>
+									<tr>
+										<td style="width:10px;color:#FFD300;vertical-align:top;padding-right: 0px;padding-left: -1;padding-left: 0px;">►</td>
+										<td ng-show="obraPresentacion.metros">{{obraPresentacion.metros}} M<sup>2</sup></td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td valign="top" style="border-right-color: #FFD300;border-right-width: 1px;border-right-style: solid;font-size: 11px;padding-bottom: 15px">Responsable</td>
+							<td style="padding-bottom: 15px">
+								<table>
+									<tr>
+										<td style="width:10px;color:#FFD300;vertical-align:top;padding-right: 0px;padding-left: -1;padding-left: 0px;">►</td>
+										<td>{{jurisdiccionPorId(obraPresentacion.dependencia).nombreCompleto}}</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td valign="top" style="border-right-color: #FFD300;border-right-width: 1px;border-right-style: solid;font-size: 11px;padding-bottom: 10px">Prioridad</td>
+							<td style="padding-bottom: 10px">
+								<table>
+									<tr>
+										<td style="width:10px;color:#FFD300;vertical-align:top;padding-right: 0px;padding-left: -1;padding-left: 0px;">►</td>
+										<td>{{prioridadPorId(obraPresentacion.relevancia).nombre}}</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td valign="top" style="border-right-color: #FFD300;border-right-width: 1px;border-right-style: solid;font-size: 11px;padding-bottom: 10px">Estado</td>
+							<td style="padding-bottom: 10px">
+								<table>
+									<tr>
+										<td style="width:10px;color:#FFD300;vertical-align:top;padding-right: 0px;padding-left: -1;padding-left: 0px;">►</td>
+										<td>{{estadoPorId(obraPresentacion.estado).nombre}}</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td valign="top" style="border-right-color: #FFD300;border-right-width: 1px;border-right-style: solid;font-size: 11px">Inicio - Fin</td>
+							<td>
+								<table>
+									<tr>
+										<td style="width:10px;color:#FFD300;vertical-align:top;padding-right: 0px;padding-left: -1;padding-left: 0px;">►</td>
+										<td>{{formatoFecha(inicio) | uppercase}} - {{formatoFecha(fin) | uppercase}}</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div ng-hide="foto12 || foto13 || foto24 || foto1234" class="span2" style="border-width: 2px; border-style:solid; border-color:#FFD300; border-radius: 15px 15px 15px 15px; margin-bottom:20px; margin-left:0px; margin-right:20px; width:228px; height:250px">
+				<img src="/file/{{foto1}}" width="100%" style="max-height: 250px; border-radius: 15px 15px 15px 15px">
+			</div>
+			<div ng-hide="foto12 || foto13 || foto24 || foto1234" class="span2" style="border-width: 2px; border-style:solid; border-color:#FFD300; border-radius: 15px 15px 15px 15px; margin-bottom:20px; margin-left:0px; width:228px; height:250px">
+				<img src="/file/{{foto2}}" width="100%" style="max-height: 2500px; border-radius: 15px 15px 15px 15px">
+			</div>
+			<div ng-show="foto12" class="span2" style="border-width: 2px; border-style:solid; border-color:#FFD300; border-radius: 15px 15px 15px 15px; margin-bottom:20px; margin-left:0px; width:480px; height:250px">
+				<img src="/file/{{foto12}}" width="100%" style="max-height: 250px; border-radius: 15px 15px 15px 15px">
+			</div>
+			
+			<div ng-hide="foto34 || foto13 || foto24 || foto1234" class="span2" style="border-width: 2px; border-style:solid; border-color:#FFD300; border-radius: 15px 15px 15px 15px; margin-left:0px; margin-right:20px; width:228px; height:250px">
+				<img src="/file/{{foto3}}" width="100%" style="max-height: 250px; border-radius: 15px 15px 15px 15px">
+			</div>
+			<div ng-hide="foto34 || foto13 || foto24 || foto1234" class="span2" style="border-width: 2px; border-style:solid; border-color:#FFD300; border-radius: 15px 15px 15px 15px; margin-left:0px; width:228px; height:250px">
+				<img src="/file/{{foto4}}" width="100%" style="max-height: 250px; border-radius: 15px 15px 15px 15px">
+			</div>
+			
+			<div ng-show="foto1234" class="span2" style="border-width: 2px; border-style:solid; border-color:#FFD300; border-radius: 15px 15px 15px 15px; margin-left:0px; width:480px; height:520px">
+				<img src="/file/{{foto1234}}" width="100%" style="max-height: 250px; border-radius: 15px 15px 15px 15px">
+			</div>
+			<div ng-show="foto13" class="span2" style="border-width: 2px; border-style:solid; border-color:#FFD300; border-radius: 15px 15px 15px 15px; margin-left:0px; margin-right:20px; width:225px; height:520px">
+				<img src="/file/{{foto13}}" width="100%" style="max-height: 520px; border-radius: 15px 15px 15px 15px">
+			</div>
+			<div ng-show="foto34" class="span2" style="border-width: 2px; border-style:solid; border-color:#FFD300; border-radius: 15px 15px 15px 15px; margin-left:0px; width:480px; height:250px">
+				<img src="/file/{{foto34}}" width="100%" style="max-height: 250px; border-radius: 15px 15px 15px 15px">
+			</div>
+			<div ng-show="foto24" class="span2" style="border-width: 2px; border-style:solid; border-color:#FFD300; border-radius: 15px 15px 15px 15px; margin-left:0px; width:225px; height:520px">
+				<img src="/file/{{foto24}}" width="100%" style="max-height: 520px; border-radius: 15px 15px 15px 15px">
+			</div>
+		</div>
+	</div>
+    
+    <div ng-if="tabFoto == 'relevamientos'" ng-init="filtradas = filtrarFotosRelevamiento(reverse(obraPresentacion.fotos))">
+        <carousel interval="myInterval" style="height: 100%">
+            <slide ng-repeat="f in filtradas" active="slide.active">
+                <img ng-src="/file/{{f.fotoId}}" width="100%" style="margin:auto; max-height: 600px">
+                <div class="carousel-caption">
+                    <!--<h4>Presentación de obra</h4>-->
+                    <p ng-show="f.descripcion">{{f.descripcion}}</p>
+                </div>
+            </slide>
+        </carousel>
+        
+        <div style="margin-left:0px">
+            <div ng-init="separado = separar(filtradas)" id="myCarousel" class="carousel slide">
+                <!-- Carousel items -->
+                <div class="carousel-inner">
+                    <div class=" item" ng-class="{'active':$first}" ng-repeat="s in separado">
+                        <div class="row-fluid">
+                            <div class="span2" ng-repeat="f in s">
+                                <!--<a href="#x" class="thumbnail"><img src="/file/{{f.fotoId}}" alt="Image" style="max-width:100%;"></a>-->
+                                <a class="thumbnail"><img src="/file/{{f.fotoId}}" alt="Image" style="max-width:100%;"></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <a class="left carousel-control" href="#myCarousel" data-slide="prev">‹</a>
+                <a class="right carousel-control" href="#myCarousel" data-slide="next">›</a>
+            </div>
+        </div>
+    </div>
+</div>

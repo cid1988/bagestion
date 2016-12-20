@@ -1,0 +1,70 @@
+<style>
+  ul.nav.nav-list {
+    border-bottom: 0;
+    border-left: 0;
+    border-right: 0;
+    padding-left: 15px;
+    margin-left: 2px
+  }
+  
+  ul.nav.nav-list > li {
+    overflow: visible;
+    padding-left: 11px;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  ul.nav.nav-list > li > a {
+    clear: both;
+  }
+  
+  A:link {text-decoration:none;color:#3B3537;} 
+
+  A:visited {text-decoration:none;color:#3B3537;} 
+
+  A:active {text-decoration:none;color:#3B3537;} 
+
+  A:hover {text-decoration:underline;color:#3B3537;} 
+</style>
+
+<div class="container" ng-if="error">
+  <div class="row">
+    <div class="span12">
+      <div class="alert alert-danger">
+      <button type="button" class="close" ng-click="error=null">&times;</button>
+      {{error}}</div> 
+    </div>
+  </div>
+</div>
+
+<div class="container">
+    <ul class="breadcrumb" style="margin-bottom: 0px;">
+      <li ng-if="!tabCtrl.filtro.area" class="active">{{nombrePlan}}</li>
+      <li ng-if="tabCtrl.filtro.area"><a ng-click="tabCtrl.filtro = {}" href="#">{{nombrePlan}}</a></li>
+      <li ng-if="tabCtrl.filtro.area && !tabCtrl.filtro.objArea" class="active"><span class="divider">/</span> {{tabCtrl.filtro.area.nombre}} </li>
+      <li ng-if="tabCtrl.filtro.area && tabCtrl.filtro.objArea"><span class="divider">/</span> <a href="#" ng-click="tabCtrl.filtro = {area: tabCtrl.filtro.area}">{{tabCtrl.filtro.area.nombre}}</a> </li>
+      <li ng-if="tabCtrl.filtro.objArea && !tabCtrl.filtro.actividad" class="active"><span class="divider">/</span> {{tabCtrl.filtro.objArea.nombre}} </li>
+      <li ng-if="tabCtrl.filtro.objArea && tabCtrl.filtro.actividad"><span class="divider">/</span> <a href="#" ng-click="tabCtrl.filtro = {area: tabCtrl.filtro.area, objArea: tabCtrl.filtro.objArea}">{{tabCtrl.filtro.objArea.nombre}}</a> </li>
+      <li ng-if="tabCtrl.filtro.actividad && !tabCtrl.filtro.hito" class="active"><span class="divider">/</span> {{tabCtrl.filtro.actividad.nombre}} </li>
+      <li ng-if="tabCtrl.filtro.actividad && tabCtrl.filtro.hito"><span class="divider">/</span> <a href="#" ng-click="tabCtrl.filtro = {area: tabCtrl.filtro.area, objArea: tabCtrl.filtro.objArea, actividad: tabCtrl.filtro.actividad}">{{tabCtrl.filtro.actividad.nombre}}</a> </li>
+      <li ng-if="tabCtrl.filtro.hito" class="active"><span class="divider">/</span> {{tabCtrl.filtro.hito.nombre}} </li>
+    </ul>
+  <div class="row" scroll-glue="true" target="body">
+    <div ng-if="tabCtrl.filtro.area" ng-hide="tabCtrl.filtro.objArea" ng-include="'/views/upejol/plan-area.html'">
+    </div>
+    <div ng-if="!tabCtrl.filtro.area" ng-include="'/views/upejol/plan-areas.html'">
+    </div>
+    <div ng-if="tabCtrl.filtro.objArea" ng-hide="tabCtrl.filtro.actividad" ng-include="'/views/upejol/plan-obj-area.html'">    
+    </div>
+    <div ng-if="tabCtrl.filtro.area && !tabCtrl.filtro.objArea" ng-include="'/views/upejol/plan-objs-area.html'">    
+    </div>
+    <div ng-if="tabCtrl.filtro.actividad" ng-hide="tabCtrl.filtro.hito" ng-include="'/views/upejol/plan-actividad.html'">    
+    </div>
+    <div ng-if="tabCtrl.filtro.objArea && !tabCtrl.filtro.actividad" ng-include="'/views/upejol/plan-actividades.html'">    
+    </div>
+    <!--<div ng-if="tabCtrl.filtro.hito" ng-include="'/views/upejol/plan-hito.html'">    
+    </div>
+    <div ng-if="!tabCtrl.filtro.hito && tabCtrl.filtro.actividad" ng-include="'/views/upejol/plan-hitos.html'">    
+    </div> -->
+  </div>
+</div>

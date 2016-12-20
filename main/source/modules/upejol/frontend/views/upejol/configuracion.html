@@ -1,0 +1,22 @@
+<div class="container">
+    <div class="row">
+    <div class="span12 card">
+      <h3 class="card-heading simple">Configuración</h3>
+      <div class="card-body" style="margin-bottom: 20px;">
+        <div style="font-size: 18px;padding-top: 4px;padding-bottom: 4px;margin-bottom: 30px;margin-left: 22px;"><span class="span4">Formas de pago</span>
+        <span class="pull-right input-append" style="margin-bottom: 0" >
+          <input type="text" ng-model="nuevo.nombre" placeholder="Agregar..." />
+          <a ng-click="agregarFormaDePago(nuevo)" ng-disabled="" class="btn btn-default"><i class="icon icon-plus"></i></a>
+        </span></div>
+        <hr style="margin-bottom: 10px;">
+          <div ng-repeat="e in listaDeFormas" class="span5">
+            <span class="span4">{{e.nombre}}
+            <a class="btn btn-link pull-right" href="#" title="Eliminar forma de pago" ng-click="eliminarFormaDePago(e)"><i class="icon-trash"></i></a></span>
+          </div>
+          <div ng-if="" class="text-center">
+            <em>No hay etiquetas definidas aún</em>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>

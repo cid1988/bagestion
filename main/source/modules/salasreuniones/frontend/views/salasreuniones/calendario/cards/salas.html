@@ -1,0 +1,53 @@
+<style>
+.resaltar {
+	background-color: #F5F7BE;
+}
+</style>
+
+<div class="card" ng-controller="TiposSalasCtrl as self" ng-hide="instancia">
+    <div class="card-actions pull-right" style="margin: 0" ng-show="editando">
+        <a class="btn btn-link" ng-click="programaReservaPeriodica(false)" title="Programar Reserva Semanal"><i class="icon-time"></i></a>
+    </div>
+    <h3 class="card-heading simple">Reserva de Salas</h3>
+    <div class="card-body" style="margin-bottom: 14px;padding-right: 13px;">
+    <div style="overflow-y: scroll; overflow-x: hidden; height: 552px;">
+        <div ng-repeat="r in salas | filter:mostrar | orderBy:'tipo'" ng-hide="r.apagado">
+            <a ng-class="{'disabled': programandoNuevaFecha == r}" class="btn btn-link pull-right" ng-show="editando" ng-click="self.programarNuevaFecha(r)" style="padding-left: 0px; padding-right: 0px;">
+                <i class="icon-plus"></i>
+            </a>
+            <div style="text-align: left;margin-top: 0px;margin-bottom: 0px;padding-top: 0px;">
+                <a class="btn btn-link" ng-click="ver(r)" style="text-align: left;padding-right: 0px; width: 277px;padding-left: 0px;margin-bottom: 4px;">
+                <span style="display: inline-block; border-radius: 20px; padding: 7px; float: left; border: 0px solid rgb(0, 0, 0); margin-top: 8px; margin-right: 5px; margin-left: 5px; background-color: rgb(180, 4, 95);" ng-style="{'background-color': colorSala(r)}"></span>&nbsp;
+                <b>{{r.nombre}}</b></a>
+            </div>
+        </div>
+        <span ng-hide="salas.length">No hay salas definidas aún</span>
+    </div>
+    </div>
+</div>
+
+<div id="detalleSala" class="modal hide fade" ng-controller="SRTabReservaCtrl" style="left: 600px;width: 700px;top: 30px;">
+    <div class="modal-header" style="padding-bottom: 15px;">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3><span style="display: inline-block; border-radius: 20px; padding: 13px; float: left; border: 0px solid rgb(0, 0, 0); margin-top: 2px; margin-right: 5px; margin-left: 5px; background-color: rgb(138, 75, 8);" ng-style="{'background-color': salaSeleccionada.color}"></span>&nbsp;
+        {{salaSeleccionada.nombre}}</h3>
+    </div>
+    <div class="modal-body">
+        <table class="table table-striped" style="margin-bottom: 0px;">
+            <tr>
+                <th>Capacidad</th>
+                <th>Interno</th>
+                <th>TV</th>
+            </tr>
+            <tr>
+                <td>{{salaSeleccionada.capacidad}}</td>
+                <td>{{salaSeleccionada.interno}}</td>
+                <td><span ng-show="salaSeleccionada.tv">Si</span><span ng-hide="salaSeleccionada.tv">No</span></td>
+            </tr>
+        </table>
+        <img ng-show="salaSeleccionada.image" ng-src={{salaSeleccionada.image}} />
+    </div>
+    <div class="modal-footer" style="padding-top: 10px;">
+        <a href="#" class="btn pull-right" data-dismiss="modal">Cerrar</a>
+    </div>
+</div> 

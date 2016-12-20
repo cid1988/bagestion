@@ -1,0 +1,92 @@
+<style>
+    @media print {
+        body, span, div, table, tr, tbody, tfoot, td, hr { 
+            min-width: 300px
+        }
+    }
+</style>
+<div style="margin-top:0px;border:0px" class="card oficio" ng-show="hasPermission('obras.relevador')">
+    <h1 class="card-heading simple">
+        <a class="btn btn-link pull-right" ng-show="vistaRelevamientos && !nuevoRelevamiento" ng-click="vistaRelevamientos=false;nuevoRelevamiento=false"><i class="icon-arrow-left"></i></a>
+        <a class="btn pull-right no-print" ng-click="imprimir()" style="padding-left: 0px; padding-right: 0px;"><i class="icon-print"></i></a>
+        <a class="btn btn-link pull-right" ng-show="nuevoRelevamiento" ng-click="vistaRelevamientos=true;nuevoRelevamiento=false"><i class="icon-remove"></i></a>
+        <div ng-show="!vistaRelevamientos && !nuevoRelevamiento">Obras asignadas</div>
+        <span ng-show="vistaRelevamientos || nuevoRelevamiento">{{obraPorId(idObraSelecionada).nombre_largo}}</span>
+        <span ng-show="nuevoRelevamiento && tipoRel"> - Relevamiento de {{tipoRel}}</span>
+    </h1>
+    <!--Listado de obras asignadas-->
+    <div ng-show="!vistaRelevamientos && !nuevoRelevamiento" style="margin-left:10px;margin-right:10px;margin-top:10px">
+        <div style="margin-bottom:10px">
+            <table border="1" style="margin-bottom:5px" class="table table-bordered">
+                <tr bgcolor= "#FFFFFF">
+                    <th style="text-align:center !important">
+                        <a href="#"><b>NOMBRE</b></a>
+                    </th>
+                    <th style="text-align:center !important">
+                        <a href="#"><b>HITO A RELEVAR</b></a>
+                    </th>
+                    <th style="text-align:center !important; max-width: 750px">
+                        <a href="#"><b>BARRIO</b></a>
+                    </th>
+                </tr>
+                
+                <tr ng-repeat="o in filtrar = (obras | filter:filtroObraAsignada)" bgcolor="#FFFFFF">
+                    <td>
+                        <a class="btn btn-link">{{o.nombre}}</a>
+                        <a ng-href="/obras/fichaRelevador/nuevoRelevamiento/{{o._id}}" class="btn pull-right no-print" style="padding-left: 0px;padding-right: 0px; margin-right: 4px"><i class="icon-plus no-print"></i></a>
+                        
+                        <a ng-if="o.fotos" href="#" ng-click="mostrarPresentacion(o._id)" class="btn pull-right no-print" style="padding-left: 0px;padding-right: 0px; margin-right: 4px"><i class="icon-picture"></i></a>
+                        <a href="#" ng-click="abrirRelevamiento(o._id)" ng-show="existeRelevamiento(o)" class="btn pull-right no-print" style="padding-left: 0px;padding-right: 0px; margin-right: 4px"><i class="icon-align-justify no-print"></i></a>
+                    </td>
+                    <td style="text-align:center">{{fechaUltimoHito(o)}}</td>
+                    <td style="text-align:center;max-width: 750px">{{o.barrio}} - <span>{{calcularUbicacion(o)}}</span></td>
+                </tr>
+                <tr>
+                    <td ng-show="!filtrar.length">No hay relevamientos cargados aún.</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    
+    <div ng-show="vistaRelevamientos" type="text/css" media="print" style="margin-left:10px;margin-right:10px;margin-top:10px">
+        <div ng-repeat="o in relevamientos | filter:filtroRelevamientosAsignados" class="accordion-group">
+            <div ng-show="!o.length">No hay relevamientos cargados aún.</div>
+            <div class="accordion-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse_{{$index}}">
+                    Fecha de visita: {{o.fechaVisita}}
+                </a>
+            </div>
+            <div id="collapse_{{$index}}" class="collapse">
+                <div class="accordion-inner">
+                    <div><b>Ubicación:</b> {{o.ubicacion}}</div>
+                    <div><b>Fecha inicio:</b> {{o.fechaInicio}}</div>
+                    <div><b>Fecha de fin:</b> {{o.fechaFin}}</div>
+                    
+                    <div><b>Nº Visita:</b> {{o.visitaN}}</div>
+                    <div><b>Relevador:</b> {{o.relevador}}</div>
+                    <div><b>Fecha de visita:</b> {{o.fechaVisita}}</div>
+                    
+                    <div><b>¿Obrador?:</b> {{o.obrador}}</div>
+                    <div><b>¿Cartel de gestión?:</b> {{o.cartelGestion}}</div>
+                    <div><b>¿En actividad?:</b> {{o.enActividad}}</div>
+                    <div><b>Cantidad de personal:</b> {{o.cantidadPersonal}}</div>
+                    <div><b>¿Jefe de obra?:</b> {{o.jefeObra}}</div>
+                    <div><b>Apellido y Nombre:</b> {{o.apellidoNombre}}</div>
+                    <div><b>N° de contacto:</b> {{o.numeroContacto}}</div>
+                    <div><b>Estado:</b> {{o.estadoRel}}</div>
+                    
+                    <div><b>¿Obra limpia?:</b> {{o.obraLimpia}}</div>
+                    <div><b>Fecha de finalizacion(estimada):</b> {{o.fechaFinalizacion}}</div>
+                    <div><b>Avance fisico(% estimado):</b> {{o.avanceFisico}}</div>
+                    <div><b>¿En condiciones de ser recorrida?:</b> {{o.condRecorrida}}</div>
+                    <hr>
+                    <label>Imágenes</label>
+                    <div ng-if="!o.fotos.length">No se ha cargado ninguna imagen</div>
+                    <a ng-if="o.fotos.length" ng-repeat="f in o.fotos" data-toggle="modal" ng-click="abrirModal('#fotosA_{{$index}}')" href="" class="thumbnail" style="display:inline-block">
+                        <span><img src="/file/{{f.fotoId}}" width="128" height="96"></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

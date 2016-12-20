@@ -1,0 +1,32 @@
+<style>
+    .resaltar {
+    	background-color: #F5F7BE;
+    }
+     
+    a:link {color: #3B3537;}
+    a:visited {color: #3B3537;}
+    a:hover {color: #3B3537;}
+    a:active {color: #3B3537;}
+</style>
+
+<div class="card" ng-controller="AgendasCtrl as self" ng-hide="instancia">
+    <div class="card-actions pull-right" style="margin: 0" ng-show="editando">
+        <a class="btn btn-link" ng-click="programaReunionPeriodica(false)" title="Programar Reunión Semanal"><i class="icon-time"></i></a>
+        <a class="btn btn-link" ng-click="nuevaAgenda(false)" title="Nueva Agenda"><i class="icon-plus"></i></a>
+    </div>
+    <h3 class="card-heading simple">Agendas</h3>
+    <div class="card-body" style="margin-bottom: 14px;padding-right: 13px;">
+    <div style="overflow-y: scroll; overflow-x: hidden; height: 552px;">
+        <div ng-repeat="r in agendas | filter:mostrar | orderBy:'orden'">
+            <a ng-class="{'disabled': programandoNuevaFecha == r}" class="btn btn-link pull-right" ng-show="editando" ng-click="self.programarNuevaFecha(r)" style="padding-left: 0px; padding-right: 0px;">
+                <i class="icon-plus"></i>
+            </a>
+            <div style="text-align: left;margin-top: 15px;margin-bottom: 15px;">
+                <span ng-class="{'resaltar': estaResaltado(r)}" style="background-color: {{colorAgenda(r)}}; display: inline-block; width: 15px; height: 15px; display: inline-block"></span>&nbsp;
+                <b><a href="#" ng-click="showUsers(false, r._id)">{{r.nombre}}</a></b>
+            </div>
+        </div>
+        <span ng-hide="agendas.length">No hay agendas definidas aún</span>
+    </div>
+    </div>
+</div>

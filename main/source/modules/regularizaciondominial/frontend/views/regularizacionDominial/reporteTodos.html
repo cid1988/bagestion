@@ -1,0 +1,67 @@
+<style>
+    .table {
+        border: 0;
+    }
+    .table th, .table td {
+        padding: 5px;
+        line-height: 20px;
+        text-align: left;
+        border: 0;
+        vertical-align: middle;
+    }
+    .table th {
+        background-color: #dddddd !important;
+    }
+</style>
+
+<div class="card" style="padding-top: 0px;">
+    <div class="card-body" style="padding-left: 10px; padding-right: 10px; margin-top: 10px;">
+        <table border="1" class="table table-striped">
+            <tr bgcolor= "#FFFFFF">
+                <th style="min-width:140px"><a ng-click="orden = 'denominacion'" href="#" style="display: inline-block; color:#404040;margin-left: 5px;">Denominacion</a></th>
+                <th style="min-width:100px"><a ng-click="orden = 'numero'" href="#" style="display: inline-block; color:#404040;">Numero</a></th>
+                <th><a ng-click="orden = 'prioridad'" href="#" style="display: inline-block; color:#404040;">Prioridad</a></th>
+                <th><a ng-click="orden = 'tipo'" href="#" style="display: inline-block; color:#404040;">Tipo</a></th>
+                <th style="min-width:150px"><a ng-click="orden = 'utiu'" href="#" style="display: inline-block; color:#404040;">UTIU</a></th>
+                <th style="min-width:120px"><a ng-click="orden = 'barrio'" href="#" style="display: inline-block; color:#404040;">Barrio</a></th>
+                <th style="min-width:110px"><a ng-click="orden = 'comuna'" href="#" style="display: inline-block; color:#404040;">Comuna</a></th>
+                <th><a ng-click="orden = 'regularizacion'" href="#" style="display: inline-block; color:#404040;">Regularizacion</a></th>
+                <th><center><a href="#" style="display: inline-block; color:#404040;">Gestion</a></center></th>
+            </tr>
+            <tr ng-repeat="i in listado | orderBy:orden" bgcolor="#FFFFFF">
+                <td style="min-width:140px"><div><span style="display: inline-block; -moz-border-radius: 20px; border-radius: 20px; padding: 7px; float: left; border: 0px solid #000; margin-top: 3px; margin-right: 10px; margin-left: 5px;" ng-style="{'background-color': color(i.tipo)}"></span><a href="/regularizacionDominial/{{i._id}}" title="Ver detalle"> {{i.denominacion}} </a></div></td>
+                <td><div>{{i.numero}}</div></td>
+                <td><div>{{i.prioridad}}</div></td>
+                <td><div>{{i.tipo}}</div></td>
+                <td><div>{{i.utiu}}</div></td>
+                <td><div>{{i.barrio}}</div></td>
+                <td><div>{{i.comuna}}</div></td>
+                <td><div><span ng-show="i.regularizacion">Si</span><span ng-hide="i.regularizacion">No</span></div></td>
+                <td>
+                    <table border="1" class="table table-striped" ng-if="i.hicimos" style="width: 1300px;">
+                        <tr bgcolor= "#FFFFFF">
+                            <th><a href="#" style="display: inline-block; color:#404040;">Proyecto</a></th>
+                            <th><a href="#" style="display: inline-block; color:#404040;">Descripcion Meta</a></th>
+                            <th><a href="#" style="display: inline-block; color:#404040;">Cantidad</a></th>
+                            <th><a href="#" style="display: inline-block; color:#404040;">Unidad</a></th>
+                            <th><a href="#" style="display: inline-block; color:#404040;">Jurisdiccion</a></th>
+                            <th><a href="#" style="display: inline-block; color:#404040;">Inicio</a></th>
+                            <th><a href="#" style="display: inline-block; color:#404040;">Fin</a></th>
+                        </tr>
+                        <tr ng-repeat="j in i.hicimos | orderBy:orden" bgcolor="#FFFFFF">
+                            <td><div>{{j.proyecto}}</div></td>
+                            <td><div>{{j.descripcionMeta}}</div></td>
+                            <td><div>{{j.cantidad}}</div></td>
+                            <td><div>{{j.unidad}}</div></td>
+                            <td><div>{{organigramaPorId(j.jurisdiccion).nombreCompleto}}</div></td>
+                            <td><div>{{j.fechaInicio}}</div></td>
+                            <td><div>{{j.fechaFin}}</div></td>
+                            <td></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+        <div class="row-fluid" ng-show="!dominios.length">No hay ningun dominio.</div>
+    </div>
+</div>

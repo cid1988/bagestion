@@ -1,0 +1,80 @@
+<style>
+    .nav-list > li > div,
+    .nav-list .nav-header {
+      padding: 9px 18px;
+      margin-top: 1px;
+      overflow: hidden;
+      font-size: 14px;
+      line-height: 1.4;
+      color: #737373;
+      text-overflow: ellipsis;
+      text-shadow: none;
+      background-color: #ffffff;
+      border-left: 2px solid transparent;
+      -webkit-transition: border 0.218s;
+         -moz-transition: border 0.218s;
+           -o-transition: border 0.218s;
+              transition: border 0.218s;
+    }
+    
+    .nav-list > li > div:hover,
+    .nav-list > li > div:focus,
+    .nav-list > .active > div,
+    .nav-list > .active > div:hover,
+    .nav-list > .active > div:focus {
+      color: #262626;
+      text-shadow: none;
+      background-color: #f5f5f5;
+      border-color: #427fed;
+    }
+    
+    .nav-list > li > div,
+    .nav-list .nav-header {
+      margin-right: -15px;
+      margin-left: -15px;
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+    }
+    
+    .nav-list > li > div {
+      padding: 3px 15px;
+    }
+    
+    .nav-list > .active > div,
+    .nav-list > .active > div:hover,
+    .nav-list > .active > div:focus {
+      color: #ffffff;
+      text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
+      background-color: #3B3537;
+    }
+</style>
+
+<div class="span12 card" style="padding-top: 10px; margin-top: 0px;">
+  <h3 class="card-heading simple">Jurisdicciones</h3>
+  <div class="card-body" style="padding: 0; margin-top: 0; border-bottom: 0">
+    <ul class="nav nav-list">
+      <li ng-repeat="j in tabCtrl.jurisdicciones | orderBy:ordenNumerico" ng-hide="j.idOrmOrganigrama == '0'" ng-if="(hasPermission('poa.administrador') || hasPermission('poa.verTodos') || (hasPermission('poa.verJurisdiccion') && (j.idOrmOrganigrama == user.jurisdiccion)))" >
+        <div style="padding-top: 0px; padding-bottom: 0px;">
+            <a style="font-size: 18px;display: inline-block;margin-top: 5px;" href="javascript:" ng-click="tabCtrl.filtro = {jurisdiccion: j}">
+            <span class="span9"><!--<strong class="pull-right" ng-if="j.codIdentificacion">{{j.codIdentificacion}}</strong>-->{{j.nombre}} </span></a>
+        </div>
+      </li>
+      <li ng-if="!tabCtrl.jurisdicciones.length" class="text-center">
+        <em>No hay ninguna jurisdicción asociada a este plan aún</em>
+      </li>
+    </ul>
+  </div>
+  <h3 class="card-heading simple" style="margin-top: 25px;">Otras</h3>
+  <div class="card-body" style="padding: 0; margin-top: 0; border-bottom: 0">
+    <ul class="nav nav-list">
+      <li ng-repeat="j in tabCtrl.jurisdicciones | orderBy:ordenNumerico" ng-hide="j.idOrmOrganigrama !== '0'" ng-if="(hasPermission('poa.administrador') || hasPermission('poa.verTodos') || (hasPermission('poa.verJurisdiccion') && (j.idsOrmOrganigrama.indexOf(user.jurisdiccion) >= 0)))">
+        <div style="padding-top: 0px; padding-bottom: 0px;">
+            <a style="font-size: 18px;display: inline-block;margin-top: 5px;" href="javascript:" ng-click="tabCtrl.filtro = {jurisdiccion: j}">
+            <span class="span9"><!--<strong class="pull-right" ng-if="j.codIdentificacion">{{j.codIdentificacion}}</strong>-->{{j.nombre}} </span></a>
+        </div>
+      </li>
+      <li ng-if="!tabCtrl.jurisdicciones.length" class="text-center">
+        <em>No hay ninguna jurisdicción asociada a este plan aún</em>
+      </li>
+    </ul>
+  </div>
+</div>

@@ -1,0 +1,190 @@
+<style type="text/css">
+    html,body { 
+      overflow:hidden; 
+    }
+    label{
+        margin-left:0 !important;
+    }
+    .nav-list > li > div, #test,
+    .nav-list .nav-header {
+      padding: 9px 18px;
+      margin-top: 1px;
+      overflow: hidden;
+      font-size: 14px;
+      line-height: 1.4;
+      color: #737373;
+      text-overflow: ellipsis;
+      text-shadow: none;
+      background-color: #ffffff;
+      border-left: 2px solid transparent;
+      -webkit-transition: border 0.218s;
+         -moz-transition: border 0.218s;
+           -o-transition: border 0.218s;
+              transition: border 0.218s;
+    }
+
+    .nav-list > li > div:hover,
+    .nav-list > li > div:focus,
+    .nav-list > .active > div,
+    .nav-list > .active > div:hover,
+    .nav-list > .active > div:focus {
+      color: #262626;
+      text-shadow: none;
+      background-color: #f5f5f5;
+      border-color: #427fed;
+    }
+    
+    .nav-list > li > div,
+    .nav-list .nav-header {
+      margin-right: -15px;
+      margin-left: -15px;
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+    }
+    
+    .nav-list > li > div {
+      padding: 3px 15px;
+    }
+    
+    .nav-list > .active > div,
+    .nav-list > .active > div:hover,
+    .nav-list > .active > div:focus {
+      color: #ffffff;
+      text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
+      background-color: #3B3537;
+    }
+    a:hover, a:focus{
+        color:inherit;
+    }
+    #test{
+        padding:8px;
+        background-color: inherit;
+    }
+    .nav > li > div > a >span{
+        margin-top:5px;
+    }
+    .Height{
+        height:25px;
+    }
+</style>
+<div style="position: absolute;top: 50px;bottom: 0px;right: 20px;left: 20px;margin-bottom: 0px;" ng-controller="TareasCtrl">
+    <div class="card" style="margin-top:0px; margin-bottom:0px; height:98%;padding-top:10px;">
+        <div class="card-actions pull-right no-print" style="margin: 0; padding: 0;">
+            <input placeholder="Nombre de la Tarea" type="text" class="span2" ng-model="filtro.nombre" title="Nombre de la Tarea" style="margin-bottom: 0px;margin-top: 5px;" />
+            <a href="#" class="btn btn-link pull-right" style="margin-right: 15px;margin-left: 15px;margin-top: 5px;" ng-if=hasPermission('tareas.editar') ><i class="icon-plus"></i> Grupo</a>
+            <a href="#" class="btn btn-link pull-right" style="margin-right: 15px;margin-left: 25px;margin-top: 5px;" ng-if=hasPermission('tareas.editar') ><i class="icon-plus"></i> Tarea</a>
+        </div>
+        <h4 class="card-heading simple" style="padding-left: 10px;">
+            <ul class="nav nav-pills" style="margin-bottom: 0px;">
+                <li ng-class="{'active': tab == 'pendientes'}">
+                    <a ng-click="tab='pendientes'" href="#" data-toggle="tab" style="padding-bottom: 15px; padding-top: 15px; margin-bottom: 0px; font-size: 18px;">Tareas Pendientes</a>
+                </li>
+                <li ng-class="{'active': tab == 'enProceso'}">
+                    <a ng-click="tab='enProceso'" href="#" data-toggle="tab" style="padding-bottom: 15px; padding-top: 15px; margin-bottom: 0px; font-size: 18px;">Tareas en Proceso</a>
+                </li>
+                <li ng-class="{'active': tab == 'finalizadas'}">
+                    <a ng-click="tab='finalizadas'" href="#" data-toggle="tab" style="padding-bottom: 15px; padding-top: 15px; margin-bottom: 0px; font-size: 18px;">Tareas Finalizadas</a>
+                </li>
+            </ul>
+        </h4>
+        <div ng-if="tab == 'pendientes'" class="card-body" style="padding-left: 0px; padding-right: 0px; padding-bottom: 0px;margin-top: 15px;">
+            <div class="form-horizontal" name="form" style="padding-left:48px; clear: both; background-color:#F0F0F0; padding-top:3px;">
+                <div class="row" style="padding-bottom: 3px;">
+                    <strong>
+                        <div class="span2" style="display: table-cell;"><a href="#" style="display: inline-block; color:#404040;">Aplicación:</a></div>
+                        <div class="span4" style="display: table-cell;"><a href="#" style="display: inline-block; color:#404040;">Tarea:</a></div>
+                        <div class="span2" style="display: table-cell;"><a href="#" style="display: inline-block; color:#404040;">Prioridad:</a></div>
+                        <div class="span2" style="display: table-cell;"><a href="#" style="display: inline-block; color:#404040;">Fecha:</a></div>
+                        <div class="span2" style="display: table-cell;"><a href="#" style="display: inline-block; color:#404040;">Usuarios Asignados:</a></div>
+                    </strong>
+                </div>
+            </div>
+            <div style="overflow-y: scroll; overflow-x: hidden;position: absolute;top: 100px;bottom: 30px;right: 0px;left: 0px; margin-right:1px">
+                <ul class="nav nav-list">
+                    <li ng-repeat="i in tareas | filter:{estado:'Pendiente'} | filter:filtro">
+                        <div href="/tareas/{{i._id}}">
+                            <a href="/tareas/{{i._id}}">
+                                <span class="span2 Height">{{i.aplicacion}}</span>
+                                <span class="span4 Height">{{i.nombre}}</span>
+                                <span class="span2 Height">{{i.prioridad}}</span>
+                                <span class="span2 Height">{{i.fechaCreacion}}</span>
+                                <span class="span2 Height">{{i.usuariosAsignados}}</span>
+                            </a>
+                            <a class="btn" href="#"><i class="icon-ok icon-white"></i>Tomar Tarea</a>
+                        </div>
+                    </li>
+                    <li ng-if="!tareas.length" class="text-center">
+                        <em>No hay tareas para visualizar</em>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        
+        <div ng-if="tab == 'enProceso'" class="card-body" style="padding-left: 0px; padding-right: 0px; padding-bottom: 0px;margin-top: 15px;">
+            <div class="form-horizontal" name="form" style="padding-left:48px; clear: both; background-color:#F0F0F0; padding-top:3px;">
+                <div class="row" style="padding-bottom: 3px;">
+                    <strong>
+                        <div class="span2" style="display: table-cell;"><a href="#" style="display: inline-block; color:#404040;">Aplicación:</a></div>
+                        <div class="span4" style="display: table-cell;"><a href="#" style="display: inline-block; color:#404040;">Tarea:</a></div>
+                        <div class="span2" style="display: table-cell;"><a href="#" style="display: inline-block; color:#404040;">Prioridad:</a></div>
+                        <div class="span2" style="display: table-cell;"><a href="#" style="display: inline-block; color:#404040;">Fecha:</a></div>
+                        <div class="span2" style="display: table-cell;"><a href="#" style="display: inline-block; color:#404040;">Usuarios Asignados:</a></div>
+                    </strong>
+                </div>
+            </div>
+            <div style="overflow-y: scroll; overflow-x: hidden;position: absolute;top: 100px;bottom: 30px;right: 0px;left: 0px; margin-right:1px">
+                <ul class="nav nav-list">
+                    <li ng-repeat="i in tareas | filter:{estado:'En Proceso'} | filter:filtro">
+                        <div href="/tareas/{{i._id}}">
+                            <a href="/tareas/{{i._id}}">
+                                <span class="span2 Height">{{i.aplicacion}}</span>
+                                <span class="span4 Height">{{i.nombre}}</span>
+                                <span class="span2 Height">{{i.prioridad}}</span>
+                                <span class="span2 Height">{{i.fechaCreacion}}</span>
+                                <span class="span2 Height">{{i.usuariosAsignados}}</span>
+                            </a>
+                            <a class="btn" href="#"><i class="icon-ok icon-white"></i>Tomar Tarea</a>
+                        </div>
+                    </li>
+                    <li ng-if="!tareas.length" class="text-center">
+                        <em>No hay tareas para visualizar</em>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        
+        <div ng-if="tab == 'finalizadas'" class="card-body" style="padding-left: 0px; padding-right: 0px; padding-bottom: 0px;margin-top: 15px;">
+            <div class="form-horizontal" name="form" style="padding-left:48px; clear: both; background-color:#F0F0F0; padding-top:3px;">
+                <div class="row" style="padding-bottom: 3px;">
+                    <strong>
+                        <div class="span2" style="display: table-cell;"><a href="#" style="display: inline-block; color:#404040;">Aplicación:</a></div>
+                        <div class="span4" style="display: table-cell;"><a href="#" style="display: inline-block; color:#404040;">Tarea:</a></div>
+                        <div class="span2" style="display: table-cell;"><a href="#" style="display: inline-block; color:#404040;">Prioridad:</a></div>
+                        <div class="span2" style="display: table-cell;"><a href="#" style="display: inline-block; color:#404040;">Fecha:</a></div>
+                        <div class="span2" style="display: table-cell;"><a href="#" style="display: inline-block; color:#404040;">Usuarios Asignados:</a></div>
+                    </strong>
+                </div>
+            </div>
+            <div style="overflow-y: scroll; overflow-x: hidden;position: absolute;top: 100px;bottom: 30px;right: 0px;left: 0px; margin-right:1px">
+                <ul class="nav nav-list">
+                    <li ng-repeat="i in tareas | filter:{estado:'Finalizada'} | filter:filtro">
+                        <div href="/tareas/{{i._id}}">
+                            <a href="/tareas/{{i._id}}">
+                                <span class="span2 Height">{{i.aplicacion}}</span>
+                                <span class="span4 Height">{{i.nombre}}</span>
+                                <span class="span2 Height">{{i.prioridad}}</span>
+                                <span class="span2 Height">{{i.fechaCreacion}}</span>
+                                <span class="span2 Height">{{i.usuariosAsignados}}</span>
+                            </a>
+                            <a class="btn" href="#"><i class="icon-ok icon-white"></i>Tomar Tarea</a>
+                        </div>
+                    </li>
+                    <li ng-if="!tareas.length" class="text-center">
+                        <em>No hay tareas para visualizar</em>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

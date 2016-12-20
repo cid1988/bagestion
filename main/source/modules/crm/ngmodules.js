@@ -1,0 +1,1 @@
+exports = module.exports = ["bag2.crm", "bag2.crm.contacts-search"];

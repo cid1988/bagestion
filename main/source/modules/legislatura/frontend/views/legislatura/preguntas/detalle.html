@@ -1,0 +1,286 @@
+<script>
+    $(document).ready(function() { $("#e1").select2(); });
+    $(document).ready(function() { $("#e2").select2(); });
+    $(document).ready(function() { $("#e3").select2(); });
+    $(document).ready(function() { $("#e4").select2(); });
+    $(document).ready(function() { $("#e5").select2(); });
+    $(document).ready(function() { $("#e6").select2(); });
+    $(document).ready(function() { $("#e7").select2(); });
+    $(document).ready(function() { $("#e8").select2(); });
+    $(document).ready(function() { $("#e9").select2(); });
+</script>
+
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="card span4">
+            <h3 class="card-heading simple">Evento
+                <!--<a class="btn pull-right no-print" ng-class="sigueCambios && 'active'"
+                ng-click="seguirCambios('preguntas', pregunta._id)" data-toggle="button">
+        			<span><i class="icon-eye-open"></i></span> Seguir cambios
+        		</a>-->
+            </h3>
+            <div class="card-body">
+                <div class="control-group  ng-pristine ng-valid">
+                    <label class="control-label">Nombre:</label>
+                    <div class="controls">
+                        <input class="input-block-level ng-pristine ng-valid" placeholder="Sin nombre" disabled="" type="text" 
+                            ng-model="evento.nombre" name="evento.nombre">
+                    </div>
+                </div>
+                <div class="control-group  ng-pristine ng-valid">
+                    <label class="control-label">Nombre corto:</label>
+                    <div class="controls">
+                        <input class="input-block-level ng-pristine ng-valid" placeholder="Sin nombre corto" disabled="" type="text" 
+                            ng-model="evento.nombreCorto" name="evento.nombreCorto">
+                    </div>
+                </div>
+                <div class="control-group  ng-pristine ng-valid"><label class="control-label">Nombre largo:</label><div class="controls"><textarea style="width:95%" placeholder="Sin nombre largo" disabled="" type="text" ng-model="evento.nombreLargo" name="evento.nombreLargo" rows="2" class="ng-pristine ng-valid"></textarea></div></div>
+                <div class="control-group  ng-pristine ng-valid">
+                    <label class="control-label">Fecha:</label>
+                    <div class="controls">
+                        <input class="input-block-level ng-pristine ng-valid" placeholder="Sin fecha" disabled="" type="text" 
+                            ng-model="evento.fecha" name="evento.fecha">
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Dirección:</label>
+                    <div class="controls">
+                        <input type="text" style="width: 282px" disabled ng-model="evento.calle"
+                        placeholder="Calle del evento" />
+                        <input disabled type="text" style="width: 60px" ng-model="evento.altura"
+                        />
+                    </div>
+                </div>
+                <div class="control-group  ng-pristine ng-valid">
+                    <label class="control-label">Lugar:</label>
+                    <div class="controls">
+                        <input class="input-block-level ng-pristine ng-valid" placeholder="Sin lugar" disabled="" type="text" 
+                            ng-model="evento.lugar" name="evento.lugar">
+                    </div>
+                </div>
+                <div class="control-group  ng-pristine ng-valid"><label class="control-label">Descripcion:</label><div class="controls"><textarea style="width:95%; margin-bottom:25px" placeholder="Sin descripcion" disabled="" type="text" ng-model="evento.descripcion" name="evento.descripcion" rows="4" class="ng-pristine ng-valid"></textarea></div></div>
+            </div>
+        </div>
+        
+        
+        <div class="card span8">
+            <div class="card-actions pull-right" style="margin: 0; padding: 0">
+                <a class="btn pull-right btn-link no-print" ng-hide="modificando" style="margin-left: 10px; margin-right: 15px"
+                ng-click="eliminar()" ng-class="{true:'', false:'disabled'}[tienePermiso('master') || tienePermiso('actualizarLegislatura')]"><i class="icon-trash icon-white"></i></a>
+                <a style="margin-left: 10px" ng-click="modificar()" ng-hide="modificando" ng-class="{true:'', false:'disabled'}[tienePermiso('master') || tienePermiso('actualizarLegislatura')]"
+                class="btn btn-link pull-right no-print">
+                    <i class="icon-edit"></i></a>
+                <a style="margin-left: 10px" href="/preguntas/print/{{pregunta._id}}" ng-hide="modificando" class="btn btn-link pull-right no-print">
+                    <i class="icon-print"></i></a>
+        		<a class="btn btn-link no-print pull-right" ng-click="cancelar()" ng-show="modificando" style="margin-right: 10px;"><i class="icon-remove icon-white"></i></a>
+                <a class="btn btn-link no-print pull-right" style="margin-left: 10px; margin-right: 15px" ng-show="modificando" ng-click="guardar()"><i class="icon-ok icon-white"></i></a>
+            </div>
+            <h3 class="card-heading simple">Datos de la Pregunta</h3>
+            <div class="card-body">
+                <div class="row" style="padding-bottom: 0px;">
+                    <form class="form-horizontal" style="margin-bottom: 0px !important;">
+                        <div class="control-group" style="margin-left: 10px;margin-bottom: 0px;">
+                            <div class="control-group">
+                                <label class="control-label">Evento:</label>
+                                <div class="controls">
+                                    <select id="e1" class="span6" type="text" ng-disabled="!modificando" ng-model="pregunta.evento" ng-options="i._id as i.nombre for i in eventos">
+                                        <option ng-disabled="true" value="">{{eventoPorId(pregunta.evento).nombre}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">Cuestionario:</label>
+                                <div class="controls">
+                                    <select id="e2" class="span6" type="text" ng-disabled="!modificando" ng-model="pregunta.cuestionario" ng-options="i._id as i.nombre for i in cuestionarios">
+                                        <option ng-disabled="true" value="">{{cuestionarioPorId(pregunta.cuestionario).nombre}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">Nro de orden:</label>
+                                <div class="controls">
+                                    <input class="span4" type="text" placeholder="Sin nro de orden" ng-disabled="!modificando" ng-model="pregunta.nro_orden" />
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">Contexto</label>
+                                <div class="controls">
+                                    <textarea rows="4" class="span10" type="text" placeholder="Sin Contexto" ng-disabled="!modificando" ng-model="pregunta.contexto"></textarea>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">Pregunta</label>
+                                <div class="controls">
+                                    <textarea rows="2" class="span10" type="text" placeholder="Sin Pregunta" ng-disabled="!modificando" ng-model="pregunta.pregunta"></textarea>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">Respuesta</label>
+                                <div class="controls">
+                                    <textarea rows="6" class="span10" type="text" placeholder="Sin Respuesta" ng-disabled="!modificando" ng-model="pregunta.respuesta"></textarea>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">Elaborada por:</label>
+                                <div class="controls">
+                                    <select id="e3" class="span5" type="text" ng-model="pregunta.persona_respuesta" ng-disabled="!modificando" ng-options="i._id as i.apellidos + ' ' + i.nombre for i in contactos | orderBy:'apellidos'">
+                                    <option ng-disabled="true" value="">{{contactoPorId(pregunta.persona_respuesta).apellidos}} {{contactoPorId(pregunta.persona_respuesta).nombre}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">Adjuntos</label>
+                                <div class="controls">
+                                    <textarea rows="4" class="span10" type="text" placeholder="Sin Adjuntos" ng-disabled="!modificando" ng-model="pregunta.adjuntos"></textarea>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">Eje Temático:</label>
+                                <div class="controls">
+                                    <select id="e4" class="span5" type="text" ng-model="pregunta.eje_tematico" ng-disabled="!modificando" ng-options="i as i.nombre for i in ejes">
+                                        <option ng-disabled="true" value="">{{pregunta.eje_tematico.nombre}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">Temática:</label>
+                                <div class="controls">
+                                    <select id="e5" class="span5" type="text" ng-model="pregunta.tematica" ng-disabled="!modificando" ng-options="i.nombre as i.nombre for i in tematicas">
+                                        <option ng-disabled="true" value="">{{pregunta.tematica}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">Tema Particular:</label>
+                                <div class="controls">
+                                    <select id="e6" class="span5" type="text" ng-model="pregunta.tema_particular" ng-disabled="!modificando" ng-options="i.nombre as i.nombre for i in temas">
+                                        <option ng-disabled="true" value="">{{pregunta.tema_particular}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">Jurisdicción:</label>
+                                <div class="controls">
+                                    <select id="e7" class="span5" type="text" ng-model="pregunta.jurisdiccionNueva" ng-disabled="!modificando" ng-options="i._id as i.nombreCompleto for i in organigrama">
+                                        <option ng-disabled="true" value="">{{organigramaPorId(pregunta.jurisdiccionNueva).nombreCompleto}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">Proyecto:</label>
+                                <div class="controls">
+                                    <input class="span10" type="text" placeholder="Sin proyecto" ng-disabled="!modificando" ng-model="pregunta.proyecto" />
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">Estado:</label>
+                                <div class="controls">
+                                    <select id="e8" class="span5" type="text" ng-model="pregunta.estado" ng-disabled="!modificando" ng-options="i as i.nombre for i in estados">
+                                        <option ng-disabled="true" value="">{{pregunta.estado.nombre}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="control-group" style="margin-bottom: 5px;">
+                                <label class="control-label">Temas:</label>
+                                <div class="controls">
+                                    <select id="e9" class="span5" type="text" ng-model="dataTema" ng-disabled="!modificando" ng-options="i._id as i.nombre for i in temasORM | filter: mostrarTema">
+                                        <option ng-disabled="true" value=""></option>
+                                    </select>
+                                    <button class="btn" style="margin-bottom:10px; margin-left: 5px" ng-click="agregarTema(dataTema)"><i class="icon-plus"></i></button>
+                                </div>
+                            </div>
+                            <div class="control-group" ng-repeat="t in pregunta.temas" style="margin-bottom: 0px;">
+                                <div class="controls">
+                                    <input class="span5" type="text" ng-disabled="true" value="{{temaPorId(t).nombre}}" />
+                                    <a href="#" style="margin-left: 10px" ng-click="eliminarListaElem(t, pregunta.temas)"><i class="icon-trash"></i></a>
+                                </div>
+                            </div>
+                        <div class="span8" style="margin-left: 80px;margin-top: 15px;">
+                            <h4>Documentos
+                            <div class="card-actions pull-right" style="margin: 0; padding: 0">
+                                <a class="btn btn-link" ng-click="agregarDocumentacion()" ng-if="modificando"><i class="icon-plus"></i></a>
+                            </div></h4>
+                            <div ng-if="!pregunta.documentos.length">No se ha cargardo ningun documento aún</div>
+                            <div ng-repeat="d in pregunta.documentos">
+                                <a data-toggle="modal" ng-click="abrirModal('#documentosE_{{$index}}')" href="">{{d.nombre}}</a> (<a href="/file/{{d.archivoId}}" target="_blank">Descargar</a>)<br>
+                            </div>
+                            <div ng-repeat="d in pregunta.documentos" id="documentosE_{{$index}}"
+                            class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+                                <div class='modal-header'>
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                </div>
+                                <div class='modal-content'>
+                                    <span style="display: inline-block"> Nombre:<br /> 
+                                        <input class="span4" type="text" placeholder="Nombre del documento" ng-disabled="true" ng-model="d.nombre" />
+                                    </span>
+                                    <span style="display: inline-block"> Fecha:<br /> 
+                                        <input class="span2" type="text" date placeholder="Fecha" ng-disabled="true" ng-model="d.fecha" />
+                                    </span>
+                                    <span style="display: inline-block"> Version:<br /> 
+                                        <input class="span2" type="text" placeholder="Version del documento" ng-disabled="true" ng-model="d.version" />
+                                    </span>
+                                    <span style="display: inline-block"> Fuente:<br /> 
+                                        <div class="input-append">
+                                            <input class="span3" type="text" placeholder="Fuente del documento" ng-disabled="true" value="{{contactoPorId(d.fuente).apellidos}} {{contactoPorId(d.fuente).nombre}}" />
+                                        </div>
+                                    </span>
+                                    <span style="display: inline-block"> Tipo:<br /> 
+                                        <input class="span2" type="text" placeholder="DOC, XLS, PPT, etc" ng-disabled="true" ng-model="d.tipo" />
+                                    </span>
+                                    <span style="display: inline-block"> Autor:<br /> 
+                                        <input class="span4" type="text" placeholder="Autor del documento" ng-disabled="true" ng-model="d.autor" />
+                                    </span>
+                                    <span style="display: inline-block"> Tags:<br /> 
+                                        <input class="span5" type="text" placeholder="Separados por coma" ng-disabled="true" ng-model="d.tags" />
+                                    </span>
+                                    <span style="display: inline-block"> Descripción:<br /> 
+                                        <textarea style="height:80px; width:530px" placeholder="Descripción del documento" type="text" ng-disabled="true"
+                                        ng-model="d.descripcion" />
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                            <div class="span8" style="margin-left: 80px;margin-bottom: 30px;margin-top: 10px;">
+                                <h4>Comentarios
+                                <div class="card-actions pull-right" style="margin: 0; padding: 0">
+                                    <a class="btn btn-link" ng-show="modificando" ng-click="agregarComen()"><i class="icon-plus"></i></a>
+                                </div></h4>
+                                <div class="card-body">
+                                    <div ng-hide="pregunta.comentarios.length">No se ha cargardo ningun comentario aún</div>
+                                    <div ng-repeat="o in reverse(pregunta.comentarios)"
+                                    style="clear:both; min-height: 40px; margin-top: 20px; margin-bottom: 20px" ng-show="pregunta.comentarios.length">
+                                        <div class="pull-right" style="display: inline-block; margin-right: 10px; margin-bottom: 0px;margin-top: 10px;">
+                                            <button type="button" ng-show="modificando" ng-click="eliminarElemento(pregunta.comentarios,o)" style="margin-left: 10px" class="btn btn-danger"><i class="icon-trash icon-white"></i></button>
+                                        </div>
+                                        <span style="display: inline-block"> Cuando:<br /> 
+                                            <input class="span8" type="text" ng-disabled="!modificando" date ng-model="o.cuando"/>
+                                        </span>
+                                        <span style="display: inline-block"> Quien:<br /> 
+                                            <input class="span12" type="text" ng-disabled="!modificando" value="{{contactoPorId(o.quien).apellidos}} {{contactoPorId(o.quien).nombre}}"/>
+                                        </span>
+                                        <textarea style="height:100px; width:95%" type="text" ng-disabled="!modificando" ng-model="o.descripcion" />
+                                        <hr />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="confirmarEliminar" class="modal hide fade">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>Eliminar pregunta</h3>
+    </div>
+    <div class="modal-body">
+        <p>Está a un paso de eliminar la pregunta</p>
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="btn btn-info" data-dismiss="modal">Conservar el registro</a>
+        <a href="#" class="btn btn-danger" data-dismiss="modal" ng-click="eliminar(true)">Eliminar la pregunta</a>
+    </div>
+</div>

@@ -1,0 +1,516 @@
+<script>
+    $(document).ready(function() { 
+        $("#e1").select2(); 
+        $("#e2").select2();
+        $("#e3").select2();
+        $("#e4").select2();
+        $("#e5").select2();
+        $("#e6").select2();
+        $("#e7").select2();
+        $("#e8").select2();
+        $("#e9").select2();
+        $("#e10").select2();
+         $("#e11").select2();
+         $("#e12").select2();
+         $("#e13").select2();
+         $("#e14").select2();
+         $("#e15").select2();
+    });
+    
+    window.onunload = window.onbeforeunload = function(){
+        var porId=document.getElementById("nombre").value;
+        alert(porId);
+        if(porId==="guardo"){
+            porId="guardo";
+            window.close();
+        }else{
+            return "Ud esta abandonando este sitio sin guardar, los cambios se perderan.";
+        }
+    };
+</script>
+<div style="margin-bottom: 0px" ng-controller="IndicadorSEMGDetalleCtrl">
+    <input type="text" value="{{variable}}" id="nombre" ng-show="false">
+    <ul class="breadcrumb" style="margin-bottom: 0px">
+        <li><a href="/semg/matrizIndicadores/{{anio}}" style="color:#404040;">Matriz de Indicadores {{anio}}</a><span class="divider">/</span></li>
+        <li><a href="/semg/indicadores/{{anio}}?filtro={{indicador.dependencia}}" style="color:#404040;">{{organigramaPorId(indicador.dependencia).nombreCompleto}}</a> <span class="divider">/</span></li>
+        <li class="active">Detalle {{indicador.objetivo}}</li>
+    </ul>
+</div>
+<div class="card body" style="margin-top: 0px;padding-top: 0px;" ng-controller="IndicadorSEMGDetalleCtrl">
+    <div ng-show="tab == 'datos'" style="margin-left: 20px; margin-right: 20px; margin-bottom: 20px;">
+        <div class="row" style="padding-bottom: 0px;">
+            <form name="myDecimal" ng-submit="guardar();variable='guardo';editando=false" class="form-horizontal" style="margin-bottom: 0px !important;">
+                <button class="btn pull-right" type="button" ng-show="editando" ng-click="editando = false" style="margin-right: 20px"><i class="icon-remove"></i></button>
+                
+                <a ng-click="modificar()" class="btn pull-right" ng-show="(hasPermission('semg.edicionSecretaria') || hasPermission('semg.edicionJurisdiccion')) && !editando" style="margin-right:20px"><i class="icon-edit"></i></a>
+                
+                <button type="submit" class="btn pull-right" ng-show="editando" style="margin-right: 20px;"><i class="icon-ok icon-white"></i></button>
+                <a ng-click="eliminar(false)" class="btn pull-right" ng-show="editando && (hasPermission('semg.editar') || hasPermission('semg.editarJurisdiccion'))" style="margin-right: 20px;"><i class="icon-trash icon-white"></i> Eliminar</a>
+                <div class="controls pull-right" style="margin-right: 20px;">
+                    <button type="button" ng-class="indicador.aprobado ? 'btn btn-success' : 'btn'" ng-disabled="!hasPermission('semg.aprobacionSecretariaMinisterio') || !editando" ng-click="indicador.aprobado=!indicador.aprobado">
+                        <span ng-show="!indicador.aprobado">Pendiente de Aprobación por el Ministro</span>
+                        <span ng-show="indicador.aprobado">Aprobado por el Ministro</span>
+                    </button>
+                    <button class="btn" type="button" ng-hide="indicador.validado" ng-click="indicador.validado = !indicador.validado" ng-disabled="!hasPermission('semg.validarSecretaria') || !editando">Pendiente de Validación por SPLyCG</button>
+                    <button class="btn btn-success" type="button" ng-show="indicador.validado" ng-click="indicador.validado = !indicador.validado" ng-disabled="!hasPermission('semg.validarSecretaria') || !editando">Validado por SPLyCG</button>
+                </div>{{semg.editarJurisdiccion}}
+                <h3 class="card-heading simple" style="padding-left: 10px; font-size:14px;padding-right: 0px;height: 45px;margin-bottom: 10px;">
+                    <ul id="myTab" class="nav nav-pills">
+                        <li ng-class="{'active': tab == 'datos'}"><a href="#" ng-click="tab='datos';tienePermiso('datos')" data-toggle="tab">Datos</a></li>
+                        <!-- <li ng-class="{'active': tab == 'resultados'}"><a href="#" ng-click="tab='resultados';tienePermiso('resultados')" data-toggle="tab">Resultados</a></li>
+                        <li ng-class="{'active': tab == 'evaluacion'}" ng-show="hasPermission('semg.editar') || !hasPermission('semg.editarJurisdiccion')"><a href="#" ng-click="tab='evaluacion';tienePermiso('evaluacion')" data-toggle="tab">Evaluación</a></li> --> 
+                        <!--<li ng-class="{'active': tab == 'grafico'}"><a href="#" ng-click="tab='grafico';tienePermiso('grafico')" data-toggle="tab">Grafico</a></li>-->
+                    </ul>
+                </h3>
+                <div class="span6">
+                    <legend>Planificación</legend>
+                    <div class="control-group" style="margin-left: 10px;margin-bottom: 0px;">
+                        <div class="control-group">
+                            <label class="control-label">Objetivo de Impacto:</label>
+                            <div class="controls">
+                                <select id="e1" class="span4" type="text" ng-model="indicador.objetivoImpacto" ng-disabled="!editando" ng-options="i._id as i.nombre for i in impactosPOA">
+                                    <option ng-disabled="true" value="">{{impactoPOAPorId(indicador.objetivoImpacto).nombre}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">Objetivo Ministerial:</label>
+                            <div class="controls">
+                                <select id="e2" class="span4" type="text" ng-model="indicador.objetivoMinisterial" ng-disabled="!editando" ng-options="i._id as i.nombre for i in ministerialesPOA">
+                                    <option ng-disabled="true" value="">{{ministerialPOAPorId(indicador.objetivoMinisterial).nombre}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <legend>Indicador</legend>
+                    <div class="control-group" style="margin-left: 10px;margin-bottom: 0px;">
+                        <div class="control-group">
+                            <label class="control-label">Nombre del Indicador:</label>
+                            <div class="controls">
+                                <textarea class="span4" rows="3" type="text" title="{{indicador.indicadorImpacto}}" ng-disabled="!editando" ng-model="indicador.indicadorImpacto"></textarea>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">Descripción del Indicador:</label>
+                            <div class="controls">
+                                <input class="span4" type="text" title="{{indicador.descripcionImpacto}}" ng-disabled="!editando" ng-model="indicador.descripcionImpacto"/>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">Metodo de Calculo:</label>
+                            <div class="controls">
+                                <input class="span4" type="text" title="{{indicador.metodoCalculo}}" ng-disabled="!editando" ng-model="indicador.metodoCalculo"/>
+                            </div>
+                        </div>
+                        <div class="control-group" style="margin-top: 20px;">
+                            <label class="control-label">Métrica:</label>
+                            <div class="controls">
+                                <input class="span4" type="text" data-provide="typeahead" ng-model="indicador.metrica" ng-disabled="!editando" data-source={{metricas}}/>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">Sentido del Indicador:</label>
+                            <div class="controls">
+                                <select class="span4" id="e6" type="text" ng-model="indicador.sentido" ng-disabled="!editando">
+                                    <option ng-disabled="true" value="">{{indicador.sentido}}</option>
+                                    <option value="Ascendente">Ascendente</option>
+                                    <option value="Descendente">Descendente</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">Frecuencia de Medición:</label>
+                            <div class="controls">
+                                <select class="span4" id="e7" ng-disabled="!editando" type="text" ng-model="indicador.frecuencia">
+                                    <option ng-disabled="true" value="">{{indicador.frecuencia}}</option>
+                                    <option value="Mensual">Mensual</option>
+                                    <option value="Bimestral">Bimestral</option>
+                                    <option value="Trimestral">Trimestral</option>
+                                    <option value="Cuatrimestral">Cuatrimestral</option>
+                                    <option value="Semestral">Semestral</option>
+                                    <option value="Anual">Anual</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">Formato de Número:</label>
+                            <div class="controls">
+                                <select class="span4" id="e8" ng-disabled="!editando" type="text" ng-model="indicador.formatoNumero">
+                                    <option ng-disabled="true" value="">{{indicador.formatoNumero}}</option>
+                                    <option value="Promedio">Promedio</option>
+                                    <option value="Porcentaje">Porcentaje</option>
+                                    <option value="Numero Absoluto">Número Absoluto</option>
+                                    <option value="Tasa">Tasa</option>
+                                    <option value="Fraccion">Fracción</option>
+                                    <option value="Indice">Índice</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="input-append" style="margin-bottom:20px">
+                            <label class="control-label">Peso:</label>
+                            <div class="controls">
+                                <input id="appendedInput" ng-disabled="!editando" class="span2" type="number" ng-model="indicador.peso" min="1" max="{{pesoTotal}}"/>
+                                <span class="add-on">%</span>
+                                <span style="display: inline-block; -moz-border-radius: 20px; border-radius: 20px; padding: 4px; border: 0px solid #000; margin-top: 3px; margin-left: 10px; background-color: blue" ng-if="campoVacio(indicador.peso)"></span>
+                                <span class="help-block alert" ng-show="editando" style="margin-top:10px;font-size:15px">El valor debe ser menor a 100</span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">Proyectos:</label>
+                            <div class="controls" style="margin-bottom:5px">
+                                <select id="e9" class="span3" type="text" ng-model="proyectos" ng-disabled="!editando" ng-options="i._id as i.nombre for i in todosLosProyectos | filter:filtroProyectos">
+                                    <option ng-disabled="true" value="">{{proyectoPOAPorId(indicador.proyectos).nombre}}</option>
+                                </select>
+                                <button class="btn" type="button" ng-disabled="!editando" style="margin-left:5px" ng-click="agregarProyecto(proyectos)"><i class="icon-plus"></i></button>
+                                <button class="btn" type="button" ng-disabled="!editando" title="Proyectos que contribuyen al desempeño del indicador" style="margin-left:5px" ><i class="icon-search"></i></button>
+                            </div>
+                            <div class="control-group" ng-repeat="t in indicador.proyectos" style="margin-bottom:0px">
+                                <div class="controls">
+                                    <input class="span3" type="text" ng-disabled="true" value="{{proyectoPOAPorId(t).nombre}}"/>
+                                    <button type="button" class="btn" style="margin-left:5px" ng-show="editando" ng-click="eliminarListaElem(t, indicador.proyectos)"><i class="icon-trash"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="span6">
+                    <legend>Desempeño</legend>
+                    <span class="help-block" style="margin-bottom:5px"><center>Ingrese hasta dos decimales, separándolos con coma (",")</center></span>
+                    <div class="control-group" style="margin-left: 10px;margin-bottom: 0px;">
+                        <div class="control-group" style="display: inline-block;margin-left: 95px;margin-bottom: 10px;">
+                            <label>Unidad {{anio-4}}: <span style="display: inline-block; -moz-border-radius: 20px; border-radius: 20px; padding: 4px; border: 0px solid #000; margin-top: 3px; margin-right: 10px; background-color: blue" ng-if="campoVacio(indicador.unidad4)"></span></label>
+                            <input type="number" ng-disabled="!editando" class="form-control" style="width:90px" name="myDecimal" ng-model="indicador.unidad4" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.01"/>
+                        </div>
+                        <div class="control-group" style="display: inline-block;margin-bottom: 10px;">
+                            <label>Unidad {{anio-3}}: <span style="display: inline-block; -moz-border-radius: 20px; border-radius: 20px; padding: 4px; border: 0px solid #000; margin-top: 3px; margin-right: 10px; background-color: blue" ng-if="(diferenciaUnidades(indicador.unidad4, indicador.unidad3) || campoVacio(indicador.unidad3))"></span></label>
+                            <input type="number" ng-disabled="!editando" class="form-control" style="width:90px" name="myDecimal" ng-model="indicador.unidad3" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.01"/>
+                        </div>
+                        <div class="control-group" style="display: inline-block;margin-bottom: 10px;">
+                            <label>Unidad {{anio-2}}: <span style="display: inline-block; -moz-border-radius: 20px; border-radius: 20px; padding: 4px; border: 0px solid #000; margin-top: 3px; margin-right: 10px; background-color: blue" ng-if="(diferenciaUnidades(indicador.unidad3, indicador.unidad2) || campoVacio(indicador.unidad2))"></span></label>
+                            <input type="number" ng-disabled="!editando" class="form-control" style="width:90px" name="myDecimal" ng-model="indicador.unidad2" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.01"/>
+                        </div>
+                        <div class="control-group" style="display: inline-block;margin-bottom: 10px;">
+                            <label>Unidad {{anio-1}}: <span style="display: inline-block; -moz-border-radius: 20px; border-radius: 20px; padding: 4px; border: 0px solid #000; margin-top: 3px; margin-right: 10px; background-color: blue" ng-if="(diferenciaUnidades(indicador.unidad2, indicador.unidad1) || campoVacio(indicador.unidad1))"></span></label>
+                            <input type="number" ng-disabled="!editando" class="form-control" style="width:90px" name="myDecimal" ng-model="indicador.unidad1" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.01"/>
+                        </div>
+                        <div class="control-group" style="display: inline-block;margin-left:95px">
+                            <label>Meta {{anio-1}}:</label>
+                            <input type="number" ng-disabled="!editando" class="form-control" style="width:90px" name="myDecimal" ng-model="indicador.metaAnterior" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.01"/>
+                        </div>
+                        <div class="control-group" style="display: inline-block;">
+                            <label>Meta {{anio}}:</label>
+                            <input type="number" ng-disabled="!editando" class="form-control" style="width:90px" name="myDecimal" ng-model="indicador.metaAnio" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.01"/>
+                        </div>
+                        <div class="control-group" style="display:inline-block;width:700px">
+                            <label class="control-label" style="margin-right:20px">Semaforización:</label>
+                            <div ng-if="indicador.sentido == 'Ascendente' || !indicador.sentido">
+                                <div class="input-prepend" style="margin-right:5px">
+                                <span class="add-on" style="background-color:#58b058"><b>X ></b></span>
+                                    <input type="number" class="span1" id="prependedInput" ng-disabled="!editando" ng-model="indicador.semaforizacion.rango1" style="width: 50px">
+                                    <span class="add-on" style="background-color:#fbae42"><b>> X ></b></span>
+                                    <input type="number" class="span1" id="prependedInput" ng-disabled="!editando" ng-model="indicador.semaforizacion.rango2" style="width: 50px">
+                                    <span class="add-on" style="background-color:#c73e38"><b>> X</b></span>
+                                    <input type="number" class="span1" id="prependedInput" ng-disabled="!editando" ng-model="indicador.semaforizacion.rango3" style="width: 50px">
+                                </div>
+                            </div>
+                            <div ng-if="indicador.sentido == 'Descendente'">
+                                <div class="input-prepend" style="margin-right:5px">
+                                <span class="add-on" style="background-color:#58b058"><b>X <</b></span>
+                                    <input type="number" class="span1" id="prependedInput" ng-disabled="!editando" ng-model="indicador.semaforizacion.rango1" style="width: 50px">
+                                    <span class="add-on" style="background-color:#fbae42"><b>< X <</b></span>
+                                    <input type="number" class="span1" id="prependedInput" ng-disabled="!editando" ng-model="indicador.semaforizacion.rango2" style="width: 50px">
+                                    <span class="add-on" style="background-color:#c73e38"><b>< X</b></span>
+                                    <input type="number" class="span1" id="prependedInput" ng-disabled="!editando" ng-model="indicador.semaforizacion.rango3" style="width: 50px">
+                                </div>
+                            </div>
+                        </div>
+                        <!--<div class="control-group" style="display:inline-block;width:700px" ng-init="indicador.semaforizacion.tipo = 'Rango'">-->
+                        <!--    <label class="control-label">Semaforización:</label>-->
+                        <!--    <div ng-if="indicador.semaforizacion.tipo == 'Rango'">-->
+                        <!--        <div class="input-prepend" style="margin-right:5px">-->
+                        <!--            <span class="add-on" style="background-color:#58b058"><b>X ></b></span>-->
+                        <!--            <input type="number" class="span1" id="prependedInput" ng-disabled="!editando" placeholder="Sin valor" ng-model="indicador.semaforizacion.verde" style="width: 50px">-->
+                        <!--        </div>-->
+                        <!--        <div class="input-prepend" style="margin-right:5px">-->
+                        <!--            <input type="number" class="span1" id="prependedInput" ng-disabled="!editando" placeholder="Sin valor" ng-model="indicador.semaforizacion.amarillo" style="width: 50px">-->
+                        <!--            <span class="add-on" style="background-color:#fbae42"><b>> X ></b></span>-->
+                        <!--            <input type="number" class="span1" id="prependedInput" ng-disabled="!editando" placeholder="Sin valor" ng-model="indicador.semaforizacion.amarillo2" style="width: 50px">-->
+                        <!--        </div>-->
+                        <!--        <div class="input-prepend">-->
+                        <!--            <span class="add-on" style="background-color:#c73e38"><b>X <</b></span>-->
+                        <!--            <input type="number" class="span1" id="prependedInput" ng-disabled="!editando" placeholder="Sin valor" ng-model="indicador.semaforizacion.rojo" style="width: 50px">-->
+                        <!--        </div>-->
+                        <!--        <div class="input-prepend">-->
+                        <!--            <button type="button" class="btn" ng-disabled="!editando" ng-show="indicador.semaforizacion.tipo == '%'" ng-click="indicador.semaforizacion.tipo = 'Rango'">%</button>-->
+                        <!--            <button type="button" class="btn" ng-disabled="!editando" ng-show="indicador.semaforizacion.tipo == 'Rango'" ng-click="indicador.semaforizacion.tipo = '%'">Rango</button>-->
+                        <!--        </div>-->
+                        <!--    </div>-->
+                        <!--    <div ng-if="indicador.semaforizacion.tipo == '%' || indicador.semaforizacion.tipo == ''">-->
+                        <!--        <div class="input-prepend">-->
+                        <!--            <span class="add-on" style="background-color:#58b058"></span>-->
+                        <!--            <input type="number" class="span1" id="prependedInput" ng-disabled="!editando" placeholder="Sin valor" ng-model="indicador.semaforizacion.verde" style="width: 50px">-->
+                        <!--        </div>-->
+                        <!--        <div class="input-prepend">-->
+                        <!--            <span class="add-on" style="background-color:#fbae42"></span>-->
+                        <!--            <input type="number" class="span1" id="prependedInput" ng-disabled="!editando" placeholder="Sin valor" ng-model="indicador.semaforizacion.amarillo" style="width: 50px">-->
+                        <!--        </div>-->
+                        <!--        <div class="input-prepend">-->
+                        <!--            <span class="add-on" style="background-color:#c73e38"></span>-->
+                        <!--            <input type="number" class="span1" id="prependedInput" ng-disabled="!editando" placeholder="Sin valor" ng-model="indicador.semaforizacion.rojo" style="width: 50px">-->
+                        <!--        </div>-->
+                        <!--        <div class="input-prepend">-->
+                        <!--            <button type="button" class="btn" ng-disabled="!editando" ng-show="indicador.semaforizacion.tipo == '%' || indicador.semaforizacion.tipo == ''" ng-click="indicador.semaforizacion.tipo = 'Rango'">%</button>-->
+                        <!--            <button type="button" class="btn" ng-disabled="!editando" ng-show="indicador.semaforizacion.tipo == 'Rango'" ng-click="indicador.semaforizacion.tipo = '%'">Rango</button>-->
+                        <!--        </div>-->
+                        <!--    </div>-->
+                        <!--</div>-->
+                        <div class="control-group" style="margin-bottom: 5px">
+                            <label class="control-label">Justificación de la Meta:</label>
+                            <div class="controls">
+                                <select id="e10" class="span3" ng-disabled="!editando" type="text" ng-model="justificacion">
+                                    <option value=""></option>
+                                    <option value="En base a Parámetro Internacional">En base a Parámetro Internacional</option>
+                                    <option value="En base a Parámetro Nacional">En base a Parámetro Nacional</option>
+                                    <option value="En base a Resultados Propios de Años Anteriores">En base a Resultados Propios de Años Anteriores</option>
+                                    <option value="En base a Resultados Historicos">En base a Resultados Historicos</option>
+                                    <option value="En base al Presupuesto">En base al Presupuesto</option>
+                                    <option value="En base a otras Instituciones Similares o Comparables">En base a otras Instituciones Similares o Comparables</option>
+                                </select>
+                                <button type="button" class="btn" ng-disabled="!editando" style="margin-bottom:10px; margin-left: 5px" ng-click="agregarJustificacion(justificacion)"><i class="icon-plus"></i></button>
+                            </div>
+                        </div>
+                        <div class="control-group" ng-repeat="t in indicador.justificacionMeta track by $index" style="margin-bottom:5px">
+                            <div class="controls">
+                                <input class="span3" type="text" ng-disabled="true" value="{{t}}" />
+                                <a href="#" style="margin-left: 10px" ng-show="editando" ng-click="eliminarListaElem(t, indicador.justificacionMeta)"><i class="icon-trash"></i></a>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">Variación Interanual de las Metas 2015/2016:</label>
+                            <div class="controls">
+                                <input class="span3" disabled type="text" placeholder="{{((indicador.metaAnio - indicador.metaAnterior)/indicador.metaAnterior * 100).toFixed(2)}}"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group" style="margin-left: 10px;margin-bottom: 0px;">
+                        <legend>Fuente</legend>
+                        <div class="control-group">
+                            <label class="control-label">Fuente:</label>
+                            <div class="controls">
+                                <select class="span3" id="e11" type="text" ng-disabled="!editando" ng-model="indicador.fuente">
+                                    <option ng-disabled="true" value="">{{indicador.fuente}}</option>
+                                    <option value="Interna">Interna</option>
+                                    <option value="Externa">Externa</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="control-group" ng-if="indicador.fuente=='Externa'">
+                            <label class="control-label">Fuente Externa:</label>
+                            <div class="controls">
+                                <input class="span4" type="text" ng-disabled="!editando" ng-model="indicador.fuenteExterna" />
+                            </div>
+                        </div>
+                        <div class="control-group" ng-if="indicador.fuente=='Interna'">
+                            <label class="control-label">Fuente Interna:</label>
+                            <div class="controls">
+                                <input class="span4" type="text" ng-disabled="!editando" ng-model="indicador.fuenteInterna" />
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">Referente Fuente:</label>
+                            <div class="controls">
+                                <input class="span4" type="text" ng-disabled="!editando" ng-model="indicador.referenteFuente"/>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">Sistema Recoleccion de Datos:</label>
+                            <div class="controls">
+                                <select class="span3" id="e12" type="text" ng-disabled="!editando" ng-model="indicador.recoleccionDatos">
+                                    <option ng-disabled="true" value="">{{indicador.recoleccionDatos}}</option>
+                                    <option value="Registro Informatizado">Registro Informatizado</option>
+                                    <option value="Registro Manual con Fuentes Digitalizadas">Registro Manual con Fuentes Digitalizadas</option>
+                                    <option value="Registro Manual">Registro Manual</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group" style="margin-left: 10px;margin-bottom: 0px">
+                        <legend>Ejes</legend>
+                        <div class="control-group">
+                            <label class="control-label">Ejes:</label>
+                            <div class="controls">
+                                <select class="span3" id="e13" type="text" ng-disabled="!editando" ng-model="indicador.ejes">
+                                    <option ng-disabled="true" value="">{{indicador.ejes}}</option>
+                                    <option value="Convivencia">Convivencia</option>
+                                    <option value="Creatividad">Creatividad</option>
+                                    <option value="Escala Humana">Escala Humana</option>
+                                    <option value="Progreso Social">Progreso Social</option>
+                                    <option value="Ninguna">Ninguna</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">Compromisos:</label>
+                            <div class="controls">
+                                <select class="span4" type="text" ng-model="indicador.compromiso" ng-disabled="!editando" ng-options="i._id as i.nombre for i in compromisos | orderBy: 'nombre'">
+                                    <option ng-disabled="true" value=""></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="control-group" style="margin-bottom: 5px">
+                            <label class="control-label">Temas:</label>
+                            <div class="controls">
+                                <select id="e15" class="span3" ng-disabled="!editando" type="text" ng-model="dataTema" ng-options="i._id as i.nombre for i in temas | orderBy: 'nombre'">
+                                    <option ng-disabled="true" value=""></option>
+                                </select>
+                                <button class="btn" type="button" style="margin-bottom:0px; margin-left: 5px" ng-disabled="!editando" ng-click="agregarTema(dataTema)"><i class="icon-plus"></i></button>
+                            </div>
+                        </div>
+                        <div class="control-group" ng-repeat="t in indicador.temas" style="margin-bottom: 0px">
+                            <div class="controls">
+                                <input class="span3" type="text" ng-disabled="true" value="{{temaPorId(t).nombre}}" />
+                                <a href="#" style="margin-left: 10px" ng-show="editando" ng-click="eliminarListaElem(t, indicador.temas)"><i class="icon-trash"></i></a>
+                            </div>
+                        </div>
+                        <div class="span5" style="margin-left: 80px;">
+                            <h4>Comentarios
+                            <div class="card-actions pull-right" style="margin: 0; padding: 0">
+                                <a class="btn btn-link" ng-show="editando" ng-click="agregarComen()"><i class="icon-plus"></i></a>
+                            </div></h4>
+                            <div class="card-body">
+                                <div ng-hide="indicador.comentarios.length">No se ha cargado ningun comentario aún</div>
+                                <div ng-repeat="o in reverse(indicador.comentarios)" style="clear:both; min-height: 40px; margin-top: 10px; margin-bottom: 10px" ng-show="indicador.comentarios.length">
+                                    <div class="pull-right" style="display: inline-block; margin-right: 0px; margin-bottom: 0px;margin-top: 0px;">
+                                        <button type="button" ng-show="editando" ng-click="eliminarElemento(indicador.comentarios,o)" style="margin-left: 10px" class="btn btn-link"><i class="icon-trash icon-white"></i></button>
+                                    </div>
+                                    <span style="display: inline-block"> <b>Cuando:</b> {{o.cuando}}</span>
+                                    <span style="display: inline-block"> <b>Campo:</b> {{o.campo}}</span><br/>
+                                    <span style="display: inline-block"> <b>Usuario:</b> {{o.usuario}}</span><br/>
+                                    <span style="display: inline-block"> <b>Comentario:</b> {{o.descripcion}}</span>
+                                    <hr style="margin-bottom: 10px;margin-top: 10px;"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- <div ng-show="tab == 'resultados'" style="margin-left: 20px; margin-right: 20px; margin-bottom: 20px;">
+        <div class="row" style="padding-bottom: 0px;">
+            <div class="span6">
+                <form class="form-horizontal" style="margin-bottom: 0px !important;">
+                    <div class="control-group" style="margin-left: 10px;margin-bottom: 0px;">
+                        <div class="control-group">
+                            <label class="control-label">Meta 2014 Alcanzada:<br>(6 meses)&nbsp;&nbsp;</label>
+                            <div class="controls">
+                                <textarea rows="4" class="span4" type="text" placeholder="Sin Meta 2014 Alcanzada (6 meses)" ng-disabled="!editando" ng-model="indicador.meta6meses"></textarea>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">Estado (6 meses):</label>
+                            <div class="controls">
+                                <button class="btn" ng-class="{'active btn-info': (indicador.validadoResul6meses == true)}" ng-click="indicador.validadoResul6meses = !indicador.validadoResul6meses" ng-disabled="!editando">Validado</button>
+                                <button class="btn" ng-class="{'active btn-info': (indicador.aprobadoResul6meses == true)}" ng-click="indicador.aprobadoResul6meses = !indicador.aprobadoResul6meses" ng-disabled="!editando">Aprobado</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="span6">
+                <form class="form-horizontal" style="margin-bottom: 0px !important;">
+                    <div class="control-group" style="margin-left: 10px;margin-bottom: 0px;">
+                        <div class="control-group">
+                            <label class="control-label">Meta 2014 Alcanzada:<br>(12 meses)&nbsp;&nbsp;</label>
+                            <div class="controls">
+                                <textarea rows="4" class="span4" type="text" placeholder="Sin Meta 2014 Alcanzada (12 meses)" ng-disabled="!editando" ng-model="indicador.meta12meses"></textarea>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">Estado (12 meses):</label>
+                            <div class="controls">
+                                <button class="btn" ng-class="{'active btn-info': (indicador.validadoResul12meses == true)}" ng-click="indicador.validadoResul12meses = !indicador.validadoResul12meses" ng-disabled="!editando">Validado</button>
+                                <button class="btn" ng-class="{'active btn-info': (indicador.aprobadoResul12meses == true)}" ng-click="indicador.aprobadoResul12meses = !indicador.aprobadoResul12meses" ng-disabled="!editando">Aprobado</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div ng-show="tab == 'evaluacion'" style="margin-left: 20px; margin-right: 20px; margin-bottom: 20px;">
+        <div class="row" style="padding-bottom: 0px;">
+            <div class="span6">
+                <form class="form-horizontal" style="margin-bottom: 0px !important;">
+                    <div class="control-group" style="margin-left: 10px;margin-bottom: 0px;">
+                        <div class="control-group">
+                            <label class="control-label">Puntaje (6 meses):</label>
+                            <div class="controls">
+                                <textarea rows="4" class="span4" type="text" placeholder="Sin Puntaje (6 meses)" ng-disabled="!editando" ng-model="indicador.puntaje6meses"></textarea>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">Evaluación Categoria:<br>(6 meses)&nbsp;&nbsp;</label>
+                            <div class="controls">
+                                <textarea rows="4" class="span4" type="text" placeholder="Sin Evaluación Categoria (6 meses)" ng-disabled="!editando" ng-model="indicador.evaluacionCategoria6meses"></textarea>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">Evaluación Reporte:<br>(6 meses)&nbsp;&nbsp;</label>
+                            <div class="controls">
+                                <textarea rows="4" class="span4" type="text" placeholder="Sin Evaluación Reporte (6 meses)" ng-disabled="!editando" ng-model="indicador.evaluacionReporte6meses"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="span6">
+                <form class="form-horizontal" style="margin-bottom: 0px !important;">
+                    <div class="control-group" style="margin-left: 10px;margin-bottom: 0px;">
+                        <div class="control-group">
+                            <label class="control-label">Puntaje (12 meses):</label>
+                            <div class="controls">
+                                <textarea rows="4" class="span4" type="text" placeholder="Sin Puntaje (12 meses)" ng-disabled="!editando" ng-model="indicador.puntaje12meses"></textarea>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">Evaluación Categoria:<br>(12 meses)&nbsp;&nbsp;</label>
+                            <div class="controls">
+                                <textarea rows="4" class="span4" type="text" placeholder="Sin Evaluación Categoria (12 meses)" ng-disabled="!editando" ng-model="indicador.evaluacionCategoria12meses"></textarea>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">Evaluación Reporte:<br>(12 meses)&nbsp;&nbsp;</label>
+                            <div class="controls">
+                                <textarea rows="4" class="span4" type="text" placeholder="Sin Evaluación Reporte (12 meses)" ng-disabled="!editando" ng-model="indicador.evaluacionReporte12meses"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div> -->
+
+    <div ng-show="tab == 'grafico'" style="margin-left: 20px; margin-right: 20px; margin-bottom: 20px;">
+        <div class="row" style="padding-bottom: 0px;">
+            <nvd3 options="options" data="data"></nvd3>
+        </div>
+    </div>
+    
+    <div id="confirmarEliminar" class="modal hide fade">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3>Eliminar Indicador</h3>
+        </div>
+        <div class="modal-body">
+            <p>Está a un paso de eliminar el Indicador</p>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn btn-info" data-dismiss="modal">Conservar el registro</a>
+            <a href="#" class="btn btn-danger" data-dismiss="modal" ng-click="eliminar(true)">Eliminar</a>
+        </div>
+    </div>
+</div>

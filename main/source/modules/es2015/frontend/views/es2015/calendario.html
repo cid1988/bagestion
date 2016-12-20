@@ -1,0 +1,87 @@
+<style>
+    .table-hover tbody tr:hover > td,
+    .table-hover tbody tr:hover > th {
+      background-color: #eeeeee !important;
+    }
+    
+    table tr td a {
+        display:block;
+        height:100%;
+        width:100%;
+    }
+    
+    .referencia {
+        list-style-type: none;
+    }
+</style>
+<div style="margin-top: 0px;padding-top: 0px;" ng-controller="ES2015CalendarioCtrl">
+    <div style="margin-top: 0px;margin-bottom: 10px;">
+        <div class="span9">
+            <div class="card" style="margin-bottom: 3px;padding-top: 10px;">
+                <h3 class="card-heading simple" style="font-size: 28px !important;">Calendario de Agenda</h3>
+                <div style="margin-left: 20px; margin-right: 20px; margin-top: 16px" class="calendar"
+                fullcalendar calendar-object="calendar" ng-model="calendar"></div>
+                <div style="margin: 20px">
+                    <span>{{distritoPorId(instanciaResaltada.distrito).nombre}} - {{instanciaResaltada.titulo}}</span>&nbsp;
+                </div>
+            </div>
+        </div>
+        <div class="span4">
+            <div class="card" style="padding-top: 10px;">
+                <h3 class="card-heading simple">Filtros</h3>
+                <div class="card-body" style="margin-bottom: 9px;padding-right: 13px;margin-top: 5px;">
+                <div style="overflow-y: scroll; overflow-x: hidden; height: 260px;">
+                    <a class="btn btn-link" ng-click="filtro = ''" style="width: 300px;">
+                        <b>Todos</b>
+                    </a>
+                    <a class="btn btn-link" ng-click="filtro = 'Mauricio Macri'" style="width: 300px;">
+                        <b>Mauricio Macri</b>
+                    </a>
+                    <a class="btn btn-link" ng-click="filtro = 'Eugenia Vidal'" style="width: 300px;">
+                        <b>María Eugenia Vidal</b>
+                    </a>
+                    <a class="btn btn-link" ng-click="filtro = 'Gabriela Michetti'" style="width: 300px;">
+                        <b>Gabriela Michetti</b>
+                    </a>
+                    <a class="btn btn-link" ng-click="filtro = 'Sergio Bergman'" style="width: 300px;">
+                        <b>Sergio Bergman</b>
+                    </a>
+                    <a class="btn btn-link" ng-click="filtro = 'Carlos Melconian'" style="width: 300px;">
+                        <b>Carlos Melconian</b>
+                    </a>
+                    <a class="btn btn-link" ng-click="filtro = 'Federico Pinedo'" style="width: 300px;">
+                        <b>Federico Pinedo</b>
+                    </a>
+                    <a class="btn btn-link" ng-click="filtro = 'Alfredo de Angelis'" style="width: 300px;">
+                        <b>Alfredo de Angelis</b>
+                    </a>
+                    <a class="btn btn-link" ng-click="filtro = 'Esteban Bullrich'" style="width: 300px;">
+                        <b>Esteban Bullrich</b>
+                    </a>
+                    <a class="btn btn-link" ng-click="filtro = 'Federico Struzenneger'" style="width: 300px;">
+                        <b>Federico Struzenneger</b>
+                    </a>
+                </div>
+                </div>
+            </div>
+            <div ng-model="instancia" ng-show="instancia" edit-model="live" class="card animated fadeInDown" style="padding-top: 10px;">
+                <div class="card-actions pull-right" style="margin: 0">
+                    <a type="button" ng-click="volver()" class="btn btn-link">
+                        <i class="icon-remove"></i></a>
+                </div>
+                <h3 class="card-heading simple">
+                    <span style="white-space: nowrap">
+                        <span>{{instancia.fechaInicio}}</span>
+                    </span>
+                </h3>
+                <div class="card-body">
+                    <center><h3 style="margin-top: 15px;margin-bottom: 5px;">{{distritoPorId(instancia.distrito).nombre}}</h3></center>
+                    <center><h3 style="margin-top: 5px;margin-bottom: 25px;">{{instancia.titulo}}</h3></center>
+                    <div class="control-group">
+                        <a type="button" href="/es2015/hitos/{{instancia._id}}" style="margin-bottom: 15px" class="btn btn-block">Ver detalle</a>
+                    </div>
+                </div>
+            </div>
+        </div> 
+    </div>
+</div>

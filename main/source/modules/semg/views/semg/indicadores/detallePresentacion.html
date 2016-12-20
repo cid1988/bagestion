@@ -1,0 +1,40 @@
+<style>
+    .table {
+        border: 0;
+    }
+    .table th, .table td {
+        padding: 8px;
+        line-height: 20px;
+        text-align: center;
+        border: 0;
+        padding-top: 0px;
+        padding-bottom: 0px;
+        vertical-align: middle;
+    }
+    .table th {
+        background-color: #dddddd !important;
+    }
+</style>
+<div class="card" ng-controller="DetallePresentacionSEMGCtrl">
+    <h2 class="card-heading simple">{{ministerialPorId(idObjetivoMinisterial).nombre}}
+        <a type="button" class="btn btn-link pull-right" href="/semg/indicadores/{{anio}}/presentacion" ><i class="icon-arrow-left"></i> Volver</a></h2>
+    <div class="card-body">
+        <table border="1" class="table">
+            <tr>
+                <td>
+                    <div ng-repeat="i in indicadores" class="span3" style="background-color: #FFD300; margin-left: 10px; height: 280px; margin-bottom: 5px; margin-top: 5px; width: 230px; position: relative;"> <!-- onmouseover="this.style.backgroundColor='#999'" onmouseout="this.style.backgroundColor=dameColor($parent.$index)"> -->
+                        <center ng-hide="descripcion" style="margin-left: 5px;margin-right: 5px;margin-top: 20px;"><h4><b>{{i.indicadorImpacto}}</b></h4></center><br>
+                        <div style="margin-left: 10px; margin-right: 10px;">
+                            <span class="pull-left">Unidad {{anio-4}}:</span> <h4 class="pull-right" style="margin-bottom: 0px; margin-top: 0px;">{{i.unidad4}}</h4><br><hr style="margin-top: 2px; margin-bottom: 2px;">
+                            <span class="pull-left">Unidad {{anio-3}}:</span> <h4 class="pull-right" style="margin-bottom: 0px; margin-top: 0px;">{{i.unidad3}}</h4><br><hr style="margin-top: 2px; margin-bottom: 2px;">
+                            <span class="pull-left">Unidad {{anio-2}}:</span> <h4 class="pull-right" style="margin-bottom: 0px; margin-top: 0px;">{{i.unidad2}}</h4><br><hr style="margin-top: 2px; margin-bottom: 2px;">
+                            <span class="pull-left">Unidad {{anio-1}}:</span> <h4 class="pull-right" style="margin-bottom: 0px; margin-top: 0px;">{{i.unidad1}}</h4>
+                        </div><br>
+                        <span class="pull-right" style="margin-top: 5px; font-size: 11px; margin-right: 10px; margin-left: 10px;">*{{i.unidadMedida}}</span>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <nvd3 options="options" data="data"></nvd3>
+</div>

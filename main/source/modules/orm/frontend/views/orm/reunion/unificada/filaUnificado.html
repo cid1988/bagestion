@@ -1,0 +1,39 @@
+<!--Lista de participantes-->
+<td>
+    <!--<button type="button" class="btn btn-link no-underline" ng-disabled="!editando" ng-click="switchStar(p)"><i ng-class="{'icon-star': p.star, 'icon-star-empty': !p.star}"></i></button>-->
+    <a href="/contactos/detalle/{{p.contactoId}}" title="Ir a detalle de {{p.c.apellidos}}, {{p.c.nombre}}" style="line-height:normal" target="_blank" class="btn btn-link input-block-level no-underline">
+        <!--<i ng-class="{'icon-star': p.star, 'icon-star-empty': !p.star}"></i>-->
+        <span style="opacity:1 !important">{{p.c.apellidos}}, {{p.c.nombre}}</span>
+    </a>
+</td>
+<td>{{p.c.cargo}}</td>
+<td>{{jurisdiccionPorId(p.c.organigrama).sigla}}</td>
+<td>{{buscarCorreo("Email oficial",p.c)}}</td>
+<td>
+    <select ng-disabled="!editando" ng-model="p.clasificacion" style="width: 140px">
+        <option value="responsable">Responsable</option>
+        <option value="jefeGabinete">Jefe de Gabinete</option>
+        <option value="ejecutivo">Ejecutivo</option>
+        <option value="participante">Participante</option>
+        <option value="legislador">Legislador</option>
+        <option value="privada">Privada</option>
+        <option value="gestion">Gestión</option>
+        <option value="exclusivo">Eventual</option>
+        <option value="otros">Otro</option>
+    </select>
+</td>
+<td>
+    <button type="button" ng-disabled="!editando" ng-click="cambiarLlamado(p)" class="btn input-block-level cccco" ng-class="{'btn-info':p.llamados}">{{p.llamados || "No"}}</button>
+</td>
+<td>
+    <button type="button" ng-disabled="!editando" ng-click="cambiarTipoEnvio(p,'cita')" class="btn input-block-level" ng-class="{'btn-info':p.cita, 'para':p.cita=='para', 'cccco':p.cita!='para'}">{{p.cita || "No"}}</button>
+</td>
+<td>
+    <button type="button" ng-disabled="!editando" ng-click="cambiarTipoEnvio(p,'propuestaTemario')" class="btn input-block-level" ng-class="{'btn-info':p.propuestaTemario, 'para':p.propuestaTemario=='para', 'cccco':p.propuestaTemario!='para'}">{{p.propuestaTemario || "No"}}</button>
+</td>
+<td>
+    <button type="button" ng-disabled="!editando" ng-click="cambiarTipoEnvio(p,'minuta')" class="btn input-block-level" ng-class="{'btn-info':p.minuta, 'para':p.minuta=='para', 'cccco':p.minuta!='para'}">{{p.minuta || "No"}}</button>
+</td>
+<td>
+    <button type="button" title="Eliminar" ng-show="editando" ng-click="eliminarParticipante(p)" class="btn btn-link no-underline input-block-level"><i class="icon-trash"></i></button>
+</td>

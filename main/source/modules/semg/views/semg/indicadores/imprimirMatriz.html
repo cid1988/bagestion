@@ -1,0 +1,87 @@
+<style>
+    .no-border, .no-border > th, .no-border > td {
+        border: none;
+    }
+    .tablaPrint th, .tablaPrint td {
+        padding-top:1px;
+        padding-bottom:1px;
+        border-bottom:1px solid #AAAAAA;
+        line-height: 25px;
+    }
+    @media print {
+        body, span, div, table, tr, tbody, tfoot, td, hr { 
+            -webkit-print-color-adjust: exact !important;
+        }
+    }
+    .table {
+        border: 0;
+    }
+    .table th, .table td {
+        padding: 8px;
+        line-height: 20px;
+        text-align: left;
+        border: 0;
+        vertical-align: middle;
+    }
+</style>
+
+<div class="card span12" style="border:0px;padding-top: 0px;" ng-controller="IndicadorSEMGImprimirMatrizCtrl">
+    <div>
+        <a href="" class="btn btn-link pull-right no-print" style="margin-right: 20px;margin-bottom: 0px; margin-top:5px" ng-click="imprimir()"><i class="icon-print"></i></a>
+    </div>
+    <br>
+    <div style="background-image: url('/views/semg/cartascompromisos/portadaBA2030.jpg') !important; background-repeat: no-repeat;
+        position: relative;font-family: Arial !important; color: rgb(0, 0, 0);height: 138px;margin-top: 5px;margin-bottom: 20px;width: 1100px;">
+        <div style=" text-align: left; position: absolute; width: 700px;top:30px; left: 160px">
+            <h3 style="font-size: 30px !important; margin-top: 0px; margin-bottom: 0px;">Matriz de Indicadores {{anio}}<br><span>{{detalleOrganigrama.nombreCompleto}} {{detalleOrganigrama.sigla}}</span>  </h3>
+        </div>
+    </div>
+    
+    <div style="margin-top: 0px; padding-top:0px; margin-left:15px;margin-right:25px;">
+        <table border="0" class="table tabla-striped" style="margin-right:15px background-color: white;margin-bottom: 0px; width:1120px;">
+        
+            <tr style="min-width: 130px !important;vertical-align: middle;border: none;font-size: 13px !important;">
+                <th style="border: none">Objetivo Impacto</th>
+                <th style="border: none">Objetivo Ministerial</th>
+                <th style="border: none">Indicador de Impacto</th>
+                <th style="border: none">Métrica</th>
+                <th style="border: none">Frecuencia</th>
+                <th style="border: none">Peso</th>
+                <th style="border: none;min-width:50px">Unidad {{anio-2}}</th>
+                <th style="border: none;min-width:50px">Unidad {{anio-1}}</th>
+                <th style="border: none">Meta {{anio}}</th>
+                <th style="border: none; padding-left:0px; padding-right:0px;"></th>
+            </tr>
+            
+              <!--  <tr ng-show="false" ng-repeat="i in indicadores">
+                    <span >{{devolverRowspan(i.objetivoImpacto)}}</span>
+                </tr>
+            
+                <tr ng-repeat="i in indicadores">
+                    <td style="min-width: 150px !important;vertical-align: middle;background-color: #fcd305 !important;-webkit-print-color-adjust: exact !important;border-color: gray;border: 1px solid;text-align: center;padding: 10px;">
+                         {{devolviendo()}}</span>
+                    </td>
+                </tr>  -->
+                
+            <tr ng-repeat="i in indicadores | orderBy:orden " style="font-size: 13px !important;" ng-style="{'border-top' : estiloImpacto}">
+                <td style="min-width: 150px !important;vertical-align: middle;background-color: #fcd305 !important;-webkit-print-color-adjust: exact !important;text-align: center;padding: 10px;">
+                         <span ng-show="compararImpacto(i.objetivoImpacto, $index)">{{i.objetivoImpacto}}</span>
+                </td>
+                <td style="min-width: 130px !important;" ng-style="{'border-top' : estiloMinisterial}" ><span ng-show="compararMinisterial(i.objetivoMinisterial)">{{i.objetivoMinisterial}}</span></td>
+                <td style="min-width: 120px !important;" ng-style="{'border-top' : '1px solid #aaaaaa'}">{{i.indicadorImpacto}}</td>
+                <td style="min-width: 100px !important;" ng-style="{'border-top' : '1px solid #aaaaaa'}">{{i.metrica}}</td>
+                <td style="min-width:120px !important;" ng-style="{'border-top' : '1px solid #aaaaaa'}">{{i.frecuencia}}</td>
+                <td ng-style="{'border-top' : '1px solid #aaaaaa'}">{{i.peso}}</td>
+                <td ng-style="{'border-top' : '1px solid #aaaaaa'}"><div>{{i.unidad2}}</div></td>
+                <td ng-style="{'border-top' : '1px solid #aaaaaa'}"><div>{{i.unidad1}}</div></td>
+                <td ng-style="{'border-top' : '1px solid #aaaaaa'}">{{i.metaAnio}}</td>
+                <td style="min-width:20px; margin-right:15px; padding-left:0px; padding-right:0px;" ng-style="{'border-top' : '1px solid #aaaaaa'}">
+                    <a class="btn btn-link " style="padding-right:0px !important; padding-left:0px !important; border-radius:0% !important; margin-right: 0px;margin-bottom: 0px; margin-top:0px; background-color: {{color(i)}} !important; height:25%;" ></a>
+                    <a class="btn btn-link " style="padding-right:0px !important; padding-left:0px !important; border-radius:0% !important; margin-right: 0px;margin-bottom: 0px; margin-top:0px; background-color: {{color(i)}} !important; height:25%;" ></a>
+                    <a class="btn btn-link " style="padding-right:0px !important; padding-left:0px !important; border-radius:0% !important; margin-right: 0px;margin-bottom: 0px; margin-top:0px; background-color: {{color(i)}} !important; height:25%;" ></a>
+                    <a class="btn btn-link " style="padding-right:0px !important; padding-left:0px !important; border-radius:0% !important; margin-right: 0px;margin-bottom: 0px; margin-top:0px; background-color: {{color(i)}} !important; height:25%;" ></a>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

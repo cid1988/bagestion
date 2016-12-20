@@ -1,0 +1,42 @@
+<div class="card span12" style="padding-top: 10px; margin-top: 0px;margin-bottom: 10px;">
+  <h3 class="card-heading simple">
+  <span class="btn-group pull-right">
+    <a ng-if="!activada && !detalle" ng-click="verDetalle()" class="btn"><i class="icon icon-zoom-in"></i> Ver detalle</a>
+    <a ng-if="!activada && detalle" ng-click="cancelarDetalle()" class="btn"><i class="icon icon-zoom-out"></i> Ocultar</a>
+  </span>
+  <span class="pull-right" style="margin-right: 10px;margin-left: 20px;">Misión</span>
+  <strong style="margin-right: 1em">{{tabCtrl.filtro.objImpacto.nombre}}</strong></h3>
+  <div class="card-body" ng-if="detalle">
+    <form class="form-horizontal">
+      <div class="control-group" style="width: 975px; display: inline-block;margin-bottom: 0px;">
+        <label class="control-label">Nombre:</label>
+        <div class="controls" style="margin-right: 20px;">
+          <input type="text"  ng-disabled="!activada" ng-model="objImpacto.nombre" style="width: 100%;">
+        </div>
+      </div>
+      <div class="btn-group">
+        <button class="btn" ng-class="{'active btn-info': objImpacto.validado}" ng-click="objImpacto.validado = !objImpacto.validado" ng-disabled="!activada">Validado</button>
+        <button class="btn" ng-class="{'active btn-info': objImpacto.aprobado}" ng-click="objImpacto.aprobado = !objImpacto.aprobado" ng-disabled="!activada || !hasPermission('poa.administrador')">Aprobado</button>
+      </div>
+    </form>
+    <form class="form-horizontal">
+      <div class="control-group">
+        <label class="control-label">Descripción:</label>
+        <div class="controls" style="margin-right: 20px;">
+          <textarea ng-disabled="!activada" ng-model="objImpacto.descripcion" style="width: 100%; resize: vertical" rows="3"></textarea>
+        </div>
+      </div>
+    </form>
+    <form class="form-inline">
+        <label style="width: 162px; text-align: right; padding-right: 14px;">Cód. Identificación:</label>
+        <input type="text" ng-disabled="!activada" ng-model="objImpacto.codIdentificacion" style="width: 100px;" />
+        <label style="width: 95px; text-align: right; padding-right: 14px;">Responsable:</label>
+        <input type="text" ng-disabled="!activada" ng-model="objImpacto.responsableDeCarga" />
+        <label style="width: 240px; text-align: right; padding-right: 14px;">Correspondencia con ejes de gestión:</label>
+        <select type="text" ng-model="objImpacto.correspondenciaEjes" ng-disabled="!activada" style="width: 224px" ng-options="i.nombre as i.nombre for i in ejes">
+            <option ng-disabled="true" value="">{{objImpacto.correspondenciaEjes}}</option>
+        </select>
+    </form>
+  </div>
+</div>
+

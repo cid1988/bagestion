@@ -1,0 +1,106 @@
+<style type="text/css">
+    .form-inline .control-group {
+        display: inline-block;
+    }
+    .involucrados {
+        display: inline-block;
+        list-style-type: none;
+    }
+    .involucrados li {
+        width: 400px;
+        height: 80px;
+        margin-bottom: 24px;
+        background-color: #a6a;
+        color: #000;
+        border-color: #233;
+    }
+</style>
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="card span3">
+            <h3 class="card-heading simple">Filtros</h3>
+            <div class="card-body">
+                <!-- Panel izquierdo -->
+                <div class="control-group" style="display: block; margin-top:15px">
+                    <div class="controls">
+                        <input placeholder="Buscar por..." type="text" class="input-block-level search-query"
+                        ng-model="filtro2.pregunta" />
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label>Eje Temático:</label>
+                    <select class="input-block-level" ui-select2 type="text" ng-model="filtro.eje_tematico">
+                        <option value="">Todos</option>
+                        <option ng-repeat="e in ejesTematicos" value="{{e._id}}">{{e.nombre}}</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>Estado:</label>
+                    <select class="input-block-level" ui-select2 type="text" ng-model="filtro.estado">
+                        <option value="">Todos</option>
+                        <option ng-repeat="e in estados" value="{{e._id}}">{{e.nombre}}</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>Cuestionario:</label>
+                    <select class="input-block-level" ui-select2 type="text" ng-model="filtro.cuestionario">
+                        <option value="">Todos</option>
+                        <option ng-repeat="c in cuestionarios" value="{{c._id}}">{{c.nombre}}</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>Temática:</label>
+                    <select class="input-block-level" ui-select2 type="text" ng-model="filtro.temarica">
+                        <option value="">Todos</option>
+                        <option ng-repeat="t in tematicas" value="{{t.nombre}}">{{t.nombre}}</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>Tema Particular:</label>
+                    <select class="input-block-level" ui-select2 type="text" ng-model="filtro.tema_particular">
+                        <option value="">Todos</option>
+                        <option ng-repeat="t in temas | filter: mostrarTema" value="{{t.nombre}}">{{t.nombre}}</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>Jurisdicción:</label>
+                    <select class="input-block-level" ui-select2 type="text" ng-model="filtro.jurisdiccion">
+                        <option value="">Todos</option>
+                        <option ng-repeat="j in jurisdicciones" value="{{j._id}}">{{j.nombre}}</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>Evento:</label>
+                    <select class="input-block-level" ui-select2 type="text" ng-model="filtro.evento">
+                        <option value="">Todos</option>
+                        <option ng-repeat="e in eventos" value="{{e._id}}">{{e.nombre}}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="card-actions">
+                <div class="btn-group pull-right">
+                    <a class="btn btn-primary" ng-click="filtrar()"><i class="icon-search icon-white"></i> Buscar</a>
+                </div>
+            </div>
+        </div>
+        <div class="span9 card">
+            <div class="card-actions pull-right" style="margin: 0; padding: 0">
+                <a class="btn btn-link no-print" href="/preguntas/nueva"><i class="icon-plus"></i></a>
+            </div>
+            <h3 class="card-heading simple">Preguntas</h3>
+            <div class="card-body">
+                <div class="row-fluid" style="margin-bottom: 10px;" ng-repeat="p in preguntas | filter:filtro2">
+                    <a class="span2 disabled btn" ng-class="(p.estado.aprobada && 'btn-success') || (p.estado.noAprobada && 'btn-danger') || (p.estado.incompleta && 'btn-warning')">{{p.estado.nombre}}</a>
+                    <div class="span8">
+                        <strong>{{p.pregunta}}</strong>
+                    </div>
+                    <div class="span2">
+                        <a href="/preguntas/{{p._id}}" class="btn btn-link no-print"><i class="icon-zoom-in"></i> Ver detalle</a>
+                    </div>
+                </div>
+                <div class="row-fluid" ng-show="!preguntas.length">No hay ninguna pregunta</div>
+            </div>
+        </div>
+    </div>
+</div>

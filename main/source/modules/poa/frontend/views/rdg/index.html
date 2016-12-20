@@ -1,0 +1,264 @@
+<style type="text/css">
+    body {
+        background : none;
+    }
+    .navbar
+    {
+        display: none;
+    }
+</style>
+
+<script type="text/javascript">
+
+    function limpiarChecks() {
+        
+        this.frm_header.prioridad_A.checked = false;
+        this.frm_header.prioridad_AAA.checked = false;
+        this.frm_header.prioridad_B.checked = false;
+        this.frm_header.prioridad_C.checked = false;
+		this.frm_header.prioridad_NP.checked = false;
+    }
+
+    function limpiarCheckTodos() {
+
+        this.frm_header.prioridad_todos.checked = false;
+    }
+
+</script>
+<link href="/views/rdg/RDG.css" rel="stylesheet" type="text/css">
+
+
+<div id="wrapper" ng-controller="POARDGCtrl">
+<section class="content" style="margin-bottom: 20px;">
+<div id="header" class="header" style="margin-top: 4px;">
+    <form action="./PLAN ESTRATÉGICO 2014 15_files/PLAN ESTRATÉGICO 2014 15.html" method="post" id="frm_header">
+    <table width="100%" border="0" cellspacing="4" cellpadding="0" style="background-image: url(&#39;/views/rdg/fdoAmarilloCabecera.png&#39;); background-repeat: repeat-x; background-attachment: fixed; background-position: top">
+        <tbody><tr height="68">
+            <td style=" padding-left: 40px; width: 80px;">
+                <img src="/views/rdg/globoBA_93x93_fdoBco.png" style="height: 72px; width: 72px;" onclick="history.back();">
+            </td>
+            <td style=" vertical-align: middle;"><span style="font-family: Tahoma; font-size: 20px; font-weight: 600; padding-left: 15px; color: #FFFFFF;">MÓDULO PRESENTACIONES</span></td>
+            <td title="Gestion 2014 PRD" style=" vertical-align: middle; border-left: 1px solid #FFFFFF;"><span style="font-family: Tahoma; font-size: 20px; font-weight: 600; padding-left: 15px; color: #FFFFFF;">TABLERO DE GESTIÓN {{anio}}</span></td>
+            <td style=" vertical-align: middle;"><img src="/views/rdg/empty.gif" style="width: 38px; height: 38px;"></td>
+        </tr>
+        <tr height="44">
+            <td style="vertical-align: middle; background-color: #FFFFFF;" colspan="4">
+            <table>
+                <tbody><tr>
+                    <td>
+                        <table class="borde_redondeado_asimetrico_1110" style="background-color: #CCCCCC; border: none; margin: 0 7 auto auto; height:42px;width:550px;">
+                            <tbody><tr>
+                                <td align="left">          
+                                    <select id="pk_tag" name="pk_tag" ng-model="filtroEtiqueta" class="selectorSecundario" style="background-color: #CCCCCC;
+                                        border: none; text-transform: uppercase;">
+                                        <option value="">Todas las Etiquetas</option>
+                                        <option ng-repeat="r in etiquetas" value="{{r._id}}">{{r.nombre}}</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </tbody></table>
+                    </td>
+                    <td style="width: 4px;">
+                       <img src="/views/rdg/empty.gif" style="width: 4px;">
+                    </td>
+                    <td align="right">
+                       <table class="borde_redondeado_asimetrico_1110" style="background-color: #CCCCCC; border: none; margin: 0 7 auto auto; height:42px; width: 700px;">
+                         <tbody><tr>
+                          <td align="right">          
+                             <select id="pk_jurisdiccion" name="pk_jurisdiccion" ng-model="filtro.idJurisdiccion" class="selectorPrincipal" style="background-color: #CCCCCC;
+                                border: none; text-transform: uppercase;">
+                                <option value=""> Todas las Jurisdicciones </option>
+                                <option ng-repeat="j in jurisdicciones" value="{{j._id}}">{{j.nombre}}</option>
+                                    
+                            </select>
+                            </td>
+                        </tr>
+                       </tbody></table>
+                    </td>
+                 </tr>
+            </tbody></table>
+            </td>
+        </tr>
+        <tr style="height: 4px;"><td colspan="4"><img src="/views/rdg/empty.gif" style="width: 8px; height: 4px;"></td></tr><!-- tr para espaciar -->
+        <tr height="38">
+            <td colspan="4">
+                <!-- parte insertada -->
+                <table width="100%" border="0">
+                    <tbody><tr>
+                        <!-- inicio panel  -->
+                        <td class="asimetrico_1110_generico" style="background-color: #33AD33;
+                                border: none; height:38px; vertical-align:middle;">
+                             <table border="0" cellspacing="2" style=" width:100%;">
+                                    <tbody><tr class="menuContent">
+                                        <td style=" width:50%;">
+                                            <span style="font-family: Tahoma; font-size: 20px; font-weight: 600; padding-left: 15px; color: #FFFFFF;">Proyectos</span>
+                                        </td>
+                                        <td align="right" style=" width:50%; padding-right: 10px;">
+                                            <span style="font-family: Tahoma; font-size: 20px; font-weight: 600; padding-left: 15px; color: #FFFFFF;">{{filtrados.length}}</span>
+                                        </td>
+                                    </tr>
+                             </tbody></table>
+                        </td>
+                        <td style="width: 1px;">
+                            <img src="/views/rdg/empty.gif" style="width: 1px;">
+                        </td>
+                        <td class="asimetrico_1110_generico" style="background-color: #ccc;
+                                border: none; height:38px; width:450px; vertical-align:middle;">
+
+                                <table border="0" cellspacing="2">
+                                    <tbody><tr nowrap="nowrap">
+                                        <td style=" vertical-align:middle;">
+                                            <span style="font-family: Tahoma; font-size: 20px; font-weight: 600; padding-left: 15px;">Buscar: </span><input type="text" id="pk_buscar" name="pk_buscar" ng-model="filtro.nombre" size="50" value="" style="margin-bottom: 0px;">
+                                        </td>
+                                    </tr>
+                                </tbody></table>
+                        </td>
+                        <td style="width: 1px;">
+                            <img src="/views/rdg/empty.gif" style="width: 1px;">
+                        </td>
+                        <td class="asimetrico_1110_generico" style="background-color: #ccc;
+                                border: none; height:38px; width:400px; vertical-align:middle; padding-left: 15px;">
+
+                                <table width="100%" border="0" cellspacing="2">
+                                    <tbody><tr>
+                                        <td>
+                                            <span style="font-family: Tahoma; font-size: 20px; font-weight: 600;">&nbsp;Prioridad: <span style="font-family: Tahoma; font-size: 14px; font-weight: 600;">
+                                                <label for="prioridad_AAA" style="display: inline-block;">
+                                                    A+</label>
+                                                <input type="radio" name="optionsRadios" id="prioridad_AAA" ng-click="filtro.prioridadJefatura='A+'" style="display: inline-block;">
+                                                <label for="prioridad_A" style="display: inline-block;">
+                                                    A</label>
+                                                <input type="radio" name="optionsRadios" id="prioridad_A" ng-click="filtro.prioridadJefatura='A'" style="display: inline-block;">
+                                                <label for="prioridad_B" style="display: inline-block;">
+                                                    B</label>
+                                                <input type="radio" name="optionsRadios" id="prioridad_B" ng-click="filtro.prioridadJefatura='B'" style="display: inline-block;">
+                                                <label for="prioridad_C" style="display: inline-block;">
+                                                    C</label>
+                                                <input type="radio" name="optionsRadios" id="prioridad_C" ng-click="filtro.prioridadJefatura='C'" style="display: inline-block;">
+                                                <label for="prioridad_NP" style="display: inline-block;">
+                                                    NP</label>
+                                                <input type="radio" name="optionsRadios" id="prioridad_NP" ng-click="filtro.prioridadJefatura=' '" style="display: inline-block;">
+                                                <label for="prioridad_todos" style="display: inline-block;">
+                                                    Todos</label>
+                                                <input type="radio" name="optionsRadios" id="prioridad_todos" ng-click="filtro.prioridadJefatura=''" style="display: inline-block;">
+                                            </span></span>
+                                        </td>
+                                    </tr>
+                                </tbody></table>
+                        </td>
+                        <td style="width: 1px;">
+                            <img src="/views/rdg/empty.gif" style="width: 1px;">
+                        </td>
+                        <td align="center" class="asimetrico_1110_generico" style="background-color: #dddddd;border: none; height:38px; vertical-align:middle; width: 100px;">
+                                 <table border="0" cellspacing="2">
+                                        <tbody><tr>
+                                            <td>
+                                                <span style="font-family: Tahoma; font-size: 18px; font-weight: 600;">
+                                                <label for="ordenTodos" style="display: inline-block;">Orden</label>
+                                                <input type="checkbox" name="pk_ordenTodos" id="ordenTodos" value="1" ng-click="orden()" style="display: inline-block;">
+                                           
+                                                </span>
+                                               
+                                            </td>
+                                        </tr>
+                                 </tbody></table>
+                        </td>
+                        <!-- fin panel  -->
+                    </tr>
+                </tbody></table>
+                <!-- hasta aca parte insertada -->
+            </td>
+        </tr>
+    </tbody></table>
+    </form>
+    </div>
+<!-- armado del recordset para mostrar proyectos y la logica para los filtros-->
+
+<!-- comienza el contenido -->
+<div id="contenido" class="contenido">
+    <table width="98%" border="0" cellspacing="0" celpadding="0" style="table-layout: fixed;">
+
+     <tbody><tr height="30">
+            <td style="border: 1px solid #808080; background-color: #FFFFFF !important; color:#333 !important; width:auto; vertical-align: middle;" class="asimetrico_1010_generico">
+                <span style="font-family: Tahoma; font-size: 18px; font-weight: 500; text-decoration: none; padding-left: 12px;">
+                  Nombre del proyecto </span>
+            </td>
+      
+            <td colspan="2" style="border: 1px solid #808080; background-color: #FFFFFF; width: 55px; padding-right: 2px; vertical-align: middle;" class="asimetrico_0101_generico">
+             <span style="font-family: Tahoma; font-size: 18px; font-weight: 500; text-decoration: none; padding-left: 2px;"> Estado </span>
+            </td>
+
+            <td style="background-color: #FFFFFF; width: 24px; text-align: center; border-bottom: 1px solid #FFFFFF; ">
+                &nbsp;
+            </td>
+            <td style="background-color: #CCCCCC; width:90px; vertical-align: middle; text-align:center; white-space:nowrap">
+            <span style="font-family: Tahoma; font-size: 18px; font-weight: 500; text-decoration: none; padding-left: 2px;"> Fin Plan</span>
+            </td>
+            <td style="border: none; background-color: #FFFFFF; width: 3px;">
+               <img src="/views/rdg/empty.gif" style="width: 3px;">
+            </td>       
+            <td style="background-color: #CCCCCC; width:90px; vertical-align: middle; text-align:center; white-space:nowrap">
+            <span style="font-family: Tahoma; font-size: 18px; font-weight: 500; text-decoration: none; padding-left: 2px;"> Fin x hitos</span>
+            </td>
+            <td style="border: none; background-color: #FFFFFF; width: 3px;">
+               <img src="/views/rdg/empty.gif" style="width: 3px;">
+            </td>
+            <td class="borde_redondeado_asimetrico_1001" style="background-color: #CCCCCC; width: 70px;">
+             <span style="font-family: Tahoma; font-size: 18px; font-weight: 500; text-decoration: none; padding-left: 2px;">Obras</span>
+            </td>
+
+        </tr>
+        <tr style=" height: 8px;"><td colspan="4"></td></tr><!-- tr para espaciar -->
+        <tr height="30" ng-repeat-start="p in filtrados = (proyectos | orderBy:ordenPro | filter:filtro)">
+            <td style="border: 1px solid #808080; background-color: #FFFFFF; width:auto; vertical-align: middle; cursor:pointer;" class="asimetrico_1010_generico" ng-click="irDetalle(p._id)" title="{{p.prioridadJefatura}}">
+                <span title="Proyecto" style="font-family: Tahoma; font-size: 18px; font-weight: 700; text-decoration: none; padding-left: 12px;"> {{p.nombre}}</span>
+            </td>
+            <td style="border-left: 1px solid #CCCCCC; border-bottom: 1px solid #CCCCCC; border-top: 1px solid #CCCCCC; border-right: none; background-color: #FFFFFF; width: 35px; vertical-align: middle;">
+                <img alt="Sin Hitos" title="El proyecto no tiene hitos cargados" ng-if="!tieneHitos(p._id)" src="/views/rdg/no-gantt.png" style="width: 28px;">
+                <img alt="Cumplido" title="El proyecto se encuentra cumplido" ng-if="cumplido(p._id)" src="/views/rdg/facebook-like-m.png" style="width: 28px;">
+            </td>
+            <td style=" border-left: none; border-bottom: 1px solid #CCCCCC; border-right: 1px solid #CCCCCC; border-top: 1px solid #CCCCCC; background-color: #FFFFFF; width: 20px; padding-right: 2px; vertical-align: middle;" class="asimetrico_0101_generico">
+                <div class="indicadorEstado" style="background-color: {{colorEstado(p)}}"> </div>
+            </td>
+            <td style="background-color: #FFFFFF; width: 24px;
+                text-align: center;  border: 1px solid #FFFFFF; ">
+                &nbsp;
+            </td>
+            <td title="Fecha de fin planificada" style="border: none; background-color: #7C7B7B; width:90px; vertical-align: middle; text-align:center; white-space:nowrap">
+                 <div style="font-family: Tahoma; font-size: 14px; font-weight: 700; text-decoration: none; color:#FFFFFF">
+                    {{p.fechaFin}}
+                </div>
+            </td>
+            <td style="border: none; background-color: #FFFFFF; width: 3px;">
+               <img src="/views/rdg/empty.gif" style="width: 3px;">
+            </td>
+            <td title="Fecha de fin calculada por la fecha del ultimo hito/actividad" style="border: none; background-color: #7C7B7B; width:90px; vertical-align: middle; text-align:center; white-space:nowrap">
+                <div style="font-family: Tahoma; font-size: 14px; font-weight: 700; text-decoration: none; color:#FFFFFF">
+                    {{finXhitos(p._id)}}
+                </div>
+            </td>
+            <td style="border: none; background-color: #FFFFFF; width: 3px;">
+               <img src="/views/rdg/empty.gif" style="width: 3px;">
+            </td>
+            <td onmouseover="this.style.textDecoration=&#39;underline&#39;" onmouseout="this.style.textDecoration=&#39;none&#39;" class="borde_redondeado_asimetrico_1001" style="width: 70px; cursor: pointer; color: rgb(255, 255, 255); font-weight: bold; font-size: 14px; font-family: sans-serif; text-decoration: none; background-color: rgb(25, 71, 209);">
+                -
+            </td>
+        </tr>
+        <tr ng-repeat-end height="8"><td colspan="4"></td></tr><!-- tr para espaciar -->
+    </tbody></table>
+</div>
+</section>
+</div>
+<footer id="footer" style="position: absolute; bottom: 0px; right: 0px; left: 0px; margin-bottom: 0px;">
+    <table style=" width:100%; height: 50px; vertical-align: middle;">
+        <tbody><tr>
+        <td style=" text-align: left; vertical-align: middle;">
+                   <img src="/views/rdg/LOGO-BuenosAiresCiudad.jpg" style="height: 46px;">
+        </td>
+        <td style=" text-align: right; vertical-align: middle;">
+                   <h1 style="margin-right: 20px;">EN TODO ESTAS VOS   </h1> 
+        </td>
+
+        </tr>
+    </tbody></table>
+</footer>

@@ -1,0 +1,120 @@
+<div class="card body" style="margin-top: 0px;padding-top: 0px;"  ng-controller="ImprimirTablaCtrl">
+     <div style="margin-top: 0px; padding-top:0px;">
+        <div>
+                <h3  style="margin-top: 0px; margin-bottom: 0px; text-align: center;">Detalle Bajo Autopista <a href="" class="btn btn-link pull-right no-print" style="margin-right: 10px;margin-bottom: 0px; margin-top:5px" ng-click="imprimir()"><i class="icon-print"></i></a></h3>
+        </div>
+        <div>
+            <table border="0" class="table table" style="margin-right:15px">
+                <tr bgcolor= "#FFFFFF">
+                    <th>Comuna</th>
+                    <td>{{comunaPorId(bajoautopista.comuna).numero}}</td>
+                </tr>
+                <tr bgcolor= "#FFFFFF">
+                    <th>ID Mapa</th>
+                    <td>{{bajoautopista.idMapa}}</td>
+                </tr>
+                <tr bgcolor= "#FFFFFF">
+                    <th>Predio</th>
+                    <td>{{bajoautopista.predio}}</td>
+                </tr>
+                <tr bgcolor= "#FFFFFF">
+                    <th>Ubicación</th>
+                    <td><div>{{bajoautopista.calle}} <span ng-if="bajoautopista.entre1 && !bajoautopista.interseccion">e/ {{bajoautopista.entre1}} </span><span ng-if="bajoautopista.entre2 && !bajoautopista.interseccion">y {{bajoautopista.entre2}}</span><span ng-if="bajoautopista.interseccion">intersección {{bajoautopista.entre1}} </span></div></td>
+                </tr>
+                <tr bgcolor= "#FFFFFF">
+                    <th>Direccion Exacta</th>
+                    <td>{{bajoautopista.calleExacta+" "+bajoautopista.numeroExacto}}</td>
+                </tr>
+                <tr bgcolor= "#FFFFFF">
+                    <th>Usuario</th>
+                    <td>{{bajoautopista.usuario}}</td>
+                </tr>
+                <tr bgcolor= "#FFFFFF">
+                    <th>USO</th>
+                    <td>{{bajoautopista.uso}}</td>
+                </tr>
+                <tr bgcolor= "#FFFFFF">
+                    <th>Ocupacion</th>
+                    <td>{{bajoautopista.ocupacion}}</td>
+                </tr>
+                <tr bgcolor= "#FFFFFF">
+                    <th>Status</th>
+                    <td>{{bajoautopista.status}}</td>
+                </tr>
+                <tr bgcolor= "#FFFFFF">
+                    <th>Inicio</th>
+                    <td>{{bajoautopista.fechaInicio}}</td>
+                </tr>
+                <tr bgcolor= "#FFFFFF">
+                    <th>Fin</th>
+                    <td>{{bajoautopista.fechaFin}}</td>
+                </tr>
+                <tr bgcolor= "#FFFFFF">
+                    <th>Canon</th>
+                    <td>{{bajoautopista.canon}}</td>
+                </tr>
+                <tr bgcolor= "#FFFFFF">
+                    <th>Valor Mensual ($)</th>
+                    <td>{{bajoautopista.valorMensual}}</td>
+                </tr>
+                <tr bgcolor= "#FFFFFF">
+                    <th>Uso Actual</th>
+                    <td>{{bajoautopista.usoActual}}</td>
+                </tr>
+                <tr bgcolor= "#FFFFFF">
+                    <th>Plan de Acción</th>
+                    <td>{{bajoautopista.planAccion}}</td>
+                </tr>
+                <tr bgcolor= "#FFFFFF">
+                    <th>Fecha</th>
+                    <td>{{bajoautopista.fecha}}</td>
+                </tr>
+                <tr bgcolor= "#FFFFFF">
+                    <th>Responsable</th>
+                    <td>{{organigramaPorId(bajoautopista.responsable).nombreCompleto}}</td>
+                </tr>
+                <tr>
+                    <td style="padding-left: 0px;padding-bottom: 0px; padding-right: 0px;">
+                        <table style="width:100%;"> 
+                            <tr><th style="border-top-width: 0px; padding-top: 0px;">Seccion</th></tr>
+                            <tr><th>Manzana</th><td style="padding-left: 75px;"></td></tr>
+                            <tr><th style="padding-bottom: 0px;">Parcela</th><td style="padding-left: 50px;"></td></tr>
+                        </table>
+                    </td>
+                    <td style="padding-left: 0px;" >
+                        <table style="border-top:0px; margin-right:10px; width:100%">
+                            <tr><th style="border-top-width: 0px; font-weight: normal; padding-top: 0px;" ng-repeat="i in bajoautopista.smp">{{i.seccion}} </th><td class="pull-right" style="border-top-width: 0px; font-weight: normal; padding-top: 0px; padding-left: 300px;"></td></tr>
+                            <tr><th style="font-weight: normal;" ng-repeat="i in bajoautopista.smp">{{i.manzana}}</th><td></td></tr>
+                            <tr><th style="font-weight: normal; padding-bottom: 0px;"  ng-repeat="i in bajoautopista.smp">{{i.parcela}}<span ng-if="i.parcial==true"> Parcial</span></th><td></td></tr>
+                        </table>
+                        <table>
+                            
+                        </table>
+                    </td>
+                </tr>
+                <tr bgcolor= "#FFFFFF">
+                    <th>Superficie Total</th>
+                    <td>{{bajoautopista.superficieTotal}}</td>
+                </tr>
+                <tr bgcolor= "#FFFFFF">
+                    <th>Superficie Cubierta</th>
+                    <td>{{bajoautopista.superficieCubierta}}</td>
+                </tr>
+                <tr bgcolor= "#FFFFFF">
+                    <th>FOT</th>
+                    <td>{{bajoautopista.fot}}</td>
+                </tr>
+                <tr bgcolor= "#FFFFFF" >
+                    <th>Temas</th>
+                    <td style="padding-left: 0px;">
+                        <table style="margin-top: -8px;">
+                            <td ng-repeat="i in bajoautopista.temas" style="margin-right: 10px; margin-bottom:0px">{{temaPorId(i).nombre}}</td>
+                        </table>
+                    </td>
+                </tr>
+
+            </table>
+        </div>
+    </div>
+</div>
+    

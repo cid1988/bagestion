@@ -1,0 +1,18 @@
+<div ng-controller="NuevoSegMetroCtrl" class="card span10 offset1">
+    <div class="card-actions pull-right">
+        <div class="btn-group">
+            <a href="/metrobus" class="btn btn-link"><i class="icon-remove"></i></a>
+            <a ng-click="guardar()" class="btn btn-link"><i class="icon-ok"></i></a>
+        </div>
+    </div>
+    
+    <h3 class="card-heading simple" style="padding-left: 10px;padding-right: 0px;height: 45px;margin-bottom: 10px;">
+        Nuevo
+    </h3>
+    
+    <div style="margin-left: 20px; margin-right: 20px; margin-bottom: 180px;">
+        <span style="display: inline-block"> Nombre:<br />
+            <input class="span5" type="text" ng-model="item.nombre" />
+        </span>
+    </div>
+</div>

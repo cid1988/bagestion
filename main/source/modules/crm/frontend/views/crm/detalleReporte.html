@@ -1,0 +1,99 @@
+<style type="text/css">
+    .wysihtml5-sandbox {
+        border: 1 !important;
+        padding: 0 !important;
+    }
+    
+    .wysihtml5-toolbar:nth-child(2) 
+    {
+        display: none;
+    }
+    .wysihtml5-toolbar:nth-child(3) 
+    {
+        display: none;
+    }
+    .wysihtml5-toolbar:nth-child(4) 
+    {
+        display: none;
+    }
+    .wysihtml5-toolbar:nth-child(5) 
+    {
+        display: none;
+    }
+
+</style>
+
+<div ng-controller="CRMDetalleReporteCtrl" class="card">
+    <div class="card-actions pull-right" style="margin: 0; padding-right: 0">
+        <a ng-show="!editando" href="/crm/reportes" class="btn btn-link no-underline"><i class="icon-arrow-left"></i></a>
+        <a ng-show="!editando" ng-click="modalMail()" title="Enviar mail" class="btn btn-link no-underline" ng-if=hasPermission('crm.editar')><i class="icon-envelope"></i></a>
+        <a ng-show="!editando" ng-click="editar()" class="btn btn-link no-underline" ng-if=hasPermission('crm.editar')><i class="icon-edit"></i></a>
+        <a ng-show="editando" ng-click="guardar()" class="btn btn-link no-underline"><i class="icon-ok"></i></a>
+    </div>
+    <h3 class="card-heading simple">{{reporte.nombre}}</h3>
+    
+    <div class="form-horizontal" name="form" style="margin-left:10px; padding-top: 16px; clear: both">
+        <div class="row" style="padding-bottom: 10px;">
+            <div class="span3" style="display: table-cell;margin-left: 70px;">Contactos:</div>
+            <div class="span2" style="display: table-cell">Sexo:</div>
+            <div class="span2" style="display: table-cell">Celular personal:</div>
+            <div class="span2" style="display: table-cell">Email Personal:</div>
+            <div class="span1" style="display: table-cell">Contactado:</div>
+            <div class="span1" style="display: table-cell">Asistio:</div>
+        </div>
+    </div>
+    <hr style="margin-bottom: 0px;margin-top: 0px;">
+    <ul class="nav nav-list">
+      <li ng-repeat="c in reporte.contactos | orderBy:'apellidos' | orderBy:orden | filter:filtro">
+        <a style="font-size: 12px;padding-top: 8px;padding-bottom: 8px;display: inline-block;" href="/crm/detalle/{{c.contactoId}}">
+        <span class="span3">{{contactoPorId(c.contactoId).apellidos}}, {{contactoPorId(c.contactoId).nombre}} {{contactoPorId(c.contactoId).segundoNombre || ""}}</span>
+        <span class="span2"><div ng-if="contactoPorId(c.contactoId).sexo == 'M'">Masculino</div><div ng-if="contactoPorId(c.contactoId).sexo == 'F'">Femenino</div></span>
+        <span class="span2">{{valorCelular(contactoPorId(c.contactoId))}}</span>
+        <span class="span2">{{valorCorreo(contactoPorId(c.contactoId))}}</span>
+        </a>
+        <div style="display: inline-block;">
+            <span class="span1">
+                <select ui-select2 class="span1" ng-disabled="!editando" type="text" ng-model="c.contactado">
+                    <option value=""></option>
+                    <option value="Si">Si</option>
+                    <option value="No">No</option>
+                </select></span>
+            <span class="span1">
+                <select ui-select2 class="span1" ng-disabled="!editando" type="text" ng-model="c.asistio">
+                    <option value=""></option>
+                    <option value="Si">Si</option>
+                    <option value="No">No</option>
+                </select></span></span>
+        </div>
+      </li>
+      <li ng-if="!contactos.length" class="text-center">
+        <em>No hay cargas aún</em>
+      </li>
+    </ul>
+    
+    <!--Modal enviar mail-->
+    <div id="modalMail" class="modal hide fade">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3>Enviar Mail</h3>
+        </div>
+        <div class="modal-body">
+            <span style="display: inline-block"> De (Nombre para mostrar):<br />
+                <input class="span3" type="text" placeholder="Juan Perez" ng-model="nombreFrom" />
+            </span>
+            <span style="display: inline-block"> De (Mail):<br />
+                <input class="span3" type="text" placeholder="juan@mail.com" ng-model="mailFrom" />
+            </span>
+            <span style="display: inline-block"> Asunto:<br />
+                <input class="span3" type="text" ng-model="asunto" />
+            </span>
+            <span style="display: inline-block"> Texto:<br />
+                <textarea rich-text-editor rows="4" style="width: 98%;" ng-model="texto"></textarea>
+            </span>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal">Cerrar</a>
+            <a href="#" class="btn btn-info" data-dismiss="modal" ng-click="enviar()">Enviar</a>
+        </div>
+    </div>
+</div>

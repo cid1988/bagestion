@@ -1,0 +1,57 @@
+<style>
+    .table {
+        border: 0;
+    }
+    .table th, .table td {
+        padding: 8px;
+        line-height: 20px;
+        text-align: left;
+        vertical-align: middle;
+        border: 0;
+    }
+    .table th {
+        background-color: #dddddd !important;
+    }
+</style>
+<div class="card" ng-controller="ConsolidadosPlanificacion20162019Ctrl">
+    <div class="card-actions pull-right no-print" style="margin-right: 30px;">
+        <div style="margin-left: 5px; display: inline-block;">
+            <select class="span3" ui-select2 type="text" ng-model="filtro2">
+                <option value="">Todas las Áreas</option>
+                <option ng-repeat="e in organigrama" value="{{e._id}}">{{e.nombreCompleto}} ({{e.sigla}})</option>
+            </select>
+        </div>
+        <a class="btn btn-link pull-right no-print" ng-click="imprimir()" style="padding-left: 0px; padding-right: 0px;"><i class="icon-print"></i> Imprimir</a>
+        <a class="btn btn-link pull-right" href="/planificacion20162019" style="margin-left: 20px;margin-right: 20px;" ><i class="icon-arrow-left"></i> Volver</a>
+    </div>
+    <h2 class="card-heading simple" style="font-size: 24px;">Comentarios HRL - Planificación 2016 - 2019</h2>
+    <div class="card-body">
+        <div>
+            <div ng-repeat="a in areas | filter:filtro2 | orderBy:ordenAreaPorId" style="margin-bottom: 20px;" ng-if="tieneComentariosHRL(a)">
+                <div style="width:100%;text-align: left;background-color: gainsboro;font-weight: 600;margin-top: 0px;padding-top: 5px;padding-bottom: 5px;font-size: 16px;margin-bottom: 3px;">
+                    <div style="width: 100%; display: inline-block;"><a href="#" style="color:#404040;margin-left: 10px;font-size: 20px;">{{organigramaPorId(a).nombreCompleto}}</a></div>
+                </div>
+                <table border="1" class="table table-striped" style="margin-bottom: 0px;">
+                    <tr bgcolor= "#FFFFFF">
+                        <th width="10%" style="text-align: center;">Fecha</th>
+                        <th width="25%" style="text-align: center;">Iniciativa</th>
+                        <th width="55%" style="text-align: center;">Descripción</th>
+                        <th width="10%" style="text-align: center;">Leido</th>
+                    </tr>
+                </table>
+                <table border="1" class="table table-striped" ng-repeat="i in planes | filter:{areaResponsable:a}" ng-show="i.comentariosHRL.length" style="margin-bottom: 0px;">
+                    <tr ng-repeat="o in i.comentariosHRL" style="border-bottom: 1px solid #ddd;">
+                        <td width="10%" style="text-align: center;">{{o.cuando}}</td>
+                        <td width="25%" style="text-align: justify;">{{i.nombreProyecto}}</td>
+                        <td width="55%" style="text-align: justify;">{{o.descripcion}}</td>
+                        <td width="10%" style="text-align: center;">
+                            <i title="Leido" ng-if="o.leido" style="font-size: 19px;" class="icon-ok"></i>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+

@@ -1,0 +1,16 @@
+
+<div class="card span12" ng-controller="SegMetroCtrl" style="padding-bottom: 40px;">
+    <div class="card-actions pull-right" style="margin: 0; padding: 0">
+        <input placeholder="Buscar por Nombre..." type="text" class="span2" ng-model="filtro.nombre"/>
+        <a href="/metrobus/nuevo" class="btn btn-link"><i class="icon-plus"></i></a>
+    </div>
+    <h3 class="card-heading simple">Seguimiento Metrobus</h3>
+    <div class="card-body" style="margin-top: 30px;">
+        <div class="row" ng-repeat="t in lista" style="padding-bottom: 0px;margin-left: 0px;">
+            <a class="btn btn-large span5" href="/metrobus/{{t._id}}" style="margin-left: 20px;margin-bottom: 10px;">
+              {{t.nombre}}
+            </a>
+        </div>
+        <div class="row-fluid" ng-show="!lista.length">No hay ningun.</div>
+    </div>
+</div>

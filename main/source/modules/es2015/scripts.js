@@ -1,0 +1,1 @@
+exports = module.exports = ['/scripts/controllers/es2015.js'];

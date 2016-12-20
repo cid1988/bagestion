@@ -1,0 +1,4 @@
+<ul class="nav">
+    <li ng-class="{'active': state.current.section == 'dashboard'}"><a  ng-href="/dashboard">Dashboard</a></li>
+    <li ng-class="{'active': state.current.section == 'facts'}" ng-if=hasPermission('facts')><a  ng-href="/facts">BA Facts</a></li>
+</ul>

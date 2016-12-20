@@ -1,0 +1,67 @@
+<style>
+    .table {
+        border: 0;
+    }
+    .table th, .table td {
+        padding: 8px;
+        line-height: 20px;
+        text-align: left;
+        vertical-align: middle;
+        border: 0;
+    }
+    .table th {
+        background-color: #dddddd !important;
+    }
+</style>
+<div class="card" ng-controller="FactCtrl">
+    <div class="card-actions pull-right no-print" style="margin: 0; padding: 0">
+        <input placeholder="Buscar por Magnitud..." type="text" class="span2" ng-model="filtro.magnitud" style="margin-right: 10px;margin-left: 10px;" />
+        <input placeholder="Buscar por Concepto..." type="text" class="span2" ng-model="filtro.concepto" style="margin-right: 13px;" />
+        <input placeholder="Buscar por Tags..."     type="text" class="span2" ng-model="filtro.tags" />
+        <select class="span3" ui-select2 type="text" ng-model="filtro.fuente">
+            <option value="">Todas las Fuentes</option>
+            <option value="BA Data">BA Data</option>
+            <option value="Otra Publicación">Otra Publicación</option>
+            <option value="Sin Calidad">Sin Calidad</option>
+            <option value="IDG">IDG</option>
+        </select>
+        <a href="/facts/nuevo" class="btn btn-link" style="margin-right: 10px;" ng-if=hasPermission('facts.editar') ><i class="icon-plus"></i></a>
+    </div>
+    <h2 class="card-heading simple">Buenos Aires Facts</h2>
+    <div class="card-body">
+        <table border="1" class="table table-striped">
+            <tr bgcolor= "#FFFFFF">
+                <th><a ng-click="orden = 'valor'" href="#" style="display: inline-block; color:#404040;">Valor</a></th>
+                <th><a ng-click="orden = 'magnitud'" href="#" style="display: inline-block; color:#404040;">Magnitud</a></th>
+                <th><a ng-click="orden = 'concepto'" href="#" style="display: inline-block; color:#404040;">Concepto</a></th>
+                <th><a ng-click="orden = 'fuente'" href="#" style="display: inline-block; color:#404040;">Fuente</a></th>
+                <th><center>Calidad</center></th>
+                <th><center>Vigencia</center></th>
+                <th><center>Gráfico</center></th>
+                <th></th>
+            </tr>
+            <tr ng-repeat="i in facts | orderBy:orden | filter:filtro" href="/facts/{{i._id}}">
+                <td><div>{{i.valor}}</div></td>
+                <td><div>{{i.magnitud}}</div></td>
+                <td><div>{{i.concepto}}</div></td>
+                <td><div ng-if="((i.fuente == 'BA Data') || (i.fuente == 'Otra Publicación') || (i.fuente == 'IDG'))">{{i.fuente}}</div>
+                    <div ng-if="(i.fuente == 'Sin Calidad')">{{i.otraFuente}}</div></td>
+                <td style="padding-right: 0px; padding-left: 0px;">
+                    <button class="btn btn-success" type="button" ng-if="!(i.fuente == 'Sin Calidad')" style="width: 100%;"><i class="icon-ok"></i></button>
+                    <button class="btn btn-danger" type="button" ng-if="(i.fuente == 'Sin Calidad')" style="width: 100%;"><i class="icon-remove"></i></button>
+                </td>
+                <td style="padding-right: 0px; padding-left: 0px;">
+                    <button class="btn btn-success" type="button" ng-if="!(vencido(i))" style="width: 100%;"><i class="icon-ok"></i></button>
+                    <button class="btn btn-danger" type="button" ng-if="(vencido(i))" style="width: 100%;"><i class="icon-remove"></i></button>
+                </td>
+                <td style="padding-right: 0px; padding-left: 0px;">
+                    <button class="btn btn-success" type="button" ng-if="(i.historico.length)" style="width: 100%;"><i class="icon-ok"></i></button>
+                    <button class="btn btn-danger" type="button" ng-if="!(i.historico.length)" style="width: 100%;"><i class="icon-remove"></i></button>
+                </td>
+                <td><div><a class="btn btn-link pull-right" type="button" href="/facts/{{i._id}}" ng-if=hasPermission('facts.editar') ><i class="icon-edit"></i></a></div></td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+

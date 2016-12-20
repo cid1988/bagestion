@@ -1,0 +1,1 @@
+exports = module.exports = ['bag2.ormOld-reunionOld', "bag2.ormOld.temarioOld", 'bag2.groupBy', 'bag2.ormOld.minutaOld'];

@@ -1,0 +1,58 @@
+<style>
+    .table {
+        border: 0;
+    }
+    .table th, .table td {
+        padding: 8px;
+        line-height: 20px;
+        text-align: left;
+        vertical-align: middle;
+        border: 0;
+    }
+    .table th {
+        background-color: #dddddd !important;
+    }
+</style>
+<div class="card" ng-controller="CortesCalzadasCtrl">
+    <div class="card-actions pull-right no-print" style="margin: 0; padding: 0">
+        <input placeholder="Buscar por Calle..." type="text" class="span2" ng-model="filtro.calle" style="margin-right: 30px;" id="calle1-typeahead"  data-source={{calles}} data-provide="typeahead" />
+        <input placeholder="Desde..." type="text" date class="span2 input-block-level" ng-model="fecha.desde"/>
+        <input placeholder="Hasta..." type="text" date class="span2 input-block-level" ng-model="fecha.hasta" style="margin-right: 20px;"/>
+        <a href="/cortescalzadas/nuevo" class="btn btn-link" style="margin-right: 10px;" ng-if=hasPermission('cortescalzadas.editar') ><i class="icon-plus"></i></a>
+    </div>
+    <h3 class="card-heading simple">Cortes de Calzadas</h3>
+    <div class="card-body">
+        <table border="1" class="table table-striped">
+            <tr bgcolor= "#FFFFFF">
+                <th><a ng-click="orden = 'tarea'" href="#" style="display: inline-block; color:#404040;">Tarea</a></th>
+                <th><a ng-click="orden = 'calle'" href="#" style="display: inline-block; color:#404040;">Ubicación</a></th>
+                <th><a ng-click="orden = 'comuna'" href="#" style="display: inline-block; color:#404040;">Comuna</a></th>
+                <th><a ng-click="orden = 'tipoTarea'" href="#" style="display: inline-block; color:#404040;">Tipo de Tarea</a></th>
+                <th><a ng-click="orden = 'inconveniente'" href="#" style="display: inline-block; color:#404040;">Inconveniente</a></th>
+                <th><a ng-click="orden = 'tipoMaterial'" href="#" style="display: inline-block; color:#404040;">Tipo de Material</a></th>
+                <th><a ng-click="orden = 'barrio'" href="#" style="display: inline-block; color:#404040;">Barrio</a></th>
+                <th><a ng-click="orden = 'contratista'" href="#" style="display: inline-block; color:#404040;">Contratista</a></th>
+                <th><a ng-click="orden = 'comentarios'" href="#" style="display: inline-block; color:#404040;">Comentarios</a></th>
+                <th><a ng-click="orden = 'turno'" href="#" style="display: inline-block; color:#404040;">Turno de Trabajo</a></th>
+                <th><a ng-click="orden = 'fechaFin'" href="#" style="display: inline-block; color:#404040;">Fecha Fin</a></th>
+                <th></th>
+            </tr>
+            <tr ng-repeat="i in cortes | orderBy:orden | filter:filtro">
+                <td><div>{{i.tarea}}</div></td>
+                <td><div style="width: 250px;">{{i.calle}} <span ng-if="i.entre1 && !i.interseccion">e/ {{i.entre1}} </span><span ng-if="i.entre2 && !i.interseccion">y {{i.entre2}}</span><span ng-if="i.interseccion">intersección {{i.entre1}} </span></div></td>
+                <td><div style="width: 67px;">{{comunaPorId(i.comuna).nombre}}</div></td>
+                <td><div>{{i.tipoTarea}}</div></td>
+                <td><div ng-show="i.inconveniente == 'CERRADO AL TRANSITO'"><b>{{i.inconveniente}}</b></div><div ng-hide="i.inconveniente == 'CERRADO AL TRANSITO'">{{i.inconveniente}}</div></td>
+                <td><div>{{i.tipoMaterial}}</div></td>
+                <td><span ng-repeat="b in i.barrio">{{barrioPorId(b)}}<span ng-hide="$last">, </span></span></td>
+                <td><div>{{i.contratista}}</div></td>
+                <td><div ng-if="i.comentarios.length">{{i.comentarios[i.comentarios.length - 1].cuando}} - {{i.comentarios[i.comentarios.length - 1].descripcion}}</div></td>
+                <td><div>{{i.turno}}</div></td>
+                <td><div>{{i.fechaFin}}</div></td>
+                <td><a href="/cortescalzadas/{{i._id}}" class="btn btn-link no-print" style="padding-left: 0px; padding-right: 0px;" ng-if=hasPermission('cortescalzadas.editar') ><i class="icon-edit"></i></a></td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+

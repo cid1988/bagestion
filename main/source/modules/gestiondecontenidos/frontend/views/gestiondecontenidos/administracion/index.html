@@ -1,0 +1,186 @@
+<style>
+    a:visited{color:#3B3537;}
+    a:active{color:#3B3537;}
+    a:hover{color:#3B3537;}
+    a:focus{color:#3B3537;}
+
+    #tableHeader{
+        padding-bottom: 10px;
+        background-color:#F9F9F9;
+        padding-top:10px;
+    }
+    #tableHeader>div>a{
+        display: inline-block; 
+        color:#404040;
+    }
+    #tableHeader>div
+    {
+        display: table-cell;
+    }
+    .small{
+        width:6%;
+    }
+    .medium{
+        width:13%;
+    }
+    .large{
+        width:15%;
+    }
+</style>
+<div class="container" ng-controller="GestionDeContenidosAdminCtrl">
+  <div class="row">
+    <div class="span12 card">
+        <div class="card-actions no-print pull-right" style="margin: 0; padding: 0;">
+            <input placeholder="Titulo..." type="text" class="span2" ng-model="filtro.titulo" style="margin-right: 5px; margin-left: 5px; margin-bottom: 25px;"/>
+            <input placeholder="Tema..." type="text" class="span2" ng-model="filtro.tema" style="margin-right: 5px; margin-left: 5px; margin-bottom:25px;"/>
+            <div style="display: inline-block;">
+                <select class="span4" ui-select2 type="text" ng-model="filtro.jurisdiccion">
+                    <option value=""></option>
+                    <option value="">Todas las jurisdicciones</option>
+                    <option ng-repeat="e in jurisdicciones | orderBy:'nombreCompleto'" value="{{e._id}}">{{e.nombreCompleto}}</option>
+                </select>
+                <a href="/gestiondecontenidos/administracion/nuevo" class="btn btn-link pull-right" ng-show="hasPermission('gestiondecontenidos.editar')" ><i class="icon-plus"></i></a>
+            </div>
+        </div>
+    
+        <h3 class="card-heading simple">Administración</h3>
+            <div class="card-body">
+                <div class="accordion" id="accordion2">
+                    <div class="accordion-group" style="box-shadow: 0px; -webkit-box-shadow: 0px 0px 0px #999; box-shadow: 0px 0px 0px #999;">
+                        <div class="accordion-heading" onmouseover="background-color:red">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
+                            <font size=3>Piezas de Información</font>
+                            </a>
+                        </div>
+                        <div id="collapseOne" class="accordion-body collapse">
+                            <div class="accordion-inner">
+                                <div class="accordion" id="accordion5">
+                                    <div class="accordion-group" style="box-shadow: 0px; -webkit-box-shadow: 0px 0px 0px #999; box-shadow: 0px 0px 0px #999;">
+                                        <div class="accordion-heading" onmouseover="background-color:red">
+                                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion5" href="#collapseOneb">
+                                            <font size=3>Piezas Gestión</font>
+                                            </a>
+                                        </div>
+                                        <div id="collapseOneb" class="accordion-body collapse">
+                                            <div class="accordion-inner">
+                                                <div>
+                                                    <div class="form-horizontal" name="form" style="margin-left:10px; padding-top: 16px; clear: both">
+                                                        <div class="row" id="tableHeader" class="form-horizontal" name="form" >
+                                                            <div class="span large"><a ng-click="ordenG = 'titulo'" href="#" >Titulo</a></div>
+                                                            <div class="span small"><a ng-click="ordenG = 'tipo'" href="#">Tipo de Pieza</a></div>
+                                                            <div class="span medium"><a ng-click="ordenG = 'tema'" href="#">Tema</a></div>
+                                                            <div class="span medium"><a ng-click="ordenG = 'jurisdiccion'" href="#">Jurisdicción</a></div>                               
+                                                            <div class="span medium"><a ng-click="ordenG = 'fecha'" href="#" >Fecha</a></div>
+                                                            <div class="span medium"><a ng-click="ordenG = 'vencimiento'" href="#" >Vencimiento</a></div>
+                                                            <div class="span small"><a href="#">Estado</a></div>
+                                                        </div>
+                                                    </div>
+                                                    <hr style="margin-bottom: 0px;margin-top: 0px;">
+                                                    <ul class="nav nav-list" style="padding: 0">
+                                                        <li ng-repeat="i in piezasGestion | orderBy:ordenG | filter:{tipoPieza:'tipo1'} | filter:filtro">
+                                                            <a style="font-size: 14px;padding-top: 8px;padding-bottom: 8px; padding-left:0" href="/gestiondecontenidos/administracion/{{i._id}}">
+                                                                <span class="span large">{{i.titulo}}</span>
+                                                                <span class="span small">Gestión</span>
+                                                                <span class="span medium">{{i.tema}}<span ng-show="menosCincoDias(i.milisegundos)" class="pull-right" style="height:100%; color:white; background-color:#6F5959; padding:0 3px; border-radius:3px; font-size: 10px;"><strong>NUEVO</strong></span></span>
+                                                                <span class="span medium">{{jurisdiccionPorId(i.jurisdiccion).nombreCompleto}}</span>
+                                                                <span class="span medium">{{i.fecha}}</span>
+                                                                <span class="span medium">{{i.vencimiento}}</span>
+                                                                <span class="span small">
+                                                                    <span style="display: inline-block; -moz-border-radius: 20px; border-radius: 20px; padding: 7px; float: left; border: 0px solid #000; margin-top: 3px; margin-right: 10px; margin-left: 5px;" ng-style="{'background-color': compararMilisegundos(i.vencimiento)}"></span>
+                                                                </span>
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr style="margin: 2px 0; border-top: 1px solid #C7BBBB">
+                                    <div class="accordion-group"  style="box-shadow: 0px; -webkit-box-shadow: 0px 0px 0px #999; box-shadow: 0px 0px 0px #999;">
+                                        <div class="accordion-heading">
+                                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion5" href="#collapseTwob">
+                                            <font size=3>Piezas E</font>
+                                            </a>
+                                        </div>
+                                        <div id="collapseTwob" class="accordion-body collapse">
+                                            <div class="accordion-inner">
+                                                <div>
+                                                    <div class="form-horizontal" name="form" style="margin-left:10px; padding-top: 16px; clear: both">
+                                                        <div class="row" id="tableHeader" class="form-horizontal" name="form" >
+                                                            <div class="span large"><a ng-click="ordenGe = 'titulo'" href="#" >Titulo</a></div>
+                                                            <div class="span small"><a ng-click="ordenGe = 'tipo'" href="#">Tipo de Pieza</a></div>
+                                                            <div class="span medium"><a ng-click="ordenGe = 'tema'" href="#">Tema</a></div>
+                                                            <div class="span medium"><a ng-click="ordenGe = 'jurisdiccion'" href="#">Jurisdicción</a></div>                               
+                                                            <div class="span medium"><a ng-click="ordenGe = 'fecha'" href="#" >Fecha</a></div>
+                                                            <div class="span medium"><a ng-click="ordenGe = 'vencimiento'" href="#" >Vencimiento</a></div>
+                                                            <div class="span small"><a href="#">Estado</a></div>
+                                                        </div>
+                                                    </div>
+                                                    <hr style="margin-bottom: 0px;margin-top: 0px;">
+                                                    <ul class="nav nav-list" style="padding: 0">
+                                                        <li ng-repeat="i in piezasE | orderBy:ordenGe | filter:{tipoPieza:'tipo2'} | filter:filtro">
+                                                            <a style="font-size: 14px;padding-top: 8px;padding-bottom: 8px; padding-left:0" href="/gestiondecontenidos/administracion/{{i._id}}">
+                                                                <span class="span large">{{i.titulo}}</span>
+                                                                <span class="span small">E</span>
+                                                                <span class="span medium">{{i.tema}}<span ng-show="menosCincoDias(i.milisegundos)" class="pull-right" style="height:100%; color:white; background-color:#6F5959; padding:0 3px; border-radius:3px; font-size: 10px;"><strong>NUEVO</strong></span></span>
+                                                                <span class="span medium">{{jurisdiccionPorId(i.jurisdiccion).nombreCompleto}}</span>
+                                                                <span class="span medium">{{i.fecha}}</span>
+                                                                <span class="span medium">{{i.vencimiento}}</span>
+                                                                <span class="span small">
+                                                                    <span style="display: inline-block; -moz-border-radius: 20px; border-radius: 20px; padding: 7px; float: left; border: 0px solid #000; margin-top: 3px; margin-right: 10px; margin-left: 5px;" ng-style="{'background-color': compararMilisegundos(i.vencimiento)}"></span>
+                                                                </span>
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+                <hr style="margin: 2px 0; border-top: 1px solid #C7BBBB">
+                <div class="accordion-group"  style="box-shadow: 0px; -webkit-box-shadow: 0px 0px 0px #999; box-shadow: 0px 0px 0px #999;">
+                    <div class="accordion-heading">
+                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseThree">
+                        <font size=3>iBreak</font>
+                        </a>
+                    </div>
+                    <div id="collapseThree" class="accordion-body collapse">
+                        <div class="accordion-inner">
+                            <div>
+                                <div class="form-horizontal" name="form" style="margin-left:10px; padding-top: 16px; clear: both">
+                                        <div class="row" id="tableHeader" class="form-horizontal" name="form" >
+                                            <div class="span large"><a ng-click="ordeniG = 'titulo'" href="#" >Titulo</a></div>
+                                            <div class="span medium"><a ng-click="ordeniG = 'tipo'" href="#">Tipo de Pieza</a></div>
+                                            <div class="span large"><a ng-click="ordeniG = 'tema'" href="#">Tema</a></div>
+                                            <div class="span medium"><a ng-click="ordeniG = 'fecha'" href="#" >Fecha</a></div>
+                                            <div class="span medium"><a ng-click="ordeniG = 'vencimiento'" href="#" >Vencimiento</a></div>
+                                            <div class="span medium"><a href="#">Estado</a></div>
+                                        </div>
+                                    </div>
+                                    <hr style="margin-bottom: 0px;margin-top: 0px;">
+                                    <ul class="nav nav-list" style="padding: 0">
+                                        <li ng-repeat="i in iGestion | orderBy:ordeniG | filter:{tipoPieza:'tipo3'} | filter:filtro">
+                                            <a style="font-size: 14px;padding-top: 8px;padding-bottom: 8px; padding-left:0" href="/gestiondecontenidos/administracion/igestion/{{i._id}}">
+                                                <span class="span large">{{i.titulo}}</span>
+                                                <span class="span medium">iGestión</span>
+                                                <span class="span large">{{i.tema}}<span ng-show="menosCincoDias(i.milisegundos)" class="pull-right" style="height:100%; color:white; background-color:#6F5959; padding:0 3px; border-radius:3px; font-size: 10px;"><strong>NUEVO</strong></span></span>
+                                                <span class="span medium">{{i.fecha}}</span>
+                                                <span class="span medium">{{i.vencimiento}}</span>
+                                                <span class="span medium">
+                                                    <span style="display: inline-block; -moz-border-radius: 20px; border-radius: 20px; padding: 7px; float: left; border: 0px solid #000; margin-top: 3px; margin-right: 10px; margin-left: 5px;" ng-style="{'background-color': compararMilisegundos(i.vencimiento)}"></span>
+                                                </span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>

@@ -1,0 +1,23 @@
+<div class="modal-header" style="padding-bottom: 10px;">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>Agregar comentario</h3>
+    </div>
+    <div class="modal-body">
+        <span style="display: inline-block"> Cuando:<br /> 
+            <input class="span2" type="text" date placeholder="Fecha" ng-model="data.cuando" style="margin-bottom: 0px; margin-top: 5px;" />
+        </span>
+        <span style="display: inline-block;margin-bottom: 10px;"> Quien:<br />
+            <select class="span3" ui-select2 type="text" ng-model="data.quien" ng-options="i._id as i.apellidos + ' ' + i.nombre for i in contactos | orderBy:'apellidos'">
+                <option value=""></option>
+            </select>
+        </span>
+        <span style="display: inline-block;">Descripción:
+            <textarea style="height:150px; width:530px" type="text"
+            ng-model="data.descripcion" placeholder="Descripción del comentario" />
+        </span>
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="btn" data-dismiss="modal">Cancelar</a>
+        <a href="#" class="btn btn-info" data-dismiss="modal" ng-click="agregarComen(true, data)">Agregar comentario</a>
+    </div>
+</div>

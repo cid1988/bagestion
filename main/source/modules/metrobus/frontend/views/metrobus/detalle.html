@@ -1,0 +1,217 @@
+<div ng-controller="DetalleSegMetroCtrl" class="card">
+    <div class="card-actions pull-right">
+        <div class="btn-group">
+            <a ng-click="modificar()" ng-if="!modificando" class="btn btn-link"><i class="icon-edit"></i></a>
+            <a ng-click="cancelar()" ng-if="modificando" href="/metrobus" class="btn btn-link"><i class="icon-remove"></i></a>
+            <a ng-click="guardar()" ng-if="modificando" href="/metrobus" class="btn btn-link"><i class="icon-ok"></i></a>
+        </div>
+    </div>
+    
+    <h3 class="card-heading simple" style="padding-left: 10px; padding-right: 0px;height: 45px;margin-bottom: 10px;">
+        Seguimiento Metrobus
+    </h3>
+    
+    <div style="margin-left: 20px; margin-right: 20px; margin-bottom: 180px;">
+        <span style="display: inline-block"> Nombre:<br />
+            <input class="span5" ng-disabled="!modificando" type="text" ng-model="item.nombre" />
+        </span>
+        <br>
+        <table border="1" class="table table-bordered">
+            <tr bgcolor="#B8CCE4">
+                <th bgcolor="#DCE6F1">Dependencia</th>
+                <th bgcolor="#DCE6F1">Área</th>
+                <th>Proyecto</th>
+                <th>Especificación</th>
+                <th>Presupuesto</th>
+                <th>Aprobación</th>
+                <th>Crédito</th>
+                <th>Ejecución</th>
+                <th>Fecha Prevista de Ejecución</th>
+                <th>Contratista</th>
+                <th>Presupuesto Asignado (en $)</th>
+            </tr>
+            <tr bgcolor="#FFFFFF">
+                <th rowspan="9" style="vertical-align:middle;">MAyEP</th>
+                <th>Alumbrado</th>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr bgcolor="#FFFFFF">
+                <th>Asfalto (calzadas)</th>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr bgcolor="#FFFFFF">
+                <th>Veredas (aceras)</th>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr bgcolor="#FFFFFF">
+                <th>Pluviales</th>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr bgcolor="#D9D9D9">
+                <th bgcolor="#FFFFFF">EE.VV</th>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr bgcolor="#FFFFFF">
+                <th style="text-align:right;">EE.VV</th>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr bgcolor="#FFFFFF">
+                <th style="text-align:right;">Arbolado</th>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr bgcolor="#FFFFFF">
+                <th style="text-align:right;">Monumentos</th>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr bgcolor="#FFFFFF">
+                <th>Mobiliario Urbano</th>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr bgcolor="#FFFFFF">
+                <th rowspan="6" style="vertical-align:middle;">SSTRANS</th>
+                <th>Semáforos</th>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr bgcolor="#FFFFFF">
+                <th>Señalización Vertical</th>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr bgcolor="#FFFFFF">
+                <th>Demarcación Horizontal</th>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr bgcolor="#FFFFFF">
+                <th>Interferencias EPSP</th>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr bgcolor="#FFFFFF">
+                <th>Expropiaciones</th>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr bgcolor="#FFFFFF">
+                <th>Estaciones</th>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+</div>

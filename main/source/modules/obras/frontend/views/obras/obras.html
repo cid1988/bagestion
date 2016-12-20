@@ -1,0 +1,242 @@
+<style type="text/css">
+    .btn-gris {
+        background-color: hsl(0, 0%, 74%) !important;
+        background-repeat: repeat-x;
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#bcbcbc", endColorstr="#bcbcbc");
+        background-image: -khtml-gradient(linear, left top, left bottom, from(#bcbcbc), to(#bcbcbc));
+        background-image: -moz-linear-gradient(top, #bcbcbc, #bcbcbc);
+        background-image: -ms-linear-gradient(top, #bcbcbc, #bcbcbc);
+        background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #bcbcbc), color-stop(100%, #bcbcbc));
+        background-image: -webkit-linear-gradient(top, #bcbcbc, #bcbcbc);
+        background-image: -o-linear-gradient(top, #bcbcbc, #bcbcbc);
+        background-image: linear-gradient(#bcbcbc, #bcbcbc);
+        border-color: #bcbcbc #bcbcbc hsl(0, 0%, 74%);
+        color: #333 !important;
+        text-shadow: 0 1px 1px rgba(255, 255, 255, 0.00);
+        -webkit-font-smoothing: antialiased;
+    }
+    .botones {
+        width: 83px;
+        padding: 0;
+        width: 7%;
+        max-width: 83px;
+    }
+    a:hover{
+        color:black;
+    }
+</style>
+
+<div class="card">
+    <div class="col-md-3">
+        <table style="height:300px" class="table table-striped">
+            <thead>
+                <div style="margin-left:10px;margin-right:10px;margin-bottom:5px">
+                    <input type="text" style="margin-bottom:0px;width:25%" placeholder="Nombre" ng-model="filtro.nombre">
+                    <select type="text" style="width:20%" placeholder="Segmento" ui-select2 ng-model="filtro.orden1">
+                        <option value=""></option>
+                        <option value="">Todos los segmentos</option>
+                        <option ng-repeat="e in ordenes | orderBy: 'orden'" value="{{e._id}}">{{e.nombre}}</option>
+                    </select>
+                    <select type="text" style="width:15%" placeholder="Tipo" ui-select2 ng-model="filtro.tipo">
+                        <option value=""></option>
+                        <option value="">Todos los Tipos</option>
+                        <option ng-repeat="e in tipos" value="{{e._id}}">{{e.nombre}}</option>
+                    </select>
+                    <select ng-if="!hasPermission('obras.comuneros')" type="text" style="width:25%" placeholder="Jurisdiccion" ui-select2 ng-model="filtro.jurisdiccion">
+                        <option value=""></option>
+                        <option value="">Todas las jurisdicciones</option>
+                        <option ng-repeat="e in jurisdicciones" value="{{e._id}}">{{e.nombreCompleto}}</option>
+                    </select>
+                    <select ng-if="hasPermission('obras.comuneros')" type="text" style="width:25%" placeholder="Jurisdiccion" ui-select2 ng-model="filtro.jurisdiccion">
+                        <option value=""></option>
+                        <option value=""></option>
+                        <option value="52433a64295915d121000029">Secretaria de Gestión Comunal y Atención Ciudadana</option>
+                        <option ng-repeat="e in jurisdicciones | filter:filtroJurisdiccionComunero" value="{{e._id}}">{{e.nombreCompleto}}</option>
+                    </select>
+                    <select type="text" style="width:12%" placeholder="Estado" ui-select2 ng-model="filtro.estado">
+                        <option value=""></option>
+                        <option value="">Todos los estados</option>
+                        <option ng-repeat="e in estados" value="{{e._id}}">{{e.nombre}}</option>
+                    </select>
+                </div>
+                
+                <div style="margin-left:10px;margin-right:10px">
+                    <div data-toggle="multiselect buttons-radio" class="control-group pull-left">
+                        <a style="min-width:21px; min-height:25px; height:27px; margin-right:50px;border-left-width: 1px;width: 120px" class="btn" ng-click="filtro=''; orden =['orden1','orden2'];filtrosVarios = ''">Total obras: {{filtrados.length}}</a>
+                    </div>
+                    <div data-toggle="multiselect buttons-radio" class="control-group pull-right span4" style="width: 240px !important">
+                        Prioridad:
+                        <div class="btn-group">
+                            <a style="padding-left: 0px;padding-right: 0px; min-width:21px; font-weight: 700" class="btn" ng-class="{'active btn-info': filtrandoPrioridad('SP')}" ng-click="cambiarFiltroPrioridad('SP')">SP</a>
+                            <a ng-repeat="c in relevancias | orderBy:'_id'" style="padding-left: 0px;padding-right: 0px; min-width:21px; font-weight: 700" class="btn" ng-class="{'active btn-info': filtrandoPrioridad(c)}" ng-click="cambiarFiltroPrioridad(c)">{{c.nombre}}</a>
+                            <a class="btn" ng-class="{'active btn-info': todasLasPrioridadesEstanFiltradas(c)}" style="font-weight: 700" ng-click="togglePrioridades()"><div ng-show="todasLasPrioridadesEstanFiltradas(c)">Ninguna</div><div ng-show="!todasLasPrioridadesEstanFiltradas(c)">Todas</div></a>
+                        </div>
+                    </div>
+                    <div data-toggle="multiselect buttons-radio" class="control-group pull-left" style="margin-left: 10px; margin-right: 0px;">
+                        <a style="min-width:21px; min-height:25px; height:27px; padding-right: 10px; padding-left: 10px; border-left-width: 1px" class="btn" ng-click="">Monto total: {{montoTotal(filtrados)}}</a>
+                    </div>
+                    <!--<div data-toggle="multiselect buttons-radio" class="control-group pull-right span4" style="margin-left: 0px; width: 460px !important;margin-right: 0px;">-->
+                    <!--    Comuna:-->
+                    <!--    <div class="btn-group">-->
+                    <!--        <a ng-repeat="c in comunas | orderBy:'numero'" style="padding-left: 0px;padding-right: 0px; min-width:21px; font-weight: 700" class="btn" ng-class="{'active btn-info': filtrandoComuna(c) }" ng-click="cambiarFiltroComuna(c)">{{c.numero}}</a>-->
+                    <!--        <a class="btn" ng-class="{'active btn-info': todasLasComunasEstanFiltradas(c)}" style="font-weight: 700" ng-click="toggleComunas()"><div ng-show="todasLasComunasEstanFiltradas(c)">Ninguna</div><div ng-show="!todasLasComunasEstanFiltradas(c)">Todas</div></a>-->
+                    <!--    </div>-->
+                    <!--</div>-->
+                    <div data-toggle="multiselect buttons-radio" class="control-group pull-right span4" style="margin-left: 0px; width: 460px !important;margin-right: 0px;">
+                        Comuna:
+                        <div class="btn-group">
+                            <a ng-show="hasPermission('obras.comuneros')" ng-disabled="true" ng-repeat="c in comunas | orderBy:'numero'" style="padding-left: 0px;padding-right: 0px; min-width:21px; font-weight: 700" class="btn" ng-class="{'active btn-info': filtrandoComuna(c)}">{{c.numero}}</a>
+                            <a ng-show="!hasPermission('obras.comuneros')" ng-repeat="c in comunas | orderBy:'numero'" style="padding-left: 0px;padding-right: 0px; min-width:21px; font-weight: 700" class="btn" ng-class="{'active btn-info': filtrandoComuna(c) }" ng-click="cambiarFiltroComuna(c)">{{c.numero}}</a>
+                            <a class="btn" ng-class="{'active btn-info': todasLasComunasEstanFiltradas(c)}" ng-hide="hasPermission('obras.comuneros')" style="font-weight: 700" ng-click="toggleComunas()"><div ng-disabled="hasPermission('obras.comuneros')" ng-show="todasLasComunasEstanFiltradas(c)">Ninguna</div><div ng-show="!todasLasComunasEstanFiltradas(c)">Todas</div></a>
+                        </div>
+                    </div>
+                    <div data-toggle="multiselect buttons-radio" style="margin-left:0px" class="control-group pull-right span3">
+                        Plan:
+                        <a class="btn" ng-class="{'active btn-info': togglePlan == 'cero'}" ng-click="funcToggle('uno')">S/A</a>
+                        <a class="btn" ng-class="{'active btn-info': togglePlan2 == '2015'}" ng-click="funcToggle('dos')">2015</a>
+                        <a class="btn" ng-class="{'active btn-info': togglePlan3 == '2016'}" ng-click="funcToggle('tres')">2016</a>
+                    </div>
+                </div>
+                
+                <tr style="width: 100%;display: inline-table">
+                    <th style="width:31%">
+                        <a ng-show="!reverse" href="#" ng-click="orden = ordenNombre(obras.nombre,true);reverse=true"><b>Nombre:</b></a>
+                        <a ng-show="reverse" href="#" ng-click="orden = ordenNombre(obras.nombre,false);reverse=false"><b>Nombre:</b></a>
+                    </th>
+                    <th style="width:6%">
+                        <a ng-show="!reverse" href="#" ng-click="orden = ordenRelevancia(obras.relevancia,true);reverse=true"><b>Prioridad:</b></a>
+                        <a ng-show="reverse" href="#" ng-click="orden = ordenRelevancia(obras.relevancia,false);reverse=false; "><b>Prioridad:</b></a>
+                    </th>
+                    <!--<th style="width:110px"></th>-->
+                    <th class="botones">
+                        <a ng-show="reverse" href="#" ng-click="orden = ordenFechaProyecto;reverse=false"><b>Proyecto:</b></a>
+                        <a ng-show="!reverse" href="#" ng-click="orden = ordenFechaProyecto;reverse=true"><b>Proyecto:</b></a>
+                    </th>
+                    <th class="botones">
+                        <a ng-show="reverse" href="#" ng-click="orden = ordenFechaContrato;reverse=false"><b>Contrato:</b></a>
+                        <a ng-show="!reverse" href="#" ng-click="orden = ordenFechaContrato;reverse=true"><b>Contrato:</b></a>
+                    </th>
+                    <th class="botones">
+                        <a ng-show="reverse" href="#" ng-click="orden = ordenFechaInicio;reverse=false"><b>Inicio:</b></a>
+                        <a ng-show="!reverse" href="#" ng-click="orden = ordenFechaInicio;reverse=true; "><b>Inicio:</b></a>
+                    </th>
+                    <th class="botones">
+                        <a ng-show="reverse" href="#" ng-click="orden = ordenFechaDuracion;reverse=false"><b>Duracion:</b></a>
+                        <a ng-show="!reverse" href="#" ng-click="orden = ordenFechaDuracion;reverse=true; "><b>Duracion:</b></a>
+                    </th>
+                    <th class="botones">
+                        <a ng-show="reverse" href="#" ng-click="orden = ordenFechaFinal;reverse=false"><b>Final:</b></a>
+                        <a ng-show="!reverse" href="#" ng-click="orden = ordenFechaFinal;reverse=true"><b>Final:</b></a>
+                    </th>
+                    <th class="botones">
+                        <a ng-show="reverse" href="#"><b>Estado:</b></a>
+                        <a ng-show="!reverse" href="#"><b>Estado:</b></a>
+                    </th>
+                    <th class="botones"><b>Financiero:</b></th>
+                    <th class="botones">
+                        <a ng-show="reverse" href="#" ng-click="orden = ordenFechaObjetivo;reverse=false"><b>Objetivo:</b></a>
+                        <a ng-show="!reverse" href="#" ng-click="orden = ordenFechaObjetivo;reverse=true;"><b>Objetivo:</b></a>
+                    </th>
+                    <td style="padding: 0px">
+                        <div>
+                            <div class="btn-group pull-right">
+                                <a class="btn btn-link dropdown-toggle" data-toggle="dropdown" href="#" title="Filtros" style="padding-left: 0px;padding-right: 0px;"><i class="icon-filter"></i></a>
+                                <ul class="dropdown-menu">
+                                    <li class="pull-left">
+                                        <a href="#" ng-click="filtrosVarios = ''">Sin filtro</a>
+                                        <a href="#" ng-click="filtrosVarios = filtroAIniciar">A Iniciar</a>
+                                        <a href="#" ng-click="filtrosVarios = filtroNoIniciada">No Iniciada</a>
+                                        <a href="#" ng-click="filtrosVarios = filtroEnEjecucion">En Ejecución</a>
+                                        <a href="#" ng-click="filtrosVarios = filtroPosibilidadAtraso">Con Posibilidad de Atraso</a>
+                                        <a href="#" ng-click="filtrosVarios = filtroAtrasadas">Atrasadas</a>
+                                        <a href="#" ng-click="filtrosVarios = filtroFinATiempo">Finalizadas a Tiempo</a>
+                                        <a href="#" ng-click="filtrosVarios = filtroFinFueraPlazo">Finalizadas Fuera de Plazo</a>
+                                    </li>
+                                </ul> 
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </thead>
+            
+            <tbody style="overflow-y: scroll; overflow-x: hidden; position: absolute;top: 204px;background: white;bottom: 12px;right: 20px;left: 20px;border: 1px solid #FFD300;border-top: transparent">
+            <!--<tbody style="overflow-x: hidden;overflow-y: scroll;height: 90%;width: 98%;position: absolute;top: 20px;bottom: 12px">-->
+                <tr bgcolor="#FFFFFF" ng-repeat="i in filtrados = (listado | orderBy: ['orden1','orden2'] | orderBy: orden | filter:filtro | filter:filtroComunas | filter:filtroPrioridades | filter:filtrosVarios | filter:funcionPlan)">
+                    <td style="width:32%;vertical-align:middle">
+                        <a ng-show="hasPermission('obras.lectura')" title="{{toolNombre(i)}}" href="/obras/{{i._id}}"><b>{{i.nombre}}</b></a>
+                        <span ng-hide="hasPermission('obras.lectura')" title="{{toolNombre(i)}}" href="#"><b>{{i.nombre}}</b></span>
+                    </td>
+                    <td style="width:77px;vertical-align:middle">
+                        <a href="#" style="width:10px">{{prioridadPorId(i.relevancia).nombre}}</a>
+                    </td>
+                    <td style="width:90px;vertical-align:middle" class="botones">
+                        <a ng-if="botonPresentacion(i.fotos)" href="#" ng-click="mostrarPresentacion(i._id)" class="btn" style="padding-left: 0px;padding-right: 0px; margin-left: 4px"><i class="icon-picture"></i></a>
+                    </td>
+                    <td class="botones">
+                        <a href="#" style="width:93%" data-toggle="tooltip" title="{{tool(i.proyectos)}}" class="btn" ng-class="coloresProyCont(i.proyectos,i.contratos,i.inicios,i.final,'proyecto')">
+                            <sub ng-class="iconos(i.proyectos[i.proyectos.length-1],i.contratos[i.contratos.length-1])"></sub>
+                            {{calcularmes(i.proyectos[i.proyectos.length-1]) | uppercase}}
+                            <sub> {{contados(i.proyectos)}}</sub>
+                        </a>
+                    </td>
+                    <td class="botones">
+                        <a style="width:93%" class="btn" data-toggle="tooltip" title="{{tool(i.contratos)}}" ng-class="coloresProyCont('',i.contratos,i.inicios,i.final,'contrato')">
+                            <sub ng-class="iconos(i.contratos[i.contratos.length-1],i.inicios[i.inicios.length-1])"></sub>
+                            {{calcularmes(i.contratos[i.contratos.length-1]) | uppercase}}
+                            <sub> {{contados(i.contratos)}}</sub>
+                        </a>
+                    </td>
+                    <td class="botones">
+                        <a style="width:93%" class="btn" data-toggle="tooltip" 
+                            title="{{toolInicio(i.inicios, i.iniciosRel)}}"
+                            ng-class="colores(i.inicios[i.inicios.length-1],i.final[i.final.length-1],i.iniciosRel[i.iniciosRel.length-1],'','Inicio')">
+                            <sub ng-class="iconos(i.inicios[i.inicios.length-1],i.final[i.final.length-1])"></sub>
+                            {{calcularmes(i.inicios[i.inicios.length-1]) | uppercase}}
+                            <sub> {{contados(i.inicios)}}</sub>
+                            <sup><i class="pull-right" ng-class="relevamientos(i.iniciosRel[i.iniciosRel.length-1])" style="margin-left: 0px;"></i></sup>
+                        </a>
+                    </td>
+                    <td class="botones">
+                        <a style="width:93%" class="btn" data-toggle="tooltip" title="{{toolDuracion(i.duracion)}}">
+                            {{duracion(i.duracion)}}
+                            <sub><span ng-show="i.duracion.length > 1">{{contados(i.inicios) + contados(i.final)}}</span></sub>
+                        </a>
+                    </td>
+                    <td class="botones">
+                        <a style="width:93%" class="btn" data-toggle="tooltip"
+                            title="{{toolFinal(i.final, i.finalRel)}}"
+                            ng-class="colores('',i.final[i.final.length-1],'',i.finalRel[i.finalRel.length-1],'Final')">
+                            <sub ng-class="iconos(i.final[i.final.length-1],i.objetivo[i.objetivo.length-1])"></sub>
+                            {{calcularmes(i.final[i.final.length-1]) | uppercase}}
+                            <sub> {{contados(i.final)}}</sub>
+                            <sup><i class="pull-right" ng-class="relevamientos(i.finalRel[i.finalRel.length-1])" style="margin-left: 0px;"></i></sup>
+                        </a>
+                    </td>
+                    <td class="botones">
+                        <a disabled style="width:93%" class="btn" data-toggle="tooltip" title="{{toolFisicoFinan(i.fisico[i.fisico.length-1])}}">
+                            {{calcularEstado(i)}}
+                        </a>
+                    </td>
+                    <td class="botones">
+                        <a disabled style="width:93%" class="btn" data-toggle="tooltip"
+                            title="{{toolFisicoFinan(i.financiero[i.financiero.length-1])}}">
+                            {{avanceFinanciero(i.financiero[i.financiero.length-1])}} %
+                            <sub> {{contados(i.financiero)}}</sub>
+                        </a>
+                    </td>
+                    <td class="botones">
+                        <a style="width:93%" class="btn" data-toggle="tooltip"
+                            title="{{tool(i.objetivo)}}"
+                            ng-class="coloresObjetivo(i.objetivo, i.final, i.inicios)">
+                            {{calcularmes(i.objetivo[i.objetivo.length-1]) | uppercase}}
+                            <sub> {{contados(i.objetivo)}}</sub>
+                        </a>
+                    </td>
+                    <td class="botones">
+                        <a href="javascript:" ng-click="enviarMail(i)" target="_top" class="btn" style="padding-left: 0px;padding-right: 0px; margin-right: 4px"><i class="icon-envelope"></i></a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

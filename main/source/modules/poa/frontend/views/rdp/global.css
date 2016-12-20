@@ -1,0 +1,311 @@
+body
+{
+    padding: 0px;
+    font-size: 11px;
+    margin: 0px;
+    border: 0px;
+    background-color: #FFFFFF;
+    cursor: default;
+    /*overflow: hidden;*/
+}
+
+
+div.header
+{
+	font-size: 18px;
+	color: #333333;
+	border-bottom: solid 1px #999999;
+	margin-bottom: 4px;
+}
+
+div.header a
+{
+color: #000099;
+text-decoration:none;
+}
+
+td
+{
+vertical-align: top;
+}
+	
+body, input, select, textarea
+{ 
+font-family : tahoma, Verdana, Arial;
+}
+
+table
+{
+cursor: default;
+}
+
+a
+{
+	font-weight: normal;
+	text-decoration:none;
+	font-style: normal;
+}
+
+button
+{
+filter:	progid:DXImageTransform.Microsoft.Gradient(GradientType=0, StartColorStr=#ffffff, EndColorStr=#cecfde);
+cursor:	hand;
+font-size: 11px;
+padding-left: 5px;
+padding-right: 5px;
+border:	1px solid #7b9ebd;
+}
+
+body.stage
+{
+background-color: #acc0e9;
+padding: 10px;
+}
+
+table.stdTable
+{
+width: 100%;
+height: 100%;
+table-layout: fixed;
+}
+td.rPanelBoton
+{
+    background-color: #C6E2FF; /*background-image: url(../images/fdoBotonInactivoPanelGral.png);*/
+    background-repeat: repeat-x;
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    border-top-style: solid;
+    border-right-style: solid;
+    border-left-style: solid;
+    border-top-color: #000000;
+    border-right-color: #000000;
+    border-bottom-color: #000000;
+    border-left-color: #000000;
+    padding-left: 8px;
+    color: #000000;
+    height: 32px;
+    text-align: center;
+    vertical-align: middle;
+}
+td.rPanelBotonSel
+{
+    background-color: #FFF3CD; /*background-image: url(../images/fdoBotonActivoPanelGral.png);*/
+    background-repeat: repeat-x;
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    border-top-style: solid;
+    border-right-style: solid;
+    border-left-style: solid;
+    border-bottom-style: solid;
+    border-top-color: #000000;
+    border-right-color: #000000;
+    border-bottom-color: #000000;
+    border-left-color: #000000;
+    padding-left: 8px;
+    color: #336699;
+    height: 32px;
+    text-align: center;
+    vertical-align: middle;
+    font-weight: bold;
+}
+.rPanelBoton a {
+	color: #000000;
+	text-decoration: none;
+	font-family: tahoma;
+	font-size: 11px;
+	}
+.rPanelBoton a:hover {
+	color: #CC0000;
+	text-decoration: none;
+	}
+.rPanelBotonSel a {
+	color: #336699;
+	text-decoration: none;
+	font-family: tahoma;
+	font-size: 11px;
+	font-weight: bold;
+	}
+.rPanelBotonSel a:hover {
+	color: #CC0000;
+	text-decoration: none;
+	}
+.rPanelBottomInfo {
+	color: #3399CC;
+	border-top-width: 1px;
+	border-top-style: solid;
+	border-top-color: #CCCCCC;
+	text-decoration: none;
+	font-family: tahoma, Verdana, Arial;
+	font-size: 11px;
+	height: 24px;
+	letter-spacing: normal;
+	text-align: left;
+	vertical-align: middle;
+	padding-left: 3px;
+}
+td.rPanelBottomInfo {
+	color: #3399CC;
+	border-top-width: 1px;
+	border-top-style: solid;
+	border-top-color: #CCCCCC;
+	text-decoration: none;
+	font-family: tahoma, Verdana, Arial;
+	font-size: 11px;
+	height: 24px;
+	letter-spacing: normal;
+	text-align: left;
+	vertical-align: middle;
+	padding-left: 3px;
+}
+td.panelGralTop {
+	background-color: #cccccc;
+	/*background-image: url(../images/fondoHeaderGradient.png);*/
+	background-repeat: repeat-y;
+	background-position: left;
+	height: 32px;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: #000000;
+	border-top-width: 1px;
+	border-top-style: solid;
+	border-top-color: #333333;
+	color: #000000;
+	font-family: tahoma;
+	font-size: 11px;
+	font-weight: bold;
+	text-align: left;
+	vertical-align: middle;
+	padding-left: 10px;
+}
+tr.headerTabla
+{
+    background-color: #ffffff;
+    height: 24px;
+    padding: 3px;
+    font-family: tahoma;
+    font-size: 11px;
+    color: #0066CC;
+    font-weight: lighter;
+    white-space: nowrap;
+    vertical-align: bottom;
+}
+table.listaContenido
+{
+    font-family:tahoma, Verdana, Arial, sans-serif;
+    font-size: 11px;
+    font-weight: normal;
+}
+td.listaCOntenidoLetraAzul
+{
+    border-top-width: 1px;
+    border-top-style: solid;
+    border-top-color: #cccccc;
+    color: #275078;
+    cursor: hand;
+    padding: 0 0 0 3;
+    font-weight: bold;
+}
+td.listaCOntenidoLetraGris
+{
+    border-top-width: 1px;
+    border-top-style: solid;
+    border-top-color: #cccccc;
+    color: #333333;
+    cursor: hand;
+}	
+
+td.listaCOntenidoLetraGrisFdoAzul
+{
+    border-top-width: 1px;
+    border-top-style: solid;
+    border-top-color: #cccccc;
+    color: #333333;
+    cursor: hand;
+    padding: 0 0 0 3;
+    background-color: #DFEFFF;
+}	
+
+td.listaCOntenidoLetraRojo
+{
+    border-top-width: 1px;
+    border-top-style: solid;
+    border-top-color: #cccccc;
+    color: #800000;
+    cursor: hand;
+}	
+
+td.listaCOntenidoLetraAzulSinLinea
+{
+    color: #275078;
+    cursor: hand;
+    padding-right: 3px;
+	padding-left: 3px;
+}
+td.listaCOntenidoLetraGrisSinLinea
+{
+
+    color: #333333;
+    cursor: hand;
+    padding-right: 3px;
+	padding-left: 3px;
+}	
+td.listaCOntenidoLetraRojoSinLinea
+{
+
+    color: #800000;
+    cursor: hand;
+    padding-right: 3px;
+	padding-left: 3px;
+}	
+
+td.cabeceraListados {
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: #333333;
+	cursor: hand;
+	
+	}
+table.listaContenidoConBorde {
+	font-family: tahoma, Verdana, Arial, sans-serif;
+	font-size: 11px;
+	color: #566084;
+	border: none;
+}
+td.toolbar {
+	background-repeat: repeat-x;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: #333333;
+	background-image: url(<%=Application("URL")%>_layout/images/toolbarGradient.png);
+	background-repeat: repeat-x;
+}
+span.footer {
+	font-size:11px;
+	color:#000000;
+	text-decoration: none;
+	vertical-align: baseline;
+	font-weight: bold;
+	padding-right: 2px;
+	padding-left: 0px;
+	cursor: hand;
+}
+tr.menuContent {
+cursor:hand;
+}
+
+td.aphaFade {
+	filter: Alpha(Opacity=100, FinishOpacity=0, Style=1, StartX=0, StartY=0, FinishX=60, FinishY=0);
+	/*los start y finish de x son en porcentaje*/
+}
+div.subTitulo {
+font-family:Tahoma, Verdana, Arial;
+font-size:18px;
+font-weight:bold;
+color:#333333;
+}
+div.contenedorPrimario {
+}

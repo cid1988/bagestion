@@ -1,0 +1,70 @@
+<div ng-controller="ORMCalendarioNavbarCtrl">
+    <div class="btn-group pull-right" style="margin-right: 7px">
+        <a class="btn btn-link" href="/orm/reuniones/reportes">
+            <i class="icon-list-alt"></i>&nbsp;Reportes</a>
+        <a class="btn btn-link" ng-click="showEditarSoporte()" ng-show="hasPermission('orm.soporteTecnico')">
+            <i class="icon-wrench"></i>&nbsp;Editar soporte</a>
+        <a class="btn btn-link" ng-hide="editando" ng-if=hasPermission('orm.edicionReunion') ng-click="$root.$broadcast('start-edit')">
+            <i class="icon-edit"></i>&nbsp;Activar edición</a>
+        <a class="btn btn-link" ng-hide="!editando" ng-click="$root.$broadcast('stop-edit')">
+            <i class="icon-edit"></i>&nbsp;Cerrar edición</a>
+        <i class="icon-spinner icon-spin" ng-show="trabajando"></i>
+    </div>
+    <div class="btn-group input-prepend pull-right" style="margin-right: 7px; margin-bottom: 0">
+        <a class="btn btn-link disabled">
+            <i class="icon-calendar"></i><span style="margin-left: 0.5em">iCal</span>
+        </a>
+        <input type="text" disabled class="input-medium" value="{{appRootUrl}}/api/orm-ical/all.ics"
+        />
+    </div>
+    
+    <!--Ventana para confirmar eliminar archivo-->
+    <div id="editarSoporte" class="modal hide fade">
+        <div class="modal-header" style="padding:0">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <legend>
+                <span>Editar soporte técnico</span>
+                <div class="pull-right">
+                    <div ng-if="editandoSoporte">
+                        <button type="button" class="btn btn-link no-underline" style="margin:0" ng-click="cambiarEdicion()"><i class="icon-edit"></i> Activar edicion</button>
+                    </div>
+                    <div ng-if="!editandoSoporte">
+                        <select type="text" ng-model="buscador" ui-select2>
+                            <option value=""></option>
+                            <option ng-repeat="c in contactos | orderBy: 'apellidos' | filter:filtroContactos" value="{{c._id}}">{{c.apellidos}}, {{c.nombre}}</option>
+                        </select>
+                        <button type="button" class="btn btn-success" ng-click="agregar(buscador)" title="Agregar a soporte técnico" style="margin:0">Agregar</button>
+                    </div>
+                </div>
+            </legend>
+        </div>
+        <div class="modal-body">
+            <table class="table table-striped table-condensed">
+                <thead style="background-color:#D1D1D1">
+                    <tr>
+                        <th>Apellido y Nombre</th>
+                        <th>E-Mail</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="i in soporte" style="cursor: default;">
+                        <td>
+                            <span>{{i.apellidos}}, {{i.nombres}}</span>
+                        </td>
+                        <td>
+                            <span>{{i.email}}</span>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-link" ng-click="borrarSoporte(i)" ng-hide="editandoSoporte"  style="margin:0" title="Eliminar soporte"><i class="icon-trash"></i></button>
+                            <button type="button" class="btn btn-link" ng-click="irAContacto(i.idSoporte)" style="margin:0" title="Ir a contacto"><i class="icon-user"></i></button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn pull-right" data-dismiss="modal" title="Cerrar ventana">Cerrar</button>
+        </div>
+    </div>
+</div>

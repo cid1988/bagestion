@@ -1,0 +1,1 @@
+exports = module.exports = ["bag2.agenda", "bag2.agenda.calendario", "bag2.agenda.minuta", "bag2.agenda.temario"];

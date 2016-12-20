@@ -1,0 +1,79 @@
+<style>
+    .table {
+        border: 0;
+    }
+    .table th, .table td {
+        padding: 8px;
+        line-height: 20px;
+        text-align: left;
+        vertical-align: middle;
+        border: 0;
+    }
+    .table th {
+        background-color: #dddddd !important;
+    }
+</style>
+<div class="card" style="position: absolute;top: 50px;bottom: 0px;right: 20px;left: 20px;margin-bottom: 10px;">
+    <div class="card-actions pull-right no-print" style="margin: 0; padding: 0">
+        <input placeholder="Buscar por Actividad..." type="text" class="span2" ng-model="filtro.nombre" style="margin-right: 0px;margin-left: 5px;margin-bottom: 25px;" />
+        <div style="margin-left: 5px; display: inline-block;">
+            <select class="span2" ui-select2 type="text" ng-model="filtro.etapaActividad">
+                <option value="">Todas las Etapas</option>
+                <option value="Diseño Inicial">Diseño Inicial</option>
+                <option value="Autorización de Actividad">Autorización de Actividad</option>
+            </select>
+        </div>
+        <div style="margin-left: 5px; display: inline-block;">
+            <select class="span3" ui-select2 type="text" ng-model="filtro.idArea">
+                <option value="">Todas las Áreas</option>
+                <option ng-repeat="e in areas" value="{{e._id}}">{{e.nombre}}</option>
+            </select>
+        </div>
+        <div style="margin-left: 5px; display: inline-block;margin-right: 20px;">
+            <select class="span3" ui-select2 type="text" ng-model="filtro.idObjArea">
+                <option value="">Todas los Objetivos</option>
+                <option ng-repeat="e in objetivos | filter:{idArea:filtro.idArea}" value="{{e._id}}">{{e.nombre}}</option>
+            </select>
+        </div>
+    </div>
+    <h2 class="card-heading simple">UPEJOL - Gestión Presupuestaria <sub>({{filtrados.length}})</sub></h2>
+    <div class="card-body">
+        <table border="1" class="table table-striped">
+            <tr bgcolor= "#FFFFFF">
+                <th width="21% !important"><a ng-click="orden = 'idArea'" href="#" style="display: inline-block; color:#404040;">Área</a></th>
+                <th width="22% !important"><a ng-click="orden = 'nombre'" href="#" style="display: inline-block; color:#404040;">Actividad</a></th>
+                <th width="8% !important"><a ng-click="orden = 'fechaInicio'" href="#" style="display: inline-block; color:#404040;">Fecha Inicio</a></th>
+                <th width="8% !important"><a ng-click="orden = 'fechaFin'" href="#" style="display: inline-block; color:#404040;">Fecha Fin</a></th>
+                <th width="10% !important"><a ng-click="orden = ''" href="#" style="display: inline-block; color:#404040;">Presupuesto Total</a></th>
+                <th width="11% !important"><a ng-click="orden = 'ordenPago'" href="#" style="display: inline-block; color:#404040;">Nro Orden de Pago</a></th>
+                <th width="5% !important"><a ng-click="orden = ''" href="#" style="display: inline-block; color:#404040;">Status</a></th>
+                <th width="10% !important"><a ng-click="orden = 'etapaActividad'" href="#" style="display: inline-block; color:#404040;">Etapa</a></th>
+                <th width="5% !important"></th>
+            </tr>
+        </table>
+        <div style="overflow-y: scroll; overflow-x: hidden;position: absolute;top: 120px;bottom: 12px;right: 20px;left: 20px;">
+        <table border="1" class="table table-striped">
+            <tr ng-repeat="i in filtrados = (actividades | orderBy:orden | filter:filtro)">
+                <td width="22% !important"><div>{{areaPorId(i.idArea).nombre}}</div></td>
+                <td width="22% !important"><div>{{i.nombre}}</div></td>
+                <td width="8% !important"><div>{{i.fechaInicio}}</div></td>
+                <td width="8% !important"><div>{{i.fechaFin}}</div></td>
+                <td width="10% !important"><div>{{presupuestoTotal(i)}}</div></td>
+                <td width="11% !important"><div>{{i.ordenPago}}</div></td>
+                <td width="5% !important"><button class="btn" title="Status"></button>
+                    <button class="btn btn-warning" ng-if="i.statusAvance=='Avance Medio'" title="Avance Medio" style="margin-left: 13px;"></button>
+                    <button class="btn btn-danger" ng-if="i.statusAvance=='Avance Bajo'" title="Avance Bajo" style="margin-left: 13px;"></button>
+                    <button class="btn" ng-if="i.statusAvance=='Activación en Espera'" title="Activación en Espera" style="margin-left: 13px;"></button></td>
+                <td width="10% !important"><div>{{i.etapaActividad}}</div></td>
+                <td width="4% !important">
+                    <div>
+                        <a class="btn btn-link pull-right" type="button" href="/upejol/plan/2015/planificacion?area={{i.idArea}}&objArea={{i.idObjArea}}&actividad={{i._id}}" title="Ver detalle" style="padding-left: 0px;padding-right: 0px;"><i class="icon-edit"></i></a>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        </div>
+    </div>
+</div>
+
+

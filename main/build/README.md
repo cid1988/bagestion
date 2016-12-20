@@ -1,0 +1,1 @@
+En la Carpeta Build/ se deben incluir todos los binarios compilados en caso de tratarse de un lenguaje compilado.

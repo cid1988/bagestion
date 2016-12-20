@@ -1,0 +1,44 @@
+<style type="text/css">
+    body {
+        background-image: none !important;
+    }
+    input.disabled, input[disabled] {
+        background-color: #ffffff;
+    }
+    hr{
+        display: block;
+        height: 1px;
+        background: transparent;
+        width: 100%;
+        border: none;
+        border-top: solid 1px #aaa;
+    }
+</style>
+
+<div class="container-fluid" ng-controller="ListasCtrl">
+    <div class="row-fluid">
+		<div class="jumbotron">
+			<h3 style="margin-top: 0px;">Lista: {{ listaImpresion.text }}<span class="label label-info">{{ listaImpresion.tareas.length }}</span>
+			<a class="btn btn-info no-print pull-right" href="javascript:window.print()"><i class="icon-print icon-white"></i> Imprimir</a>
+			<a class="btn no-print pull-right" ng-model="filtro.cumplido" ng-click="(filtro.cumplido = 'false'); (botonPendiente = true)" ng-hide="botonPendiente" href="#" style="margin-right: 10px;">Solo pendientes</a>
+			<a class="btn no-print pull-right" ng-model="filtro.cumplido" ng-click="(filtro.cumplido = ''); (botonPendiente = false)" ng-show="botonPendiente" href="#" style="margin-right: 10px;">Todos</a></h3>
+		</div>
+        <hr style="margin-top: 5px; margin-bottom: 5px;">
+		<div ng-repeat="tarea in listaImpresion.tareas | filter: filtro">
+			<label style="display: inline-block !important">
+			    <input type="checkbox" ng-model="tarea.cumplido" ng-disabled="true" style="margin-top: 0px;">
+			</label>
+			<a href="#" style="display: inline-block; color:#404040;" ng-style="{'text-decoration': tarea.cumplido && 'line-through' || ''}"> {{ tarea.text }} </a> 
+			<hr style="margin-top: 0px;margin-bottom: 0px;">
+			<div ng-repeat="subtarea in tarea.subtareas" style="margin-left:50px">
+				<label style="display: inline-block !important">
+				    <input type="checkbox" ng-model="subtarea.cumplido" ng-disabled="true" style="margin-top: 0px;">
+				</label>
+				<a href="#" style="display: inline-block; color:#404040;" ng-style="{'text-decoration': subtarea.cumplido && 'line-through' || ''}"> {{ subtarea.text }} </a> 
+			    <hr style="margin-top: 0px;margin-bottom: 0px;">
+			</div>
+		</div>
+    </div>
+</div>
+
+

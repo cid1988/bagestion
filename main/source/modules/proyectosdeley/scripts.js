@@ -1,0 +1,1 @@
+exports = module.exports = ['/scripts/controllers/proyectosDeLey.js','/scripts/controllers/detallePdl.js','/scripts/controllers/nuevoPdl.js'];

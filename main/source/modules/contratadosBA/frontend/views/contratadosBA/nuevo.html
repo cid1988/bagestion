@@ -1,0 +1,570 @@
+<style>
+    .control-group {
+      margin-bottom: 10px !important;
+    }
+</style>
+
+<div ng-controller="ContratadosBANuevoCtrl" class="card">
+    <a ng-click="guardar()"  href="/contratadosBA" class="btn btn-link pull-right" style="margin-right: 20px; margin-top:0%;margin-bottom:0%;"><i class="icon-ok icon-white"></i> Guardar</a>
+    <h3 class="card-heading simple">Nuevo contratado<span ng-show="contratado.nombre">&nbsp de {{contratado.nombre}} <span ng-show="contratado.apellido">{{contratado.apellido}}</span></span></h3>
+    <div class="card-body " style="margin-top: 0px;margin-bottom: 10px;">
+        <div class="card-body" style="padding-bottom: 0px;">
+            <form class="form-horizontal" style="margin-bottom: 0px !important;" autocomplete="on">
+            
+<!-- Datos personales ------------------------------------------------------------------------------------------------------------------------------------------------------ -->            
+                <div class="row">
+                <h4 style="margin-bottom: 5px;margin-top: 10px; margin-left: 20px;font-weight: 600;">Datos personales</h4>
+                <hr style=" margin-top: 0px;margin-bottom: 10px;border-top-width: 2px;">
+                    <div class="span6">
+                        <form class="form-horizontal" style="margin-bottom: 0px !important;">
+                            <div class="control-group" style="margin-left: 10px;margin-bottom: 0px;">
+                                <div class="control-group">
+                                    <label class="control-label">Apellido:</label>
+                                    <div class="controls">
+                                        <input class="span3" type="text" placeholder="Apellido" required ng-model="contratado.apellido" />
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">Tipo y nº Documento:</label>
+                                    <div class="controls">
+                                        <select type="text" ng-model="contratado.tipo" class="span1">
+                                            <option value="">Tipo...</option>
+                                            <option value="Pasaporte">Pasaporte</option>
+                                            <option value="L.C.">L.C.</option>
+                                            <option value="Cedula de Identidad">Cedula de Identidad</option>
+                                            <option value="L.E.">L.E.</option>
+                                            <option value="D.N.I.">D.N.I.</option>
+                                        </select>
+                                        <input class="span2" style="margin-left:6%;" type="text"  required ng-model="contratado.documento" />
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">CUIL:</label>
+                                    <div class="controls">
+                                        <input class="span3" type="text" placeholder="CUIL" required ng-model="contratado.cuil" />
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">Telefono celular:</label>
+                                    <div class="controls">
+                                        <input class="span3" type="text" placeholder="Numero de telefono celular"  ng-model="contratado.numeroCelular" />
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">Sexo:</label>
+                                    <div class="controls" style="margin-top: 1%;">
+                                        <form class="span3" style="margin-left:36%; vertical-align: middle;">
+                                            <span style="vertical-align: middle;">Masculino</span>
+                                            <input type="radio" name="sex" value="Masculino" ng-model="contratado.sexo" class="span1" checked>
+                                            <span style="vertical-align: middle;">Femenino</span>
+                                            <input type="radio" name="sex" value="Femenino" ng-model="contratado.sexo" class="span1">
+                                        </form> 
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">Domicilio:</label>
+                                    <div class="controls">
+                                        <input class="span3" type="text" placeholder="Dirección" required ng-model="contratado.domicilio" />
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">Nacionalidad:</label>
+                                    <div class="controls">
+                                        <input class="span3" type="text" placeholder="Nacionalidad" required ng-model="contratado.nacionalidad"/>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">Código Postal:</label>
+                                    <div class="controls">
+                                        <input class="span3" type="text" placeholder="Codigo Postal" required ng-model="contratado.codigoPostal"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="span6">
+                        <form class="form-horizontal" style="margin-bottom: 0px !important;">
+                            <div class="control-group" style="margin-left: 10px;margin-bottom: 0px;">
+                                <div class="control-group">
+                                    <label class="control-label">Nombre:</label>
+                                    <div class="controls">
+                                        <input class="span3" ui-select2 type="text" ng-model="contratado.nombre" placeholder="Nombre" required autofocus/>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">Fecha de Nacimiento:</label>
+                                    <div class="controls">
+                                        <input class="span3" type="text" date required ng-model="contratado.fechaNacimiento" />
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">Teléfono fijo:</label>
+                                    <div class="controls">
+                                        <input class="span3" type="text" placeholder="Numero de telefono fijo" ng-model="contratado.numeroTelefono"/>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">E-mail:</label>
+                                    <div class="controls">
+                                        <input class="span3" type="email" placeholder="Correo electronico" required ng-model="contratado.email"/>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">Estado Civil:</label>
+                                    <div class="controls">
+                                        <select type="text"  ui-select2 ng-model="contratado.estadoCivil" class="span3">
+                                            <option value="">Estado...</option>
+                                            <option value="Soltero/a">Soltero/a</option>
+                                            <option value="Casado/a">Casado/a</option>
+                                            <option value="Divorciado/a">Divorciado/a</option>
+                                            <option value="Viudo/a">Viudo/a</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">Ciudad:</label>
+                                    <div class="controls">
+                                        <input class="span3" type="text" placeholder="Ciudad" required ng-model="contratado.ciudad"/>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">Provincia:</label>
+                                    <div class="controls">
+                                        <input class="span3" type="text" placeholder="Provincia" required ng-model="contratado.provincia"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div> 
+            <!-- informacion laboral ------------------------------------------------------------------------------------------------------------------------------------------------------ -->            
+                <div class="row">
+                <h4 style="margin-bottom: 5px;margin-top: 10px; margin-left: 20px;font-weight: 600;">Informacion Laboral</h4>
+                <hr style=" margin-top: 0px;margin-bottom: 10px;border-top-width: 2px;">
+                    <div class="span6">
+                        <form class="form-horizontal" style="margin-bottom: 0px !important;">
+                            <div class="control-group" style="margin-left: 10px;margin-bottom: 0px;">
+                                <div class="control-group">
+                                    <label class="control-label">Fecha de Ingreso:</label>
+                                    <div class="controls">
+                                        <input class="span3" type="text" date placeholder="Fecha de Ingreso" required ng-model="contratado.fechaIngreso" />
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">Antigüedad:</label>
+                                    <div class="controls">
+                                        <input class="span3" type="text" placeholder="Antigüedad" ng-disabled="true" value="{{calcularAntiguedad(contratado.fechaIngreso, contratado.fechaEgreso)}} años" />
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">Dirección General:</label>
+                                    <div class="controls">
+                                        <select type="text"  ui-select2 ng-model="contratado.reparticion" class="span3">
+                                            <option value=""></option>
+                                            <option value="522e05fde5fd3d320e000029">Dirección General de Control de Gestión</option>
+                                            <option value="522e068ee5fd3d320e00002d">Dirección General de Planificación Estratégica</option>
+                                            <option value="522e063de5fd3d320e00002a">Dirección General de Evaluación del Gasto</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">Área:</label>
+                                    <div class="controls">
+                                        <input class="span3" type="text" placeholder="Área"  ng-model="contratado.area" />
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="span6">
+                        <form class="form-horizontal" style="margin-bottom: 0px !important;">
+                            <div class="control-group" style="margin-left: 10px;margin-bottom: 0px;">
+                                <div class="control-group">
+                                    <label class="control-label">Fecha de Egreso:</label>
+                                    <div class="controls">
+                                        <input class="span3" type="text" ng-model="contratado.fechaEgreso" placeholder="Fecha de Egreso" date />
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">Motivo:</label>
+                                    <div class="controls">
+                                        <input class="span3" type="text" placeholder="Motivo" ng-model="contratado.motivo"/>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">Categoría:</label>
+                                    <div class="controls">
+                                        <select type="text"  ui-select2 ng-model="contratado.categoria" class="span3">
+                                            <option value="">Categoría...</option>
+                                            <option value="Estudiante Universitario">Estudiante Universitario</option>
+                                            <option value="Joven Profesional">Joven Profesional</option>
+                                            <option value="Profesional Junior">Profesional Junior</option>
+                                            <option value="Profesional Senior">Profesional Senior</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">Tipo de Contrato:</label>
+                                    <div class="controls">
+                                        <select type="text"  ui-select2 ng-model="contratado.tipoContrato" class="span3">
+                                            <option value="">Tipo de Contrato...</option>
+                                            <option value="Asistente técnico">Asistente técnico</option>
+                                            <option value="Contrato de Locación">Contrato de Locación</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div> 
+<!-- Estudios ------------------------------------------------------------------------------------------------------------------------------------------------------ -->            
+            <div class="row">
+                <h4 style="margin-bottom: 5px;margin-top: 10px; margin-left: 20px;font-weight: 600;">Estudios</h4>
+                <hr style=" margin-top: 0px;margin-bottom: 10px;border-top-width: 2px;">
+                
+                <div class="span2" style="margin-left:3%;">
+                    <form class="form-horizontal" style="margin-bottom: 0px !important;">
+                        <div class="control-group" style="margin-left: 0px;margin-bottom: 0px;">
+                            <div class="control-group">
+                                <div>
+                                <h4>Nivel Profesional:</h4>
+                                    <select type="text" ui-select2  class="span2" ng-model="estudios.nivelProfesional" >
+                                        <option value="">No especifica</option>
+                                        <option value="Secundario">Secundario</option>
+                                        <option value="Terciario">Terciario</option>
+                                        <option value="Universitario">Universitario</option>
+                                        <option value="Postgrado">Postgrado</option>
+                                        <option value="Maestria">Maestría</option>
+                                        <option value="Doctorado">Doctorado</option>
+                                        <option value="Otro">Otro (especificar)</option>
+                                    </select>
+                                    <input class="span2" type="text" placeholder="Otro nivel profesional" ng-model="estudios.otroNivelProfesional" ng-show="estudios.nivelProfesional=='Otro'" style="margin-top:5px;"/>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="span2" ng-show="estudios.nivelProfesional" style="margin-left:5px;">
+                    <form class="form-horizontal" style="margin-bottom: 0px !important;">
+                        <div class="control-group" style="margin-left: 0px;margin-bottom: 0px;">
+                            <div class="control-group">
+                                <div>
+                                <h4>Título</h4>
+                                    <div class="row-fluid">
+                                        <div class="span12">
+                                            <input class="span12 " type="text" placeholder="Titulo" required ng-model="estudios.titulo" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                 <div class="span2" ng-show="estudios.nivelProfesional" style="margin-left:5px;">
+                    <form class="form-horizontal" style="margin-bottom: 0px !important;">
+                        <div class="control-group" style="margin-left: 0px;margin-bottom: 0px;">
+                            <div class="control-group">
+                                <div>
+                                <h4>Pais</h4>
+                                    <div class="row-fluid">
+                                        <div class="span12">
+                                            <input class="span12 " type="text" placeholder="Pais" required ng-model="estudios.pais" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="span2" ng-show="estudios.nivelProfesional" style="margin-left:5px;">
+                    <form class="form-horizontal" style="margin-bottom: 0px !important;">
+                        <div class="control-group" style="margin-left: 0px;margin-bottom: 0px;">
+                            <div class="control-group">
+                                <div >
+                                <h4>Estado</h4>
+                                    <select class="span2" ui-select2  type="text" ng-model="estudios.estadoNivelProfesional" >
+                                        <option value="">No especifica</option>
+                                        <option value="En curso">En curso</option>
+                                        <option value="Graduado">Graduado</option>
+                                        <option value="Abandonado">Abandonado</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="span2" ng-show="estudios.nivelProfesional" style="margin-left:5px;">
+                    <form class="form-horizontal" style="margin-bottom: 0px !important;">
+                        <div class="control-group" style="margin-left: 0px;margin-bottom: 0px;">
+                            <div class="control-group">
+                                <div>
+                                <h4>Fecha de Inicio</h4>
+                                    <input type="text" style="width:80%;" date ng-model="estudios.inicio" placeholder="Desde"/>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="span2" ng-show="estudios.nivelProfesional" style="margin-left:-10px;">
+                    <form class="form-horizontal" style="margin-bottom: 0px !important;">
+                        <div class="control-group" style="margin-left: 0px;margin-bottom: 0px;">
+                            <div class="control-group">
+                                <div >
+                                <h4>Fecha de Fin</h4>
+                                     <input type="text" style="width:80%;" date ng-model="estudios.fin" placeholder="Hasta" ng-show="estudios.fin!='Al presente'"/>
+                                     <input type="checkbox" ng-model="estudios.fin" ng-true-value="Al presente" ng-false-value="''"> Al presente
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="span2" ng-show="estudios.nivelProfesional" style="margin-left:-10px;">
+                    <form class="form-horizontal" style="margin-bottom: 0px !important;">
+                        <div class="control-group" style="margin-left: 0px;margin-bottom: 0px;">
+                            <div class="control-group">
+                                <div>
+                                <h4>Institución:</h4>
+                                    <div class="row-fluid">
+                                        <div class="span12">
+                                            <input class="span9" type="text" placeholder="Nombre de la institucion" required ng-model="estudios.nombreInstituto" />
+                                            <button class="btn span1 pull-right"  style="margin-left: 0%; height:100%;" ng-click="agregarEstudios(estudios)" ng-disabled="!estudios.nombreInstituto || !estudios.estadoNivelProfesional"><i class="icon-ok"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="row" style="margin-left:1%;">
+                <div class="span12">
+                    <div ng-repeat="t in contratado.estudios">
+                        <input ng-hide="t.otroNivelProfesional" type="text" class="span2" value ="{{t.nivelProfesional}}" ng-disabled="true"/>
+                        <input ng-show="t.otroNivelProfesional" type="text" class="span2" value ="{{t.otroNivelProfesional}}" ng-disabled="true"/>
+                        <input type="text" class="span2" value ="{{t.titulo}}" ng-disabled="true"/>
+                        <input type="text" class="span2" value ="{{t.pais}}" ng-disabled="true"/>
+                        <input type="text" class="span2" value ="{{t.estadoNivelProfesional}}" ng-disabled="true"/>
+                        <input type="text" class="span1" value ="{{t.inicio}}" ng-disabled="true" style="width:7.5%; text-transform:capitalize;"/>
+                        <input type="text" class="span1" value ="{{t.fin}}" ng-disabled="true" style="width:7.5%; text-transform:capitalize;"/>
+                        <input type="text" class="span2" value ="{{t.nombreInstituto}}" ng-disabled="true"/>
+                        <a href="#" ng-click="eliminarIdioma(t, contratado.estudios)" class="btn btn-link" style="margin-bottom: 1%;"><i class="icon-trash"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="span12" style="margin-left: 41px;">
+                    <form class="form-horizontal" style="margin-bottom: 0px !important;">
+                        <div class="control-group" style="margin-left: 0px;margin-bottom: 0px;">
+                            <div class="control-group">
+                                <h4>Idiomas</h4>
+                                <div class="row-fluid" style="margin-bottom:1%;">
+                                    <select class="span4" ui-select2 type="text" ng-model="valorIdioma.idioma">
+                                        <option value=""></option>
+                                        <option value="Inglés">Inglés</option>
+                                        <option value="Portugués">Portugués</option>
+                                        <option value="Francés">Francés</option>
+                                        <option value="Italiano">Italiano</option>
+                                        <option value="Alemán">Alemán</option>
+                                        <option value="Otros">Otros</option>
+                                    </select>
+                                    <div class="span2" ng-show="valorIdioma.idioma=='Otros'" style="margin-right:1%; margin-left:1%;">
+                                        <input type="text" placeholder="Especifique otro idioma" style="width:100%;" ng-model="valorIdioma.otroIdioma"/>
+                                    </div>
+                                    <div class="btn-group span6" data-toggle="buttons-radio" style="margin-left:2%;">
+                                        <button ng-disabled="!valorIdioma" type="button" class="btn" style="padding-left: 26px; padding-right: 26px;" ng-click="valorIdioma.nivelAprendizaje='Basico'"  ng-class="{'btn-info active': valorIdioma.nivelAprendizaje=='Basico'}">Básico</button>
+                                        <button ng-disabled="!valorIdioma" type="button" class="btn" style="padding-left: 26px; padding-right: 26px;" ng-click="valorIdioma.nivelAprendizaje='Intermedio'"  ng-class="{'btn-info active':valorIdioma.nivelAprendizaje=='Intermedio'}">Intermedio</button>
+                                        <button ng-disabled="!valorIdioma" type="button" class="btn" style="padding-left: 26px; padding-right: 26px;" ng-click="valorIdioma.nivelAprendizaje='Avanzado'"  ng-class="{'btn-info active': valorIdioma.nivelAprendizaje=='Avanzado'}">Avanzado</button>
+                                        <button ng-disabled="!valorIdioma || !valorIdioma.nivelAprendizaje" class="btn" style= "margin-left: 5px" ng-click="agregarIdioma(valorIdioma)"><i class="icon-ok"></i></button>
+                                    </div>
+                                </div> 
+                                <div class="row-fluid" ng-show="contratado.idiomas">
+                                    <div class="span6">
+                                        <div ng-repeat="t in contratado.idiomas" class="span12" style="margin-top:1%;margin-left:5%;">
+                                            <div ng-show="t.otroIdioma" class="span6" style="margin-left:2.5%;"><input type="text" class="span12" ng-disabled="true" value="{{t.otroIdioma}}" /></div>
+                                            <div ng-hide="t.otroIdioma" class="span6"><input type="text" class="span12" ng-disabled="true" value="{{t.idioma}}" /></div>
+                                            <div class="span2"><button ng-disabled="true" style="width:100%;" type="button" class="btn btn-primary " ng-class="{'btn-info active'}"> {{t.nivelAprendizaje}}</button></div>
+                                            <div class="span1"><a href="#" ng-click="eliminarIdioma(t, contratado.idiomas)" class="btn btn-link" ><i class="icon-trash"></i></a></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="span12" style="margin-left: 41px;">
+                    <form class="form-horizontal" style="margin-bottom: 0px !important;">
+                        <div class="control-group" style="margin-left: 0px;margin-bottom: 0px;">
+                            <div class="control-group">
+                                <h4>Informática</h4>
+                                <div class="row-fluid" style="margin-bottom:1%;">
+                                    <select class="span4" ui-select2 type="text" ng-model="valorSistemas.sistema">
+                                        <option value=""></option>
+                                        <option value="Base de Datos">Base de Datos</option>
+                                        <option value="Herramientas Graficas">Herramientas Gráficas</option>
+                                        <option value="Office">Office</option>
+                                        <option value="Programación">Programación</option>
+                                        <option value="Software de Gestión">Software de Gestión</option>
+                                        <option value="Otro">Otro (Completar) </option>
+                                    </select>
+                                    <div class="span2" ng-show="valorSistemas.sistema=='Otro'" style="margin-right:1%; margin-left:1%;">
+                                        <input type="text" placeholder="Especifique otro" style="width:100%;" ng-model="valorSistemas.otroSistema"/>
+                                    </div>
+                                    <div class="btn-group span6" data-toggle="buttons-radio" style="margin-left:2%;">
+                                        <button ng-disabled="!valorSistemas" type="button" class="btn" style="padding-left: 26px; padding-right: 26px;" ng-click="valorSistemas.nivelAprendizaje='Basico'"  ng-class="{'btn-info active': valorSistemas.nivelAprendizaje=='Basico'}">Básico</button>
+                                        <button ng-disabled="!valorSistemas" type="button" class="btn" style="padding-left: 26px; padding-right: 26px;" ng-click="valorSistemas.nivelAprendizaje='Intermedio'"  ng-class="{'btn-info active':valorSistemas.nivelAprendizaje=='Intermedio'}">Intermedio</button>
+                                        <button ng-disabled="!valorSistemas" type="button" class="btn" style="padding-left: 26px; padding-right: 26px;" ng-click="valorSistemas.nivelAprendizaje='Avanzado'"  ng-class="{'btn-info active': valorSistemas.nivelAprendizaje=='Avanzado'}">Avanzado</button>
+                                        <button ng-disabled="!valorSistemas || !valorSistemas.nivelAprendizaje" class="btn" style= "margin-left: 5px" ng-click="agregarSistema(valorSistemas)"><i class="icon-ok"></i></button>
+                                    </div>
+                                </div>
+                                <div class="row-fluid" ng-show="contratado.sistemas">
+                                <div class="span6">
+                                    <div ng-repeat="t in contratado.sistemas" class="span12" style="margin-top:1%;margin-left:5%;">
+                                        <div ng-show="t.otroSistema" class="span6" style="margin-left:2.5%;"><input type="text" class="span12" ng-disabled="true" value="{{t.otroSistema}}" /></div>
+                                        <div ng-hide="t.otroSistema" class="span6"><input type="text" class="span12" ng-disabled="true" value="{{t.sistema}}" /></div>
+                                        <div class="span2"><button ng-disabled="true" style="width:100%;" type="button" class="btn btn-primary " ng-class="{'btn-info active'}"> {{t.nivelAprendizaje}}</button></div>
+                                        <div class="span1"><a href="#" ng-click="eliminarIdioma(t, contratado.sistemas)" class="btn btn-link" ><i class="icon-trash"></i></a></div>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+<!-- EXPERIENCIA ------------------------------------------------------------------------------------------------------------------------------------------------------ -->
+    <!--Experiencias relacionadas al campo--> 
+        <div class="row show-grid">
+            <h4 style="margin-bottom: 5px;margin-top: 10px; margin-left: 20px;font-weight: 600;">Experiencias</h4>
+            <hr style=" margin-top: 0px;margin-bottom: 1%;border-top-width: 2px;">
+            
+            <div class="span6">
+                <form class="form-horizontal" style="margin-bottom: 0px !important;">
+                    <div class="control-group" style="margin-left: 10px;margin-bottom: 0px;">
+                        <div class="control-group">
+                        <h4>Experiencias:</h4>
+                            <div class="control-group" style="margin-bottom: 1%;">
+                                <div class="row-fluid">
+                                    <div class="span12">
+                                        <div>
+                                            <input type="text" style="width:33%;" date ng-model="valorExperiencia.desde" placeholder="Desde" />
+                                            <input type="text" style="width:34%; " date ng-model="valorExperiencia.hasta" placeholder="Hasta" ng-disabled="valorExperiencia.hasta=='Al presente'"/>
+                                            <input type="checkbox" ng-model="valorExperiencia.hasta" ng-true-value="Al presente" ng-false-value="''"> Al presente
+                                            
+                                            <button ng-disabled="!valorExperiencia || !valorExperiencia.experiencia || !valorExperiencia.empresa || !valorExperiencia.hasta || !valorExperiencia.pais" class="btn" style="margin-left: 0%; height:100%;" ng-click="agregarExperiencia(valorExperiencia)" title="Agregar Experiencia"><i class="icon-ok"></i></button>
+                                        </div>
+                                        <input type="text" style="width:94%; margin-top:1%;" ng-model="valorExperiencia.empresa" placeholder="Empresa" />
+                                        <input type="text" style="width:50%; margin-top:1%;" ng-model="valorExperiencia.puesto" placeholder="Título / Puesto" />
+                                        <input type="text" style="width:40%; margin-top:1%;" ng-model="valorExperiencia.pais" placeholder="Pais"/>
+                                        <input type="text" style="width:60%; margin-top:1%;" ng-model="valorExperiencia.area" placeholder="Área / Rubro"/>
+                                        <input type="text" style="width:30%; margin-top:1%;" ng-model="valorExperiencia.personasACargo" placeholder="Personas a Cargo"/>
+                                        <textarea rows="3" style="width:94%; max-width:94%; margin-top:1%;" class=" form-control" placeholder="Descripción de tareas y responsabilidades" ng-model="valorExperiencia.experiencia"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="control-group" ng-repeat="t in contratado.experiencias" style="margin-bottom: 1%;">
+                            <hr>
+                                <div class="row-fluid">
+                                    <div class="span12">
+                                        <div>
+                                            <input type="text" ng-disabled="true" date  value ="{{t.desde}}" style="width: 45%;" title="Desde"/>
+                                            <input type="text" ng-disabled="true" date  value ="{{t.hasta}}" style="width: 38%;" title="Hasta"/>
+                                            <button href="#" class="btn" style="margin-left: 0%; height:100%;" ng-click="eliminarIdioma(t, contratado.experiencias)" title="Borrar"><i class="icon-trash"></i></button>
+                                        </div>
+                                        <input type="text" ng-disabled="true" value="{{t.empresa}}" style="width: 94%;margin-top:1%;" title="Empresa"/>
+                                        <input type="text" ng-disabled="true" value="{{t.puesto}}" style="width: 52%;margin-top:1%;" title="Puesto"/>
+                                        <input type="text" ng-disabled="true" value="{{t.pais}}" style="width:38%; margin-top:1%;" title="Pais"/>
+                                        <input type="text" ng-disabled="true" value="{{t.area}}" style="width:60%; margin-top:1%;" title="Area / Rubro"/>
+                                        <input type="text" ng-disabled="true" value="{{t.personasACargo}}" style="width:30%; margin-top:1%;" title="Personas a cargo"/>
+                                        <textarea rows="3"  ng-disabled="true" class="span3 form-control" style="width:97%;margin-top:1%;" title="Experiencia">{{t.experiencia}}</textarea>
+                                    </div>
+                                </div>
+                            </div> 
+                        </div>
+                    </div>
+                </form>  
+            </div>
+            <div class="span6">
+                <form class="form-horizontal" style="margin-bottom: 0px !important;">
+                    <div class="control-group" style="margin-left: 10px;margin-bottom: 0px;">
+                        <div class="control-group">
+                            <h4>Conocimientos Adicionales:</h4>
+                            <div class="control-group" style="margin-bottom: 1%;">
+                                <div class="row-fluid">
+                                    <div class="span12">
+                                        <textarea rows="7" class="form-control" type="text" placeholder="Cursos, Voluntariados, Actividades Extracurriculares, Experiencias en el Exterior, etc" ng-model="contratado.otrasExperiencias" style="margin-top:0.5%;width:100%; max-width:100%;"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>  
+            </div>   
+        </div>  
+        <!-- Información de Emergencia ------------------------------------------------------------------------------------------------------------------------------------------------------ -->            
+            <div class="row">
+            <h4 style="margin-bottom: 5px;margin-top: 10px; margin-left: 20px;font-weight: 600;">Información de Emergencia</h4>
+            <hr style=" margin-top: 0px;margin-bottom: 10px;border-top-width: 2px;">
+                <div class="span6">
+                    <form class="form-horizontal" style="margin-bottom: 0px !important;">
+                        <div class="control-group" style="margin-left: 10px;margin-bottom: 0px;">
+                            <div class="control-group">
+                                <label class="control-label">Obra socia/Prepaga:</label>
+                                <div class="controls">
+                                    <input class="span3" type="text" placeholder="Obra socia/Prepaga" required ng-model="contratado.obraSocial" />
+                                </div>
+                            </div>
+                            <h4 style="margin-top: 20px;">En caso de Emergencia llamar a:</h4>
+                            <div class="control-group">
+                                <label class="control-label">Nombre y Apellido:</label>
+                                <div class="controls">
+                                    <input class="span3" type="text" placeholder="Nombre y Apellido" required ng-model="contratado.emergenciaNyA" />
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">Vinculo:</label>
+                                <div class="controls">
+                                    <input class="span3" type="text" placeholder="Vinculo"  ng-model="contratado.emergenciaVinculo" />
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">Número de Teléfono:</label>
+                                <div class="controls">
+                                    <input class="span3" type="text" placeholder="Número de Teléfono" required ng-model="contratado.emergenciaTel" />
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="span6">
+                    <form class="form-horizontal" style="margin-bottom: 0px !important;">
+                        <div class="control-group" style="margin-left: 10px;margin-bottom: 0px;">
+                            <div class="control-group">
+                                <label class="control-label">Nro. de Socio:</label>
+                                <div class="controls">
+                                    <input class="span3" type="text" ng-model="contratado.nroSocio" placeholder="Nro. de Socio" />
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div> 
+                    
+        <div class="row show-grid">
+            <h4 style="margin-bottom: 5px;margin-top: 10px; margin-left: 20px;font-weight: 600;">Adjuntar Currículum</h4>
+            <hr style=" margin-top: 0px;margin-bottom: 1%;border-top-width: 2px;">
+            <div style="margin-left:50px; margin-top:20px;">
+                <div ng-if="uploaded.length">Currículum (<a href="/file/{{uploaded[0].id}}" target="_blank">Descargar</a>)</div><br>
+                <div style="width: 300px" fine-uploader destination="'/upload/'"  placeholder="'Examinar'" uploaded="uploaded" ></div>
+            </div>
+        </div>
+    </div> 
+</div> 
+
+
+

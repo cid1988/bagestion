@@ -1,0 +1,82 @@
+
+<div class="card span11 offset1" ng-hide="modificando">
+    <h3 class="card-heading simple">Datos del Cuestionario
+        <a class="btn pull-right btn-link" style="margin-left: 10px" ng-click="eliminar()" ng-class="{true:'', false:'disabled'}[ui.legislatura.nuevoCuestionario.tienePermisos()]"><i class="icon-trash icon-white no-print"></i></a>
+        <a style="margin-left: 10px" ng-click="modificar()" ng-class="{true:'', false:'disabled'}[ui.legislatura.nuevoCuestionario.tienePermisos()]" class="btn btn-link pull-right no-print"><i class="icon-edit"></i></a>
+        <a class="pull-right btn btn-link" style="margin-left: 10px" href="/preguntas/cuestionarios/print/{{cuestionario._id}}"><i class="icon-print icon-white"></i></a>
+	</h3>
+    <div class="card-body container-fluid">
+        <forminput read-only ng-model="cuestionario.evento.nombre" placeholder="Seleccionar" title="Evento" />
+    	<forminput read-only ng-model="cuestionario.nombre" placeholder="Sin nombre" title="Nombre" />
+        <forminput read-only ng-model="cuestionario.nombreCorto" placeholder="Sin nombre corto" title="Nombre corto" />
+        <forminput read-only ng-model="cuestionario.nombreLargo" placeholder="Sin nombre largo" title="Nombre largo" />
+		<forminput read-only ng-model="cuestionario.fecha_nota" placeholder="Sin fecha de nota" title="Fecha de nota" />
+        <forminput read-only ng-model="cuestionario.fecha_recepcion" placeholder="Sin fecha de nota" title="Fecha de recepción" />
+    	<forminput read-only ng-model="cuestionario.nro_nota" placeholder="Sin numero de nota" title="Nro de nota" />
+		<forminput read-only lines="4" ng-model="cuestionario.descripcion" placeholder="Sin descripcion" title="Descripcion" />
+        <forminput read-only ng-model="cuestionario.bloque.nombre" placeholder="Seleccionar" title="Bloque" />
+        <forminput read-only ng-model="cuestionario.legislador" placeholder="Sin legislador" title="Legislador" />
+        <forminput read-only ng-model="cuestionario.via_recepcion" placeholder="Sin via de recepcion" title="Via de recepción" />
+	</div>    
+</div>
+<div class="card span11 offset1" ng-show="modificando">
+    <h3 class="card-heading simple">Datos del Cuestionario
+		<a class="btn btn-link no-print pull-right" ng-click="cancelar()" style="margin-left: 10px;"><i class="icon-remove icon-white"></i></a>
+        <a class="btn btn-link no-print pull-right" ng-click="guardar()"><i class="icon-ok icon-white"></i></a>
+    </h3>
+    <div class="card-body container-fluid">
+        <formselect required ng-model="cuestionario.evento" source="eventos" placeholder="Seleccionar" title="Evento" span="5" />
+    	<forminput required ng-model="cuestionario.nombre" placeholder="Sin nombre" title="Nombre" />
+        <forminput ng-model="cuestionario.nombreCorto" placeholder="Sin nombre corto" title="Nombre corto" />
+        <forminput ng-model="cuestionario.nombreLargo" placeholder="Sin nombre largo" title="Nombre largo" />
+		<forminput date ng-model="cuestionario.fecha_nota" placeholder="Sin fecha de nota" title="Fecha de nota" />
+        <forminput required date ng-model="cuestionario.fecha_recepcion" placeholder="Sin fecha de nota" title="Fecha de recepción" />
+    	<forminput ng-model="cuestionario.nro_nota" placeholder="Sin numero de nota" title="Nro de nota" />
+		<div class="control-group  ng-pristine ng-valid ng-valid-required"><label class="control-label">Descripcion:</label><div class="controls"><textarea style="width:95%" required="" placeholder="Sin descripcion" type="text" ng-model="cuestionario.descripcion" name="cuestionario.descripcion" rows="4" class="ng-pristine ng-valid ng-valid-required"></textarea></div></div>
+        <formselect ng-model="cuestionario.bloque" source="bloques" placeholder="Seleccionar" title="Bloque" />
+        <forminput ng-model="cuestionario.legislador" placeholder="Sin legislador" title="Legislador" />
+        <forminput required ng-model="cuestionario.via_recepcion" placeholder="Sin via de recepcion" title="Via de recepción" />
+    </div>
+</div>
+
+<div class="card span11 offset1" style="margin-top: 16px;">
+    <h3 class="card-heading simple">Preguntas de este Cuestionario
+        <a class="btn btn-link no-print pull-right" href="/preguntas/nueva?cuestionario={{cuestionario._id}}&evento={{cuestionario.evento._id}}"><i class="icon-plus"></i></a>
+    </h3>
+    <div class="card-body row-fluid" style="margin-bottom: 10px;"
+		ng-repeat="p in preguntas">
+			<a class="span2 disabled btn" ng-class="(estadosDict[p.estado._id].aprobada && 'btn-success') || (estadosDict[p.estado._id].noAprobada && 'btn-danger') || (estadosDict[p.estado._id].incompleta && 'btn-warning')">{{p.estado.nombre}}</a>
+		<div class="span8">
+			<strong>{{p.pregunta}}</strong>
+		</div>
+		<div class="span2">
+			<div class="btn-group">
+				<a href="/preguntas/{{p._id}}" class="btn no-print"><i class="icon-zoom-in"></i> Ver detalle</a>
+				<a class="btn dropdown-toggle" data-toggle="dropdown" href="#"> <span class="caret"></span> </a>
+				<ul class="dropdown-menu">
+                    <li>
+    					<a tabindex="-1" ng-class="{true:'', false:'disabled'}[ui.legislatura.borrarPregunta.tienePermisos()]" ng-click="ui.legislatura.borrarPregunta.navegar(p._id)"><i class="icon-trash"></i> Borrar</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div class="row-fluid" ng-show="!preguntas.length">
+		No hay ninguna pregunta
+	</div>
+</div>
+
+
+<div id="confirmarEliminar" class="modal hide fade">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h3>Eliminar cuestionario</h3>
+  </div>
+  <div class="modal-body">
+    <p>Está a un paso de eliminar el cuestionario</p>
+  </div>
+  <div class="modal-footer">
+    <a href="#" class="btn btn-info" data-dismiss="modal">Conservar el registro</a>
+    <a href="#" class="btn btn-danger"  data-dismiss="modal" ng-click="eliminar(true)">Eliminar el cuestionario</a>
+  </div> 
+</div>

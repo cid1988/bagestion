@@ -1,0 +1,56 @@
+<div ng-controller="CRMReportesCtrl" class="card">
+    <div class="card-actions pull-right no-print" style="margin: 0; padding: 0">
+        <a href="#" class="btn btn-link" ng-click="abrirModal()" style="margin-right: 10px;" ng-if=hasPermission('crm.editar') ><i class="icon-plus"></i></a>
+    </div>
+    <h3 class="card-heading simple">Reportes
+        <input type="text" style="margin-right:10px; margin-bottom:10px;width: 180px;" class="input-level-block search-query pull-right" placeholder="Buscar por..." ng-model="filtro.nombre" />
+    </h3>
+    
+    <div class="form-horizontal" name="form" style="margin-left:10px; padding-top: 16px; clear: both">
+        <div class="row" style="padding-bottom: 10px;">
+            <div ng-show="!tipoOrdenApellidos" class="span3" style="display: table-cell;margin-left: 70px;"><a href="#" ng-click="orden = 'apellidos'; tipoOrdenApellidos=true" style="display: inline-block; color:#404040;">Nombre:</a></div>
+            <div ng-show="tipoOrdenApellidos" class="span3" style="display: table-cell;margin-left: 70px;"><a href="#" ng-click="orden = '-apellidos'; tipoOrdenApellidos=false" style="display: inline-block; color:#404040;">Nombre:</a></div>
+            
+            <div ng-show="!tipoOrdenSexo" class="span2" style="display: table-cell"><a href="#" ng-click="orden = 'sexo'; tipoOrdenSexo=true" style="display: inline-block; color:#404040;">Sexo:</a></div>
+            <div ng-show="tipoOrdenSexo" class="span2" style="display: table-cell"><a href="#" ng-click="orden = '-sexo'; tipoOrdenSexo=false" style="display: inline-block; color:#404040;">Sexo:</a></div>
+            
+            <div class="span2" style="display: table-cell">En Gobierno:</div>
+            
+            <div class="span2" style="display: table-cell">Afiliado:</div>
+            
+            <div class="span3" style="display: table-cell">Cantidad de contactos:</div>
+        </div>
+    </div>
+    <hr style="margin-bottom: 0px;margin-top: 0px;">
+    <ul class="nav nav-list">
+      <li ng-repeat="c in reportes | orderBy:'apellidos' | orderBy:orden | filter:filtro">
+        <a style="font-size: 12px;padding-top: 8px;padding-bottom: 8px;" href="/crm/reportes/{{c._id}}">
+        <span class="span3">{{c.nombre}}</span>
+        <span class="span2"><div ng-if="c.sexo == 'M'">Masculino</div><div ng-if="c.sexo == 'F'">Femenino</div></span>
+        <span class="span2">{{c.enGobierno.toUpperCase()}}</span>
+        <span class="span2">{{c.afiliado.toUpperCase()}}</span>
+        <span class="span3">{{c.contactos.length}}</span></a>
+      </li>
+      <li ng-if="!reportes.length" class="text-center">
+        <em>No hay reportes aún</em>
+      </li>
+    </ul>
+    
+    
+    <!--Modal crear reporte-->
+    <div id="modalReporte" class="modal hide fade">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3>Crear Nuevo Reporte</h3>
+        </div>
+        <div class="modal-body">
+            <span style="display: inline-block"> Nombre:<br />
+                <input class="span3" type="text" ng-model="reporte.nombre" />
+            </span>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn btn-info" data-dismiss="modal">Cerrar</a>
+            <a href="#" class="btn btn-danger" data-dismiss="modal" ng-click="crearReporte(true)">Crear</a>
+        </div>
+    </div>
+</div>

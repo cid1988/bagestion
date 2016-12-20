@@ -1,0 +1,41 @@
+<div ng-model="instancia" changes-watch="temas,suspendida,comentarios"
+ng-show="instancia" edit-model="live" ng-controller="MEBTabReservaCtrl"
+class="card animated fadeInDown">
+    <div class="card-actions pull-right" style="margin: 0">
+        <a type="button" ng-click="volver()" class="btn btn-link">
+            <i class="icon-remove"></i></a>
+    </div>
+    <div class="card-actions pull-right" ng-show="editando" style="margin: 0">
+        <a class="btn btn-danger" ng-show="hasPermission('mejorenbici.borrar')" ng-click="eliminar()"><i class="icon-trash"></i></a>
+    </div>
+    <h3 class="card-heading simple">
+        <span style="white-space: nowrap">
+            <span style="margin-bottom: 0;background-color: {{bicisPorId[live.bici].tipo && colorBici(bicisPorId[live.bici])}}; width: 1em; height: 1em; display: inline-block; ">&nbsp;</span>&nbsp;
+            <span>{{bici.nombre}}</span>
+        </span>
+    </h3>
+    <div class="card-body">
+        <h4>
+        <span class="pull-right">{{instancia.desdeHora}} a {{instancia.hastaHora}}</span>
+        {{instancia.fecha}} </h4>
+        <center><h3 style="margin-top: 15px;margin-bottom: 25px;">{{instancia.usuario}}</h3></center>
+        <div class="control-group">
+            <a type="button" href="/mejorenbici/{{instancia._id}}/print" style="margin-bottom: 30px" class="btn btn-block">Imprimir reserva</a>
+        </div>
+    </div>
+</div>
+
+
+<div id="confirmarEliminar" class="modal hide fade" ng-controller="MEBTabReservaCtrl">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>Eliminar reserva</h3>
+    </div>
+    <div class="modal-body">
+        <p>Está a un paso de eliminar la reserva de {{bici.nombre}}</p>
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="btn btn-info" data-dismiss="modal">Conservar el registro</a>
+        <a href="#" class="btn btn-danger" data-dismiss="modal" ng-click="eliminar(true)">Eliminar reserva</a>
+    </div>
+</div>

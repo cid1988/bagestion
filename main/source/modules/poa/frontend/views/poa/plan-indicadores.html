@@ -1,0 +1,19 @@
+<div class="span12 card" style="padding-top: 10px; margin-top: 0px;">
+  <h3 class="card-heading simple">
+    <!-- <span class="pull-right input-append" ng-controller="POANuevaActividadCtrl" style="margin-bottom: 0" >
+      <input type="text" ng-model="nueva.nombre" placeholder="Agregar..." />
+      <a ng-click="crear()" ng-disabled="!nueva.nombre" class="btn btn-default"><i class="icon icon-plus"></i></a>
+    </span> -->
+    Indicadores</h3>
+  <div class="card-body" style="padding: 0; margin-top: 0; border-bottom: 0">
+    <ul class="nav nav-list">
+      <li ng-repeat="a in tabCtrl.indicadores|filter:{idProyecto:tabCtrl.filtro.proyecto._id} | orderBy:'codIdentificacion'">
+        <a style="font-size: 18px" href="javascript:" ng-click="tabCtrl.filtro.actividad = a">
+        <strong class="pull-right" ng-if="a.codIdentificacion">{{a.codIdentificacion}}</strong>{{a.nombre}} </a>
+      </li>
+      <li ng-if="!(tabCtrl.indicadores|filter:{idProyecto:tabCtrl.filtro.proyecto._id}).length" class="text-center" style="padding-top: 10px; padding-bottom: 10px;">
+        <em>No hay indicadores asociados</em>
+      </li>
+    </ul>
+  </div>
+</div>

@@ -1,0 +1,12 @@
+ 
+<div class="well span11 offset1">
+<a ng-click="guardar()" class="btn btn-success pull-right"><i class="icon-ok icon-white"></i> Guardar</a>
+    <h3 style="margin-top: 0px;">Nueva</h3>
+    <div class="control-group">
+        <forminput required date ng-model="trazabilidad.fecha_respuesta" placeholder="Sin especificar"
+        title="Fecha de la Respuesta" />
+        <forminput required ng-model="trazabilidad.persona_respuesta" placeholder="Sin especificar"
+        title="Redactada por" />
+        <div class="control-group  ng-pristine ng-invalid ng-invalid-required"><label class="control-label">Adjuntos de la respuesta:</label><div class="controls"><textarea style="width:95%" required="" placeholder="" type="text" ng-model="trazabilidad.adjunto_respuesta" name="trazabilidad.adjunto_respuesta" rows="4" class="ng-pristine ng-invalid ng-invalid-required"></textarea></div></div>
+    </div>
+</div>

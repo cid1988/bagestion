@@ -1,0 +1,55 @@
+<div ng-controller="AgendaAsistenciaEditableCtrl">
+    <div class="card span12" style="padding-bottom: 10px;margin-top: 5px;padding-top: 5px;margin-bottom: 5px;">
+        <h3 class="card-heading simple"><span ng-if="instancia.desdeDate > hoy">Participantes</span><span ng-if="instancia.desdeDate < hoy">Asistencia</span> de reunión del {{instancia.fecha}} de {{agenda.nombre}}
+            <a class="btn pull-right no-print" href="/agenda/?instancia={{instancia._id}}" style="margin-left: 10px;"><i class="icon-arrow-left"></i> Volver</a>
+            <a class="btn pull-right" ng-click="edit()" ng-if="!editando"><i class="icon-edit"></i>&nbsp;Editar</a>
+            <a class="btn pull-right" ng-click="save()" ng-if="editando"><i class="icon-hdd"></i>&nbsp;Guardar</a></h3>
+        <div class="card-body" style="margin-top: 10px;">
+            <div class="span11" ng-if="instancia.desdeDate < hoy" style="margin-left: 0px;">
+                <span class="span2" style="display: inline-block;margin-left: 4px;"> Hora Inicio Real<br /> 
+                    <input type="text" ng-disabled="!editando" placeholder="hh:mm" class="input-block-level" ng-model="instancia.desdeHoraReal" />
+                </span>
+                <span class="span2" style="display: inline-block;margin-left: 4px;"> Hora Fin Real<br /> 
+                    <input type="text" ng-disabled="!editando" placeholder="hh:mm" class="input-block-level" ng-model="instancia.hastaHoraReal" />
+                </span>
+            </div>
+            <br ng-if="instancia.desdeDate < hoy"><br ng-if="instancia.desdeDate < hoy">
+            <hr ng-if="instancia.desdeDate < hoy">
+            <h4 ng-if="instancia.desdeDate < hoy">Participantes</h4>
+            <em ng-if="!instancia.participantes.length">No hay participantes definidos</em>
+            <div ng-if="instancia.participantes.length">
+                    <div class="span3" style="display: table-cell;margin-left: 0px;">Nombre</div>
+                    <div class="span2" style="display: table-cell">Cargo</div>
+                    <div class="span2" style="display: table-cell">Jurisdiccion</div>
+                    <div class="span3" style="display: table-cell">Email Oficial</div>
+                    <div class="span1" style="display: table-cell" ng-if="instancia.desdeDate < hoy">Asistencia</div><br>
+                    <hr style="margin-top: 10px; margin-bottom: 10px;">
+                    <div ng-repeat="p in vistaAsistencia">
+                        <div class="row">
+                            <div class="span3" style="display: table-cell; margin-left:30px">{{p.c.apellidos}}, {{p.c.nombre}}</div>
+                            <div class="span2" style="display: table-cell">{{p.c.cargo}}</div>
+                            <div class="span2" style="display: table-cell">{{jurisdiccionPorId(p.c.organigrama).sigla}}</div>
+                            <div class="span3" style="display: table-cell">{{buscarCorreo('Email oficial', p.c)}}</div>
+                            <div class="span1" ng-if="instancia.desdeDate < hoy">
+                                <select ng-disabled="!editando" ui-select2 type="text" ng-model="p.p.asistio" style="width: 70px">
+                                    <option ng-disabled="true">{{p.p.asistio}}</option>
+                                    <option value="Si">Si</option>
+                                    <option value="No">No</option>
+                                </select>
+                            </div>
+                            <a class="btn btn-link" ng-click="eliminarParticipante(p)" style="padding-left: 0px; padding-right: 0px; float: right" ng-show="editando">
+                                <i class="icon-trash"></i>
+                            </a>
+                        </div>
+                    </div>
+            </div>
+            <div class="card-actions" ng-if="editando" style="padding-left: 0px;">
+                <select ui-select2 type="text" ng-model="buscador">
+                    <option value=""></option>
+                    <option ng-repeat="c in contactos | orderBy:'apellidos' | filter:puedeAgregar" value="{{c._id}}">{{c.apellidos}}, {{c.nombre}}</option>
+                </select>
+                <a ng-click="agregarParticipante(buscador)" ng-disabled="!buscador && editando" type="button" class="btn" ng-class="{'btn-success': buscador}">Agregar</a>
+            </div>
+        </div>
+    </div>
+</div>

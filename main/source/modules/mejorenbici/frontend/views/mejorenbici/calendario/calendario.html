@@ -1,0 +1,16 @@
+<style type="text/css">
+    .referencia {
+        list-style-type: none;
+    }
+</style>
+<div ng-controller="MejorEnBiciCtrl">
+    <div class="span8">
+        <div class="row-fluid">
+            <div ng-include src="'/views/mejorenbici/calendario/cards/calendario.html'"></div>
+        </div>
+    </div>
+    <div class="span4">
+        <div ng-include src="'/views/mejorenbici/calendario/cards/bicis.html'"></div>
+        <div ng-include src="'/views/mejorenbici/calendario/cards/reserva.html'"></div>
+    </div> 
+</div>

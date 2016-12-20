@@ -1,0 +1,22 @@
+<div class="card" style="border:0px;padding-left:20px;padding-right:20px;padding-bottom:20px">
+    <legend ng-init="tab='obrasPoa'" class="card-heading simple" style="padding-left:0px;font-size:16px;padding-right:0px;margin-bottom:10px">Obras POA</legend>
+    
+    <div ng-if="tab == 'obrasPoa'">
+        <table border="1" class="table table-bordered">
+            <tr>
+                <th>NOMBRE</th>
+                <th style="text-align:center">JURISDICCION</th>
+                <th style="text-align:center">F. INICIO</th>
+                <th style="text-align:center">F. FIN</th>
+                <th style="text-align:center">PLAN POA</th>
+            </tr>
+            <tr ng-repeat="o in obras">
+                <td><a href="/obras/{{o._id}}" style="color:black">{{o.nombre}}</a></td>
+                <td style="text-align:center">{{jurisdiccionPorId(o.jurisdiccion).nombreCompleto}}</td>
+                <td style="text-align:center">{{o.fInicio.fecha}}</td>
+                <td style="text-align:center">{{o.fFinal.fecha}}</td>
+                <td style="text-align:center;width:8%">{{o.anio}}</td>
+            </tr>
+        </table>
+    </div>
+</div>

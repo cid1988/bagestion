@@ -1,0 +1,523 @@
+<style>
+    .table {
+        border: 0;
+    }
+    .table th, .table td {
+        padding: 8px;
+        line-height: 20px;
+        text-align: left;
+        vertical-align: middle;
+        border: 0;
+    }
+    .table th {
+        background-color: #dddddd !important;
+    }
+</style>
+<script>
+    $(document).ready(function() { $("#e1").select2(); });
+    $(document).ready(function() { $("#e2").select2(); });
+    $(document).ready(function() { $("#e3").select2(); });
+    $(document).ready(function() { $("#e4").select2(); });
+    $(document).ready(function() { $("#e5").select2(); });
+    $(document).ready(function() { $("#e6").select2(); });
+    $(document).ready(function() { $("#e7").select2(); });
+    $(document).ready(function() { $("#e8").select2(); });
+    $(document).ready(function() { $("#e9").select2(); });
+    $(document).ready(function() { $("#e10").select2(); });
+    $(document).ready(function() { $("#e11").select2(); });
+    $(document).ready(function() { $("#e12").select2(); });
+    $(document).ready(function() { $("#e13").select2(); });
+    $(document).ready(function() { $("#e14").select2(); });
+    $(document).ready(function() { $("#e15").select2(); });
+    $(document).ready(function() { $("#e16").select2(); });
+</script>
+<div class="card body" style="margin-top: 0px;padding-top: 0px;" ng-controller="PlanBA2030DetalleCtrl">
+    <div style="margin-bottom: 10px">
+        <ul class="breadcrumb" style="margin-bottom: 0px;">
+          <li><a href="/planba2030" style="color:#404040;">Plan BA 2030</a> <span class="divider">/</span></li>
+          <li class="active">Detalle</li>
+        </ul>
+    </div>
+    <a ng-click="editando=true" class="btn btn-link pull-right" ng-hide="editando" style="margin-right: 20px;" ><i class="icon-edit"></i></a>
+    <a ng-click="guardar()" href="/planba2030" class="btn btn-link pull-right" ng-show="editando" style="margin-right: 20px;"><i class="icon-ok icon-white"></i></a>
+    <a ng-click="eliminar(false)" class="btn btn-link pull-right" ng-show="editando" style="margin-right: 20px;"><i class="icon-trash icon-white"></i></a>
+    
+    <h3 class="card-heading simple" style="padding-left: 10px; font-size:14px;padding-right: 0px;height: 45px;margin-bottom: 10px;">
+        <ul id="myTab" class="nav nav-pills">
+            <li ng-class="{'active': tab == 'ficha'}"><a href="#" ng-click="tab='ficha'" data-toggle="tab">Ficha</a></li>
+            <li ng-class="{'active': tab == 'presupuesto'}"><a href="#" ng-click="tab='presupuesto'" data-toggle="tab">Presupuesto</a></li>
+            <li ng-class="{'active': tab == 'gantt'}"><a href="#" ng-click="tab='gantt'" data-toggle="tab">Gantt</a></li>
+        </ul>
+    </h3>
+    
+    <div ng-show="tab == 'ficha'" style="margin-left: 20px; margin-right: 20px; margin-bottom: 20px;">
+        <div class="row" style="padding-bottom: 0px;">
+            <div class="span6">
+                <form class="form-horizontal" style="margin-bottom: 0px !important;">
+                    <div class="control-group" style="margin-left: 10px;margin-bottom: 0px;">
+                        <div class="control-group">
+                            <label class="control-label">Eje:</label>
+                            <div class="controls">
+                                <select id="e1" class="span3" type="text" ng-disabled="!editando" ng-model="plan.eje" ng-options="i._id as i.nombre for i in ejes">
+                                    <option ng-disabled="true" value="">{{ejePorId(plan.eje).nombre}}</option>
+                                </select>
+                                <button class="btn" style="margin-bottom:0px; margin-left: 5px" ng-show="editando" ng-click="agregarEje(false)"><i class="icon-plus"></i> Nuevo</button>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">Estrategia:</label>
+                            <div class="controls">
+                                <select id="e2" class="span3" type="text" ng-model="plan.estrategia" ng-disabled="!editando" ng-options="i._id as i.nombre for i in estrategias | filter:{eje:plan.eje}">
+                                    <option ng-disabled="true" value="">{{estrategiaPorId(plan.estrategia).nombre}}</option>
+                                </select>
+                                <button class="btn" style="margin-bottom:0px; margin-left: 5px" ng-show="editando" ng-click="agregarEstrategia(false)"><i class="icon-plus"></i> Nueva</button>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">Nombre de Proyecto:</label>
+                            <div class="controls">
+                                <input class="span4" type="text" placeholder="Sin nombre de proyecto" ng-disabled="!editando" ng-model="plan.nombreProyecto" />
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">Sub-proyecto de:</label>
+                            <div class="controls">
+                                <select id="e15" class="span4" type="text" ng-model="plan.proyectoPadre" ng-disabled="!editando" ng-options="i._id as i.nombreProyecto for i in proyectos">
+                                    <option ng-disabled="true" value="">{{proyectoPorId(plan.proyectoPadre).nombreProyecto}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">Área Responsable:</label>
+                            <div class="controls">
+                                <select class="span4" id="e3" type="text" ng-model="plan.areaResponsable" ng-disabled="!editando" ng-options="i._id as i.nombreCompleto for i in organigrama">
+                                    <option ng-disabled="true" value="">{{organigramaPorId(plan.areaResponsable).nombreCompleto}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">Área Sponsor:</label>
+                            <div class="controls">
+                                <select class="span4" id="e5" type="text" ng-model="plan.areaSponsor" ng-disabled="!editando" ng-options="i._id as i.nombreCompleto for i in organigrama">
+                                    <option ng-disabled="true" value="">{{organigramaPorId(plan.areaSponsor).nombreCompleto}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">Responsable Carga:</label>
+                            <div class="controls">
+                                <select id="e16" class="span3" type="text" ng-disabled="!editando" ng-model="plan.responsableCarga" ng-options="i._id as i.apellidos + ' ' + i.nombre for i in contactos | orderBy:'apellidos'">
+                                    <option ng-disabled="true" value="">{{contactoPorId(plan.responsableCarga).apellidos}} {{contactoPorId(plan.responsableCarga).nombre}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">Plazo de Ejecución:</label>
+                            <div class="controls">
+                                <input class="span2" type="text" placeholder="Sin plazo" ng-disabled="!editando" ng-model="plan.plazoEjecucion" />
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">Status de Avance:</label>
+                            <div class="controls">
+                                <select class="span3" id="e9" type="text" ng-disabled="!editando" ng-model="plan.statusAvance">
+                                    <option ng-disabled="true" value="">{{plan.statusAvance}}</option>
+                                    <option value="Avance Alto">Avance Alto</option>
+                                    <option value="Avance Medio">Avance Medio</option>
+                                    <option value="Avance Bajo">Avance Bajo</option>
+                                    <option value="Activación en Espera">Activación en Espera</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">Status Iniciativa:</label>
+                            <div class="controls">
+                                <select class="span3" id="e11" type="text" ng-disabled="!editando" ng-model="plan.statusIniciativa">
+                                    <option ng-disabled="true" value="">{{plan.statusIniciativa}}</option>
+                                    <option value="Estudio">Estudio</option>
+                                    <option value="Piloto">Piloto</option>
+                                    <option value="Ejecución">Ejecución</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">Impacto:</label>
+                            <div class="controls input-append" style="margin-left: 20px;">
+                                <input class="span2" type="text" placeholder="Sin impacto" ng-disabled="!editando" ng-model="plan.impacto" />
+                                <span class="add-on">%</span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">Factibilidad:</label>
+                            <div class="controls input-append" style="margin-left: 20px;">
+                                <input class="span2" type="text" placeholder="Sin factibilidad" ng-disabled="!editando" ng-model="plan.factibilidad" />
+                                <span class="add-on">%</span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">Diagnóstico / Fundamentación:</label>
+                            <div class="controls">
+                                <textarea rows="4" class="span4" type="text" placeholder="Sin Diagnóstico / Fundamentación" ng-disabled="!editando" ng-model="plan.diagnosticoFundamentacion"></textarea>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">Objetivos:</label>
+                            <div class="controls">
+                                <textarea rows="4" class="span4" type="text" placeholder="Sin objetivos" ng-disabled="!editando" ng-model="plan.objetivos"></textarea>
+                            </div>
+                        </div>
+                        <div class="control-group" style="margin-bottom: 5px;">
+                            <label class="control-label">Comunas Impactadas:</label>
+                            <div class="controls">
+                                <select id="e7" class="span2" type="text" ng-model="dataComuna" ng-disabled="!editando">
+                                    <option ng-disabled="true" value=""></option>
+                                    <option value="Todas">Toda la Ciudad</option>
+                                    <option value="{{i._id}}" ng-repeat="i in comunas">{{i.nombre}}</option>
+                                </select>
+                                <button class="btn" style="margin-bottom:10px; margin-left: 5px" ng-disabled="!editando" ng-click="agregarComuna(dataComuna)"><i class="icon-plus"></i></button>
+                            </div>
+                        </div>
+                        <div class="control-group" ng-repeat="c in plan.comunasImpactadas" style="margin-bottom: 0px;">
+                            <div class="controls">
+                                <input class="span2" type="text" ng-disabled="true" value="{{comunaPorId(c).nombre}}" />
+                                <a href="#" style="margin-left: 10px" ng-show="editando" ng-click="eliminarListaElem(c, plan.comunasImpactadas)"><i class="icon-trash"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="span6">
+                <form class="form-horizontal" style="margin-bottom: 0px !important;">
+                    <div class="control-group" style="margin-left: 10px;margin-bottom: 0px;">
+                        <div class="control-group">
+                            <label class="control-label">Número de Eje:</label>
+                            <div class="controls">
+                                <input class="span2" type="text" placeholder="Sin numero" ng-disabled="true" value="{{ejePorId(plan.eje).numero}}" />
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">Número de Estrategia:</label>
+                            <div class="controls">
+                                <input class="span2" type="text" placeholder="Sin numero" ng-disabled="true" value="{{estrategiaPorId(plan.estrategia).numero}}" />
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">Número de Proyecto:</label>
+                            <div class="controls">
+                                <input class="span2" type="text" placeholder="Sin numero" ng-disabled="!editando" ng-model="plan.numeroProyecto" />
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">Foco:</label>
+                            <div class="controls">
+                                <button class="btn" ng-class="{'btn-info active': plan.foco}" ng-click="plan.foco=true" ng-disabled="!editando">Si</button>
+                                <button class="btn" ng-class="{'btn-info active': !plan.foco}" ng-click="plan.foco=false" ng-disabled="!editando">No</button>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">Foco 2015:</label>
+                            <div class="controls">
+                                <input class="span4" type="text" placeholder="Sin foco 2015" ng-disabled="!editando" ng-model="plan.foco2015" />
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">Funcionario Responsable:</label>
+                            <div class="controls">
+                                <select class="span4" id="e4" type="text" ng-model="plan.funcionarioResponsable" ng-disabled="!editando" ng-options="i._id as i.apellidos + ' ' + i.nombre for i in contactos | orderBy:'apellidos'">
+                                    <option ng-disabled="true" value="">{{contactoPorId(plan.funcionarioResponsable).apellidos}} {{contactoPorId(plan.funcionarioResponsable).nombre}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">Funcionario Sponsor:</label>
+                            <div class="controls">
+                                <select class="span4" id="e6" type="text" ng-model="plan.funcionarioSponsor" ng-disabled="!editando" ng-options="i._id as i.apellidos + ' ' + i.nombre for i in contactos | orderBy:'apellidos'">
+                                    <option ng-disabled="true" value="">{{contactoPorId(plan.funcionarioSponsor).apellidos}} {{contactoPorId(plan.funcionarioSponsor).nombre}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">Presupuesto Estimado:</label>
+                            <div class="controls">
+                                <input class="span2" type="text" placeholder="Sin presupuesto estimado" ng-disabled="!editando" ng-model="plan.presupuestoEstimado" />
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">Priorización:</label>
+                            <div class="controls">
+                                <select class="span2" id="e8" type="text" ng-disabled="!editando" ng-model="plan.prioridad">
+                                    <option ng-disabled="true" value="">{{plan.prioridad}}</option>
+                                    <option value="A+">A+</option>
+                                    <option value="A">A</option>
+                                    <option value="B">B</option>
+                                    <option value="C">C</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="control-group" style="margin-bottom: 5px;">
+                            <label class="control-label">Status Operativo:</label>
+                            <div class="controls">
+                                <input class="span2" type="text" ng-disabled="true" value="Ficha de iniciativa" />
+                                    <button class="btn" ng-class="{'disabled': !(plan.statusOperativo[0]=='white')}" ng-show="(editando || (plan.statusOperativo[0]=='white'))" ng-click="plan.statusOperativo[0]='white'"></button>
+                                    <button class="btn btn-danger" ng-class="{'disabled': !(plan.statusOperativo[0]=='danger')}" ng-show="(editando || (plan.statusOperativo[0]=='danger'))" ng-click="plan.statusOperativo[0]='danger'"></button>
+                                    <button class="btn btn-warning" ng-class="{'disabled': !(plan.statusOperativo[0]=='warning')}" ng-show="(editando || (plan.statusOperativo[0]=='warning'))" ng-click="plan.statusOperativo[0]='warning'"></button>
+                                    <button class="btn btn-success" ng-class="{'disabled': !(plan.statusOperativo[0]=='success')}" ng-show="(editando || (plan.statusOperativo[0]=='success'))" ng-click="plan.statusOperativo[0]='success'"></button>
+                                <input class="span2" type="text" ng-disabled="true" value="Presupuesto estimado" />
+                                    <button class="btn" ng-class="{'disabled': !(plan.statusOperativo[1]=='white')}" ng-show="(editando || (plan.statusOperativo[1]=='white'))" ng-click="plan.statusOperativo[1]='white'"></button>
+                                    <button class="btn btn-danger" ng-class="{'disabled': !(plan.statusOperativo[1]=='danger')}" ng-show="(editando || (plan.statusOperativo[1]=='danger'))" ng-click="plan.statusOperativo[1]='danger'"></button>
+                                    <button class="btn btn-warning" ng-class="{'disabled': !(plan.statusOperativo[1]=='warning')}" ng-show="(editando || (plan.statusOperativo[1]=='warning'))" ng-click="plan.statusOperativo[1]='warning'"></button>
+                                    <button class="btn btn-success" ng-class="{'disabled': !(plan.statusOperativo[1]=='success')}" ng-show="(editando || (plan.statusOperativo[1]=='success'))" ng-click="plan.statusOperativo[1]='success'"></button>
+                                <input class="span2" type="text" ng-disabled="true" value="Gantt de trabajo" />
+                                    <button class="btn" ng-class="{'disabled': !(plan.statusOperativo[2]=='white')}" ng-show="(editando || (plan.statusOperativo[2]=='white'))" ng-click="plan.statusOperativo[2]='white'"></button>
+                                    <button class="btn btn-danger" ng-class="{'disabled': !(plan.statusOperativo[2]=='danger')}" ng-show="(editando || (plan.statusOperativo[2]=='danger'))" ng-click="plan.statusOperativo[2]='danger'"></button>
+                                    <button class="btn btn-warning" ng-class="{'disabled': !(plan.statusOperativo[2]=='warning')}" ng-show="(editando || (plan.statusOperativo[2]=='warning'))" ng-click="plan.statusOperativo[2]='warning'"></button>
+                                    <button class="btn btn-success" ng-class="{'disabled': !(plan.statusOperativo[2]=='success')}" ng-show="(editando || (plan.statusOperativo[2]=='success'))" ng-click="plan.statusOperativo[2]='success'"></button>
+                            </div>
+                        </div>
+                        <div class="control-group" style="margin-top: 20px;">
+                            <label class="control-label">Descripción:</label>
+                            <div class="controls">
+                                <textarea rows="4" class="span4" type="text" placeholder="Sin descripción" ng-disabled="!editando" ng-model="plan.descripcion"></textarea>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">Factores Críticos / Habilitadores vs. Barreras / Amenazas:</label>
+                            <div class="controls">
+                                <textarea rows="4" class="span4" type="text" placeholder="Sin Factores Críticos / Habilitadores vs. Barreras / Amenazas" ng-disabled="!editando" ng-model="plan.factoresCriticosBarreras"></textarea>
+                            </div>
+                        </div>
+                        <div class="control-group" style="margin-bottom: 20px;" ng-if="proyectosHijos(plan._id).length">
+                            <label class="control-label">Sub Proyectos:</label>
+                            <div ng-repeat="t in proyectosHijos(plan._id)" style="margin-bottom: 0px;">
+                                <div class="controls">
+                                    <input class="span3" type="text" ng-disabled="true" value="{{proyectoPorId(t).nombreProyecto}}" />
+                                    <a class="btn btn-link" style="margin-left: 10px" href="/planba2030/{{t}}"><i class="icon-zoom-in"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="control-group" style="margin-bottom: 5px;">
+                            <label class="control-label">Temas:</label>
+                            <div class="controls">
+                                <select id="e12" class="span3" type="text" ng-model="dataTema" ng-disabled="!editando" ng-options="i._id as i.nombre for i in temas | filter: mostrarTema">
+                                    <option ng-disabled="true" value=""></option>
+                                </select>
+                                <button class="btn" style="margin-bottom:10px; margin-left: 5px" ng-disabled="!editando" ng-click="agregarTema(dataTema)"><i class="icon-plus"></i></button>
+                            </div>
+                        </div>
+                        <div class="control-group" ng-repeat="t in plan.temas" style="margin-bottom: 0px;">
+                            <div class="controls">
+                                <input class="span3" type="text" ng-disabled="true" value="{{temaPorId(t).nombre}}" />
+                                <a href="#" style="margin-left: 10px" ng-show="editando" ng-click="eliminarListaElem(t, plan.temas)"><i class="icon-trash"></i></a>
+                            </div>
+                        </div>
+                        <div class="span5" style="margin-left: 80px;margin-top: 15px;">
+                            <h4>Documentos
+                            <div class="card-actions pull-right" style="margin: 0; padding: 0">
+                                <a class="btn btn-link" ng-click="agregarDocumentacion()" ng-if="editando"><i class="icon-plus"></i></a>
+                            </div></h4>
+                            <div ng-if="!plan.documentos.length">No se ha cargardo ningun documento aún</div>
+                            <div ng-repeat="d in plan.documentos">
+                                <a data-toggle="modal" ng-click="abrirModal('#documentosE_{{$index}}')" href="">{{d.nombre}}</a> (<a href="/file/{{d.archivoId}}" target="_blank">Descargar</a>)<br>
+                            </div>
+                            <div ng-repeat="d in plan.documentos" id="documentosE_{{$index}}"
+                            class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+                                <div class='modal-header'>
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                </div>
+                                <div class='modal-content'>
+                                    <span style="display: inline-block"> Nombre:<br /> 
+                                        <input class="span4" type="text" placeholder="Nombre del documento" ng-disabled="true" ng-model="d.nombre" />
+                                    </span>
+                                    <span style="display: inline-block"> Fecha:<br /> 
+                                        <input class="span2" type="text" date placeholder="Fecha" ng-disabled="true" ng-model="d.fecha" />
+                                    </span>
+                                    <span style="display: inline-block"> Version:<br /> 
+                                        <input class="span2" type="text" placeholder="Version del documento" ng-disabled="true" ng-model="d.version" />
+                                    </span>
+                                    <span style="display: inline-block"> Fuente:<br /> 
+                                        <div class="input-append">
+                                            <input class="span3" type="text" placeholder="Fuente del documento" ng-disabled="true" value="{{contactoPorId(d.fuente).apellidos}} {{contactoPorId(d.fuente).nombre}}" />
+                                        </div>
+                                    </span>
+                                    <span style="display: inline-block"> Tipo:<br /> 
+                                        <input class="span2" type="text" placeholder="DOC, XLS, PPT, etc" ng-disabled="true" ng-model="d.tipo" />
+                                    </span>
+                                    <span style="display: inline-block"> Autor:<br /> 
+                                        <input class="span4" type="text" placeholder="Autor del documento" ng-disabled="true" ng-model="d.autor" />
+                                    </span>
+                                    <span style="display: inline-block"> Tags:<br /> 
+                                        <input class="span5" type="text" placeholder="Separados por coma" ng-disabled="true" ng-model="d.tags" />
+                                    </span>
+                                    <span style="display: inline-block"> Descripción:<br /> 
+                                        <textarea style="height:80px; width:530px" placeholder="Descripción del documento" type="text" ng-disabled="true"
+                                        ng-model="d.descripcion" />
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="span5" style="margin-left: 80px;margin-top: 15px;">
+                            <h4>Comentarios
+                            <div class="card-actions pull-right" style="margin: 0; padding: 0">
+                                <a class="btn btn-link" ng-show="editando" ng-click="agregarComen()"><i class="icon-plus"></i></a>
+                            </div></h4>
+                            <div class="card-body">
+                                <div ng-hide="plan.comentarios.length">No se ha cargardo ningun comentario aún</div>
+                                <div ng-repeat="o in reverse(plan.comentarios)"
+                                style="clear:both; min-height: 40px; margin-top: 20px; margin-bottom: 20px" ng-show="plan.comentarios.length">
+                                    <div class="pull-right" style="display: inline-block; margin-right: 10px; margin-bottom: 10px">
+                                        <button type="button" ng-show="editando" ng-click="eliminarElemento(plan.comentarios,o)" style="margin-left: 10px" class="btn btn-danger"><i class="icon-trash icon-white"></i> Eliminar</button>
+                                    </div>
+                                    <span style="display: inline-block"> Cuando:<br /> 
+                                        <input class="span2" type="text" ng-disabled="!editando" date ng-model="o.cuando"/>
+                                    </span>
+                                    <textarea style="height:100px; width:95%" type="text" ng-disabled="!editando" ng-model="o.descripcion" />
+                                    <hr />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div ng-show="tab == 'presupuesto'" style="margin-left: 20px; margin-right: 20px; margin-bottom: 20px;">
+        <div class="row" style="padding-bottom: 0px;margin-left: 10px;margin-right: 10px;">
+            <form class="form-horizontal" style="margin-bottom: 0px !important;">
+                <div class="control-group">
+                    <label class="control-label">Actividad:</label>
+                    <div class="controls">
+                        <input class="span4" type="text" placeholder="Sin actividad" ng-disabled="!editando" ng-model="dataActividad.actividad" />
+                        <button class="btn" style="margin-bottom:0px; margin-left: 5px;" ng-disabled="!editando" ng-click="agregarAct(dataActividad)"><i class="icon-plus"></i></button>
+                    </div>
+                </div>
+                <table border="1" class="table table-striped">
+                    <tr bgcolor= "#FFFFFF">
+                        <th>Actividad</th>
+                        <th><center>Moneda</center></th>
+                        <th><center>2015</center></th>
+                        <th><center>2016</center></th>
+                        <th><center>2017</center></th>
+                        <th><center>2018</center></th>
+                        <th><center>2019</center></th>
+                        <th><center>Total</center></th>
+                        <th></th>
+                    </tr>
+                    <tr ng-repeat="i in plan.actividades">
+                        <td><div ng-hide="editando">{{i.actividad}}</div><input type="text" ng-show="editando" ng-model="i.actividad"/></td>
+                        <td><center><div ng-hide="editando">{{i.moneda}}</div><select ui-select2 type="text" ng-show="editando" style="width: 100px;" ng-model="i.moneda"><option ng-disabled="true" value="">{{i.moneda}}</option><option value="Dólares">Dólares</option><option value="Pesos">Pesos</option></select></center></td>
+                        <td><center><div ng-hide="editando">{{i.a2015}}</div><input type="text" style="width: 100px;" ng-show="editando" ng-model="i.a2015"/></center></td>
+                        <td><center><div ng-hide="editando">{{i.a2016}}</div><input type="text" style="width: 100px;" ng-show="editando" ng-model="i.a2016"/></center></td>
+                        <td><center><div ng-hide="editando">{{i.a2017}}</div><input type="text" style="width: 100px;" ng-show="editando" ng-model="i.a2017"/></center></td>
+                        <td><center><div ng-hide="editando">{{i.a2018}}</div><input type="text" style="width: 100px;" ng-show="editando" ng-model="i.a2018"/></center></td>
+                        <td><center><div ng-hide="editando">{{i.a2019}}</div><input type="text" style="width: 100px;" ng-show="editando" ng-model="i.a2019"/></center></td>
+                        <td><center>{{sumaFila(i)}}</center></td>
+                        <td><div><a class="btn btn-link pull-right" type="button" ng-show="editando" ng-click="eliminarListaElemConfirm(i, plan.actividades)"><i class="icon-trash"></i></a></div></td>
+                    </tr>
+                    <tr ng-show="plan.actividades">
+                        <th>Totales</th>
+                        <th><center></center></th>
+                        <th><center>{{sumaColumna("a2015")}}</center></th>
+                        <th><center>{{sumaColumna("a2016")}}</center></th>
+                        <th><center>{{sumaColumna("a2017")}}</center></th>
+                        <th><center>{{sumaColumna("a2018")}}</center></th>
+                        <th><center>{{sumaColumna("a2019")}}</center></th>
+                        <th><center>{{sumaColumna("total")}}</center></th>
+                        <th></th>
+                    </tr>
+                </table>
+                <div class="control-group span6" style="margin-left: 10px;margin-bottom: 0px;">
+                    <h4>Comentarios
+                    <div class="card-actions pull-right" style="margin: 0; padding: 0">
+                        <a class="btn btn-link" ng-click="agregarComenPresu()" ng-if="editando"><i class="icon-plus"></i></a>
+                    </div></h4>
+                    <div class="card-body">
+                        <div ng-hide="plan.comentariosPresupuesto.length">No se ha cargardo ningun comentario aún</div>
+                        <div ng-repeat="o in reverse(plan.comentariosPresupuesto)"
+                        style="clear:both; min-height: 40px; margin-top: 20px; margin-bottom: 20px" ng-show="plan.comentariosPresupuesto.length">
+                            <div class="pull-right" style="display: inline-block; margin-right: 10px; margin-bottom: 10px">
+                                <button type="button" ng-click="eliminarElemento(plan.comentariosPresupuesto,o)" style="margin-left: 10px" class="btn btn-danger" ng-if="editando"><i class="icon-trash icon-white"></i> Eliminar</button>
+                            </div>
+                            <span style="display: inline-block"> Cuando:<br /> 
+                                <input class="span2" type="text" date ng-model="o.cuando" ng-disabled="!editando"/>
+                            </span>
+                            <textarea style="height:100px; width:95%" type="text" ng-disabled="!editando" ng-model="o.descripcion" />
+                            <hr />
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div ng-show="tab == 'gantt'" style="margin-left: 20px; margin-right: 20px; margin-bottom: 20px;">
+        <span style="display: inline-block;margin-left: 20px;">Bloque:<br>
+            <input class="span5" type="text" placeholder="Sin bloque" ng-disabled="!editando" ng-model="dataBloque.bloque" style="margin-bottom: 0px;margin-top: 8px;" />
+        </span>
+        <span style="display: inline-block;margin-bottom: 20px;">Responsable:<br>
+            <select ui-select2 class="span3" type="text" ng-model="dataBloque.responsable" ng-disabled="!editando" ng-options="i._id as i.apellidos + ' ' + i.nombre for i in contactos | orderBy:'apellidos'">
+                <option ng-disabled="true" value=""></option>
+            </select>
+        </span>
+        <span style="display: inline-block">Área Participante:<br>
+            <select ui-select2 class="span4" multiple="multiple" type="text" ng-model="dataBloque.areasParticipantes" ng-disabled="!editando" ng-options="i._id as i.nombreCompleto for i in organigrama">
+                <option ng-disabled="true" value=""></option>
+            </select>
+        </span>
+        <button class="btn" style="margin-bottom:0px; margin-left: 5px;margin-top: 8px;" ng-disabled="!editando" ng-click="agregarBloque(dataBloque)"><i class="icon-plus"></i></button>
+        <div class="span12"></div>
+            <form class="form-horizontal" style="margin-bottom: 0px !important;">
+                <div class="control-group" style="margin-left: 10px;margin-bottom: 0px;">
+                    <table border="1" class="table table-striped">
+                        <tr bgcolor= "#FFFFFF">
+                            <th>Bloque</th>
+                            <th>Responsable</th>
+                            <th>Áreas Participantes</th>
+                            <th><table border="0" class="table" style="margin-bottom: 0px; background-color: gray !important;">
+                                <tr>
+                                    <th><div>Macro Actividad</div></th>
+                                    <th style="width: 100px;"><div>Fecha Inicio</div></th>
+                                    <th style="width: 100px;"><div>Fecha Fin</div></th>
+                                    <th style="width: 15px;"></th>
+                                </tr>
+                            </table></th>
+                            <th></th>
+                        </tr>
+                        <tr ng-repeat="i in plan.bloques">
+                            <td><div ng-hide="editando">{{i.bloque}}</div><input type="text" ng-show="editando" ng-model="i.bloque"/></td>
+                            <td><div>{{contactoPorId(i.responsable).apellidos}} {{contactoPorId(i.responsable).nombre}}</div>
+                                <select ui-select2 type="text" style="width: 160px;" ng-model="i.responsable" ng-show="editando" ng-options="i._id as i.apellidos + ' ' + i.nombre for i in contactos | orderBy:'apellidos'"><option ng-disabled="true" value="">{{contactoPorId(i.responsable).apellidos}} {{contactoPorId(i.responsable).nombre}}</option></select></td>
+                            <td><div ng-repeat="j in i.areasParticipantes">{{organigramaPorId(j).sigla}}</div></td>
+                            <td><table border="1" class="table table-striped" style="margin-bottom: 0px;">
+                                <tr ng-repeat="a in i.actividades">
+                                    <td><div ng-hide="editando">{{a.macroActividad}}</div><input type="text" style="width: 260px;" ng-show="editando" ng-model="a.macroActividad"/></td>
+                                    <td style="width: 100px;"><div ng-hide="editando">{{a.fechaInicio}}</div><input type="text" style="width: 90px;" date ng-show="editando" ng-model="a.fechaInicio"/></td>
+                                    <td style="width: 100px;"><div ng-hide="editando">{{a.fechaFin}}</div><input type="text" style="width: 90px;" date ng-show="editando" ng-model="a.fechaFin"/></td>
+                                    <td style="width: 15px;"><a href="#" ng-click="eliminarListaElem(a, i.actividades)" ng-show="editando"><i class="icon-trash"></i></a></td>
+                                </tr>
+                            </table></td>
+                            <td><div><a class="btn btn-link pull-right" type="button" ng-show="editando" ng-click="agregarActividad(false, i)"><i class="icon-plus"></i></a><br>
+                                    <a class="btn btn-link pull-right" type="button" ng-show="editando" ng-click="eliminarListaElemConfirm(i, plan.bloques)"><i class="icon-trash"></i></a>
+                            </div></td>
+                        </tr>
+                    </table>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+
+    <div id="confirmarEliminar" class="modal hide fade">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3>Eliminar registro</h3>
+        </div>
+        <div class="modal-body">
+            <p>Está a un paso de eliminar el registro</p>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn btn-info" data-dismiss="modal">Conservar el registro</a>
+            <a href="#" class="btn btn-danger" data-dismiss="modal" ng-click="eliminar(true)">Eliminar</a>
+        </div>
+    </div>
+</div>

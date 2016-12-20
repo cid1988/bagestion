@@ -1,0 +1,323 @@
+<script>
+    $(document).ready(function() { $("#e1").select2(); });
+    $(document).ready(function() { $("#e2").select2(); });
+    $(document).ready(function() { $("#e3").select2(); });
+</script>
+
+<div class="card" style="margin-left: 20px; margin-right: 20px; margin-bottom: 20px;">
+    <h3 style="margin-top:0px;margin-left:20px">
+        Datos del expediente
+        <a class="btn btn-link pull-right" style="margin-left: 0px" ng-click="enviarMail(false)"><i class="icon-envelope"></i></a>
+        <a ng-show="modificando" class="btn btn-link pull-right" style="margin-left: 0px" ng-click="agregarComentario()"><i class="icon-align-justify"></i></a>
+        <a ng-show="!modificando" ng-click="modificar()" class="btn btn-link no-print pull-right"><i class="icon-edit"></i></a>
+        <a ng-show="!modificando" class="btn btn-link pull-right" href="/expedientes/print/{{expediente._id}}"><i class="icon-print"></i></a>
+        <a ng-show="modificando" class="btn btn-link no-print pull-right" ng-click="guardar()"><i class="icon-ok icon-white"></i></a>
+        <a ng-show="modificando" class="btn btn-link pull-right" ng-click="cancelar()"><i class="icon-remove"></i></a>
+        <a ng-show="modificando" class="btn btn-link pull-right" style="margin-left: 10px" ng-click="eliminar()"><i class="icon-trash"></i></a>
+    </h3><hr>
+    
+    <div class="row" style="padding-bottom: 0px;margin-left:10px">
+        <div class="span6">
+            <form class="form-horizontal" style="margin-bottom: 0px !important;">
+                <div class="control-group" style="margin-bottom: 10px;width:900px">
+                    <label class="control-label">Título:</label>
+                    <div class="controls">
+                        <input style="width:480px" ng-disabled="!modificando" class="span5" type="text" ng-model="expediente.titulo" placeholder="Sin Título" />
+                        <button ng-class="colorFlecha()"><i ng-class="botonIcon"></i></button>
+                        <a style="margin-left:10px" ng-if="expediente.documentos.length" class="icon-file"><i></i></a>
+                    </div>
+                </div>
+                <div class="control-group" style="margin-bottom: 10px;">
+                    <label class="control-label">Tipo:</label>
+                    <div class="controls">
+                        <input ng-disabled="!modificando" class="span6" type="text" class="span2" data-provide="typeahead" id="tema-typeahead" ng-model="expediente.tema" data-source={{temasSiglas}} />
+                    </div>
+                </div>
+                <div class="control-group" style="margin-bottom: 10px;width:900px">
+                    <label class="control-label">Número:</label>
+                    <div class="controls">
+                        <input ng-disabled="!modificando" type="text" style="width: 50px" maxlength="2" ng-model="expediente.tipo" placeholder="Tipo" uppercase/>
+                        <input ng-disabled="!modificando" type="text" style="width: 40px" ng-model="expediente.ano" placeholder="Año"/>
+                        <input ng-disabled="!modificando" type="text" style="width: 130px" ng-model="expediente.numero" placeholder="Numero"/>
+                        <input style="width: 100px" ng-disabled="!modificando" type="text" class="span2" data-provide="typeahead" placeholder="Reparticion" ng-model="expediente.reparticion" bs-typeahead="reparticionesSiglas" />
+                        <a class="btn" ng-disabled="!modificando" ng-show="!modificando && expediente.activado"> Activado</a>
+                        <a class="btn" ng-disabled="!modificando" ng-show="!modificando && expediente.activado=='false'"> Desactivado</a>
+                        <div ng-show="modificando" class="btn-group" data-toggle="buttons-radio">
+                            <button class="btn" ng-class="(expediente.activado == 'true') &amp;&amp; 'active btn-info'" ng-click="expediente.activado='true'">Activado</button>
+                            <button class="btn" ng-class="(expediente.activado == 'false') &amp;&amp; 'active btn-info'" ng-click="expediente.activado='false'">Desactivado</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="control-group" style="margin-bottom: 10px">
+                    <label class="control-label">Jurisdicción:</label>
+                    <div class="controls">
+                        <select id="e1" class="span6" type="text" ng-model="expediente.jurisdiccion" ng-disabled="!modificando" ng-options="i._id as i.nombreCompleto for i in organigrama">
+                            <option ng-disabled="true" value="">{{jurisdiccionPorId(expediente.jurisdiccion).nombreCompleto}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="control-group" style="margin-bottom: 10px">
+                    <label class="control-label">Responsable:</label>
+                    <div class="controls">
+                        <select id="e2" class="span4" type="text" ng-model="expediente.responsable" ng-disabled="!modificando" ng-options="i._id as i.apellidos + ' ' + i.nombre for i in contactos | orderBy:'apellidos'">
+                            <option ng-disabled="true" value="">{{contactoPorId(expediente.responsable).apellidos}} {{contactoPorId(expediente.responsable).nombre}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Interesados:</label>
+                    <div class="controls">
+                        <select class="span4" style="width:80%" ui-select2 type="text" ng-model="dataInteresado" ng-disabled="!modificando" ng-options="i._id as i.apellidos + ' ' + i.nombre for i in contactos | orderBy:'apellidos' | filter: filtrarInteresados">
+                            <option value="">{{contactoPorId(expediente.interesados).apellidos}} {{contactoPorId(expediente.interesados).nombre}}</option>
+                        </select>
+                        <button class="btn" style="margin-bottom:10px; margin-left: 5px" ng-disabled="!modificando" ng-click="agregarInteresado(dataInteresado)"><i class="icon-plus"></i></button>
+                    </div>
+                    <div class="span5" style="margin-left: 180px;">
+                        <div class="control-group" ng-repeat="t in expediente.interesados" style="margin-left: 0px; margin-right: 5px;margin-bottom: 0px;">
+                            <input class="span4" type="text" ng-disabled="true" value="{{contactoPorId(t).apellidos}} {{contactoPorId(t).nombre}}" style="margin-bottom: 0px;" />
+                            <a href="#" style="margin-left: 10px" ng-show="modificando" ng-click="eliminarListaElem(t, expediente.interesados)"><i class="icon-trash"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="control-group" style="margin-bottom: 10px">
+                    <label class="control-label">Camino Refrendos:</label>
+                    <div class="controls">
+                        <input class="span6" type="text" data-provide="typeahead" ng-disabled="!modificando" placeholder="Camino Refrendos" ng-model="expediente.caminoRefrendos"/>
+                    </div>
+                </div>
+                <div class="control-group" style="margin-bottom: 10px">
+                    <label class="control-label">Proxima reunión:</label>
+                    <div class="controls">
+                        <input ng-disabled="!modificando" type="text" class="span2" ng-model="expediente.fechaProxReunionSeg" date placeholder="Sin fecha de reunión"/>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Descripción:</label>
+                    <div class="controls">
+                        <textarea class="span6" type="text" ng-disabled="!modificando" placeholder="Sin Descripción" ng-model="expediente.descripcion" rows="3"></textarea>
+                    </div>
+                </div>
+                <hr>
+                
+                <div class="control-group">
+                    <label class="control-label">Temas:</label>
+                    <div class="controls">
+                        <select ui-select2 class="span4" style="width:80%" type="text" ng-model="dataTema" ng-disabled="!modificando" ng-options="i._id as i.nombre for i in temas2 | filter: filtrarTemas">
+                            <option ng-disabled="true" value=""></option>
+                        </select>
+                        <button class="btn" style="margin-bottom:10px; margin-left: 5px" ng-disabled="!modificando" ng-click="agregarTema(dataTema)"><i class="icon-plus"></i></button>
+                    </div>
+                        
+                    <div class="span5" style="margin-left: 180px;">
+                        <div class="control-group" ng-repeat="t in expediente.temas" style="margin-left: 0px; margin-right: 5px;margin-bottom: 0px;">
+                            <input class="span4" type="text" ng-disabled="true" value="{{temaPorId(t).nombre}}" style="margin-bottom: 0px;" />
+                            <a href="#" style="margin-left: 10px" ng-show="modificando" ng-click="eliminarListaElem(t, expediente.temas)"><i class="icon-trash"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!--<div class="span6" style="margin-left: 70px;">-->
+                <!--    <h4>Documentos-->
+                <!--        <div class="card-actions pull-right" style="margin: 0; padding: 0">-->
+                <!--            <a class="btn btn-link" ng-click="agregarDocumentos()" ng-if="modificando"><i class="icon-plus"></i></a>-->
+                <!--        </div>-->
+                <!--    </h4>-->
+                <!--    <div ng-if="!expediente.documentos.length">No se ha cargado ningun documento aún</div>-->
+                <!--    <div ng-repeat="d in expediente.documentos">-->
+                <!--        <a data-toggle="modal" ng-click="abrirModal('#doc{{$index}}')" href="">{{d.nombre}}</a> (<a href="/file/{{d.archivoId}}" target="_blank">Descargar</a>)<br>-->
+                <!--    </div>-->
+                <!--    <div ng-repeat="d in expediente.documentos" id="doc{{$index}}" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">-->
+                <!--        <div class='modal-header'>-->
+                <!--            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>-->
+                <!--        </div>-->
+                <!--        <div class='modal-content'>-->
+                <!--            <span style="display: inline-block"> Nombre:<br /> -->
+                <!--                <input class="span4" type="text" placeholder="Nombre del documento" ng-disabled="true" ng-model="d.nombre" />-->
+                <!--            </span>-->
+                <!--            <span style="display: inline-block"> Fecha:<br /> -->
+                <!--                <input class="span2" type="text" date placeholder="Fecha" ng-disabled="true" ng-model="d.fecha" />-->
+                <!--            </span>-->
+                <!--            <span style="display: inline-block"> Version:<br /> -->
+                <!--                <input class="span2" type="text" placeholder="Version del documento" ng-disabled="true" ng-model="d.version" />-->
+                <!--            </span>-->
+                <!--            <span style="display: inline-block"> Fuente:<br /> -->
+                <!--                <div class="input-append">-->
+                <!--                    <input class="span3" type="text" placeholder="Fuente del documento" ng-disabled="true" value="{{d.fuente.apellidos}} {{d.fuente.nombre}}" />-->
+                <!--                </div>-->
+                <!--            </span>-->
+                <!--            <span style="display: inline-block"> Tipo:<br /> -->
+                <!--                <input class="span2" type="text" placeholder="DOC, XLS, PPT, etc" ng-disabled="true" ng-model="d.tipo" />-->
+                <!--            </span>-->
+                <!--            <span style="display: inline-block"> Autor:<br /> -->
+                <!--                <input class="span4" type="text" placeholder="Autor del documento" ng-disabled="true" ng-model="d.autor" />-->
+                <!--            </span>-->
+                <!--            <span style="display: inline-block"> Tags:<br /> -->
+                <!--                <input class="span5" type="text" placeholder="Separados por coma" ng-disabled="true" ng-model="d.tags" />-->
+                <!--            </span>-->
+                <!--            <span style="display: inline-block"> Descripción:<br /> -->
+                <!--                <textarea style="height:80px; width:530px" placeholder="Descripción del documento" type="text" ng-disabled="true" ng-model="d.descripcion" />-->
+                <!--            </span>-->
+                <!--        </div>-->
+                <!--    </div>-->
+                <!--</div>-->
+            </form>
+            <!--<hr>-->
+        </div>
+        
+        <div style="float:right" class="span6">
+            <form class="form-horizontal" style="margin-bottom: 0px !important;overflow-y:scroll">
+                <div style="float: right; margin-left: 16px; width: 250px; position: relative; left: -30px;height:600px">
+                    <h4>Comentarios:</h4>
+                    <div ng-hide="expediente.comentarios.length">No se ha cargado ningun comentario aún</div>
+                    <div ng-repeat="e in expediente.comentarios | orderBy:'-fechaComentario'" style="clear:both; min-height: 40px; margin-top: 20px; margin-bottom: 20px">
+                        <a href="#" ng-show="modificando" class="pull-right" style="margin-left: 10px;margin-top:-2px" ng-click="eliminarListaElem(e, expediente.comentarios)"><i class="icon-trash"></i></a>
+                        <div><b>Fecha</b>: {{calcularFecha(e.fechaComentario)}}</div>
+                        <div><b>Fuente:</b> {{e.fuenteComentario}}</div>
+                        <div><b>Comentario:</b> {{e.comentarios}}</div>
+                        <div><em>Usuario</em>: {{e.usuario}}</div>
+                        <hr>
+                    </div>
+                </div>
+            </form>
+        </div>
+        
+        <h4 class="span12" ng-hide="consultaSade">No se han encontrado datos en SADE</h4>
+        <div ng-show="consultaSade" class="span" style="margin-left: 70px;margin-top:20px">
+            <legend>Documentos Vinculados</legend>
+            <div style="overflow-y:scroll;height:350px;margin-bottom:20px">
+                <div style="margin-right:70px">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th style="text-align:center !important;width:200px">
+                                    <a href="#" style="color:#404040">Fecha Vinc Definitiva</a>
+                                </th>
+                                <th style="text-align:center !important">
+                                    <a href="#" style="display: inline-block; color:#404040">Usuario Asociación</a>
+                                </th>
+                                <th style="text-align:center !important">
+                                    <a href="#" style="color:#404040">Referencia</a>
+                                </th>
+                                <th style="text-align:center !important">
+                                    <a href="#" style="color:#404040">Nº Documento Sade</a>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="c in consultaSade.documentosVinculados">
+                                <td style="text-align:center !important;width:200px">
+                                    {{formatFechaSade(c.fechavinculacionDefinitiva)}}
+                        		</td>
+                        		<td style="text-align:center !important">
+                                    {{c.usuarioAsociacion}}
+                        		</td>
+                        		<td style="text-align:center !important">
+                                    {{c.referencia}}
+                        		</td>
+                                <td style="text-align:center !important;width:200px">
+                            		{{c.numeroSadeDocumento}}
+                        		</td>
+                        		<td style="text-align:center !important">
+                            		<a class="btn btn-link" target="_blank" ng-href="/api/pdfSade/{{c.numeroSadeDocumento}}" style="margin-left: 10px" target="_blank"><i class="icon-download-alt"></i></a>
+                        		</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <legend>Historial de Operación</legend>
+            <div style="overflow-y:scroll;height:350px;margin-bottom:20px">
+                <div style="margin-right:70px">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th style="text-align:center !important">
+                                    <a href="#" style="color:#404040">Fecha Operación</a>
+                                </th>
+                                <th style="text-align:center !important">
+                                    <a href="#" style="display: inline-block; color:#404040">Usuario</a>
+                                </th>
+                                <th style="text-align:center !important">
+                                    <a href="#" style="color:#404040">Destinatario</a>
+                                </th>
+                                <th style="text-align:center !important;width:400px">
+                                    <a href="#" style="display: inline-block; color:#404040">Motivo</a>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="c in consultaSade.historialDeOperacion">
+                                <td style="text-align:center !important">
+                                    {{formatFechaSade(c.fechaOperacion)}}
+                        		</td>
+                        		<td style="text-align:center !important">
+                                    {{c.usuario}}
+                        		</td>
+                        		<td style="text-align:center !important">
+                                    {{c.destinatario}}
+                        		</td>
+                        		<td style="text-align:center !important;width:400px">
+                                    {{c.motivo}}
+                        		</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Vistas especiales de comentarios y eliminar -->
+    <div id="confirmarEliminar" class="modal hide fade">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3>Eliminar expediente</h3>
+        </div>
+        <div class="modal-body">
+            <p>Está a un paso de eliminar el expediente</p>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn btn-info" data-dismiss="modal">Conservar el registro</a>
+            <a href="#" class="btn btn-danger" data-dismiss="modal" ng-click="eliminar(true)">Eliminar el expediente</a>
+        </div>
+    </div>
+    
+    <!-- Vista para agregar comentario de expediente -->
+    <div id="agregarComentario" class="modal hide fade">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3>Agregar comentario</h3>
+        </div>
+        <div class="modal-body">
+            <span style="display: inline-block">Fuente:
+                <input style="height:20px; width:500px" type="text" ng-model="data.fuenteComentario" placeholder="Sin fuente" />
+            </span>
+            <span style="display: inline-block">Comentarios:
+                <textarea style="height:150px; width:500px" type="text" ng-model="data.comentarios" placeholder="Sin comentarios" />
+            </span>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal">Cancelar</a>
+            <a href="#" class="btn btn-info" data-dismiss="modal" ng-click="agregarComentario(true, data)">Agregar comentario</a>
+            <a href="#" class="btn btn-info" data-dismiss="modal" ng-click="agregarComentario(true, data, true)">Agregar comentario y enviar</a>
+        </div>
+    </div>
+    
+    <div id="mailEnviado" class="modal hide fade">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3>Enviar mail</h3>
+        </div>
+        <div class="modal-body">
+            <span style="display: inline-block;margin-bottom:10px">Interesados: {{interesados}}</span>
+            <!--<span style="display: inline-block">Comentarios:-->
+            <!--    <textarea style="height:150px; width:500px" type="text" ng-model="expediente.textoMail" placeholder="Sin comentarios" />-->
+            <!--</span>-->
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal">Cancelar</a>
+            <a href="#" class="btn btn-info" ng-click="enviarMail(true)" data-dismiss="modal">Enviar</a>
+        </div>
+    </div>
+</div>

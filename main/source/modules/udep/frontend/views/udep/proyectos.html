@@ -1,0 +1,148 @@
+<style type="text/css">
+    .wysihtml5-sandbox {
+        border: 1 !important;
+        padding: 0 !important;
+    }
+
+    .wysihtml5-toolbar:nth-child(n+2) 
+    {
+        display: none;
+    }
+
+    html,body { 
+      overflow:hidden; 
+    }
+    
+    .nav-list > li > div,
+    .nav-list .nav-header {
+      padding: 9px 18px;
+      margin-top: 1px;
+      overflow: hidden;
+      font-size: 14px;
+      line-height: 1.4;
+      color: #737373;
+      text-overflow: ellipsis;
+      text-shadow: none;
+      background-color: #ffffff;
+      border-left: 2px solid transparent;
+      -webkit-transition: border 0.218s;
+         -moz-transition: border 0.218s;
+           -o-transition: border 0.218s;
+              transition: border 0.218s;
+    }
+    
+    .nav-list > li > div:hover,
+    .nav-list > li > div:focus,
+    .nav-list > .active > div,
+    .nav-list > .active > div:hover,
+    .nav-list > .active > div:focus {
+      color: #262626;
+      text-shadow: none;
+      background-color: #f5f5f5;
+      border-color: #427fed;
+    }
+    
+    .nav-list > li > div,
+    .nav-list .nav-header {
+      margin-right: -15px;
+      margin-left: -15px;
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+    }
+    
+    .nav-list > li > div {
+      padding: 3px 15px;
+    }
+    
+    .nav-list > .active > div,
+    .nav-list > .active > div:hover,
+    .nav-list > .active > div:focus {
+      color: #ffffff;
+      text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
+      background-color: #3B3537;
+    }
+    
+    a:link, a:visited, a:active {
+        color: #737373;
+    }
+
+    a:hover {
+        color: #262626;
+    }
+    
+</style>
+<div style="position: absolute;top: 50px;bottom: 0px;right: 20px;left: 20px;margin-bottom: 0px;" ng-controller="UDEPCtrl">
+    <div class="card" style="margin-top:0px; margin-bottom:0px; height:98%;padding-top:10px;">
+        <div class="card-actions pull-right no-print" style="margin: 0px,15px,0px,0px; padding: 0;height: 40px; margin-right:20px;">
+            <input placeholder="Nombre del Proyecto" type="text" class="span2" ng-model="filtro.nombre" title="Nombre del Proyecto" style="margin-bottom: 24px;" />
+            <div style="margin-right: 5px; display: inline-block;">
+                <select class="span2" ui-select2 type="text" ng-model="filtro.prioridadJefatura">
+                    <option value="">Todos las prioridades</option>
+                    <option value="A+">A+</option>
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C">C</option>
+                </select>
+            </div>
+            <div style="margin-right: 5px; display: inline-block;">
+                <select class="span3" ui-select2 type="text" ng-model="filtro.idJurisdiccion">
+                    <option value="">Todos las jurisdicciones</option>
+                    <option ng-repeat="i in jurisdicciones" value="{{i._id}}">{{i.nombre}}</option>
+                </select>
+            </div>
+            <input placeholder="Fecha Fin" type="text" class="span2" date ng-model="fechaFiltroFin" title="Fecha Fin" style="margin-bottom: 24px;width: 80px;"/>
+            <input placeholder="Presupuesto Solicitado" type="text" class="span2" ng-model="presupuestoFiltroSolicitado" title="Presupuesto Solicitado" style="margin-bottom: 24px;" />
+        </div>
+        <h2 class="card-heading simple">Proyectos</h2>
+        
+        <div class="card-body" style="padding-left: 0px; padding-right: 0px; padding-bottom: 0px;margin-top:0px;">
+            <div class="form-horizontal" name="form" style="padding-left:25px; clear: both; background-color:rgb(219,219,219); padding-top:10px;">
+                <div class="row" style="padding-bottom: 10px;">
+                    <strong>
+                        <div class="span4" style="display: table-cell;margin-left: 52px;"><a href="#" style="display: inline-block; color:#404040;">Proyectos:</a></div>
+                        <div class="span2" style="display: table-cell"><a href="#" style="display: inline-block; color:#404040;">Prioridad:</a></div>
+                        <div class="span1" style="display: table-cell; width: 85px;"><a href="#" style="display: inline-block; color:#404040;">Fecha Inicio:</a></div>
+                        <div class="span1" style="display: table-cell; width: 85px;"><a href="#" style="display: inline-block; color:#404040;">Fecha Fin:</a></div>
+                        <div class="span2" style="display: table-cell"><a href="#" style="display: inline-block; color:#404040;">Presupuesto Solicitado:</a></div>
+                        <div class="span1 pull-right" style="display: table-cell;margin-left: 0px;margin-right: 60px;"><a href="#" style="display: inline-block; color:#404040;">Formulario:</a></div>
+                    </strong>
+                </div>
+            </div>
+            <div class="control-group" style="overflow-y: scroll; overflow-x: hidden;position: absolute;top: 100px;bottom: 30px;right: 0px;left: 0px;">
+                <ul class="nav nav-list">
+                    <li ng-repeat="i in proyectos | filter:filtro | filter:filtroFechaFin | filter:filtroPresupuesto">
+                        <div>
+                            <a style="width: 90%;display: inline-block;margin-top: 5px;" href="#">
+                                <span class="span4">{{i.nombre}}</span>
+                                <span class="span2">{{i.prioridadJefatura}}</span>
+                                <span class="span1" style="width: 85px;">{{i.fechaInicio}}</span>
+                                <span class="span1" style="width: 85px;">{{i.fechaFin}}</span>
+                                <span class="span2">{{i.presupuestoSolicitado}}</span>
+                            </a>
+                            <span class="span1 pull-right" style="display: inline-block;">
+                              <button type="button" class="btn btn-small" ng-click="enviarMail(i,true)" ng-hide="i.formulario == 'Si'">No</button>        
+                              <button type="button" class="btn btn-small" ng-click="confirmar(i,false)" ng-show="i.formulario == 'Si'" ng-class="{'btn-info active': i.formulario}">Si</button>
+                            </span>
+                        </div>
+                    </li>
+                    <li ng-if="!proyectos.length" class="text-center">
+                        <em>No hay cargas aún</em>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div id="enviarMail" class="modal hide fade" style="width:50%;left:45% !important;top:6%;">
+        <legend>Enviar correo a {{data.responsableDeCarga}}</legend>
+        <form>
+            <label>Para:</label>
+            <input type="text" placehoder="Destinatarios del mensaje" title="Destinatarios" style="margin:0; width:97%" align="center" ng-model="data.responsableDeCarga">
+            <label style="margin-top:5px">Asunto:</label>
+            <input type="text" placehoder="Asunto del mensaje" title="asunto" style="margin:0; width:97%" align="center" ng-model="data.asuntoCorreo">
+            <hr style="margin:10px 0 10px 0">
+            <label>Contenido del mensaje:</label>
+            <textarea rich-text-editor placeholder="Contenido del mensaje" style=" width: 100%; height: 250px" ng-model="data.mensaje" ></textarea>
+        </form>
+        <button type="button" class="btn btn-success pull-right" style="margin:30px 0 0 0;" data-dismiss="modal" ng-click="enviarMail(data,false); confirmar(data,true)">Enviar</button>
+        <button type="button" class="btn btn-danger pull-right" style="margin:30px 10px 0 0;" data-dismiss="modal">Cancelar envio</button>
+    </div>
+</div>

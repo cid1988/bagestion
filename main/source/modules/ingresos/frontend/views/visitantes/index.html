@@ -1,0 +1,103 @@
+<style type="text/css">
+    .btn-link:hover{
+        text-decoration:none;
+    }
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        /*No flechas en input type number*/
+        -webkit-appearance: none;
+        -moz-appearance: none;
+    }
+    input{
+        border-radius: 4px !important;
+    }
+    input:focus{
+        /*Borde celeste al hacerles focus */
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6) !important;
+        border-color: rgba(82, 168, 236, 0.8) !important;
+    }
+    tbody>tr{
+        cursor:pointer;
+    }
+    label{
+        font-size:14px;
+    }
+    .control-group>*{
+        margin-top:10px;
+    }
+    .radio{
+        display:inline-block;
+        margin-right:20px;
+        margin-left:10px;
+    }
+    .input-large>a {
+        width: 44%;
+    }
+    h3{
+        padding:0 !important;
+    }
+    .card{
+        position:absolute;
+        width:500px;
+        padding-bottom:20px;
+        left:50%;
+        margin-left:-250px;
+    }
+    .help-block{
+        text-align:center;
+    }
+</style>
+
+<div class="card body animated fadeInDown" ng-controller="IngresosVisitantesIndexCtrl">
+    <form class="card-heading form-horizontal" ng-submit="guardarVisita()">
+        <h3 class="card-heading simple">Registrar visita
+            <button type="submit" title="Modificar visita" class="pull-right btn btn-link" ng-click="guardarVisita()">
+                <i class="icon-plus"></i> Acceso
+            </button>
+        </h3>  
+        <div class="control-group animated fadeInDown">
+            <label class="control-label" for="documento">Documento</label>
+            <div class="controls">
+                <input autofocus type="number" id="documento" placeholder="Documento..." ng-model="documento" class="input-large" required="required">
+            </div>
+            <span class="help-block">Presione el botón <i class="icon-plus"></i> o "Enter" para registrar acceso.</span>
+
+            <div class="control-group animated fadeInDown" ng-show="mostrar">
+                <label class="control-label" for="nombre">Nombre</label>
+                <div class="controls">
+                    <input type="text" id="nombre" placeholder="Nombre..." ng-model="ingreso.nombre" class="input-large" required="required">
+                </div>
+                
+                <label class="control-label" for="autSup">Autoridad superior</label>
+                <div class="controls">
+                    <input type="text" id="autSup" placeholder="Autoridad superior..." ng-model="ingreso.autSup" class="input-large" required="required">
+                </div>
+                
+                <label class="control-label" for="pertenece">Pert</label>
+                <div class="controls">
+                    <input type="text" id="pert" placeholder="Pert..." ng-model="ingreso.pert" class="input-large" required="required">
+                </div>
+                
+                <label class="control-label" for="reparticion">Repartición</label>
+                <div class="controls">
+                    <input type="text" id="reparticion" placeholder="Repartición..." ng-model="ingreso.reparticion" class="input-large" required="required">
+                </div>
+                
+                <label class="control-label" for="presentismo">Presentismo</label>
+                <div class="controls">
+                    <input type="text" id="presentismo" placeholder="Presentismo..." ng-model="ingreso.presentismo" class="input-large" required="required">
+                </div>
+                
+                <label class="control-label" for="observaciones">Observaciones</label>
+                <div class="controls">
+                    <input type="text" id="observaciones" placeholder="Observaciones..." ng-model="ingreso.observaciones" class="input-large">
+                </div>
+                
+                <label class="control-label" for="ultimaVisita">Ultima visita</label>
+                <div class="controls">
+                    <input type="text" id="ultimaVisita" ng-model="ultimavisita" class="input-large" disabled="disabled">
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,50 @@
+<style>
+    .gantt_grid_head_cell:nth-child(2) 
+    {
+        display: none;
+    }
+    .gantt_grid_head_cell:nth-child(3) 
+    {
+        display: none;
+    }
+    .gantt_grid_head_cell:nth-child(4) 
+    {
+        display: none;
+    }
+    .gantt_grid_head_cell:nth-child(5) 
+    {
+        display: none;
+    }
+    .gantt_cell:nth-child(2) 
+    {
+        display: none;
+    }
+    .gantt_cell:nth-child(3) 
+    {
+        display: none;
+    }
+    .gantt_cell:nth-child(4) 
+    {
+        display: none;
+    }
+    .gantt_cell:nth-child(5) 
+    {
+        display: none;
+    }
+</style>
+
+<div class="modal-header" style="padding-bottom: 10px;">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h3>Gantt</h3>
+</div>
+<div class="modal-body">
+    <div data="gantt" dhx-gantt style="height:300px; width:100%;display: inline-block;">
+        <div gantt-column label="Actividad">{{task.text}}</div>
+		<div gantt-template="task_text">
+			{{task.text | uppercase}}
+		</div>
+	</div>
+</div>
+<div class="modal-footer">
+    <a href="#" class="btn" data-dismiss="modal">Cancelar</a>
+</div>

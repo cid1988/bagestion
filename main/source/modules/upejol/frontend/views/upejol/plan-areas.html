@@ -1,0 +1,26 @@
+<div class="span12 card" style="padding-top: 10px; margin-top: 0px;">
+  <h3 class="card-heading simple">Áreas</h3>
+  <div class="card-body" style="padding: 0; margin-top: 0; border-bottom: 0">
+    <ul class="nav nav-list">
+      <li ng-repeat="j in tabCtrl.areas | orderBy:'codIdentificacion'" ng-hide="j.idOrmOrganigrama == '0'" ng-if="(hasPermission('upejol.administrador') || hasPermission('upejol.verTodos') || (hasPermission('upejol.verArea') && (j.idOrmOrganigrama == user.jurisdiccion)))" >
+        <a style="font-size: 18px;padding-top: 4px;padding-bottom: 4px;display: inline-block;" href="javascript:" ng-click="tabCtrl.filtro = {area: j}">
+        <span class="span11"><!--<strong class="pull-right" ng-if="j.codIdentificacion">{{j.codIdentificacion}}</strong>-->{{j.nombre}} </span></a>
+      </li>
+      <li ng-if="!tabCtrl.areas.length" class="text-center">
+        <em>No hay ningun area asociada a este plan aún</em>
+      </li>
+    </ul>
+  </div>
+  <h3 class="card-heading simple" style="margin-top: 25px;">Otras</h3>
+  <div class="card-body" style="padding: 0; margin-top: 0; border-bottom: 0">
+    <ul class="nav nav-list">
+      <li ng-repeat="j in tabCtrl.areas | orderBy:'codIdentificacion'" ng-hide="j.idOrmOrganigrama !== '0'" ng-if="(hasPermission('upejol.administrador') || hasPermission('upejol.verTodos') || (hasPermission('upejol.verArea') && (j.idsOrmOrganigrama.indexOf(user.jurisdiccion) >= 0)))">
+        <a style="font-size: 18px;padding-top: 4px;padding-bottom: 4px;display: inline-block;" href="javascript:" ng-click="tabCtrl.filtro = {area: j}">
+        <span class="span11"><!--<strong class="pull-right" ng-if="j.codIdentificacion">{{j.codIdentificacion}}</strong>-->{{j.nombre}} </span></a>
+      </li>
+      <li ng-if="!tabCtrl.areas.length" class="text-center">
+        <em>No hay ningun areas asociada a este plan aún</em>
+      </li>
+    </ul>
+  </div>
+</div>

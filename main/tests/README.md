@@ -1,0 +1,1 @@
+En la carpeta Tests/ incluir los casos de pruebas funcionales y no funcionales y los informes con la evidencia de los resultados.

@@ -1,0 +1,37 @@
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="card span3">
+            <h3 class="card-heading simple">Filtro</h3>
+            <div class="card-body">
+                <!-- Panel izquierdo -->
+                <div class="control-group" style="display: block; margin-top:15px; margin-bottom:25px">
+                    <div class="controls">
+                        <input placeholder="Buscar por..." type="text" class="input-block-level search-query"
+                        ng-model="filtro2.nombre" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card span9">
+            <div class="card-actions pull-right" style="margin: 0; padding: 0">
+                <a class="btn btn-link no-print" href="/preguntas/eventos/nuevo"><i class="icon-plus"></i></a>
+            </div>
+            <h3 class="card-heading simple">Eventos</h3>
+            <div class="card-body">
+                <div class="row-fluid" style="margin-bottom: 10px;"
+                	ng-repeat="e in eventos | filter:filtro">
+            		<div class="span2" align="center">
+            			{{e.fecha}}
+            		</div>
+            		<div class="span8">
+            			{{e.nombre}}
+            		</div>
+                    <div class="span2">
+            			<a href="/preguntas/eventos/{{e._id}}" class="btn btn-link"><i class="icon-zoom-in"></i> Ver detalle</a>
+            		</div>
+            	</div>
+                <div class="row-fluid" ng-show="!eventos.length">No hay ningun evento</div>
+            </div>
+        </div>
+    </div>
+</div>

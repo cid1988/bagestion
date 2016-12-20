@@ -1,0 +1,26 @@
+<div class="modal-header" style="padding-bottom: 10px;">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="actualizar()">&times;</button>
+        <h3>Comentarios de DGPLE de {{planSeleccionado.nombreProyecto}}</h3>
+    </div>
+    <div class="modal-body" style="overflow-y: scroll; overflow-x: hidden; height: 400px;margin-top: 10px;">
+        <a class="btn btn-link pull-right" ng-click="agregarComenDGPLE(planSeleccionado, data)" style="margin-right: 10px;"><i class="icon-plus"></i> Agregar</a>
+        <span style="display: inline-block;">
+            <textarea style="height:70px; width:518px" type="text"
+            ng-model="data.descripcion" placeholder="Descripción del comentario" />
+        </span>
+        <hr style="margin-top: 5px; margin-bottom: 5px;">
+        <div ng-hide="planSeleccionado.comentariosDGPLE.length">No se ha cargardo ningun comentario aún</div>
+        <div ng-repeat="o in reverse(planSeleccionado.comentariosDGPLE)"
+        style="clear:both; min-height: 40px; margin-top: 10px; margin-bottom: 10px;" ng-show="planSeleccionado.comentariosDGPLE.length">
+            <div class="pull-right" style="display: inline-block; margin-right: 10px; margin-bottom: 10px">
+                <button type="button" ng-click="eliminarElemento(planSeleccionado.comentariosDGPLE,o)" style="margin-left: 10px" class="btn btn-link"><i class="icon-trash"></i></button>
+            </div>
+            <span style="display: inline-block"> 
+                <input class="span2" type="text" ng-disabled="!editando" date ng-model="o.cuando" style="margin-bottom: 3px;"/>
+            </span>
+            <button class="btn" ng-class="{'btn-success active': o.leido}" ng-click="(o.leido=!o.leido); guardarSeleccionado()"><i class="icon-ok"></i></button>
+            <textarea style="height:70px; width:95%;margin-bottom: 0px;" type="text" ng-disabled="!editando" ng-model="o.descripcion" />
+            <hr style="margin-top: 10px;margin-bottom: 10px;">
+        </div>
+    </div>
+</div>

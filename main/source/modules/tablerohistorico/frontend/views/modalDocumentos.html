@@ -1,0 +1,12 @@
+<div class="modal-header" ng-controller="DocumentosProyectoCtrl">
+    <button style="background-color: #828590" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h3>{{proyecto.Proyecto}}</h3>
+</div>
+<div class="modal-body">
+    <table class="table table-bordered">
+        <tbody>
+            <tr ng-repeat="d in documentos">
+                <td><i class="icon icon-file"></i>&nbsp;<a ng-href="/api/documentosProyecto/{{d.documento}}">{{d.documento}}</a></td></tr>
+        </tbody>
+    </table>
+</div>

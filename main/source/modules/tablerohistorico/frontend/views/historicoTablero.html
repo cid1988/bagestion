@@ -1,0 +1,109 @@
+<div class="well offset" style="font-size:12px;" ng-controller="TableroHistoricoCtrl">
+    <h3>Histórico Sistema de Gestión de la Ciudad 2008-2013</h3>
+    <table width="100%">
+        <tr>
+            <td>
+                <label class="control-label">Año</label>
+            </td>
+            <td>
+                <label class="control-label">Dependencia</label>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <select id="anio" ui-select2 class="span2" type="text" ng-model="$root.filtro.anio">
+                    <option value="">Seleccione...</option>
+                    <option value="2013">2013</option>
+                    <option value="2012">2012</option>
+                    <option value="2011">2011</option>
+                    <option value="2010">2010</option>
+                    <option value="2009">2009</option>
+                    <option value="2008">2008</option>
+                </select>
+            </td>
+            <td style="width:90%;">
+                <select style="width:100%;" class="span6" ui-select2 type="text" ng-model="$root.filtro.idDependencia">
+                    <option value="">Seleccione...</option>
+                    <option ng-repeat="d in dependencias" value="{{d.ID}}">{{d.Dependencia}}</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <label>Objetivos Estratégicos</label>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <select style="width:100%;" id="idEstrategia" ui-select2 type="text" ng-model="$root.filtro.idEstrategia">
+                    <option value="">Seleccione...</option>
+                    <option ng-repeat="e in estrategias" value="{{e.ESTRATEGIAID}}">{{e.DESCRIPCION}}</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <label>Operativos</label>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <select style="width:100%;" id="idObjetivo" class="span6" ui-select2 type="text" ng-model="$root.filtro.idObjetivo">
+                    <option value="">Seleccione...</option>
+                    <option ng-repeat="o in objetivos" value="{{o.ID}}">{{o.Objetivo}}</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+
+    <table class="table table-bordered" style="margin-top: 1em">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Proyecto</th>
+                <th>Ubicación</th>
+                <th>Fecha de vencimiento</th>
+                <th>Prioridad</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat-start="p in proyectos">
+                <td style="white-space: nowrap">
+                    <span class="badge" ng-class="{'badge-success': p.codigocolor == 1, 'badge-warning': p.codigocolor == 2, 'badge-important': p.codigocolor == 3, 'badge-inverse': p.codigocolor == 4, 'badge-info': p.codigocolor == 5}">&nbsp;</span>
+                </td>
+                <td style="width: 50%">
+                    <a style="font-weight: 700" href="/tablero0813/proyectos/{{p.ID}}/hitos" ng-bind-html="p.Proyecto"></a>
+                </td>
+                <td style="width: 50%">{{p.Ubicacion}}</td>
+                <td style="white-space: nowrap">{{p.MetaVence_Cumplimiento |date:'dd-MM-yyyy'}}</td>
+                <td style="white-space: nowrap">
+                    <div class="animate-switch-container" ng-switch on="p.Prioridad">
+                        <div ng-switch-when="0">&nbsp;</div>
+                        <div ng-switch-when="1">A+</div>
+                        <div ng-switch-when="2">A</div>
+                        <div ng-switch-when="3">B</div>
+                        <div ng-switch-when="4">C</div>
+                        <div ng-switch-when="5">No prioritario</div>
+                    </div>
+                </td>
+            </tr>
+            <tr ng-repeat-end>
+                <td colspan="5">
+                    <a class="btn btn-link pull-right" href="/tablero0813/proyectos/{{p.ID}}/ficha" ng-if="p.EsObra">
+                        <span class="icon-eye-open"></span>
+                    </a>
+                    <a class="btn btn-link pull-right" ng-click="modalDocumentos(p)">
+                        <i class="icon icon-file"></i>
+                    </a>
+
+                    <div ng-show="p.Descripcion">
+                        <label style="display: inline">Descripcion:</label>
+                        <span compile="p.Descripcion"></span></div>
+                    <div ng-show="p.MetaUnica">
+                        <label style="display: inline">Meta:</label>
+                        <span compile="p.MetaUnica"></span></div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

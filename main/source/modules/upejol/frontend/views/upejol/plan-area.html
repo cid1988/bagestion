@@ -1,0 +1,51 @@
+<div class="card span12" ng-controller="UPEJOLEditarAreaCtrl" style="padding-top: 10px; margin-top: 0px;margin-bottom: 10px;">
+  <h3 class="card-heading simple">
+  <span class="btn-group pull-right">
+    <a ng-click="volver()" class="btn"><i class="icon icon-arrow-up"></i> Volver</a>
+    <a ng-if="activada" ng-click="cancelar()" class="btn"><i class="icon icon-undo"></i> Cancelar</a>
+    <a ng-if="activada" ng-click="eliminar()" class="btn"><i class="icon icon-trash"></i> Eliminar</a>
+    <a ng-if="activada" ng-click="guardar()" class="btn"><i class="icon icon-save"></i> Guardar</a>
+    <a ng-if="!activada && detalle && (hasPermission('upejol.administrador') || (hasPermission('upejol.editarArea') && ((area.idOrmOrganigrama == user.jurisdiccion) ||  (area.idsOrmOrganigrama.indexOf(user.jurisdiccion) >= 0))))" ng-click="activar()" class="btn"><i class="icon icon-edit"></i> Modificar</a>
+    <a ng-if="!activada && !detalle" ng-click="verDetalle()" class="btn"><i class="icon icon-zoom-in"></i> Ver detalle</a>
+    <a ng-if="!activada && detalle" ng-click="cancelarDetalle()" class="btn"><i class="icon icon-zoom-out"></i> Ocultar</a>
+  </span>
+  <span class="pull-right" style="margin-right: 10px;margin-left: 20px;">Área</span>
+  <strong style="margin-right: 1em">{{tabCtrl.filtro.area.nombre}}</strong></h3>
+  <div class="card-body" ng-if="detalle" style="padding-bottom: 20px;">
+    <form class="form-horizontal">
+      <div class="control-group" style="width: 975px; display: inline-block;margin-bottom: 0px;">
+        <label class="control-label">Descripción:</label>
+        <div class="controls" style="margin-right: 20px;">
+          <textarea ng-disabled="!activada" ng-model="area.descripcion" style="width: 100%; resize: vertical" rows="3"></textarea>
+        </div>
+      </div>
+      <div class="btn-group">
+        <button class="btn" ng-class="{'active btn-info': area.validado}" ng-click="area.validado = !area.validado" ng-disabled="!activada">Validado</button>
+        <button class="btn" ng-class="{'active btn-info': area.aprobado}" ng-click="area.aprobado = !area.aprobado" ng-disabled="!activada || !hasPermission('upejol.administrador')">Aprobado</button>
+      </div>
+    </form>
+    <form class="form-inline" style="margin-bottom: 0px;">
+        <label style="width: 162px; text-align: right; padding-right: 14px;" ng-hide="area.idOrmOrganigrama !== '0'">Áreas:</label>
+        <input type="text" ng-disabled="true" value="{{organigramaPorId(area.idsOrmOrganigrama[0]).nombreCompleto}}" ng-hide="area.idOrmOrganigrama !== '0'" style="width: 265px;" />
+        <label style="width: 162px; text-align: right; padding-right: 14px;">Cód. Identificación:</label>
+        <input type="text" ng-disabled="!activada" ng-model="area.codIdentificacion" />
+        <label style="width: 149px; text-align: right; padding-right: 14px;">Presupuesto Anual:</label>
+        <input type="text" ng-disabled="!activada" ng-model="area.presupuestoAnual" style="width: 140px;" />
+        <label style="width: 100px; text-align: right; padding-right: 14px;">Responsable:</label>
+        <input type="text" ng-disabled="true" ng-model="area.responsableDeCarga" style="width: 100px;" />
+    </form>
+    <form class="form-inline" ng-hide="area.idOrmOrganigrama !== '0'" ng-repeat="i in area.idsOrmOrganigrama" style="margin-bottom: 0px;">
+        <label style="width: 162px; text-align: right; padding-right: 14px;" ng-hide="$index==0"></label>
+        <input type="text" ng-disabled="true" value="{{organigramaPorId(i).nombreCompleto}}" ng-hide="$index==0"  ng-hide="area.idOrmOrganigrama !== '0'" style="width: 265px;"/>
+    </form>
+    <!-- <form class="form-horizontal">
+      <div class="control-group">
+        <label class="control-label">Jurisdicción que planifica:</label>
+        <div class="controls" style="margin-right: 20px;">
+          <input type="text" ng-disabled="!activada" ng-model="area.planifica" style="width: 100%" />
+        </div>
+      </div>
+    </form> -->
+  </div>
+</div>
+

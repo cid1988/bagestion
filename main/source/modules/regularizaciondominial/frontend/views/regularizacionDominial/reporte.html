@@ -1,0 +1,36 @@
+<style>
+    .table {
+        border: 0;
+    }
+    .table th, .table td {
+        padding: 3px;
+        line-height: 20px;
+        text-align: left;
+        border: 0;
+        vertical-align: middle;
+    }
+    .table th {
+        background-color: #dddddd !important;
+    }
+</style>
+
+<div ng-controller="ReporteRegularizacionDominialCtrl">
+    <div class="card span12" style="padding-top: 0px;">
+        <h2 class="card-heading simple" style="margin-top: 10px; margin-bottom: 10px;">Regularizacion Dominial - Reporte de Accesos</h2>
+        <div class="card-body" style="padding-left: 10px; padding-right: 10px; margin-top: 10px;">
+            <table border="1" class="table table-striped">
+                <tr bgcolor= "#FFFFFF">
+                    <th style="min-width:140px"><a ng-click="orden = 'user'" href="#" style="display: inline-block; color:#404040;margin-left: 5px;">Usuario</a></th>
+                    <th><a ng-click="orden = 'date'" href="#" style="display: inline-block; color:#404040;">Fecha / Hora</a></th>
+                    <th><a ng-click="orden = 'data'" href="#" style="display: inline-block; color:#404040;">URL</a></th>
+                </tr>
+                <tr ng-repeat="i in accesos | orderBy:orden" bgcolor="#FFFFFF">
+                    <td style="min-width:140px"><div> {{i.user}}</div></td>
+                    <td><div>{{milisegundosAFecha(i.date)}}</div></td>
+                    <td><div><a href="{{i.data}}">{{i.data}}</a></div></td>
+                </tr>
+            </table>
+            <div class="row-fluid" ng-show="!accesos.length">No hay ningun acceso.</div>
+        </div>
+    </div>
+</div>

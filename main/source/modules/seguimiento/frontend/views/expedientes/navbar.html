@@ -1,0 +1,24 @@
+<div ng-controller="expedientesNavbarCtrl" class="btn-group pull-right" style="margin-right: 7px">
+    <a class="btn btn-link" ng-click="cambiarPreset()" style="margin-left: 10px" href="#"> <i class="icon-paperclip"></i> SET</a>
+    <a class="btn btn-link" target="_blank" style="margin-left: 10px" href="/api/seguimiento-csv/download"><i class="icon-download-alt"></i> CSV</a>
+    <a class="btn btn-link" href="/expedientes/print"><i class="icon-print"></i> Imprimir</a>
+    
+    <div id="cambiarPreset" class="modal hide fade">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3>Preset de comentarios</h3>
+        </div>
+        <div class="modal-body">
+            <div class="control-group">
+                <label class="control-label" style="margin-bottom:0px">Asunto:</label>
+                <div class="controls">{{exp.asunto}}
+                    <input class="span5" type="text" placeholder="Sin asunto" ng-model="exp.asunto"></input>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal">Cancelar</a>
+            <a href="#" class="btn btn-info" data-dismiss="modal" ng-click="cambiarPreset(true, exp)">Guardar</a>
+        </div>
+    </div>
+</div>

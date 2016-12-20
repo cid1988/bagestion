@@ -1,0 +1,142 @@
+<div class="container" ng-controller="FichaVirtualController" style="background: white">
+    <div class="row">
+        <div class="span12">
+            <table class="table table-bordered" style="margin-bottom: 0">
+                <tbody>
+                    <tr>
+                        <th style="white-space: nowrap">Nombre del proyecto</th>
+                        <td style="width: 100%" colspan="3">{{proyecto.Proyecto}}</td>
+                    </tr>
+                    <tr>
+                        <th style="white-space: nowrap">Ministerio</th>
+                        <td style="width: 100%" colspan="3"></td>
+                    </tr>
+                    <tr>
+                        <th style="white-space: nowrap">Localización</th>
+                        <td style="width: 100%" colspan="3"></td>
+                    </tr>
+                    <tr>
+                        <th style="white-space: nowrap">Descripción</th>
+                        <td style="width: 100%" colspan="3">{{proyecto.Descripcion}}</td>
+                    </tr>
+                    <tr>
+                        <th style="white-space: nowrap">Monto total</th>
+                        <td style="width: 50%">{{proyecto.MontoContrato | currency}}</td>
+                        <th style="white-space: nowrap">Contratista</th>
+                        <td style="width: 50%; white-space: nowrap"></td>
+                    </tr>
+                    <tr>
+                        <th style="white-space: nowrap">Comuna</th>
+                        <td style="width: 50%">{{proyecto.Comuna}}</td>
+                        <th style="white-space: nowrap">Expediente</th>
+                        <td style="width: 50%; white-space: nowrap">{{proyecto.Expediente}}</td>
+                    </tr>
+                    <tr>
+                        <th style="white-space: nowrap">Fecha de inicio</th>
+                        <td style="width: 50%; white-space: nowrap">{{inicioDeObra}}</td>
+                        <th style="white-space: nowrap">Fecha de terminación</th>
+                        <td style="width: 50%; white-space: nowrap">
+                            <span ng-show="finDeObra">{{finDeObra | date:'dd-MM-yyyy'}}</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <h3>Mapa</h3>
+    <img src="http://servicios.usig.buenosaires.gov.ar/LocDir/mapa.phtml?dir={{proyecto.Ubicacion}}&desc=&punto=1&w=1353&h=332"
+    />
+    <h3 style="padding-left: 3em; margin: 0.3em;">Relevamientos</h3>
+    <carousel interval="myInterval">
+        <slide ng-repeat="f in fichas | orderBy:'fecha'" active="f.active" ng-controller="InfoAdicionalCtrl">
+            <div style="padding-right: 6em; padding-left: 6em">
+                <ul class="nav nav-tabs" ng-init="f.tab = 'general'" style="margin-bottom: 0">
+                    <li ng-class="{'active': f.tab == 'general'}">
+                        <a ng-click="f.tab = 'general'" href="javascript:">General</a>
+                    </li>
+                    <li ng-class="{'active': f.tab == 'fotos'}">
+                        <a ng-click="f.tab = 'fotos'" href="javascript:">Fotos</a>
+                    </li>
+                    <li ng-show="f.informesSyH.length" ng-class="{'active': f.tab == 'seguridadHigiene'}">
+                        <a ng-click="f.tab = 'seguridadHigiene'" href="javascript:">Seguridad e higiene</a>
+                    </li>
+                    <!-- <li ng-class="{'active': f.tab==' documentos'}"><a ng-click="f.tab = 'documentos'" href="javascript:">Documentos</a></li>-->
+                </ul>
+                <!-- <table ng-show="f.tab==' documentos'" style="margin: auto; padding-bottom:
+                4em" class="table table-bordered">
+              <tbody>
+                 <tr ng-repeat="a in [1,2,3,4,5]"><td><i class="icon icon-file"></i>&nbsp;<a href="javascript:">Archivo</a></td></tr>
+              </tbody>
+          </table>
+-->
+                <table ng-show="f.tab == 'seguridadHigiene'" style="margin: auto; margin-bottom: 4em"
+                class="table table-bordered">
+                    <tbody>
+                        <tr ng-repeat="syh in f.informesSyH">
+                            <td ng-controller="InformeSeguridadHigieneCtrl">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="2">Informe {{syh.idInforme}}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="fila in informe">
+                                            <td>{{estructuras[fila.idDescripcion].descripcion}}<br ng-if="fila.observaciones" />
+                                            <strong ng-if="fila.observaciones" >{{fila.observaciones}}</strong>
+                                            </td>
+                                            <td>{{{1: 'SI', 2: 'NO'}[fila.estado]}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table ng-controller="RelevamientoFotosCtrl" ng-show="f.tab == 'fotos'"
+                style="margin: auto; padding-bottom: 4em" class="table table-bordered">
+                    <tbody>
+                        <tr ng-repeat="f in fotos | orderBy:'ordenImagen'">
+                            <td>
+                                <i class="icon icon-picture"></i>&nbsp;
+                                <a href="javascript:" ng-click="mostrarFoto(f)">{{f.descripcion || 'Sin descripcion'}}</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table ng-show="f.tab == 'general'" style="margin: auto; padding-bottom: 4em"
+                class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <th>Cartel:</th>
+                            <td>{{f.cartel}}</td>
+                            <th>Obrador:</th>
+                            <td>{{f.obrador}}</td>
+                            <th>Vigilancia:</th>
+                            <td>{{f.vigilancia}}</td>
+                            <th>Normas de trabajo:</th>
+                            <td>{{f.cumplimiento_normas_trabajo == 'SI' ? 'Cumple' : 'No cumple'}}</td>
+                            <th>Normas de peatón:</th>
+                            <td>{{f.cumplimiento_normas_peaton == 'SI' ? 'Cumple' : 'No cumple'}}</td>
+                        </tr>
+                        <tr>
+                            <th colspan="10">Avance de obra:</th>
+                        </tr>
+                        <tr>
+                            <td colspan="10">{{f.avance_obra}}</td>
+                        </tr>
+                        <tr>
+                            <th colspan="10">Conclusión:</th>
+                        </tr>
+                        <tr>
+                            <td colspan="10">{{f.conclusion}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="carousel-caption" style="position: relative; top: -4em">
+                <h4 style="text-align: center">{{f.fecha|date:'dd/MM/yyyy hh:mm'}}</h4>
+            </div>
+        </slide>
+    </carousel>
+</div>

@@ -1,0 +1,132 @@
+<style>
+    .no-border, .no-border > th, .no-border > td {
+        border: none;
+    }
+    .tablaPrint th, .tablaPrint td {
+        padding-top:1px;
+        padding-bottom:1px;
+        border-bottom:1px solid #AAAAAA;
+        line-height: 25px;
+    }
+    @media print {
+        body, span, div, table, tr, tbody, tfoot, td, hr { 
+            -webkit-print-color-adjust: exact !important;
+        }
+    }
+</style>
+
+<div class="card span12" style="border:0px;padding-top: 0px;" ng-controller="CartaSEMGImprimirTablaCtrl">
+    
+        <div class="span12" style="margin-left: 0px;">
+            <a href="" class="btn btn-link pull-right no-print" style="margin-right: 10px;margin-bottom: 0px; margin-top:5px" ng-click="imprimir()"><i class="icon-print"></i></a>
+        </div>
+        <br>
+    <div style="background-image: url('/views/semg/cartascompromisos/portadaBA2030.jpg') !important; background-repeat: no-repeat;
+        position: relative;font-family: Arial !important; color: rgb(0, 0, 0);width: 1100px;height: 138px;margin-top: 5px;margin-bottom: 20px;">
+            <div style=" text-align: left; position: absolute; width: 700px;top:30px; left: 160px">
+                <h3 style="font-size: 30px !important; margin-top: 0px; margin-bottom: 0px;">Carta Compromiso {{anio}}<br> {{jurisdiccionPorId(carta.jurisdiccion).nombreCompleto}}</h3>
+            </div>
+        </div>
+        
+    <div style="margin-top: 0px; padding-top:0px;">
+        
+        <div>
+            <table  border="0" class="table tablaPrint" style="margin-right:15px background-color: white;margin-bottom: 0px;margin-left: 20px;font-size: 19px !important;width: 1070px;">
+                <tr style="min-width: 130px !important;vertical-align: middle;border: none;">
+                    <th>Dependencia</th>
+                    <td><div ng-if="!carta.dependencia">{{carta.titulo}}</div><div ng-if="carta.dependencia">{{organigramaPorId(carta.dependencia).nombreCompleto}}</div></td>
+                </tr>
+                <tr style="min-width: 130px !important;vertical-align: middle;border: none;">
+                    <th>Servicios</th>
+                    <td>{{carta.servicio}}</td>
+                </tr>
+                <tr style="min-width: 130px !important;vertical-align: middle;border: none;">
+                    <th>Estado</th>
+                    <td><span ng-if="carta.aprobado == true">Aprobado</span><span ng-if="(carta.validado == true && carta.aprobado!=true)">Validado</span><span ng-if="(carta.validado!=true && carta.aprobado!=true)">No Aprobado</span></td>
+                </tr>
+                <tr style="min-width: 130px !important;vertical-align: middle;border: none;">
+                    <th>Temas</th>
+                    <td style="padding-left: 0px;">
+                        <table>
+                            <td ng-repeat="i in carta.temas" style="padding-right:15px; margin-right: 10px; border-right-height:1px; margin-bottom:0px;padding-bottom: 0px;border-bottom-width: 0px;">{{temaPorId(i).nombre}}</td>
+                        </table>
+                    </td>
+                </tr>
+                <tr style="min-width: 130px !important;vertical-align: middle;border: none;">
+                    <th>Responsable Carga</th>
+                    <td>{{contactoPorId(carta.responsableCarga).apellidos}} {{contactoPorId(carta.responsableCarga).nombre}}</td>
+                </tr>
+                <tr style="min-width: 130px !important;vertical-align: middle;border: none;">
+                    <th>Responsable Validación</th>
+                    <td>{{contactoPorId(carta.responsableValidacion).apellidos}} {{contactoPorId(carta.responsableValidacion).nombre}}</td>
+                </tr>
+            </table>
+            
+            <h3 style="margin-left:22px; padding-top:15px;">Compromisos: </h3>
+            <table border="1" class="table table-striped" >
+                <tr bgcolor= "#FFFFFF">
+                        <th style="text-align: center;" rowspan="2">Servicio o Tramite</th>
+                        <th style="text-align: center;" rowspan="2">Destinatario</th>
+                        <th style="text-align: center;" colspan="2">Estándar de calidad</th>
+                        <th style="text-align: center;" rowspan="2">Justificación</th>
+                        <th style="text-align: center;" rowspan="2">Indicador</th>
+                        <th style="text-align: center;" rowspan="2" ng-hide="((carta.jurisdiccion=='5232029e2e9735061300001f') || (carta.jurisdiccion=='522e177ae5fd3d320e000041') || (carta.dependencia=='522e0594e5fd3d320e000027'))">Meta {{anio}}</th>
+                        <th style="text-align: center;" colspan="2" ng-show="((carta.jurisdiccion=='5232029e2e9735061300001f') || (carta.jurisdiccion=='522e177ae5fd3d320e000041') || (carta.dependencia=='522e0594e5fd3d320e000027'))">Meta</th>
+                        <th style="text-align: center;" rowspan="2">Requerimientos para que el usuario pueda hacer uso del servicios o trámite</th>
+                        <th style="text-align: center;" rowspan="2">Responsable</th>
+                        <th style="text-align: center;" rowspan="2">Fuente de Información</th>
+                    </tr>
+                    <tr bgcolor= "#FFFFFF">
+                        <th style="text-align: center;">¿Cómo medimos la calidad?</th>
+                        <th style="text-align: center;">Unidad de medida</th>
+                        <th style="text-align: center;" ng-show="((carta.jurisdiccion=='5232029e2e9735061300001f') || (carta.jurisdiccion=='522e177ae5fd3d320e000041') || (carta.dependencia=='522e0594e5fd3d320e000027'))">Semestre 1</th>
+                        <th style="text-align: center;" ng-show="((carta.jurisdiccion=='5232029e2e9735061300001f') || (carta.jurisdiccion=='522e177ae5fd3d320e000041') || (carta.dependencia=='522e0594e5fd3d320e000027'))">Semestre 2</th>
+                    </tr>
+                <tr ng-repeat="t in carta.compromisos">
+                        <td><div>{{t.serviciosTramites}}</div></td>
+                        <td><div>{{t.destinatario}}</div></td>
+                        <td><div>{{t.compromisoResultado}}</div></td>
+                        <td><div>{{t.medidaUnidad}}</div></td>
+                        <td><div>{{t.justificacion}}</div></td>
+                        <td><div>{{t.indicador}}</div></td>
+                        <td ng-hide="((carta.jurisdiccion=='5232029e2e9735061300001f') || (carta.jurisdiccion=='522e177ae5fd3d320e000041') || (carta.dependencia=='522e0594e5fd3d320e000027'))"><div>{{t.metaAnio}}</div></td>
+                        <td ng-show="((carta.jurisdiccion=='5232029e2e9735061300001f') || (carta.jurisdiccion=='522e177ae5fd3d320e000041') || (carta.dependencia=='522e0594e5fd3d320e000027'))"><div>{{t.semestre1}}</div></td>
+                        <td ng-show="((carta.jurisdiccion=='5232029e2e9735061300001f') || (carta.jurisdiccion=='522e177ae5fd3d320e000041') || (carta.dependencia=='522e0594e5fd3d320e000027'))"><div>{{t.semestre2}}</div></td>
+                        <td><div>{{t.procedimiento}}</div></td>
+                        <td><div>{{t.responsable}}</div></td>
+                        <td><div>{{t.fuente}}</div></td>
+                        <td style="border-right-color: #999999;" ng-show="editando">
+                            <div class="btn-group">
+                                <a class="btn btn-link pull-right" href="#" ng-click="editarCompromiso(t)" ng-show="editando" title="Editar compromiso" style="margin-left: 0px;padding-left: 0px;padding-right: 0px;"><i class="icon-edit"></i></a><br>
+                                <a class="btn btn-link pull-right" href="#" ng-show="editando" ng-click="eliminarListaElem(t, carta.compromisos)" title="Eliminar compromiso" style="margin-left: 0px;padding-left: 0px;padding-right: 0px;"><i class="icon-trash"></i></a>
+                            </div>
+                        </td>
+                    </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

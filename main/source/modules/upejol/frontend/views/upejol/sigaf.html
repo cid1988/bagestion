@@ -1,0 +1,127 @@
+<style>
+    .table {
+        border: 0;
+    }
+    .table th, .table td {
+        padding: 8px;
+        line-height: 20px;
+        text-align: left;
+        vertical-align: middle;
+        border: 0;
+    }
+    .table th {
+        background-color: #dddddd !important;
+    }
+</style>
+<div class="card" style="position: absolute;top: 50px;bottom: 0px;right: 20px;left: 20px;margin-bottom: 10px;">
+    <div class="card-actions pull-right no-print" style="margin: 0; padding: 0">
+        <input placeholder="Buscar por Requerimiento..." type="text" class="span3" ng-model="filtro.requerimiento" style="margin-right: 0px;margin-left: 5px;margin-bottom: 25px;" />
+        <a type="button" class="btn btn-link pull-right" href="#" ng-click="nuevoRequerimiento(false)" style="margin-right: 10px; margin-left: 20px;" ><i class="icon-plus"></i></a>
+    </div>
+    <h2 class="card-heading simple">UPEJOL - Partidas Presupuestarias</h2>
+    <div class="card-body">
+        <table border="1" class="table table-striped">
+            <tr bgcolor= "#FFFFFF">
+                <th width="25% !important"><a ng-click="orden = 'requerimiento'" href="#" style="display: inline-block; color:#404040;">Requerimiento</a></th>
+                <th width="6% !important"><a ng-click="orden = 'anio'" href="#" style="display: inline-block; color:#404040;">Año</a></th>
+                <th width="6% !important"><a ng-click="orden = 'jurisdiccion'" href="#" style="display: inline-block; color:#404040;">Jurisd</a></th>
+                <th width="5% !important"><a ng-click="orden = 'entidad'" href="#" style="display: inline-block; color:#404040;">Entidad</a></th>
+                <th width="6% !important"><a ng-click="orden = 'programa'" href="#" style="display: inline-block; color:#404040;">Programa</a></th>
+                <th width="5% !important"><a ng-click="orden = 'proyecto'" href="#" style="display: inline-block; color:#404040;">Proyecto</a></th>
+                <th width="6% !important"><a ng-click="orden = 'actividad'" href="#" style="display: inline-block; color:#404040;">Actividad</a></th>
+                <th width="5% !important"><a ng-click="orden = 'obra'" href="#" style="display: inline-block; color:#404040;">Obra</a></th>
+                <th width="5% !important"><a ng-click="orden = 'fuenteFinanciamiento'" href="#" style="display: inline-block; color:#404040;">Fuente Fin</a></th>
+                <th width="5% !important"><a ng-click="orden = 'moneda'" href="#" style="display: inline-block; color:#404040;">Moneda</a></th>
+                <th width="5% !important"><a ng-click="orden = 'inciso'" href="#" style="display: inline-block; color:#404040;">Inciso</a></th>
+                <th width="5% !important"><a ng-click="orden = 'principal'" href="#" style="display: inline-block; color:#404040;">Principal</a></th>
+                <th width="5% !important"><a ng-click="orden = 'parcial'" href="#" style="display: inline-block; color:#404040;">Parcial</a></th>
+                <th width="5% !important"><a ng-click="orden = 'ubicacionGeografica'" href="#" style="display: inline-block; color:#404040;">Ubic.Geo</a></th>
+                <th width="5% !important"></th>
+            </tr>
+        </table>
+        <div style="overflow-y: scroll; overflow-x: hidden;position: absolute;top: 120px;bottom: 12px;right: 20px;left: 20px;">
+        <table border="1" class="table table-striped">
+            <tr ng-repeat="i in requerimientos | orderBy:orden | filter:filtro">
+                <td width="25% !important"><div>{{i.requerimiento}}</div></td>
+                <td width="6% !important"><div>{{i.anio}}</div></td>
+                <td width="6% !important"><div>{{i.jurisdiccion}}</div></td>
+                <td width="5% !important"><div>{{i.entidad}}</div></td>
+                <td width="6% !important"><div>{{i.programa}}</div></td>
+                <td width="5% !important"><div>{{i.proyecto}}</div></td>
+                <td width="6% !important"><div>{{i.actividad}}</div></td>
+                <td width="5% !important"><div>{{i.obra}}</div></td>
+                <td width="5% !important"><div>{{i.fuenteFinanciamiento}}</div></td>
+                <td width="5% !important"><div>{{i.moneda}}</div></td>
+                <td width="5% !important"><div>{{i.inciso}}</div></td>
+                <td width="5% !important"><div>{{i.principal}}</div></td>
+                <td width="5% !important"><div>{{i.parcial}}</div></td>
+                <td width="5% !important"><div>{{i.ubicacionGeografica}}</div></td>
+                <td width="4% !important">
+                    <div>
+                        <a class="btn btn-link pull-right" type="button" href="#" title="Ver detalle" style="padding-left: 0px;padding-right: 0px;"><i class="icon-edit"></i></a>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        </div>
+    </div>
+</div>
+
+<div id="nuevoReq" class="modal hide fade">
+    <div class="modal-header" style="padding-bottom: 10px;">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3>Nuevo Requerimiento</h3>
+    </div>
+    <div class="modal-body">
+        <span style="display: inline-block; margin-top: 15px;">
+            <span style="display: inline-block"> Requerimiento:<br /> 
+                <input class="span4" type="text" placeholder="Nombre del requerimiento" ng-model="requerimientoNuevo.requerimiento" style="width: 488px;" />
+            </span>
+            <span style="display: inline-block"> Año:<br /> 
+                <input class="span2" type="text" placeholder="Año" ng-model="requerimientoNuevo.anio" style="width: 80px;" />
+            </span>
+            <span style="display: inline-block"> Jurisd:<br /> 
+                <input class="span2" type="text" placeholder="Jurisd" ng-model="requerimientoNuevo.jurisdiccion" style="width: 80px;" />
+            </span>
+            <span style="display: inline-block"> Entidad:<br /> 
+                <input class="span2" type="text" placeholder="Entidad" ng-model="requerimientoNuevo.entidad" style="width: 80px;" />
+            </span>
+            <span style="display: inline-block"> Programa:<br /> 
+                <input class="span2" type="text" placeholder="Programa" ng-model="requerimientoNuevo.programa" style="width: 80px;" />
+            </span>
+            <span style="display: inline-block"> Proyecto:<br /> 
+                <input class="span2" type="text" placeholder="Proyecto" ng-model="requerimientoNuevo.proyecto" style="width: 80px;" />
+            </span>
+            <span style="display: inline-block"> Actividad:<br /> 
+                <input class="span2" type="text" placeholder="Actividad" ng-model="requerimientoNuevo.actividad" style="width: 80px;" />
+            </span>
+            <span style="display: inline-block"> Obra:<br /> 
+                <input class="span2" type="text" placeholder="Obra" ng-model="requerimientoNuevo.obra" style="width: 80px;" />
+            </span>
+            <span style="display: inline-block"> Fuente Fin.:<br /> 
+                <input class="span2" type="text" placeholder="Fuente Fin." ng-model="requerimientoNuevo.fuenteFinanciamiento" style="width: 80px;" />
+            </span>
+            <span style="display: inline-block"> Moneda:<br /> 
+                <input class="span2" type="text" placeholder="Moneda" ng-model="requerimientoNuevo.moneda" style="width: 80px;" />
+            </span>
+            <span style="display: inline-block"> Inciso:<br /> 
+                <input class="span2" type="text" placeholder="Inciso" ng-model="requerimientoNuevo.inciso" style="width: 80px;" />
+            </span>
+            <span style="display: inline-block"> Principal:<br /> 
+                <input class="span2" type="text" placeholder="Principal" ng-model="requerimientoNuevo.principal" style="width: 80px;" />
+            </span>
+            <span style="display: inline-block"> Parcial:<br /> 
+                <input class="span2" type="text" placeholder="Parcial" ng-model="requerimientoNuevo.parcial" style="width: 80px;" />
+            </span>
+            <span style="display: inline-block"> Ubic.Geo:<br /> 
+                <input class="span2" type="text" placeholder="Ubic.Geo" ng-model="requerimientoNuevo.ubicacionGeografica" style="width: 80px;" />
+            </span>
+        </span>
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="btn pull-right" data-dismiss="modal">Cancelar</a>
+        <a href="#" class="btn pull-right" data-dismiss="modal" ng-click="nuevoRequerimiento(true)" style="margin-right: 10px;">Agregar requerimiento</a>
+    </div>
+</div>
+
+

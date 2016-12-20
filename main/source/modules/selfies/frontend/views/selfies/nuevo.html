@@ -1,0 +1,12 @@
+<div class="card body" style="margin-top: 0px;padding-top: 0px;" ng-controller="selfiesNuevoCtrl">
+    <h2 style="margin-top: 25px; margin-left: 15px; margin-bottom: 0px; padding:15px;">Nuevas fotos<a ng-click="guardar()" href="/selfies" class="btn btn-link pull-right" style="margin-right: 20px;"><i class="icon-ok icon-white"></i></a></h2>
+    <div class="card-body" style="margin-top: 0px;margin-bottom: 10px;">
+        <div class="row" style="padding-bottom: 0px;">
+            <form class="form-horizontal" style="margin-bottom: 0px !important;">
+                <div style="margin-left:20px; margin-top:20px;">
+                    <div style="width: 300px" fine-uploader destination="'/upload/'" placeholder="'Examinar'" uploaded="uploaded"></div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

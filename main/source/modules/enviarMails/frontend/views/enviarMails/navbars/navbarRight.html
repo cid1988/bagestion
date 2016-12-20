@@ -1,0 +1,70 @@
+<div style="padding-right:10px" ng-controller="enviarMailsCtrl">
+	<a href="#modalAsignarPermisos" role="button" data-toggle="modal" class="btn btn-link" title="Dar permisos a otros usuarios para enviar correos a mi nombre"><i class="icon-user"></i> Dar permisos</a>
+
+	<!-- Modal asignar permisos -->
+	<div id="modalAsignarPermisos" class="modal hide fade" tabindex="-1" role="dialog">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			<h3>Asignar permisos</h3>
+		</div>
+		<div class="moda-body">
+			<div class="container-fluid">
+				<div class="row-fluid">
+					<p>Seleccione los usuarios a los que desea dar el permiso para que puedan enviar correos a su nombre.</p>
+					<div class="control-group">
+						<label class="control-label">Compartir con</label>
+						<div class="controls">
+							<select class="todoWidth" id="selectUsuariosPermitidosModal" ng-model="selectUsuariosPermitidosModal" data-placeholder="Seleccion de usuarios" ui-select2 ng-change="agregarUserPermitido( selectUsuariosPermitidosModal, 'selectUsuariosPermitidosModal')">
+		   						<option value="" selected></option>
+		   						<option ng-repeat="usuario in $parent.usuarios" value="{{usuario}}">{{usuario.username}}</option>
+		   					</select>
+		   					<div class="listasContactos">
+				   				<div class="btn-group" ng-repeat="usuario in $parent.usuariosPermitidos track by $index">
+	   								<button type="button" class="btn btn-mini" title="{{usuario.apellido}} {{usuario.nombre}}">{{usuario.username}}</button>
+	   								<button type="button" class="btn btn-mini" ng-click="eliminarUserPermitido(usuario._id)" title="Eliminar"><i class="icon-remove"></i></button>
+	   							</div>
+	   						</div>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="modalpasswordMail">Contraseña</label>
+						<div class="controls">
+							<input id="modalpasswordMail" type="password" class="input-block-level" ng-model="$parent.passwordMail">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<div class="pull-left">
+				<div style="color: #F44336">
+					<strong id="mensajeAviso"></strong>
+				</div>
+			</div>
+			<div class="pull-right">
+				<button type="button" class="btn" data-dismiss="modal" aria-hidden="true" title="Cancelar y Cerrar">Cancelar</button>
+				<button type="button" ng-click="guardarCambiosUsersPermitidos()" class="btn btn-info" aria-hidden="true" title="Guardar y Cerrar">Guardar</button>
+			</div>
+		</div>
+	</div>
+
+	<!-- Modal informacion simple (Titulo y Texto) -->
+	<div id="modalNavbarRight" class="modal hide fade" tabindex="-1" role="dialog">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			<h3>{{$parent.parametroModalRight.titulo}}</h3>
+		</div>
+		<div class="moda-body">
+			<div class="container-fluid">
+				<div class="row-fluid">
+					<p>{{$parent.parametroModalRight.explicacion}}</p>
+				</div>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<div class="pull-right">
+				<button type="button" class="btn btn-info" data-dismiss="modal" aria-hidden="true" title="Aceptar y Cerrar">Aceptar</button>
+			</div>
+		</div>
+	</div>
+</div>

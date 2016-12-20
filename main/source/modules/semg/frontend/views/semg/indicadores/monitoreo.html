@@ -1,0 +1,377 @@
+<style>
+    .table {
+        border: 0;
+    }
+    .table th, .table td {
+        padding: 4px;
+        line-height: 20px;
+        text-align: left;
+        border: 0;
+        vertical-align: middle;
+    }
+    .table th {
+        background-color: #dddddd !important;
+    }
+    .table td {
+      border-left: 1px solid #cecece;
+      border-right: 1px solid #cecece;
+    }
+    .nav-list > li > div,
+    .nav-list .nav-header {
+      padding: 9px 18px;
+      margin-top: 1px;
+      overflow: hidden;
+      font-size: 14px;
+      line-height: 1.4;
+      color: #737373;
+      text-overflow: ellipsis;
+      text-shadow: none;
+      background-color: #ffffff;
+      border-left: 2px solid transparent;
+      -webkit-transition: border 0.218s;
+         -moz-transition: border 0.218s;
+           -o-transition: border 0.218s;
+              transition: border 0.218s;
+    }
+    
+    .nav-list > li > div:hover,
+    .nav-list > li > div:focus,
+    .nav-list > .active > div,
+    .nav-list > .active > div:hover,
+    .nav-list > .active > div:focus {
+      color: #262626;
+      text-shadow: none;
+      background-color: #f5f5f5;
+      border-color: #427fed;
+    }
+    
+    .nav-list > li > div,
+    .nav-list .nav-header {
+      margin-right: -15px;
+      margin-left: -15px;
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+    }
+    
+    .nav-list > li > div {
+      padding: 3px 15px;
+    }
+    
+    .nav-list > .active > div,
+    .nav-list > .active > div:hover,
+    .nav-list > .active > div:focus {
+      color: #ffffff;
+      text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
+      background-color: #3B3537;
+    }
+    
+    a:link {
+        color: #737373;
+    }
+    
+    a:visited {
+        color: #737373;
+    }
+    
+    a:hover {
+        color: #262626;
+    }
+    
+    a:active {
+        color: #737373;
+    }
+</style>
+<div class="card body" style="margin-top: 0px;padding-top: 0px;" ng-controller="IndicadorSEMGMonitoreoCtrl">
+<div ng-hide="monitoreo">
+    <div style="margin-bottom: 0px">
+        <ul class="breadcrumb" style="margin-bottom: 0px;">
+          <li><a href="/semg/indicadores/{{anio}}" style="color:#404040;">Matriz de Indicadores {{anio}}</a> <span class="divider">/</span></li>
+          <li class="active">Formularios de Monitoreo</li>
+        </ul>
+    </div>
+    <div class="card-actions pull-right no-print" style="margin: 0; padding: 0">
+        <div style="margin-right: 10px; display: inline-block;">
+            <input class="span3" type="text" ng-model="filtro.nombreCompleto" placeholder="Buscar por nombre.." style="margin-bottom: 0px;" />
+        </div>
+        <a href="/semg/indicadores/{{anio}}/monitoreoReporte" class="btn btn-link" style="margin-right: 20px;">Reporte</a>
+        <a target="_blank" class="btn btn-link" href="/api/semg-csv/download" ng-if=hasPermission('semg.editar')><icon class="icon-download"></icon> Descargar CSV </a>
+    </div>
+    <h3 class="card-heading simple">
+        Formulario de Monitoreo
+    </h3>
+    <div style="margin-top: 0px;">
+        <ul class="nav nav-list">
+          <li ng-repeat="i in organigrama | filter:{ministerio:true} | orderBy:'nombreCompleto' | filter:filtro">
+              <div>
+                <a style="font-size: 16px;padding-top: 8px;padding-bottom: 8px;" href="#" ng-click="eligeJuris(i._id)">
+                <span class="span9">{{i.nombreCompleto}} ({{i.sigla}})</span></a>
+                <span class="span3" style="display: inline-block;">
+                    <div class="btn-group">
+                    <a class="btn" ng-if="nivelDeCarga(i._id)==0" title="Carga baja" style="width: 30px;height: 31px;padding-top: 0px;"><i class="icon-thumbs-down" style="color:#585858"></i></a>
+                    <a class="btn" ng-if="nivelDeCarga(i._id)==100" title="Carga Completa" style="width: 30px;height: 31px;padding-top: 0px;"><i class="icon-thumbs-up" style="color:#585858"></i></a>
+                    <a class="btn btn-mini" ng-if="!monitoreoAprobacionPorJuris(i._id)" title="Pendiente de Aprobación por el Ministro" style="width: 110px;line-height: normal;height: 26px;padding-top: 5px;">Pendiente de Aprobación<br>por el Ministro</a>
+                    <a class="btn btn-mini" ng-if="monitoreoAprobacionPorJuris(i._id)" title="Aprobado por el Ministro" style="width: 110px;line-height: normal;height: 26px;padding-top: 5px;">Aprobado por<br>el Ministro</a>
+                    <a class="btn btn-mini" ng-hide="hasPermission('semg.editar')" ng-disabled="!monitoreoPorJuris(i._id).informeId" target="_blank" href="/file/{{monitoreoPorJuris(i._id).informeId}}" title="Descargar el Informe de Devolución de Monitoreo" style="width: 110px;line-height: normal;height: 26px;padding-top: 5px;">Informe de Devolución<br>de Monitoreo</a>
+                    <a class="btn btn-mini" ng-show="hasPermission('semg.editar')" ng-click="modalInforme(false, i._id)" title="Cargar el Informe de Devolución de Monitoreo" style="width: 110px;line-height: normal;height: 26px;padding-top: 5px;">Informe de Devolución<br>de Monitoreo</a>
+                </span>
+              </div>
+          </li>
+          <li ng-if="!organigrama.length" class="text-center">
+            <em>No hay organigrama definido aún</em>
+          </li>
+        </ul>
+    </div>
+</div>
+<div ng-show="monitoreo">
+    <div style="margin-bottom: 0px">
+        <ul class="breadcrumb" style="margin-bottom: 0px;">
+          <li><a href="/semg/indicadores/{{anio}}" style="color:#404040;">Matriz de Indicadores {{anio}}</a> <span class="divider">/</span></li>
+          <li ng-show="hasPermission('semg.editar')"><a href="" ng-click="monitoreo=''" style="color:#404040;">Formularios de Monitoreo</a> <span class="divider">/</span></li>
+          <li class="active">{{organigramaPorId(monitoreo.dependencia).nombreCompleto}}</li>
+        </ul>
+    </div>
+    <a ng-click="modificar()" class="btn btn-link pull-right" ng-hide="editando" ng-if="(hasPermission('semg.editar') || hasPermission('semg.editarJurisdiccion'))" style="margin-right: 20px;" ><i class="icon-edit"></i> Editar</a>
+    <a ng-click="guardar()" href="/semg/indicadores/{{anio}}" class="btn btn-link pull-right" ng-show="editando" style="margin-right: 20px;"><i class="icon-ok icon-white"></i> Guardar</a>
+    <div class="controls pull-right" style="margin-right: 20px;">
+        <button class="btn" ng-hide="monitoreo.aprobado" ng-click="monitoreo.aprobado = true" ng-disabled="!user.importante || !editando">Pendiente de Aprobación por el Ministro</button>
+        <button class="btn btn-success" ng-show="monitoreo.aprobado" ng-click="monitoreo.aprobado = false" ng-disabled="!user.importante || !editando">Aprobado por el Ministro</button>
+        <button class="btn" ng-disabled="!monitoreo.informeId" ng-hide="hasPermission('semg.editar')" target="_blank" href="/file/{{monitoreo.informeId}}" title="Descargar el Informe de Devolución de Monitoreo">Informe de Devolución de Monitoreo</button>
+        <button class="btn" ng-show="hasPermission('semg.editar')" ng-click="modalInforme(false, monitoreo.dependencia)" title="Cargar el Informe de Devolución de Monitoreo">Informe de Devolución de Monitoreo</button>
+    </div>
+    <h3 class="card-heading simple">
+        Formulario de Monitoreo - {{organigramaPorId(monitoreo.dependencia).nombreCompleto}}
+    </h3>
+    
+    <div class="card-body" id="target">
+        <h4 style="margin-top: 20px; margin-bottom: 10px; font-weight: 600;">El objetivo de la instancia de monitoreo es recolectar datos que provean información acerca del progreso de los indicadores que las jurisdicciones se propusieron alcanzar. Se trata de identificar alertas tempranas del avance o desafíos hacia los resultados que se quieren lograr. De este modo, en caso de oportunidades de mejora o de un progreso menor al esperado para lograr los resultados planificados, se podrán redoblar esfuerzos o corregir acciones.
+            <br><br>Para ello necesitamos que completen los siguientes campos:
+            <br><br>1) ¿Cómo vienen avanzando hacia el cumplimiento de las metas propuestas? 
+        </h4>
+        <table border="1" class="table table-striped">
+            <tr bgcolor= "#FFFFFF">
+                <th><a ng-click="orden = 'objetivoImpacto';" href="#" style="display: inline-block; color:#404040;margin-left: 25px;">Objetivo Impacto</a></th>
+                <th><a ng-click="orden = 'objetivoMinisterial'" href="#" style="display: inline-block; color:#404040;">Objetivo Ministerial</a></th>
+                <th><a href="#" style="display: inline-block; color:#404040;">Nro</a></th>
+                <th><a ng-click="orden = 'indicadorImpacto'" href="#" style="display: inline-block; color:#404040;">Indicador</a></th>
+                <th><a ng-click="orden = 'metrica'" href="#" style="display: inline-block; color:#404040;">Métrica</a></th>
+                <th><a ng-click="orden = 'metaAnio'" href="#" style="display: inline-block; color:#404040;">Meta {{anio}}</a></th>
+                <th>Avance a los 6 meses</th>
+                <th ng-show=hasPermission('semg.editar')>% Porcentaje de Cumplimiento</th>
+            </tr> 
+            <tr ng-repeat="i in indicadores | orderBy:orden" bgcolor="#FFFFFF" ng-style="{'border-top' : estiloImpacto}">
+            
+                <td><span ng-show="compararImpacto(i.objetivoImpacto, $index)">{{i.objetivoImpacto}} </span></td>
+                <td ng-style="{'border-top' : estiloMinisterial}"><span ng-show="compararMinisterial(i.objetivoMinisterial)">{{i.objetivoMinisterial}}</span></span></td>
+                <td ng-style="{'border-top' : estiloMinisterial}"><div style="text-align: center;">{{$index+1}}</div></td>
+                <td ng-style="{'border-top' : estiloMinisterial}"><div>{{i.indicadorImpacto}}</div></td>
+                <td ng-style="{'border-top' : estiloMinisterial}"><div>{{i.metrica}}</div></td>
+                <td style="text-align: right;" ng-style="{'border-top' : estiloMinisterial}"><div>{{i.metaAnio}}</div></td>
+                <td ng-style="{'border-top' : estiloMinisterial}"><input class="span1" type="text" ng-disabled="!editando" ng-model="i.avance6meses" style="width: 100px;margin-bottom: 0px;" /></td>
+                <td ng-style="{'border-top' : estiloMinisterial}" ng-show=hasPermission('semg.editar')><center ng-if="(i.avance6meses && ((i.sentido == 'Ascendente') || (i.sentido == 'Constante')))">{{porcentaje(i.metaAnio, i.avance6meses)}}%</center><center ng-if="(i.avance6meses && (i.sentido == 'Descendente'))">{{porcentaje2(i.metaAnio, i.avance6meses)}}%</center></td>
+            </tr>
+        </table>
+        
+        <h4 style="margin-top: 30px; margin-bottom: 10px; font-weight: 600;">2) En base a los avances alcanzados hasta el momento, ¿presenta la jurisdicción uno o mas objetivos cuya metas planificadas estén en riesgo de no alcanzarse para el final del período Diciembre {{anio}}? Indicar los factores que dificultan el cumplimiento.</h4>
+        <div class="control-group" style="margin-bottom: 5px;">
+            <label class="control-label">Especifiquen el objetivo:</label>
+            <div class="controls">
+                <select ui-select2 class="span7" ng-disabled="!editando" type="text" ng-model="data.objetivo" ng-options="i as i for i in ministeriales">
+                    <option ng-disabled="true" value=""></option>
+                </select>
+                <button class="btn" style="margin-bottom:10px; margin-left: 5px" ng-disabled="!editando" ng-click="agregarData(data, monitoreo.objetivos)"><i class="icon-ok"></i></button>
+            </div>
+        </div>
+        <div class="control-group" ng-repeat="t in monitoreo.objetivos" style="margin-bottom: 0px;">
+            <div class="controls">
+                <textarea class="span7" type="text" ng-disabled="true" ng-model="t.objetivo" style="margin-bottom: 3px;margin-left: 1px;resize: none;" ></textarea>
+                <a href="#" class="btn btn-link" style="margin-left: 10px" ng-click="verFact(t)"><i class="icon-zoom-in"></i> Ver factores</a>
+                <a href="#" class="btn btn-link" style="margin-left: 10px" ng-show="editando" ng-click="eliminarListaElem(t, monitoreo.objetivos)"><i class="icon-trash"></i> Eliminar</a>
+            </div>
+        </div>
+        <h4 style="margin-top: 30px; margin-bottom: 10px; font-weight: 600;">3) En lo que resta del año, ¿la jurisdicción va a implementar alguna medida o acción  correctiva para alcanzar las metas propuestas?</h4>
+        <div style="margin-bottom: 50px;">
+            <div class="control-group" style="margin-bottom: 5px;">
+                <div class="controls">
+                    <select ui-select2 class="span5" ng-disabled="!editando" type="text" ng-model="dataAccion.objetivo" ng-options="i as i for i in ministeriales">
+                        <option ng-disabled="true" value="">Especifiquen el objetivo...</option>
+                    </select>
+                    <input class="span5" ng-disabled="!editando" type="text" ng-model="dataAccion.texto" placeholder="Especificar la acción.." style="margin-left: 10px;" />
+                    <button class="btn" style="margin-bottom:10px; margin-left: 5px" ng-disabled="!editando" ng-click="monitoreo.medidaAccion.push(dataAccion);dataAccion={objetivo:'',texto:''}"><i class="icon-ok"></i></button>
+                </div>
+            </div>
+            <div class="control-group" ng-repeat="t in monitoreo.medidaAccion" style="margin-bottom: 0px;">
+                <div class="controls">
+                    <textarea class="span5" type="text" ng-disabled="true" ng-model="t.objetivo" style="margin-bottom: 3px;margin-left: 1px;resize: none;" ></textarea>
+                    <textarea class="span5" type="text" ng-disabled="true" ng-model="t.texto" style="margin-bottom: 3px;margin-left: 1px;resize: none;" ></textarea>
+                    <a href="#" style="margin-left: 10px" ng-show="editando" ng-click="eliminarListaElem(t, monitoreo.medidaAccion)"><i class="icon-trash"></i></a>
+                </div>
+            </div>
+        </div>
+        
+        <h4 style="margin-top: 20px; margin-bottom: 10px; font-weight: 600;">4) Este espacio está destinado para cualquier comentario, consulta y/o sugerencia que desde la jurisdicción tengan.</h4>
+        <textarea class="span10" type="text" ng-disabled="!editando" ng-model="monitoreo.sugerencias" style="margin-bottom: 30px;margin-left: 1px;resize: none;height: 80px;" ></textarea>
+        <a ng-click="guardar()" href="/semg/indicadores/{{anio}}" class="btn btn-info pull-right" ng-show="editando" style="margin-right: 20px;margin-top: 60px;"><i class="icon-ok icon-white"></i> Guardar</a>
+        
+    </div>
+    
+    
+    <div id="verFactores" class="modal hide fade" style="width: 1100px; left: 350px; top: 7px; padding-bottom: 20px;">
+        <div class="modal-header" style="padding-bottom: 10px;">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <a ng-click="modificar()" class="btn btn-link pull-right" ng-hide="editando" ng-if="hasPermission('semg.editar')" style="margin-right: 20px;" ><i class="icon-edit"></i> Editar</a>
+            <h4 style="font-weight: 600; margin-bottom: 15px;">Objetivo: {{elemento.objetivo}}</h4>
+        </div>
+        <div class="modal-body" style="overflow-y: hidden; overflow-x: hidden; height: 550px; padding-bottom: 10px;">
+            <div style="margin-top: 0px; margin-bottom: 10px; font-weight: 600;">¿Cuáles de los siguientes factores creen que generaron/están generando dificultades para alcanzar las metas?</div>
+            <table border="1" class="table table-striped">
+                <tr bgcolor= "#FFFFFF">
+                    <th style="width: 450px;">Factores de organización interna</th>
+                    <th>Si / No</th>
+                    <th>Profundicen</th>
+                    <th style="width: 256px;font-size: 10px;">Numeren de mayor a menor los tres factores que más dificultaron el alcance de las metas</th>
+                </tr> 
+                <tr>
+                    <td>a. Presupuesto (asignación o ejecución del presupuesto)</td>
+                    <td><div class="btn-group" data-toggle="buttons-radio" style="margin-left: 0px; margin-right: 0px;">
+                        <button ng-disabled="!editando" class="btn" ng-class="(elemento.presupuesto.valor == 'si') && 'active btn-info'" ng-click="elemento.presupuesto.valor='si'">Si</button>
+                        <button ng-disabled="!editando" class="btn" ng-class="(elemento.presupuesto.valor == 'no') && 'active btn-info'" ng-click="elemento.presupuesto.valor='no'">No</button>
+                    </div></td>
+                    <td><textarea class="span3" type="text" ng-disabled="!editando" ng-model="elemento.presupuesto.comentario" style="margin-bottom: 0px;margin-left: 1px;resize: none;" ></textarea></td>
+                    <td><div class="btn-group" data-toggle="buttons-radio" style="margin-left: 0px; margin-right: 0px;" ng-show="(elemento.presupuesto.valor == 'si')">
+                            <button ng-disabled="!editando" class="btn" ng-show="(elemento.presupuesto.importancia == '1')" ng-class="(elemento.presupuesto.importancia == '1') && 'active btn-info'" ng-click="elemento.presupuesto.importancia=importancia(elemento,'1')">1</button>
+                            <button ng-disabled="!editando" class="btn" ng-show="(elemento.presupuesto.importancia == '2')" ng-class="(elemento.presupuesto.importancia == '2') && 'active btn-info'" ng-click="elemento.presupuesto.importancia=importancia(elemento,'2')">2</button>
+                            <button ng-disabled="!editando" class="btn" ng-show="(elemento.presupuesto.importancia == '3')" ng-class="(elemento.presupuesto.importancia == '3') && 'active btn-info'" ng-click="elemento.presupuesto.importancia=importancia(elemento,'3')">3</button>
+                            <button ng-disabled="!editando" class="btn" ng-show="(elemento.presupuesto.importancia == '')" ng-click="elemento.presupuesto.importancia=importancia(elemento,'')"></button>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>b. Infraestructura (tecnología o espacio físico)</td>
+                    <td><div class="btn-group" data-toggle="buttons-radio" style="margin-left: 0px; margin-right: 0px;">
+                        <button ng-disabled="!editando" class="btn" ng-class="(elemento.infraestructura.valor == 'si') && 'active btn-info'" ng-click="elemento.infraestructura.valor='si'">Si</button>
+                        <button ng-disabled="!editando" class="btn" ng-class="(elemento.infraestructura.valor == 'no') && 'active btn-info'" ng-click="elemento.infraestructura.valor='no'">No</button>
+                    </div></td>
+                    <td><textarea class="span3" type="text" ng-disabled="!editando" ng-model="elemento.infraestructura.comentario" style="margin-bottom: 0px;margin-left: 1px;resize: none;" ></textarea></td>
+                    <td><div class="btn-group" data-toggle="buttons-radio" style="margin-left: 0px; margin-right: 0px;" ng-show="(elemento.infraestructura.valor == 'si')">
+                            <button ng-disabled="!editando" class="btn" ng-show="(elemento.infraestructura.importancia == '1')" ng-class="(elemento.infraestructura.importancia == '1') && 'active btn-info'" ng-click="elemento.infraestructura.importancia=importancia(elemento,'1')">1</button>
+                            <button ng-disabled="!editando" class="btn" ng-show="(elemento.infraestructura.importancia == '2')" ng-class="(elemento.infraestructura.importancia == '2') && 'active btn-info'" ng-click="elemento.infraestructura.importancia=importancia(elemento,'2')">2</button>
+                            <button ng-disabled="!editando" class="btn" ng-show="(elemento.infraestructura.importancia == '3')" ng-class="(elemento.infraestructura.importancia == '3') && 'active btn-info'" ng-click="elemento.infraestructura.importancia=importancia(elemento,'3')">3</button>
+                            <button ng-disabled="!editando" class="btn" ng-show="(elemento.infraestructura.importancia == '')" ng-click="elemento.infraestructura.importancia=importancia(elemento,'')"></button>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>c. Personal (cantidad o capacitación)</td>
+                    <td><div class="btn-group" data-toggle="buttons-radio" style="margin-left: 0px; margin-right: 0px;">
+                        <button ng-disabled="!editando" class="btn" ng-class="(elemento.personal.valor == 'si') && 'active btn-info'" ng-click="elemento.personal.valor='si'">Si</button>
+                        <button ng-disabled="!editando" class="btn" ng-class="(elemento.personal.valor == 'no') && 'active btn-info'" ng-click="elemento.personal.valor='no'">No</button>
+                    </div></td>
+                    <td><textarea class="span3" type="text" ng-disabled="!editando" ng-model="elemento.personal.comentario" style="margin-bottom: 0px;margin-left: 1px;resize: none;" ></textarea></td>
+                    <td><div class="btn-group" data-toggle="buttons-radio" style="margin-left: 0px; margin-right: 0px;" ng-show="(elemento.personal.valor == 'si')">
+                            <button ng-disabled="!editando" class="btn" ng-show="(elemento.personal.importancia == '1')" ng-class="(elemento.personal.importancia == '1') && 'active btn-info'" ng-click="elemento.personal.importancia=importancia(elemento,'1')">1</button>
+                            <button ng-disabled="!editando" class="btn" ng-show="(elemento.personal.importancia == '2')" ng-class="(elemento.personal.importancia == '2') && 'active btn-info'" ng-click="elemento.personal.importancia=importancia(elemento,'2')">2</button>
+                            <button ng-disabled="!editando" class="btn" ng-show="(elemento.personal.importancia == '3')" ng-class="(elemento.personal.importancia == '3') && 'active btn-info'" ng-click="elemento.personal.importancia=importancia(elemento,'3')">3</button>
+                            <button ng-disabled="!editando" class="btn" ng-show="(elemento.personal.importancia == '')" ng-click="elemento.personal.importancia=importancia(elemento,'')"></button>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>d. Acceso a la información (fuentes y recursos)</td>
+                    <td><div class="btn-group" data-toggle="buttons-radio" style="margin-left: 0px; margin-right: 0px;">
+                        <button ng-disabled="!editando" class="btn" ng-class="(elemento.accesoInfo.valor == 'si') && 'active btn-info'" ng-click="elemento.accesoInfo.valor='si'">Si</button>
+                        <button ng-disabled="!editando" class="btn" ng-class="(elemento.accesoInfo.valor == 'no') && 'active btn-info'" ng-click="elemento.accesoInfo.valor='no'">No</button>
+                    </div></td>
+                    <td><textarea class="span3" type="text" ng-disabled="!editando" ng-model="elemento.accesoInfo.comentario" style="margin-bottom: 0px;margin-left: 1px;resize: none;" ></textarea></td>
+                    <td><div class="btn-group" data-toggle="buttons-radio" style="margin-left: 0px; margin-right: 0px;" ng-show="(elemento.accesoInfo.valor == 'si')">
+                            <button ng-disabled="!editando" class="btn" ng-show="(elemento.accesoInfo.importancia == '1')" ng-class="(elemento.accesoInfo.importancia == '1') && 'active btn-info'" ng-click="elemento.accesoInfo.importancia=importancia(elemento,'1')">1</button>
+                            <button ng-disabled="!editando" class="btn" ng-show="(elemento.accesoInfo.importancia == '2')" ng-class="(elemento.accesoInfo.importancia == '2') && 'active btn-info'" ng-click="elemento.accesoInfo.importancia=importancia(elemento,'2')">2</button>
+                            <button ng-disabled="!editando" class="btn" ng-show="(elemento.accesoInfo.importancia == '3')" ng-class="(elemento.accesoInfo.importancia == '3') && 'active btn-info'" ng-click="elemento.accesoInfo.importancia=importancia(elemento,'3')">3</button>
+                            <button ng-disabled="!editando" class="btn" ng-show="(elemento.accesoInfo.importancia == '')" ng-click="elemento.accesoInfo.importancia=importancia(elemento,'')"></button>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>e. Coordinación del equipo</td>
+                    <td><div class="btn-group" data-toggle="buttons-radio" style="margin-left: 0px; margin-right: 0px;">
+                        <button ng-disabled="!editando" class="btn" ng-class="(elemento.coordinacionEquipo.valor == 'si') && 'active btn-info'" ng-click="elemento.coordinacionEquipo.valor='si'">Si</button>
+                        <button ng-disabled="!editando" class="btn" ng-class="(elemento.coordinacionEquipo.valor == 'no') && 'active btn-info'" ng-click="elemento.coordinacionEquipo.valor='no'">No</button>
+                    </div></td>
+                    <td><textarea class="span3" type="text" ng-disabled="!editando" ng-model="elemento.coordinacionEquipo.comentario" style="margin-bottom: 0px;margin-left: 1px;resize: none;" ></textarea></td>
+                    <td><div class="btn-group" data-toggle="buttons-radio" style="margin-left: 0px; margin-right: 0px;" ng-show="(elemento.coordinacionEquipo.valor == 'si')">
+                            <button ng-disabled="!editando" class="btn" ng-show="(elemento.coordinacionEquipo.importancia == '1')" ng-class="(elemento.coordinacionEquipo.importancia == '1') && 'active btn-info'" ng-click="elemento.coordinacionEquipo.importancia=importancia(elemento,'1')">1</button>
+                            <button ng-disabled="!editando" class="btn" ng-show="(elemento.coordinacionEquipo.importancia == '2')" ng-class="(elemento.coordinacionEquipo.importancia == '2') && 'active btn-info'" ng-click="elemento.coordinacionEquipo.importancia=importancia(elemento,'2')">2</button>
+                            <button ng-disabled="!editando" class="btn" ng-show="(elemento.coordinacionEquipo.importancia == '3')" ng-class="(elemento.coordinacionEquipo.importancia == '3') && 'active btn-info'" ng-click="elemento.coordinacionEquipo.importancia=importancia(elemento,'3')">3</button>
+                            <button ng-disabled="!editando" class="btn" ng-show="(elemento.coordinacionEquipo.importancia == '')" ng-click="elemento.coordinacionEquipo.importancia=importancia(elemento,'')"></button>
+                        </div>
+                    </td>
+                </tr>
+                <tr bgcolor= "#FFFFFF">
+                    <th>Factores de coordinación interministerial o externos</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr> 
+                <tr>
+                    <td>a. Coordinación vertical (con otras jurisdicciones de distinta jerarquía)</td>
+                    <td><div class="btn-group" data-toggle="buttons-radio" style="margin-left: 0px; margin-right: 0px;">
+                        <button ng-disabled="!editando" class="btn" ng-class="(elemento.coordinacionVertical.valor == 'si') && 'active btn-info'" ng-click="elemento.coordinacionVertical.valor='si'">Si</button>
+                        <button ng-disabled="!editando" class="btn" ng-class="(elemento.coordinacionVertical.valor == 'no') && 'active btn-info'" ng-click="elemento.coordinacionVertical.valor='no'">No</button>
+                    </div></td>
+                    <td><textarea class="span3" type="text" ng-disabled="!editando" ng-model="elemento.coordinacionVertical.comentario" style="margin-bottom: 0px;margin-left: 1px;resize: none;" ></textarea></td>
+                    <td><div class="btn-group" data-toggle="buttons-radio" style="margin-left: 0px; margin-right: 0px;" ng-show="(elemento.coordinacionVertical.valor == 'si')">
+                            <button ng-disabled="!editando" class="btn" ng-show="(elemento.coordinacionVertical.importancia == '1')" ng-class="(elemento.coordinacionVertical.importancia == '1') && 'active btn-info'" ng-click="elemento.coordinacionVertical.importancia=importancia(elemento,'1')">1</button>
+                            <button ng-disabled="!editando" class="btn" ng-show="(elemento.coordinacionVertical.importancia == '2')" ng-class="(elemento.coordinacionVertical.importancia == '2') && 'active btn-info'" ng-click="elemento.coordinacionVertical.importancia=importancia(elemento,'2')">2</button>
+                            <button ng-disabled="!editando" class="btn" ng-show="(elemento.coordinacionVertical.importancia == '3')" ng-class="(elemento.coordinacionVertical.importancia == '3') && 'active btn-info'" ng-click="elemento.coordinacionVertical.importancia=importancia(elemento,'3')">3</button>
+                            <button ng-disabled="!editando" class="btn" ng-show="(elemento.coordinacionVertical.importancia == '')" ng-click="elemento.coordinacionVertical.importancia=importancia(elemento,'')"></button>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>b. Coordinación horizontal (con otras jurisdicciones de igual jerarquía)</td>
+                    <td><div class="btn-group" data-toggle="buttons-radio" style="margin-left: 0px; margin-right: 0px;">
+                        <button ng-disabled="!editando" class="btn" ng-class="(elemento.coordinacionHorizontal.valor == 'si') && 'active btn-info'" ng-click="elemento.coordinacionHorizontal.valor='si'">Si</button>
+                        <button ng-disabled="!editando" class="btn" ng-class="(elemento.coordinacionHorizontal.valor == 'no') && 'active btn-info'" ng-click="elemento.coordinacionHorizontal.valor='no'">No</button>
+                    </div></td>
+                    <td><textarea class="span3" type="text" ng-disabled="!editando" ng-model="elemento.coordinacionHorizontal.comentario" style="margin-bottom: 0px;margin-left: 1px;resize: none;" ></textarea></td>
+                    <td><div class="btn-group" data-toggle="buttons-radio" style="margin-left: 0px; margin-right: 0px;" ng-show="(elemento.coordinacionHorizontal.valor == 'si')">
+                            <button ng-disabled="!editando" class="btn" ng-show="(elemento.coordinacionHorizontal.importancia == '1')" ng-class="(elemento.coordinacionHorizontal.importancia == '1') && 'active btn-info'" ng-click="elemento.coordinacionHorizontal.importancia=importancia(elemento,'1')">1</button>
+                            <button ng-disabled="!editando" class="btn" ng-show="(elemento.coordinacionHorizontal.importancia == '2')" ng-class="(elemento.coordinacionHorizontal.importancia == '2') && 'active btn-info'" ng-click="elemento.coordinacionHorizontal.importancia=importancia(elemento,'2')">2</button>
+                            <button ng-disabled="!editando" class="btn" ng-show="(elemento.coordinacionHorizontal.importancia == '3')" ng-class="(elemento.coordinacionHorizontal.importancia == '3') && 'active btn-info'" ng-click="elemento.coordinacionHorizontal.importancia=importancia(elemento,'3')">3</button>
+                            <button ng-disabled="!editando" class="btn" ng-show="(elemento.coordinacionHorizontal.importancia == '')" ng-click="elemento.coordinacionHorizontal.importancia=importancia(elemento,'')"></button>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>c. Coordinación con actores externos al GCBA</td>
+                    <td><div class="btn-group" data-toggle="buttons-radio" style="margin-left: 0px; margin-right: 0px;">
+                        <button ng-disabled="!editando" class="btn" ng-class="(elemento.coordinacionActores.valor == 'si') && 'active btn-info'" ng-click="elemento.coordinacionActores.valor='si'">Si</button>
+                        <button ng-disabled="!editando" class="btn" ng-class="(elemento.coordinacionActores.valor == 'no') && 'active btn-info'" ng-click="elemento.coordinacionActores.valor='no'">No</button>
+                    </div></td>
+                    <td><textarea class="span3" type="text" ng-disabled="!editando" ng-model="elemento.coordinacionActores.comentario" style="margin-bottom: 0px;margin-left: 1px;resize: none;" ></textarea></td>
+                    <td><div class="btn-group" data-toggle="buttons-radio" style="margin-left: 0px; margin-right: 0px;" ng-show="(elemento.coordinacionActores.valor == 'si')">
+                            <button ng-disabled="!editando" class="btn" ng-show="(elemento.coordinacionActores.importancia == '1')" ng-class="(elemento.coordinacionActores.importancia == '1') && 'active btn-info'" ng-click="elemento.coordinacionActores.importancia=importancia(elemento,'1')">1</button>
+                            <button ng-disabled="!editando" class="btn" ng-show="(elemento.coordinacionActores.importancia == '2')" ng-class="(elemento.coordinacionActores.importancia == '2') && 'active btn-info'" ng-click="elemento.coordinacionActores.importancia=importancia(elemento,'2')">2</button>
+                            <button ng-disabled="!editando" class="btn" ng-show="(elemento.coordinacionActores.importancia == '3')" ng-class="(elemento.coordinacionActores.importancia == '3') && 'active btn-info'" ng-click="elemento.coordinacionActores.importancia=importancia(elemento,'3')">3</button>
+                            <button ng-disabled="!editando" class="btn" ng-show="(elemento.coordinacionActores.importancia == '')" ng-click="elemento.coordinacionActores.importancia=importancia(elemento,'')"></button>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Otros ¿Cúales?</th>
+                    <th><div class="btn-group" data-toggle="buttons-radio" style="margin-left: 0px; margin-right: 0px;">
+                        <button ng-disabled="!editando" class="btn" ng-class="(elemento.otros.valor == 'si') && 'active btn-info'" ng-click="elemento.otros.valor='si'">Si</button>
+                        <button ng-disabled="!editando" class="btn" ng-class="(elemento.otros.valor == 'no') && 'active btn-info'" ng-click="elemento.otros.valor='no'">No</button>
+                    </div></th>
+                    <th><textarea class="span3" type="text" ng-disabled="!editando" ng-model="elemento.otros.comentario" style="margin-bottom: 0px;margin-left: 1px;resize: none;" ></textarea></th>
+                    <th><div class="btn-group" data-toggle="buttons-radio" style="margin-left: 0px; margin-right: 0px;" ng-show="(elemento.otros.valor == 'si')">
+                            <button ng-disabled="!editando" class="btn" ng-show="(elemento.otros.importancia == '1')" ng-class="(elemento.otros.importancia == '1') && 'active btn-info'" ng-click="elemento.otros.importancia=importancia(elemento,'1')">1</button>
+                            <button ng-disabled="!editando" class="btn" ng-show="(elemento.otros.importancia == '2')" ng-class="(elemento.otros.importancia == '2') && 'active btn-info'" ng-click="elemento.otros.importancia=importancia(elemento,'2')">2</button>
+                            <button ng-disabled="!editando" class="btn" ng-show="(elemento.otros.importancia == '3')" ng-class="(elemento.otros.importancia == '3') && 'active btn-info'" ng-click="elemento.otros.importancia=importancia(elemento,'3')">3</button>
+                            <button ng-disabled="!editando" class="btn" ng-show="(elemento.otros.importancia == '')" ng-click="elemento.otros.importancia=importancia(elemento,'')"></button>
+                        </div>
+                    </th>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+</div>

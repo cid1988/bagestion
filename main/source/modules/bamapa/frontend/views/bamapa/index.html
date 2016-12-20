@@ -1,0 +1,240 @@
+<style>
+    .titulo {
+        font-family: Arial;
+        font-size:20px;
+        color: #777777;
+        font-weight: normal;
+        padding: 15px;
+        padding-left: 7px;
+        border-bottom: solid 1px #CCCCCC;
+        margin-bottom: 5px;
+    }
+    body {
+        overflow:hidden;
+        -moz-user-select: -moz-none;
+        -khtml-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+    .navbar {
+        margin-bottom: 0px !important;
+    }
+    .container-fluid {
+        margin-left: 0px !important;
+        margin-right: 0px !important;
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+    }
+    #mapaPrincipal>div>div:first-child{
+        width: 100%;
+        height: 100%;
+    }
+    .contenedorMapa {
+        padding: 0px;
+        margin: 0px;
+    }
+    #cajaFiltros {
+        position: absolute;
+        top:  65px; 
+        left: 70px;
+        display: block;
+        background-color: #FFFFFF;
+        border: solid 1px #DDDDDD;
+        width: 300px;
+        z-index: 1000;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+        padding: 5px;
+    }
+    .cajaFiltrosTodos {
+        position: absolute;
+        top:  62px; 
+        right: 10px;
+        display: block;
+        background-color: #FFFFFF;
+        border: solid 1px #DDDDDD;
+        width: 300px;
+        z-index: 1000;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+        padding: 5px;
+        padding-bottom: 10px;
+    }
+    #buscador {
+        width: 280px !important;
+        padding: 5px !important;
+        padding-top: 0px !important;
+        padding-bottom: 0px !important;
+    }
+    button:focus, button:hover{ 
+        outline:0px;
+    }
+    input:focus, input:hover{ 
+        outline:0px;
+    }
+    .btn-map {
+        border: none;
+        color: #FFFFFF;
+        -webkit-border-radius: 2px;
+        -moz-border-radius: 2px;
+        border-radius: 2px;
+    }
+    .btn-pe {
+        font-family: Arial;
+        font-size: 12px;
+        color: #FFFFFF;
+        border: none;  
+        -webkit-border-radius: 2px;
+        -moz-border-radius: 2px;
+        border-radius: 2px;
+        text-align: center;
+        margin: 1px;
+    }
+    .conM {
+        padding: 0px;
+        margin: 0px;
+        margin-right: 15px !important;
+    }
+    .tituloM {
+		padding: 5px;
+		font-size: 18px;
+		font-family: Arial;
+		color: #575757;
+		text-align: left;
+    }
+    .lineaM {
+		font-family: Arial;
+		font-size: 12px;
+		padding: 2px;
+    }
+</style>
+
+<div ng-controller="mapaIndex" class="contenedorMapa">
+<div id="cajaFiltros"class=" animated fadeInDown">
+<div id="div">
+<div class="titulo">BA Mapa</div>
+    <div style="display: block; margin: 2px;" ng-repeat="c in capas" >
+        <button class="btn-map" ng-style="{ 'background-color': retornarColor(c) }" ng-click="cargarMakers(c)"><i class="icon-map-marker" style="cursor: pointer !important;"></i></button> {{c.nombre}} <button style="width: 27px;" class="btn-pe pull-right" ng-disabled="!c.visible" ng-class="{'btn-info': c.panel}" ng-click="panelFiltros(c)"><i class="icon-chevron-down"></i></button>
+    </div>
+</div>
+</div>
+<!-- FIN CAJA PRINCIPAL -->
+
+
+
+
+
+
+<!-- Caja de filtros de Obras -->
+<div id="cajaFiltrosObras" style="display:none;" class="cajaFiltrosTodos animated fadeInDown">
+<div id="div">
+<div class="titulo">Filtros Obras</div>
+    <div class="container" style="width: 290px">
+        <div class="">
+        Comuna:
+        <!--    <button class="btn-pe btn-info" ng-click="mostrarComuna('ninguna')" ng-show="obrasTodasComunas">Ninguna comuna</button>
+            <button class="btn-pe" ng-click="mostrarComuna('todas')" ng-show="!obrasTodasComunas">Todas las comunas</button> -->
+        </br>
+            <button style="width: 27px;" ng-repeat="b in obrasComunas | orderBy : 'numero'" class="btn-pe" ng-click="mostrarComunaObras(b)" ng-class="{'btn-info': b.visibleObra}">{{ b.numero }}</button>
+        <br/>
+        Relevancia:
+            <!-- <button class="btn-pe btn-info" style="margin: 2px !important;" ng-show="obrasTodasRelevancias">Ninguna</button>
+            <button class="btn-pe" style="margin: 2px !important;" ng-show="!obrasTodasRelevancias">Todas</button>  -->          
+        </br>
+            <button ng-repeat="r in obrasRelevancias" class="btn-pe" ng-class="{'btn-info': r.visibleObra}" ng-click="mostrarRelevanciaObras(r)">{{ r.nombre }}</button>
+        </br>
+        Jurisdiccion:
+            <select ui-select2  data-placeholder="Todas las jurisdicciones" style="width:100%" ng-model="j" ng-change="mostrarJurisdiccionObras(j)">
+                <option selected="true" disabled="disabled" value="">Seleccione una jurisdiccion</option>
+                <option value="todas">Todas las jurisdicciones</option>
+                <option ng-repeat="j in obrasJurisdicciones" value="{{ j }}">{{ j.nombre }}</option>
+            </select>
+        Estado:
+            <select ui-select2  data-placeholder="Todas los estados" style="width:100%" ng-model="e" ng-change="mostrarEstadoObras(e)">
+                <option selected="true" disabled="disabled" value="">Seleccione un estado</option>
+                <option value="todas">Todas los estados</option>
+                <option ng-repeat="e in obrasEstados | filter: { obra: true }" value="{{ e }}">{{ e.nombre }}</option>
+            </select>
+        Grupo:
+            <select ui-select2  data-placeholder="Todas los grupo" style="width:100%" ng-model="g" ng-change="mostrarGrupoObras(g)">
+                <option selected="true" disabled="disabled" value="">Seleccione un grupo</option>
+                <option value="todas">Todos los grupos</option>
+                <option ng-repeat="g in obrasGrupos" value="{{ g }}">{{ g.nombre }}</option>
+            </select>
+        Segmentos:
+            <select ui-select2  data-placeholder="Todos los segmentos" style="width:100%" ng-model="s" ng-change="mostrarSegmentoObras(s)">
+                <option selected="true" disabled="disabled" value="">Seleccione un segmento</option>
+                <option value="todas">Todos los segmentos</option>
+                <option ng-repeat="s in obrasSegmentos" value="{{ s }}">{{ s.nombre }}</option>
+            </select>
+        </div>
+    </div>
+</div>
+</div><!-- Fin caja de filtros de Obras -->
+
+<!-- Caja de filtros de Iniciativas -->
+<div id="cajaFiltrosIniciativas" style="display:none;" class="cajaFiltrosTodos animated fadeInDown">
+<div id="div">
+<div class="titulo">Filtros Iniciativas</div>
+    <div class="container" style="width: 290px">
+        En construcción...
+    </div>
+</div>
+</div><!-- Fin caja de filtros de Iniciativas -->
+
+<!-- Caja de filtros de Bajo autopista -->
+<div id="cajaFiltrosBAutopista" style="display:none;" class="cajaFiltrosTodos">
+<div id="div">
+<div class="titulo">Filtros Bajo Autopista</div>
+    <div class="container" style="width: 290px">
+        En construcción...
+    </div>
+</div>
+</div><!-- Fin caja de filtros de Bajo autopista -->
+
+<!-- Caja de filtros de Corte calzada -->
+<div id="cajaFiltrosCalzada" style="display:none;" class="cajaFiltrosTodos">
+<div id="div">
+<div class="titulo">Filtros Corte calzada</div>
+    <div class="container" style="width: 290px">
+        En construcción...
+    </div>
+</div>
+</div><!-- Fin caja de filtros de Corte calzada -->
+
+<!-- Caja de filtros de Constituyentes -->
+<div id="cajaFiltrosConstituyentes" style="display:none;" class="cajaFiltrosTodos">
+<div id="div">
+<div class="titulo">Filtros Constituyentes</div>
+    <div class="container" style="width: 290px">
+        En construcción...
+    </div>
+</div>
+</div><!-- Fin caja de filtros de Constituyentes -->
+
+<!-- Caja de filtros de Regularizacion -->
+<div id="cajaFiltrosRegularizacion" style="display:none;" class="cajaFiltrosTodos">
+<div id="div">
+<div class="titulo">Filtros Regularizacion</div>
+    <div class="container" style="width: 290px">
+        En construcción...
+    </div>
+</div>
+</div><!-- Fin caja de filtros de Regularizacion -->
+
+<!-- Caja de filtros de Cruce ferroviarios -->
+<div id="cajaFiltrosCFerroviarios" style="display:none;" class="cajaFiltrosTodos">
+<div id="div">
+<div class="titulo">Filtros Cruces ferroviarios</div>
+    <div class="container" style="width: 290px">
+        En construcción...
+    </div>
+</div>
+</div><!-- Fin caja de filtros de Cruce ferroviarios -->
+
+    <div id="mapaPrincipal"></div>
+<!-- Fin del div del controller -->  
+</div>

@@ -1,0 +1,19 @@
+<div class="modal-header" style="padding-bottom: 10px;">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>Agregar Estratregia</h3>
+    </div>
+    <div class="modal-body">
+        <span style="display: inline-block"> Eje al que pertenece:<br /> 
+            <select ui-select2 class="span4" type="text" ng-model="data.eje" ng-options="i._id as i.nombre for i in ejes">
+                <option ng-disabled="true" value=""></option>
+            </select>
+        </span>
+        <span style="display: inline-block"> Nombre:<br /> 
+            <input class="span5" type="text" placeholder="Estrategia" ng-model="data.nombre" />
+        </span>
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="btn" data-dismiss="modal">Cancelar</a>
+        <a href="#" class="btn btn-info" data-dismiss="modal" ng-click="agregarEstrategia(true, data)">Agregar Estrategia</a>
+    </div>
+</div>

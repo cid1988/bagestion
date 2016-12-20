@@ -1,0 +1,34 @@
+<div class="modal-header" style="padding-bottom: 10px;">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h3>Agregar comentario</h3>
+</div>
+<div class="modal-body">
+    <div class="span2" style="margin-left:0px">
+        <label style="display: inline-block">Cuando:<label/>
+        <input class="span2" type="text" date placeholder="Fecha" ng-model="data.cuando" style="margin-bottom: 0px;margin-top:0px"/>
+    </div>
+    <div class="span2">
+        <label style="display: inline-block">Campo:<label/>
+        <select class="span3" ui-select2 type="text" ng-model="data.campo">
+            <option value="Indicador de Impacto">Indicador</option>
+            <option value="Unidad {{anio-4}}">Unidad {{anio-4}}</option>
+            <option value="Unidad {{anio-3}}">Unidad {{anio-3}}</option>
+            <option value="Unidad {{anio-2}}">Unidad {{anio-2}}</option>
+            <option value="Unidad {{anio-1}}">Unidad {{anio-1}}</option>
+            <option value="Meta {{anio}}">Meta {{anio}}</option>
+            <option value="Linea de Base">Linea de Base</option>
+            <option value="Sentido del Indicador">Sentido del Indicador</option>
+            <option value="Metodo de Calculo">Metodo de Calculo</option>
+            <option value="Métrica">Métrica</option>
+            <option value="Peso">Peso</option>
+            <option value="Frecuencia de Medición">Frecuencia de Medición</option>
+        </select>
+    </div>
+    <span style="display: inline-block;">Descripción:
+        <textarea style="height:150px; width:530px" type="text" ng-model="data.descripcion" placeholder="Descripción del comentario" />
+    </span>
+</div>
+<div class="modal-footer">
+    <a href="#" class="btn" data-dismiss="modal">Cancelar</a>
+    <a href="#" class="btn btn-info" data-dismiss="modal" ng-click="agregarComen(true, data)">Agregar comentario</a>
+</div>

@@ -1,0 +1,76 @@
+<style>
+    a:hover{
+        color:black;
+    }
+</style>
+<div class="card" style="padding-top: 5px">
+    <div style="margin:10px">
+        <legend>Proyectos de Ley
+            <a class="btn btn-link pull-right" href="/proyectosdeley/nuevo"><i class="icon-plus"></i></a>
+        </legend>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th style="width:1%">P</th>
+                    <th style="width:15%">Proyecto</th>
+                    <th style="width:10%">Legislativo</th>
+                    <th style="width:10%">Ejecutivo</th>
+                    <th style="width:34%">Observaciones</th>
+                    <th style="width:5%">Borrador</th>
+                    <th style="width:1%">V</th>
+                    <th style="width:5%">L</th>
+                    <th style="width:5%">Status</th>
+                </tr>
+            </thead>
+            <tbody ng-repeat="p in pdl | orderBy:[funcOrden,'proyecto']">
+                <tr ng-show="p.esGrupo && p.vacio">
+                    <td colspan="9" bgcolor="#D6D6D6" style="padding-top:0px;padding-bottom:0px">{{p.nombre}}</td>
+                </tr>
+                <tr ng-repeat="g in pdl | orderBy:[funcOrden,'proyecto'] | filter:{grupo:p._id}" bgcolor="#EBEBEB">
+                    <td>{{g.prioridad}}</td>
+                    <td><a href="/proyectosdeley/{{g._id}}">{{g.proyecto}}</a></td>
+                    <td>{{contactoPorId(g.legislativo).apellidos}} {{contactoPorId(g.legislativo).nombre}}</td>
+                    <td>{{contactoPorId(g.ejecutivo).apellidos}} {{contactoPorId(g.ejecutivo).nombre}}</td>
+                    <td>{{g.observaciones}}</td>
+                    <td>{{g.borrador}}</td>
+                    <td>{{g.votos}}</td>
+                    <td>{{g.lectura}}</td>
+                    <td>
+                        <img ng-show="g.status == 'success'" style="height:30px" class="imagen" src="/views/proyectosdeley/imagenes/Verde.png"/>
+                        <img ng-show="g.status == 'warning'" style="height:30px" class="imagen" src="/views/proyectosdeley/imagenes/Amarillo.png"/>
+                        <img ng-show="g.status == 'danger'" style="height:30px" class="imagen" src="/views/proyectosdeley/imagenes/Rojo.png"/>
+                        <i ng-if="existeAdjunto(g)" class="icon-file"></i>
+                    </td>
+              <!--      <td>-->
+              <!--  		<button ng-show="g.status == 'success'" class="btn btn-success"><i class="icon-arrow-up"></i></button>-->
+              <!--  		<button ng-show="g.status == 'warning'" class="btn btn-warning"><i class="icon-arrow-right"></i></button>-->
+              <!--  		<button ng-show="g.status == 'danger'" class="btn btn-danger"><i class="icon-arrow-down"></i></button>-->
+              <!--  		<i ng-if="existeAdjunto(g)" class="icon-file"></i>-->
+            		<!--</td>-->
+                </tr>
+                <tr ng-show="!p.esGrupo && !p.grupo.length">
+                    <td>{{p.prioridad}}</td>
+                    <td><a href="/proyectosdeley/{{p._id}}">{{p.proyecto}}</a></td>
+                    <td>{{contactoPorId(p.legislativo).apellidos}} {{contactoPorId(p.legislativo).nombre}}</td>
+                    <td>{{contactoPorId(p.ejecutivo).apellidos}} {{contactoPorId(p.ejecutivo).nombre}}</td>
+                    <td>{{p.observaciones}}</td>
+                    <td>{{p.borrador}}</td>
+                    <td>{{p.votos}}</td>
+                    <td>{{p.lectura}}</td>
+                    <td>
+                        <img ng-show="p.status == 'success'" style="height:30px" class="imagen" src="/views/proyectosdeley/imagenes/Verde.png"/>
+                        <img ng-show="p.status == 'warning'" style="height:30px" class="imagen" src="/views/proyectosdeley/imagenes/Amarillo.png"/>
+                        <img ng-show="p.status == 'danger'" style="height:30px" class="imagen" src="/views/proyectosdeley/imagenes/Rojo.png"/>
+                        <i ng-if="existeAdjunto(p)" class="icon-file"></i>
+                    </td>
+              <!--      <td>-->
+              <!--  		<button ng-show="p.status == 'success'" class="btn btn-success"><i class="icon-arrow-up"></i></button>-->
+              <!--  		<button ng-show="p.status == 'warning'" class="btn btn-warning"><i class="icon-arrow-right"></i></button>-->
+              <!--  		<button ng-show="p.status == 'danger'" class="btn btn-danger"><i class="icon-arrow-down"></i></button>-->
+              <!--  		<i ng-if="existeAdjunto(p)" class="icon-file"></i>-->
+            		<!--</td>-->
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

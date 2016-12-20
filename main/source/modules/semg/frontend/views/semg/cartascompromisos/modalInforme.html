@@ -1,0 +1,13 @@
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h3>Informe de Devolución de Monitoreo</h3>
+</div>
+<div class="modal-body">
+    <center><a class="btn" ng-show="monitoreoSeleccionado.informeId" href="/file/{{monitoreoSeleccionado.informeId}}" target="_blank" title="Descargar el Informe de Devolución de Monitoreo" style="margin-bottom: 30px;margin-left: 0px;padding-left: 50px;padding-right: 50px;">Descargar el informe actual</a></center>
+    <p>Cargar Informe de Devolución de Monitoreo</p>
+    <div style="width: 300px" fine-uploader destination="'/upload/'" placeholder="'Examinar'" uploaded="uploaded"></div>
+</div>
+<div class="modal-footer">
+    <a href="#" class="btn" data-dismiss="modal">Cancelar</a>
+    <a href="#" class="btn" data-dismiss="modal" ng-click="modalInforme(true)">Guardar</a>
+</div>

@@ -1,0 +1,24 @@
+<div class="modal-header" style="padding-bottom: 10px;">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h3>Agregar descripción de Propuesta</h3>
+</div>
+<div class="modal-body">
+    <div class="control-group span3" style="margin-left: 0px; margin-bottom: 0px; margin-right: 0px; margin-bottom: 10px">
+        <label style="margin-bottom: 1px;">Quien:</label>
+        <select class="input-block-level" ui-select2 type="text" ng-model="data.quien" ng-options="i._id as i.apellidos + ' ' + i.nombre for i in contactos | orderBy:'apellidos'">
+            <option ng-disabled="true" value="">{{data.quien.apellidos}} {{data.quien.nombre}}</option>
+        </select>
+    </div>
+    <button class="btn" data-placement="bottom" style="margin-top: 1px;margin-bottom: 10px;" ng-click="crearContacto()"><i class="icon-book"></i></button>
+    <span style="display: inline-block"> Cuando:<br /> 
+        <input class="span2" type="text" date placeholder="Fecha" ng-model="data.cuando" />
+    </span>
+    <span style="display: inline-block;">Descripción:
+        <textarea style="height:150px; width:530px" type="text"
+        ng-model="data.descripcion" placeholder="Descripción de la iniciativa" />
+    </span>
+</div>
+<div class="modal-footer">
+    <a href="#" class="btn" data-dismiss="modal">Cancelar</a>
+    <a href="#" class="btn btn-info" data-dismiss="modal" ng-click="agregarDescrPropuesta(true, data)">Agregar descripción</a>
+</div>

@@ -1,0 +1,409 @@
+<script>
+    $(document).ready(function() { $("#e1").select2(); });
+    $(document).ready(function() { $("#e2").select2(); });
+    $(document).ready(function() { $("#e3").select2(); });
+    $(document).ready(function() { $("#e4").select2(); });
+    $(document).ready(function() { $("#e5").select2(); });
+    $(document).ready(function() { $("#e6").select2(); });
+    $(document).ready(function() { $("#e7").select2(); });
+    $(document).ready(function() { $("#e8").select2(); });
+    $(document).ready(function() { $("#e9").select2(); });
+    $(document).ready(function() { $("#e10").select2(); });
+    $(document).ready(function() { $("#e11").select2(); });
+    $(document).ready(function() { $("#e12").select2(); });
+    $(document).ready(function() { $("#e13").select2(); });
+    $(document).ready(function() { $("#e14").select2(); });
+    $(document).ready(function() { $("#e15").select2(); });
+    
+</script>
+<style>
+    .table {
+        border: 0;
+    }
+    .table th, .table td {
+        padding: 8px;
+        line-height: 20px;
+        text-align: center;
+        vertical-align: bottom;
+        border: 0;
+    }
+    .table th {
+        background-color: #dddddd !important;
+    }
+</style>
+<div class="card body" style="margin-top: 0px;padding-top: 0px;" ng-controller="FactDetalleCtrl">
+    <div style="margin-bottom: 0px">
+        <ul class="breadcrumb" style="margin-bottom: 0px;">
+          <li><a href="/facts" style="color:#404040;">Buenos Aires Facts</a> <span class="divider">/</span></li>
+          <li class="active">Detalle</li>
+        </ul>
+    </div>
+    <a ng-click="editando=true" class="btn btn-link pull-right" ng-hide="editando" style="margin-right: 20px;" ><i class="icon-edit"></i></a>
+    <a ng-click="guardar()" href="/facts" class="btn btn-link pull-right" ng-show="editando" style="margin-right: 20px;"><i class="icon-ok icon-white"></i></a>
+    <a ng-click="eliminar(false)" class="btn btn-link pull-right" ng-show="editando" style="margin-right: 20px;"><i class="icon-trash icon-white"></i></a>
+    
+    <h3 class="card-heading simple" style="padding-left: 10px; font-size:14px;padding-right: 0px;height: 45px;margin-bottom: 10px;">
+        <ul id="myTab" class="nav nav-pills">
+            <li ng-class="{'active': tab == 'identificacion'}"><a href="#" ng-click="tab='identificacion'" data-toggle="tab">Detalle BA Fact</a></li>
+            <li ng-class="{'active': tab == 'badata'}" ng-show="fact.fuente == 'BA Data'"><a href="#" ng-click="tab='badata'" data-toggle="tab">BA Data</a></li>
+            <li ng-class="{'active': tab == 'otrapubli'}" ng-show="fact.fuente == 'Otra Publicación'"><a href="#" ng-click="tab='otrapubli'" data-toggle="tab">Otra Publicación</a></li>
+            <li ng-class="{'active': tab == 'grafico'}" ng-show="fact.historico.length"><a href="#" ng-click="tab='grafico'" data-toggle="tab">Gráfico</a></li>
+        </ul>
+    </h3>
+    
+    <div ng-show="tab == 'identificacion'" style="margin-left: 20px; margin-right: 20px; margin-bottom: 20px;">
+        <div class="row" style="padding-bottom: 0px;">
+            <form class="form-horizontal" style="margin-bottom: 0px !important;">
+                <div class="control-group" style="margin-left: 50px;margin-bottom: 0px;">
+            		<div class="control-group">
+                        <label class="control-label">Valor:</label>
+                        <div class="controls">
+                            <input class="span3" type="text" placeholder="Sin valor" ng-disabled="!editando" ng-model="fact.valor" />
+                        </div>
+                    </div>
+            		<div class="control-group">
+                        <label class="control-label">Magnitud:</label>
+                        <div class="controls">
+                            <input class="span3" type="text" placeholder="Sin magnitud" ng-disabled="!editando" ng-model="fact.magnitud" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Concepto:</label>
+                        <div class="controls">
+                            <input class="span6" type="text" ng-disabled="!editando" placeholder="Sin concepto" ng-model="fact.concepto" />
+                        </div>
+                    </div>
+            		<div class="control-group">
+                        <label class="control-label">Periodo:</label>
+                        <div class="controls">
+                            <input class="span3" type="text" placeholder="Sin periodo" ng-disabled="!editando" ng-model="fact.periodo" />
+                        </div>
+                    </div>
+                    <div class="control-group" style="margin-top: 20px;">
+                        <label class="control-label">Segmentación:</label>
+                        <div class="controls">
+                            <select class="span3" id="e14" type="text" ng-model="fact.segmentacion" ng-disabled="!editando">
+                                <option value="">{{fact.segmentacion}}</option>
+                                <option value="CABA">CABA</option>
+                                <option value="GCABA">GCABA</option>
+                                <option value="Gestión">Gestión</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group" style="margin-top: 20px;">
+                        <label class="control-label">Visibilidad:</label>
+                        <div class="controls">
+                            <select class="span3" id="e15" type="text" ng-model="fact.visibilidad" ng-disabled="!editando" >
+                                <option value="">{{fact.visibilidad}}</option>
+                                <option value="publico">Publico</option>
+                                <option value="privado">Privado</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Tags:</label>
+                        <div class="controls">
+                            <input class="span3" type="text" ng-disabled="!editando" placeholder="Sin tags" ng-model="fact.tags" />
+                        </div>
+                    </div>
+                    <div class="control-group" style="margin-bottom: 0px;">
+                        <label class="control-label">Temas:</label>
+                        <div class="controls">
+                            <select id="e2" class="span6" ng-disabled="!editando" type="text" ng-model="dataTema" ng-options="i._id as i.nombre for i in temas | filter: mostrarTema">
+                                <option ng-disabled="true" value=""></option>
+                            </select>
+                            <button class="btn" style="margin-bottom:0px; margin-left: 5px" ng-disabled="!editando" ng-click="agregarTema(dataTema)"><i class="icon-plus"></i></button>
+                        </div>
+                    </div>
+                    <div class="control-group" ng-repeat="t in fact.temas" style="margin-bottom: 0px;">
+                        <div class="controls">
+                            <input class="span6" type="text" ng-disabled="true" value="{{temaPorId(t).nombre}}" />
+                            <a href="#" style="margin-left: 10px" ng-show="editando" ng-click="eliminarListaElem(t, fact.temas)"><i class="icon-trash"></i></a>
+                        </div>
+                    </div>
+                    <div class="control-group" style="margin-top: 20px;">
+                        <label class="control-label">Fuente:</label>
+                        <div class="controls">
+                            <select class="span3" id="e6" type="text" ng-model="fact.fuente" ng-disabled="!editando">
+                                <option value="">{{fact.fuente}}</option>
+                                <option value="BA Data">BA Data</option>
+                                <option value="Otra Publicación">Otra Publicación</option>
+                                <option value="Sin Calidad">Sin Calidad</option>
+                                <option value="IDG">IDG</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group" ng-show="fact.fuente == 'IDG'">
+                        <label class="control-label">Documento IDG:</label>
+                        <div class="controls">
+                            <select id="e13" class="span6" type="text" ng-disabled="!editando" ng-model="fact.documentoIDG" ng-options="i._id as i.nombre for i in idg | orderBy: 'nombre'">
+                                <option ng-disabled="true" value="">{{idgPorId(fact.documentoIDG).nombre}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group" ng-if="fact.fuente == 'Sin Calidad'">
+                        <label class="control-label">Otra Fuente:</label>
+                        <div class="controls">
+                            <input class="span6" type="text" ng-disabled="!editando" placeholder="Sin fuente" ng-model="fact.otraFuente" />
+                        </div>
+                    </div>
+                    <div class="control-group" ng-if="fact.fuente == 'Sin Calidad'">
+                        <label class="control-label">Base:</label>
+                        <div class="controls">
+                            <input class="span6" type="text" ng-disabled="!editando" placeholder="Sin base" ng-model="fact.base" />
+                        </div>
+                    </div>
+                    <div class="control-group" ng-if="fact.fuente == 'Sin Calidad'">
+                        <label class="control-label">Enlace:</label>
+                        <div class="controls">
+                            <input class="span6" type="text" ng-disabled="!editando" placeholder="Sin enlace" ng-model="fact.enlace" />
+                        </div>
+                    </div>
+            		<div class="control-group" ng-if="((fact.fuente == 'Sin Calidad') || (fact.fuente == 'IDG'))">
+                        <label class="control-label">Fecha:</label>
+                        <div class="controls">
+                            <input class="span3" type="text" date placeholder="Sin fecha" ng-disabled="!editando" ng-model="fact.fecha" />
+                        </div>
+                    </div>
+            		<div class="control-group" ng-if="((fact.fuente == 'Sin Calidad') || (fact.fuente == 'IDG'))">
+                        <label class="control-label">Vencimiento:</label>
+                        <div class="controls">
+                            <input class="span3" type="text" date placeholder="Sin vencimiento" ng-disabled="!editando" ng-model="fact.vencimiento" />
+                        </div>
+                    </div>
+                    <div class="span7" style="margin-left: 80px;">
+                        <h4>Comentarios
+                        <div class="card-actions pull-right" style="margin: 0; padding: 0">
+                            <a class="btn btn-link" ng-click="agregarComen()" ng-if="editando"><i class="icon-plus"></i></a>
+                        </div></h4>
+                        <div class="card-body">
+                            <div ng-hide="fact.comentarios.length">No se ha cargardo ningun comentario aún</div>
+                            <div ng-repeat="o in reverse(fact.comentarios)"
+                            style="clear:both; min-height: 40px; margin-top: 20px; margin-bottom: 20px" ng-show="fact.comentarios.length">
+                                <div class="pull-right" style="display: inline-block; margin-right: 10px; margin-bottom: 10px">
+                                    <button type="button" ng-click="eliminarElemento(fact.comentarios,o)" style="margin-left: 10px" class="btn btn-danger" ng-if="editando"><i class="icon-trash icon-white"></i> Eliminar</button>
+                                </div>
+                                <span style="display: inline-block"> Cuando:<br /> 
+                                    <input class="span2" type="text" date ng-model="o.cuando" ng-disabled="!editando"/>
+                                </span>
+                                <textarea style="height:100px; width:95%" type="text" ng-disabled="!editando" ng-model="o.descripcion" />
+                                <hr />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div ng-show="tab == 'badata'" style="margin-left: 20px; margin-right: 20px; margin-bottom: 20px;">
+        <div class="row" style="padding-bottom: 0px;">
+            <form class="form-horizontal" style="margin-bottom: 0px !important;">
+                <div class="control-group" style="margin-left: 50px;margin-bottom: 0px;">
+            		<div class="control-group">
+                        <label class="control-label">d:</label>
+                        <div class="controls">
+                            <input class="span3" type="text" placeholder="Sin d" ng-disabled="!editando" ng-model="fact.d" />
+                        </div>
+                    </div>
+            		<div class="control-group">
+                        <label class="control-label">Dataset:</label>
+                        <div class="controls">
+                            <input class="span6" type="text" placeholder="Sin Dataset" ng-disabled="!editando" ng-model="fact.dataset" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Link:</label>
+                        <div class="controls">
+                            <input class="span6" type="text" ng-disabled="!editando" placeholder="Sin link" ng-model="fact.link" />
+                        </div>
+                    </div>
+            		<div class="control-group">
+                        <label class="control-label">Estado:</label>
+                        <div class="controls">
+                            <input class="span3" type="text" placeholder="Sin estado" ng-disabled="true" value="{{estadoBAD(fact.ultimaActualizacion, fact.frecuencia)}}" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Autor:</label>
+                        <div class="controls">
+                            <select id="e5" class="span6" ng-disabled="!editando" type="text" ng-model="fact.autor" ng-options="i._id as i.nombreCompleto for i in organigrama">
+                                <option ng-disabled="true" value="">{{organigramaPorId(fact.autor).nombreCompleto}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Incorporación:</label>
+                        <div class="controls">
+                            <input class="span3" type="text" ng-disabled="!editando" placeholder="Sin Incorporación" ng-model="fact.incorporacion" />
+                        </div>
+                    </div>
+            		<div class="control-group">
+                        <label class="control-label">Última Actualización:</label>
+                        <div class="controls">
+                            <input class="span3" type="text" date placeholder="No publicado" ng-disabled="!editando" ng-model="fact.ultimaActualizacion" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Frecuencia de Actualización:</label>
+                        <div class="controls">
+                            <select class="span3" id="e3" ng-disabled="!editando" type="text" ng-model="fact.frecuencia">
+                                <option value="">{{dameFrecuencia(fact.frecuencia)}}</option>
+                                <option value="7">Semanal</option>
+                                <option value="30">Mensual</option>
+                                <option value="90">Trimestral</option>
+                                <option value="180">Semestral</option>
+                                <option value="365">Anual</option>
+                                <option value="0">Eventual</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Contacto:</label>
+                        <div class="controls">
+                            <select id="e1" class="span6" ng-disabled="!editando" type="text" ng-model="fact.contacto" ng-options="i._id as i.apellidos + ' ' + i.nombre for i in contactos | orderBy:'apellidos'">
+                                <option ng-disabled="true" value="">{{contactoPorId(fact.contacto).apellidos}} {{contactoPorId(fact.contacto).nombre}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group" style="margin-top: 20px;">
+                        <label class="control-label">En Tablero Jefatura:</label>
+                        <div class="controls">
+                            <select class="span1" id="e4" ng-disabled="!editando" type="text" ng-model="fact.enTablero">
+                                <option value="">{{fact.enTablero}}</option>
+                                <option value="Si">Si</option>
+                                <option value="No">No</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div ng-show="tab == 'otrapubli'" style="margin-left: 20px; margin-right: 20px; margin-bottom: 20px;">
+        <div class="row" style="padding-bottom: 0px;">
+            <form class="form-horizontal" style="margin-bottom: 0px !important;">
+                <div class="control-group" style="margin-left: 50px;margin-bottom: 0px;">
+                    <div class="control-group">
+                        <label class="control-label">Título:</label>
+                        <div class="controls">
+                            <input class="span6" type="text" ng-disabled="!editando" placeholder="Sin titulo" ng-model="fact.titulo" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Jurisdicción:</label>
+                        <div class="controls">
+                            <select id="e7" class="span6" ng-disabled="!editando" type="text" ng-model="fact.jurisdiccion" ng-options="i._id as i.nombreCompleto for i in organigrama">
+                                <option ng-disabled="true" value="">{{organigramaPorId(fact.jurisdiccion).nombreCompleto}}</option>
+                            </select>
+                        </div>
+                    </div>
+            		<div class="control-group">
+                        <label class="control-label">Fecha:</label>
+                        <div class="controls">
+                            <input class="span3" type="text" date placeholder="Sin fecha" ng-disabled="!editando" ng-model="fact.fecha" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Verión:</label>
+                        <div class="controls">
+                            <input class="span3" type="text" ng-disabled="!editando" placeholder="Sin version" ng-model="fact.version" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Tomo:</label>
+                        <div class="controls">
+                            <input class="span3" type="text" ng-disabled="!editando" placeholder="Sin tomo" ng-model="fact.tomo" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Responsable:</label>
+                        <div class="controls">
+                            <select id="e8" class="span6" ng-disabled="!editando" type="text" ng-model="fact.responsable" ng-options="i._id as i.apellidos + ' ' + i.nombre for i in contactos | orderBy:'apellidos'">
+                                <option ng-disabled="true" value="">{{contactoPorId(fact.responsable).apellidos}} {{contactoPorId(fact.responsable).nombre}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Coordinador de Contenidos:</label>
+                        <div class="controls">
+                            <select id="e9" class="span6" ng-disabled="!editando" type="text" ng-model="fact.coordinador" ng-options="i._id as i.apellidos + ' ' + i.nombre for i in contactos | orderBy:'apellidos'">
+                                <option ng-disabled="true" value="">{{contactoPorId(fact.coordinador).apellidos}} {{contactoPorId(fact.coordinador).nombre}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Edición de Contenidos:</label>
+                        <div class="controls">
+                            <select id="e10" class="span6" ng-disabled="!editando" type="text" ng-model="fact.edicion" ng-options="i._id as i.apellidos + ' ' + i.nombre for i in contactos | orderBy:'apellidos'">
+                                <option ng-disabled="true" value="">{{contactoPorId(fact.edicion).apellidos}} {{contactoPorId(fact.edicion).nombre}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Elaboración de Contenidos:</label>
+                        <div class="controls">
+                            <select id="e11" class="span6" ng-disabled="!editando" type="text" ng-model="fact.elaboracion" ng-options="i._id as i.apellidos + ' ' + i.nombre for i in contactos | orderBy:'apellidos'">
+                                <option ng-disabled="true" value="">{{contactoPorId(fact.elaboracion).apellidos}} {{contactoPorId(fact.elaboracion).nombre}}</option>
+                            </select>
+                        </div>
+                    </div>
+            		<div class="control-group">
+                        <label class="control-label">Vencimiento:</label>
+                        <div class="controls">
+                            <input class="span3" type="text" date placeholder="Sin vencimiento" ng-disabled="!editando" ng-model="fact.vencimiento" />
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div ng-show="tab == 'grafico'" style="margin-left: 20px; margin-right: 20px; margin-bottom: 20px;">
+        <div class="card-body" style="padding-bottom: 0px;" ng-if="fact.historico.length">
+            <h3>{{fact.concepto}}</h3>
+            <table border="1" class="table table-striped">
+                <tr>
+                    <td style="vertical-align: middle !important;width: {{100/(fact.historico.length+2)}}%; border-right: 2px solid #7D7D7D;position: relative;padding-right: 60px;">
+                        {{fact.magnitud}}
+                        <span style="position: absolute;top: 10px; right: 0px;">{{valorMax}} -</span>
+                        <span style="position: absolute;top: auto; right: 0px;">{{valorMax/2}} -</span>
+                        <span style="position: absolute;bottom: 0px; right: 0px;">0 -</span>
+                    </td>
+                    <td ng-repeat="i in fact.historico" style="width: {{100/(fact.historico.length+2)}}%">
+                        {{i.valor}}
+                        <div style="background-color:#6F89A2; height:{{altura(i.valor)}}px;"></div>
+                    </td>
+                    <td style="width: {{100/(fact.historico.length+2)}}%">
+                        {{fact.valor}}
+                        <div style="background-color:#6F89A2; height:{{altura(fact.valor)}}px;"></div>
+                    </td>
+                </tr>
+                <tr style="border-top: 2px solid #7D7D7D;">
+                    <td style="border-right: 2px solid #7D7D7D;"></td>
+                    <td ng-repeat="i in fact.historico">
+                        {{i.fecha}}
+                    </td>
+                    <td>
+                        Actual
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div id="confirmarEliminar" class="modal hide fade">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3>Eliminar BA Fact</h3>
+        </div>
+        <div class="modal-body">
+            <p>Está a un paso de eliminar el BA Fact</p>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn btn-info" data-dismiss="modal">Conservar el registro</a>
+            <a href="#" class="btn btn-danger" data-dismiss="modal" ng-click="eliminar(true)">Eliminar</a>
+        </div>
+    </div>
+</div>

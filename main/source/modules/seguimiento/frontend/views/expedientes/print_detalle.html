@@ -1,0 +1,295 @@
+<!--<style type="text/css">-->
+<!--    .wysihtml5-sandbox {-->
+<!--        border: 0 !important;-->
+<!--        padding: 0 !important;-->
+<!--    }-->
+<!--    .temario {-->
+<!--        font-size:30px !important;-->
+<!--        font-family:Arial !important;-->
+<!--        line-height: 170% !important;-->
+<!--    }-->
+<!--    .temario h6 {-->
+<!--        font-size:24px !important;-->
+<!--        line-height: 22px;-->
+<!--        margin-top: 1em;-->
+<!--        margin-bottom: 1em;-->
+<!--    }-->
+<!--    .no-border, .no-border > th, .no-border > td {-->
+<!--        border: none;-->
+<!--    }-->
+<!--    .tablaPrint th, .tablaPrint td {-->
+<!--        padding-top:1px;-->
+<!--        padding-bottom:1px;-->
+<!--        border-bottom:1px solid #AAAAAA;-->
+<!--        line-height: 25px;-->
+<!--    }-->
+<!--    .temario ul {-->
+<!--        line-height: 34px;-->
+<!--        margin-top: 1em;-->
+<!--        margin-bottom: 1em;-->
+<!--        padding-left: 15px;-->
+<!--    }-->
+<!--    .temario  li {-->
+<!--        line-height: 42px;-->
+<!--    }-->
+<!--</style>-->
+
+
+<!--ULTIMO USADO-->
+<!--<div class="card" ng-controller="PrintDetalleExpedienteCtrl">-->
+<!--    <a class="btn pull-right no-print" ng-click="imprimir()" ><i class="icon-print"></i>Imprimir</a>-->
+    
+<!--    <img src="/views/expedientes/portadaExpedientes1.jpg"></img>-->
+<!--    <table>-->
+<!--        <tr>-->
+<!--            <th colspan=2>-->
+<!--                <div style="background-image: url('/views/expedientes/portadaExpedientes2.jpg') !important; background-repeat: no-repeat;font-family: Arial !important; color: rgb(0, 0, 0);width: 1150px;height: 59px;margin-top: 20px;">-->
+<!--                    <button ng-class="colorFlecha()" style="margin-top: 18px;margin-right: 15px;" class="pull-right"><i ng-class="botonIcon"></i></button>-->
+<!--                </div>-->
+                <!--<img src="/views/expedientes/portadaExpedientes2.jpg">-->
+                <!--    <button ng-class="colorFlecha()" class="pull-right"><i ng-class="botonIcon"></i></button>-->
+                <!--</img>-->
+<!--            </th>-->
+<!--        </tr>-->
+<!--        <tr>-->
+<!--            <td class="span6" style="text-align:left;font-weight: bold">{{expediente.titulo}}</td>-->
+<!--            <td class="span6" style="text-align:left;font-weight: bold">{{expediente.tema}}</td>-->
+<!--        </tr>-->
+<!--    </table>-->
+    
+<!--    <table>-->
+<!--        <tr>-->
+<!--            <th colspan=3>-->
+<!--                <img src="/views/expedientes/portadaExpedientes3.jpg"></img>-->
+<!--            </th>-->
+<!--        </tr>-->
+<!--        <tr>-->
+<!--            <th style="text-align:left;font-weight: bold">{{expediente.tipo}}-{{expediente.ano}}-{{expediente.numero}}-{{expediente.reparticion}}</th>-->
+<!--            <th style="text-align:left;font-weight: bold">{{jurisdiccionPorId(expediente.jurisdiccion).nombreCompleto}}</th>-->
+<!--            <th style="text-align:left;font-weight: bold">{{interesadosPorId(expediente.interesados)}}</th>-->
+<!--        </tr>-->
+<!--    </table>-->
+
+<!--    <table>-->
+<!--        <tr>-->
+<!--            <th>-->
+<!--                <img src="/views/expedientes/portadaExpedientes4.jpg"></img>-->
+<!--            </th>-->
+<!--        </tr>-->
+<!--        <tr>-->
+<!--            <th class="span12" style="text-align:left;font-weight: bold">{{expediente.descripcion}}</th>-->
+<!--        </tr>-->
+<!--    </table>-->
+    
+<!--    <table>-->
+<!--        <tr>-->
+<!--            <th>-->
+<!--                <img src="/views/expedientes/portadaExpedientes5.jpg"></img>-->
+<!--            </th>-->
+<!--        </tr>-->
+<!--        <tr>-->
+<!--            <th class="span" style="text-align:left;font-weight: bold">{{expediente.caminoRefrendos}}</th>-->
+<!--        </tr>-->
+<!--    </table>-->
+    
+<!--    <table>-->
+<!--        <tr>-->
+<!--            <th colspan=4>-->
+<!--                <img src="/views/expedientes/portadaExpedientes8.jpg"></img>-->
+<!--            </th>-->
+<!--        </tr>-->
+<!--        <tr>-->
+<!--            <th class="span3" style="text-align:left;font-weight: bold">{{calcularFecha(consultaSade.historialDeOperacion[0].fechaOperacion)}}</th>-->
+<!--            <th class="span3" style="text-align:left;font-weight: bold">{{consultaSade.historialDeOperacion[0].usuario}}</th>-->
+<!--            <th class="span3" style="text-align:left;font-weight: bold">{{consultaSade.historialDeOperacion[0].destinatario}}</th>-->
+<!--            <th class="span3" style="text-align:left;font-weight: bold">{{consultaSade.historialDeOperacion[0].motivo}}</th>-->
+<!--        </tr>-->
+<!--    </table>-->
+    
+<!--    <table>-->
+<!--        <tr>-->
+<!--            <th colspan=3>-->
+<!--                <img src="/views/expedientes/footer.jpg"></img>-->
+<!--            </th>-->
+<!--        </tr>-->
+<!--        <tr>-->
+<!--            <th class="span4" style="text-align:left;font-weight: bold">{{expediente.comentarios[expediente.comentarios.length-1].comentarios}}</th>-->
+<!--            <th class="span4" style="text-align:left;font-weight: bold">{{expediente.comentarios[expediente.comentarios.length-1].fuenteComentario}}</th>-->
+<!--            <th class="span4" style="text-align:left;font-weight: bold">{{calcularFecha(expediente.comentarios[expediente.comentarios.length-1].fechaComentario)}}</th>-->
+<!--        </tr>-->
+<!--    </table>-->
+<!--</div>-->
+
+
+
+
+
+<!--<div ng-controller="PrintDetalleExpedienteCtrl">-->
+<!--    <div class="card span12" style="margin-top: 0px; border-bottom-width: 0px; border-right-width: 0px; border-left-width: 0px; padding-top: 0px;">-->
+<!--        <a class="btn pull-right no-print" ng-click="imprimir()" ><i class="icon-print"></i> Imprimir</a>-->
+<!--        <a class="btn pull-right no-print" href="/expedientes/{{expediente._id}}" ><i class="icon-arrow-left"></i> Volver</a>-->
+        <!--<a href="/expedientes/{{expediente._id}}" class="btn btn-link pull-right no-print"><i class="icon-undo"></i></a>-->
+        
+<!--        <div style="background-image: url('/views/expedientes/portadaExpedientes1.jpg') !important; background-repeat: no-repeat;-->
+<!--            position: relative;font-family: Arial !important; color: rgb(0, 0, 0);width: 1150px;height: 144px;margin-top: 32px;">-->
+<!--        </div>-->
+<!--        <div>-->
+<!--            <div style="background-image: url('/views/expedientes/portadaExpedientes2.jpg') !important; background-repeat: no-repeat;-->
+<!--                font-family: Arial !important; color: rgb(0, 0, 0);width: 1150px;height: 59px;margin-top: 20px;">-->
+<!--                <button ng-class="colorFlecha()" style="margin-top: 18px;margin-right: 15px;" class="pull-right"><i ng-class="botonIcon"></i></button>-->
+<!--            </div>-->
+<!--            <div style="text-align: left; position: relative; width: 540px; top: 0px; left: 20px;display: inline-block;">-->
+<!--                <h3 ng-style="set_size" style="font-weight: bold; margin-top: 0px; margin-bottom: 0px;">{{expediente.titulo}}</h3>-->
+<!--            </div>-->
+<!--            <div style="text-align: left; position: relative; width: 550px; top: 0px; left: 25px;display: inline-block;">-->
+<!--                <h3 style="font-size: 23px !important; margin-top: 0px; margin-bottom: 0px;">{{expediente.tema}}</h3>-->
+<!--            </div>-->
+            
+<!--            <div style="background-image: url('/views/expedientes/portadaExpedientes3.jpg') !important; background-repeat: no-repeat;-->
+<!--                font-family: Arial !important; color: rgb(0, 0, 0);width: 1150px;height: 48px;">-->
+<!--            </div>-->
+<!--            <div style="text-align: left; position: relative; width: 280px; top: 0px; left: 15px;display: inline-block;">-->
+<!--                <h3 style="font-size: 20px !important;font-weight: bold; margin-top: 0px; margin-bottom: 0px;">{{expediente.tipo}}-{{expediente.ano}}-{{expediente.numero}}-{{expediente.reparticion}}</h3>-->
+<!--            </div>-->
+<!--            <div style="text-align: left; position: relative; width: 530px; top: 0px; left: 10px;display: inline-block;">-->
+<!--                <h3 style="font-size: 20px !important;font-weight: bold; margin-top: 0px; margin-bottom: 0px;">{{jurisdiccionPorId(expediente.jurisdiccion).nombreCompleto}}</h3>-->
+<!--            </div>-->
+<!--            <div style="text-align: left; position: relative; width: 285px; top: 0px; left: 40px;display: inline-block;">-->
+<!--                <h3 style="font-size: 20px !important;font-weight: bold; margin-top: 0px; margin-bottom: 0px;">{{interesadosPorId(expediente.interesados)}}</h3>-->
+<!--            </div>-->
+            
+<!--            <div style="background-image: url('/views/expedientes/portadaExpedientes4.jpg') !important; background-repeat: no-repeat;-->
+<!--                font-family: Arial !important; color: rgb(0, 0, 0);width: 1150px;height: 50px;">-->
+<!--            </div>-->
+<!--            <div style="text-align: left; position: relative; width: 95%; left: 30px;display: inline-block;">-->
+<!--                <h3 style="font-size: 20px !important;font-weight: bold; margin-top: 0px; margin-bottom: 0px;">{{expediente.descripcion}}</h3>-->
+<!--            </div>-->
+            
+<!--            <div style="background-image: url('/views/expedientes/portadaExpedientes5.jpg') !important; background-repeat: no-repeat;-->
+<!--                font-family: Arial !important; color: rgb(0, 0, 0);width: 1150px;height: 50px;">-->
+<!--            </div>-->
+<!--            <div style="text-align: left; position: relative; width: 940px; left: 25px;display: inline-block;">-->
+<!--                <h3 style="font-size: 24px !important;font-weight: bold; margin-top: 0px; margin-bottom: 0px;">{{expediente.caminoRefrendos}}</h3>-->
+<!--            </div>-->
+            
+<!--            <div style="background-image: url('/views/expedientes/portadaExpedientes8.jpg') !important; background-repeat: no-repeat;-->
+<!--                font-family: Arial !important; color: rgb(0, 0, 0);width: 1150px;height: 85px;">-->
+<!--            </div>-->
+<!--            <div style="text-align: left; position: relative; width: 19%; left: 15px;display: inline-block;">-->
+<!--                <h3 style="font-size: 24px !important;font-weight: bold; margin-top: 0px; margin-bottom: 0px;">{{calcularFecha(consultaSade.historialDeOperacion[0].fechaOperacion)}}</h3>-->
+<!--            </div>-->
+<!--            <div style="text-align: left;  position: relative; left: 30px;width: 22%;display: inline-block;">-->
+<!--                <h3 style="font-size: 24px !important;font-weight: bold; margin-top: 0px; margin-bottom: 0px;">{{consultaSade.historialDeOperacion[0].usuario}}</h3>-->
+<!--            </div>-->
+<!--            <div style="text-align: left;  position: relative; left: 30px;width: 24%;display: inline-block;">-->
+<!--                <h3 style="font-size: 24px !important;font-weight: bold; margin-top: 0px; margin-bottom: 0px;">{{consultaSade.historialDeOperacion[0].destinatario}}</h3>-->
+<!--            </div>-->
+<!--            <div style="text-align: left;  position: relative; left: 30px;width: 24%;display: inline-block;">-->
+<!--                <h3 style="font-size: 24px !important;font-weight: bold; margin-top: 0px; margin-bottom: 0px;">{{consultaSade.historialDeOperacion[0].motivo}}</h3>-->
+<!--            </div>-->
+            
+<!--            <div style="background-image: url('/views/expedientes/footer.jpg') !important; background-repeat: no-repeat;-->
+<!--                position: relative;font-family: Arial !important; color: rgb(0, 0, 0);width: 1150px;height: 56px;">-->
+<!--            </div>-->
+<!--            <div style="text-align: left; position: relative; width: 54%; left: 25px;display: inline-block;">-->
+<!--                <h3 style="font-size: 24px !important;font-weight: bold; margin-top: 0px; margin-bottom: 0px;">{{expediente.comentarios[expediente.comentarios.length-1].comentarios}}</h3>-->
+<!--            </div>-->
+<!--            <div style="text-align: left;  position: relative; left: 30px;width: 21%;display: inline-block;">-->
+<!--                <h3 style="font-size: 24px !important;font-weight: bold; margin-top: 0px; margin-bottom: 0px;">{{expediente.comentarios[expediente.comentarios.length-1].fuenteComentario}}</h3>-->
+<!--            </div>-->
+<!--            <div style="text-align: left;  position: relative; left: 35px;width: 19%;display: inline-block;">-->
+<!--                <h3 style="font-size: 24px !important;font-weight: bold; margin-top: 0px; margin-bottom: 0px;">{{calcularFecha(expediente.comentarios[expediente.comentarios.length-1].fechaComentario)}}</h3>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        <div><em>Usuario</em>: {{username}} - {{hora}} </div>-->
+<!--    </div>-->
+<!--</div>-->
+
+
+<style type="text/css">
+    @font-face{
+        font-family: "Gotham Book";
+        src: url("/views/expedientes/Gotham-Book.otf");
+    }
+    th{
+        font-family: "Gotham Book";font-size: 20px;font-weight: bold;background-color:#E4E4E4 !important;padding-top:10px;padding-bottom:10px;padding:10px;
+    }
+    td{
+        font-weight: bold;padding:10px;
+    }
+</style>
+
+<div class="card" ng-controller="PrintDetalleExpedienteCtrl">
+    <a class="btn pull-right no-print" ng-click="imprimir()"><i class="icon-print"></i></a>
+    <a class="btn pull-right no-print" href="/expedientes/{{expediente._id}}"><i class="icon-arrow-left"></i></a>
+    <div style="background-image: url('/views/expedientes/portadaExpedientes1.jpg') !important; background-repeat: no-repeat;position: relative; color: rgb(0, 0, 0);width: 1150px;height: 144px"></div>
+    <table class="table">
+        <tr>
+            <th colspan=2 style="background-color:#C6C6C6 !important;font-family: Gotham"><span class="pull-left !important">Título</span></th>
+            <th colspan=2 style="border-left:1px solid #000000;background-color:#C6C6C6 !important;font-family: Gotham"><span class="pull-left !important">Tipo</span>
+                <button ng-class="colorFlecha()" class="pull-right"><i ng-class="botonIcon"></i></button>
+            </th>
+        </tr>
+        <tr>
+            <td colspan=2>{{expediente.titulo}}</td>
+            <td colspan=2>{{expediente.tema}}</td>
+        </tr>
+        
+        <tr>
+            <th colspan=1 style="width:200px"><span class="pull-left">Nº Expediente</span></th>
+            <th colspan=1 style="border-left:1px solid #000000"><span class="pull-left">Jurisdicción</span></th>
+            <th colspan=2 style="border-left:1px solid #000000"><span class="pull-left">Interesado</span></th>
+        </tr>
+        <tr>
+            <td colspan=1 style="width:200px">{{expediente.tipo}}-{{expediente.ano}}-{{expediente.numero}}-{{expediente.reparticion}}</td>
+            <td colspan=1>{{jurisdiccionPorId(expediente.jurisdiccion).nombreCompleto}}</td>
+            <td colspan=2>{{interesadosPorId(expediente.interesados)}}</td>
+        </tr>
+        
+        <tr>
+            <th colspan=4 style="width:100%"><span class="pull-left">Descripción</span></th>
+        </tr>
+        <tr>
+            <td colspan=4>{{expediente.descripcion}}</td>
+        </tr>
+        
+        <tr>
+            <th colspan=4><span class="pull-left">Camino Refrendos</span></th>
+        </tr>
+        <tr>
+            <td colspan=4>{{expediente.caminoRefrendos}}</td>
+        </tr>
+        
+        <tr>
+            <th colspan=4 style="border-bottom:1px solid #000000"><span class="pull-left">Movimiento SADE</span></th>
+        </tr>
+        <tr>
+            <th><span class="pull-left">Fecha</span></th>
+            <th style="border-left:1px solid #000000"><span class="pull-left">Usuario</span></th>
+            <th style="border-left:1px solid #000000"><span class="pull-left">Destino</span></th>
+            <th style="border-left:1px solid #000000"><span class="pull-left">Motivo</span></th>
+        </tr>
+        <tr>
+            <td>{{calcularFecha(consultaSade.historialDeOperacion[0].fechaOperacion)}}</td>
+            <td>{{consultaSade.historialDeOperacion[0].usuario}}</td>
+            <td>{{consultaSade.historialDeOperacion[0].destinatario}}</td>
+            <td>{{consultaSade.historialDeOperacion[0].motivo}}</td>
+        </tr>
+        
+        <tr>
+            <th colspan=2><span class="pull-left">Comentario</span></th>
+            <th colspan=1 style="border-left:1px solid #000000"><span class="pull-left">Fuente</span></th>
+            <th colspan=1 style="border-left:1px solid #000000"><span class="pull-left">Fecha</span></th>
+        </tr>
+        <tr>
+            <td colspan=2>{{expediente.comentarios[expediente.comentarios.length-1].comentarios}}</td>
+            <td colspan=1>{{expediente.comentarios[expediente.comentarios.length-1].fuenteComentario}}</td>
+            <td colspan=1>{{calcularFecha(expediente.comentarios[expediente.comentarios.length-1].fechaComentario)}}</td>
+        </tr>
+    </table>
+</div>
+
+
+
+
+

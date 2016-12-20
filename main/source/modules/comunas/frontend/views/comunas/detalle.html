@@ -1,0 +1,43 @@
+<div ng-controller="VerComunaCtrl">
+    <div class="well span11 offset1" ng-hide="modificando">
+        <h3>Datos de la Comuna
+        <a style="margin-left: 10px" ng-click="modificar()" class="btn pull-right no-print"> Modificar</a>
+    	</h3>
+    	<div class="container-fluid">
+    		<forminput read-only ng-model="comuna.numero" placeholder="Sin numero" title="Numero" />
+    		<forminput read-only ng-model="comuna.nombre" placeholder="Sin nombre" title="Nombre" />
+            <div class="control-group">
+                <label class="control-label">Dirección:</label>
+                <div class="controls">
+                    <input type="text" style="width: 400px" disabled ng-model="comuna.calle" placeholder="Calle de la comuna" />
+                    <input disabled type="text" style="width: 40px" ng-model="comuna.altura"
+                    />
+                </div>
+            </div>
+    		<forminput read-only ng-model="comuna.telefono" placeholder="Sin telefono" title="Telefono" />
+    		<forminput read-only lines="2" ng-model="comuna.barrios" placeholder="Sin barrios" title="Barrios" />
+    		<forminput read-only lines="4" ng-model="comuna.limites" placeholder="Sin limites" title="Limites" />
+    	</div>
+    </div>
+    <div class="well span11 offset1" ng-show="modificando">
+        <h3>Datos de la Comuna
+    		<a class="btn no-print pull-right" ng-click="cancelar()" style="margin-left: 10px;">
+                <i class="icon-remove"></i> Cancelar
+    		</a>
+            <a class="btn btn-success no-print pull-right" ng-click="guardar()">
+                <i class="icon-ok icon-white"></i> Guardar
+    		</a>
+        </h3>
+		<forminput ng-model="comuna.numero" placeholder="Sin numero" title="Numero" />
+		<forminput ng-model="comuna.nombre" placeholder="Sin nombre" title="Nombre" />
+        <span style="display: inline-block">Calle: <br />
+            <input class="span3" type="text" data-provide="typeahead" placeholder="Nombre de Calle" ng-model="comuna.calle" id="calle-typeahead" data-source={{calles}} />
+        </span>
+        <span style="display: inline-block">Altura: <br />
+            <input class="span1" type="text" placeholder="Nro" ng-model="comuna.altura"/>
+        </span>
+		<forminput ng-model="comuna.telefono" placeholder="Sin telefono" title="Telefono" />
+		<forminput lines="2" ng-model="comuna.barrios" placeholder="Sin barrios" title="Barrios" />
+		<forminput lines="4" ng-model="comuna.limites" placeholder="Sin limites" title="Limites" />
+    </div>
+</div>

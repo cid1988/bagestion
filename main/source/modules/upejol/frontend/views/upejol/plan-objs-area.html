@@ -1,0 +1,18 @@
+<div class="card span12" style="padding-top: 10px; margin-top: 0px;">
+  <h3 class="card-heading simple">
+    <span class="pull-right input-append" ng-controller="UPEJOLNuevoObjAreaCtrl" style="margin-bottom: 0" ng-show="permisoObArea()">
+      <input type="text" ng-model="nuevo.nombre" placeholder="Agregar..." />
+      <a ng-click="crear()" ng-disabled="!nuevo.nombre" class="btn btn-default"><i class="icon icon-plus"></i></a>
+    </span>  
+    Objetivos de área</h3>
+  <div class="card-body" style="padding: 0; margin-top: 0; border-bottom: 0">
+    <ul class="nav nav-list">
+      <li ng-repeat="o in tabCtrl.objsArea|filter:{idArea:tabCtrl.filtro.area._id} | orderBy:'codIdentificacion'">
+        <a style="font-size: 18px" href="javascript:" ng-click="tabCtrl.filtro.objArea = o"><strong class="pull-right" ng-if="o.codIdentificacion">{{o.codIdentificacion}}</strong>{{o.nombre}}</a>
+      </li>
+      <li ng-if="!(tabCtrl.objsArea|filter:{idArea:tabCtrl.filtro.area._id}).length" class="text-center" style="padding-top: 10px; padding-bottom: 10px;">
+        <em>No hay ningún objetivo de area</em>
+      </li>
+    </ul>
+  </div>
+</div>

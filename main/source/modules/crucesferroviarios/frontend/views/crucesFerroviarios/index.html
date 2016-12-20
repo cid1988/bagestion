@@ -1,0 +1,245 @@
+
+<!--<h3>
+        <a ng-click="trackAllChanges()" style="margin-left: 10px"
+        class="btn pull-right" ng-hide="trackingAllChanges"><i class="icon-eye-open"></i> Seguir todos los cambios</a>
+        <a ng-click="trackAllChanges()" style="margin-left: 10px" class="btn pull-right active"
+        ng-hide="!trackingAllChanges"><i class="icon-eye-open"></i> Seguir todos los cambios</a>
+</h3>-->
+<div style="margin-bottom: 20px;">
+    <div class="card span8" style="padding-top: 0px;margin-top: 0px;">
+       <div id="mapaPrincipal" style="width: 768px; height: 430px;"></div>
+    </div>
+    <div class="card span4" style="padding-left: 10px; border-right-width: 1px; margin-top: 0px; padding-top: 0px;padding-right: 10px; padding-bottom: 10px;">
+        <ul id="myTab" class="nav nav-pills">
+          <li class="active"><a href="#" onclick="mostra('estado', 'm'); mostra('finaliza', 'o'); mostra('ffcc', 'o')" data-toggle="tab">Estados</a></li>
+          <li class=""><a href="#" onclick="mostra('ffcc', 'm'); mostra('estado', 'o'); mostra('finaliza', 'o')" data-toggle="tab">FFCC</a></li>
+          <li class=""><a href="#" onclick="mostra('finaliza', 'm'); mostra('estado', 'o'); mostra('ffcc', 'o')" data-toggle="tab">Finalización</a></li>
+        </ul>
+          <div id="estado">
+            <div ng-repeat="s in estados | orderBy:'-total'">
+                <span style="display: inline-block; width: 10px; height: 10px" ng-style="{'background-color': s.color}">&nbsp;</span>
+                <a href="/crucesFerroviarios?estado={{s.nombre}}" style="color:#404040">{{s.nombre}}: </a>
+                <span class="pull-right">{{s.total}} ({{porcentaje(s.total,todosCruces.length)}}%)</span>
+            </div>
+            <div style="margin-top: 7px;">
+                <a href="/crucesFerroviarios" style="color:#404040; font-size:16px">Total: </a>
+                <span class="pull-right">{{todosCruces.length}}</span>
+                <br />
+                <br />
+                
+                <div class="progress" style="height:18px;">
+                  <div class="bar bar-success" style="font-size: 12px; width: {{porcentaje(enProgreso,todosCruces.length)}}%;">{{porcentaje(enProgreso,todosCruces.length)}}%</div>
+                </div>
+            </div>
+          </div>
+          <div id="ffcc" style = "display:none">
+            <div ng-repeat="f in ffccs | orderBy:'-total'">
+                <a href="/crucesFerroviarios?ffcc={{f.nombre}}" style="color:#404040">{{f.nombre}}: </a>
+                <span class="pull-right">{{f.total}} ({{porcentaje(f.total,todosCruces.length)}}%)</span>
+            </div>
+            <div style="margin-top: 7px;">
+                <a href="/crucesFerroviarios" style="color:#404040; font-size:16px">Total: </a>
+                <span class="pull-right">{{todosCruces.length}}</span>
+            </div>
+          </div>
+          <div id="finaliza" style = "display:none">
+            <div ng-repeat="a in anios | orderBy:'nombre'">
+                <a ng-click="filtrarAnio(a)" style="color:#404040">{{a.nombre}}: </a>
+                <span class="pull-right">{{a.total}} ({{porcentaje(a.total,todosCruces.length)}}%)</span>
+            </div>
+            <div style="margin-top: 7px;">
+                <a href="/crucesFerroviarios" style="color:#404040; font-size:16px">Total: </a>
+                <span class="pull-right">{{todosCruces.length}}</span>
+            </div>
+          </div>
+        <div style="margin-top: 10px;" ng-show="cruceSeleccionado.fotos.length">
+            <div>Última foto:</div>
+            <a data-toggle="modal" href="javascript:$('#foto').modal()"
+            class="thumbnail" style="display:inline-block">
+
+                <img src="/file/{{cruceSeleccionado.fotos[cruceSeleccionado.fotos.length - 1]}}" height="150" width="150">
+
+            </a>
+            <div id="foto" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class='modal-header'>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                </div>
+                <div class='modal-content'>
+                    <img src="/file/{{cruceSeleccionado.fotos[cruceSeleccionado.fotos.length - 1]}}">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card span12" ng-if="!cruceSeleccionado">
+    <div class="card-actions pull-right" style="margin: 0; padding: 0">
+        <a href="/crucesFerroviarios/nuevo" class="btn btn-link" ng-if=hasPermission('crucesFerroviarios.editar')><i 
+            class="icon-plus"></i></a>
+    </div>
+    <h3 class="card-heading simple">Cruces Ferroviarios</h3>
+    <div class="card-body">
+        <div>
+            <div class="row" style="padding-bottom: 10px;">
+                <div class="span4" style="display: table-cell">DIRECCIÓN:</div>
+                <div class="span2" style="display: table-cell">ESTADO:</div>
+                <div class="span4" style="display: table-cell">PROYECTO:</div>
+                <div style="float: right"></div>
+            </div>
+        </div>
+        <hr style="margin-top: 0px; margin-bottom: 10px;">
+        <div class="row" ng-repeat="i in listado" style="padding-bottom: 10px;">
+            <div class="span4" style="display: table-cell"><span style="display: inline-block; -moz-border-radius: 20px; border-radius: 20px; padding: 6px; float: left; border: 2px solid #000; margin-top: 3px; margin-right: 10px " ng-style="{'background-color': color(i.estado)}"></span> {{i.calle}} {{i.altura}}</div>
+            <div class="span2" style="display: table-cell">{{i.estado}}</div>
+            <div class="span4" style="display: table-cell">{{i.proyecto}}</div>
+            <div style="float: right">
+                <a type="button" class="btn btn-link no-print" ng-click="seleccionar(i)"><i class="icon-zoom-in"></i> Ver detalle</a>
+            </div>
+        </div>
+        <div class="row-fluid" ng-show="!cruces.length">No hay ningun espacio.</div>
+    </div>
+</div>
+
+<div>
+    <div class="card span12" style="padding-bottom: 20px;" ng-if="cruceSeleccionado" >
+        <div class="card-actions pull-right" style="margin: 0; padding: 0">
+            <a ng-click="modificar()" class="btn btn-link" ng-if=hasPermission('crucesFerroviarios.editar')
+            ng-hide="(editando || !puedeModificar())" ng-class="{'disabled': (!cruceSeleccionado || editando || ui.puedeModificar())}"><i
+                class="icon-edit"></i></a>
+            <a ng-click="cancelar()" class="btn btn-link" ng-show="editando"><i class="icon-undo"></i></a>
+            <a ng-click="guardar()" ng-show="editando" class="btn btn-link"><i class="icon-ok icon-white"></i></a>
+        </div>
+        <h3 class="card-heading simple">{{cruceSeleccionado.calle}} {{cruceSeleccionado.altura}}</h3>
+        <div class="card-body">
+            <span style="display: inline-block"> Calle:<br /> 
+            <input class="span4" type="text" ng-disabled="!editando" data-provide="typeahead" data-items="4" 
+    		ng-model="cruceSeleccionado.calle" id="calle-typeahead" data-source={{calles}} />
+    		</span> 
+            <span style="display: inline-block"> Altura:<br /> 
+                <input class="span1" type="text" ng-disabled="!editando" disabled ng-model="cruceSeleccionado.altura" />
+    		</span> 
+            <span style="display: inline-block"> Proyecto:<br /> 
+                <input class="span6" type="text" ng-disabled="!editando" ng-model="cruceSeleccionado.proyecto" />
+    		</span> 
+            <span style="display: inline-block"> Estado:<br /> 
+                <input type="text" class="span3" data-provide="typeahead" data-items="4" ng-model="cruceSeleccionado.estado" id="estado-typeahead" ng-disabled="!editando" data-source={{estadosNombres}} >
+    		</span> 
+            <span style="display: inline-block"> Comuna:<br /> 
+                <input class="span3" type="text" data-provide="typeahead" data-items="4" ng-disabled="!editando" ng-model="cruceSeleccionado.comuna" id="comuna-typeahead" data-source={{comunasNombres}} >
+    		</span> 
+            <span style="display: inline-block"> Dependencia:<br /> 
+                <input class="span5" type="text" data-provide="typeahead" data-items="4" ng-disabled="!editando" ng-model="cruceSeleccionado.dependencia" id="dependencia-typeahead" data-source={{dependenciasNombres}} >
+            </span> 
+            <span style="display: inline-block"> FFCC:<br /> 
+                <input type="text" class="span3" data-provide="typeahead" data-items="4" ng-model="cruceSeleccionado.ffcc" id="ffcc-typeahead" ng-disabled="!editando" data-source={{ffccsNombres}} >
+    		</span>	
+            <span style="display: inline-block"> Fecha de finalización:<br /> 
+                <input class="span3" type="text" ng-disabled="!editando" disabled ng-model="cruceSeleccionado.fecha_finaliza" />
+    		</span> 
+            <span style="display: inline-block"> Monto:<br /> 
+                <input class="span2" type="text" ng-disabled="!editando" ng-model="cruceSeleccionado.monto" />
+    		</span> 
+            <span style="display: inline-block">&nbsp;&nbsp;&nbsp;
+          	    <input type="checkbox" name="optionsCheckboxList2" ng-disabled="!editando" ng-model="cruceSeleccionado.inaugurada"> Inaugurada
+        	</span> 
+            <span style="display: inline-block"> Conclusion:<br /> 
+                <textarea class="span11" line-height="5" type="text" ng-disabled="!editando" ng-model="cruceSeleccionado.conclusion" />
+    		</span> 
+            <span style="display: inline-block"> Avance:<br /> 
+                <textarea class="span11" line-height="4" type="text" ng-disabled="!editando" ng-model="cruceSeleccionado.avance" />
+    		</span>
+        </div>
+    </div>
+    
+    <div class="card span6" ng-if="cruceSeleccionado" style="padding-bottom: 10px">
+        <div class="card-actions pull-right" style="margin: 0; padding: 0">
+            <a class="btn btn-link" ng-click="agregarObser()" ng-if="editando"><i class="icon-plus"></i></a>
+        </div>
+        <h3 class="card-heading simple">Observaciones:</h3>
+        <div class="card-body">
+            <div ng-hide="cruceSeleccionado.observaciones.length">No se ha cargardo ninguna observación aún</div>
+            <div ng-repeat="o in cruceSeleccionado.observaciones"
+            style="clear:both; min-height: 40px; margin-top: 20px; margin-bottom: 20px">
+                <div class="pull-left" style="display: inline-block; margin-right: 10px">
+                    <button ng-show="o.tipoObservacion == 'relevamiento'" type="button"
+                    class="btn disabled btn-info">Relevamiento</button>
+                    <button ng-show="o.tipoObservacion == 'procuracion'" type="button"
+                    class="btn disabled btn-info">Procuracion General</button>
+                    <button type="button" ng-show="o.tipoObservacion == 'otra'"
+                    class="btn disabled btn-info">Otra</button>
+                </div>
+                <p>{{o.observaciones}}</p>
+                <div ng-show="o.proximoHito"><br />Proximo hito: {{o.fechaProximoHito}}</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card span6" ng-if="cruceSeleccionado" style="padding-bottom: 10px">
+        <h3 class="card-heading simple">Fotos:</h3>
+        <div class="card-body">
+            <div ng-hide="cruceSeleccionado.fotos.length">No se ha cargardo ninguna foto aún</div>
+            <div ng-if="cruceSeleccionado.fotos.length" id="myCarousel" class="carousel slide">
+                <div class="carousel-inner">
+                  <div ng-class="{active : $first}" class="item" ng-repeat="f in cruceSeleccionado.fotos">
+                    <img src="/file/{{f}}" width="100%">
+                    <button type="button" ng-click="eliminarElemento(cruceSeleccionado.fotos,f)" style="margin-left: 10px" class="btn btn-danger" ng-if="editando"><i class="icon-trash icon-white"></i></button>
+                  </div>
+                </div>
+                <a class="left carousel-control" href="#" data-target="#myCarousel" style="top:47%" data-slide="prev">‹</a>
+        		<a class="right carousel-control" href="#" data-target="#myCarousel" style="top:47%" data-slide="next">›</a>
+            </div>
+            <div style="width: 300px" ng-if="editando" fine-uploader destination="'/upload/'"
+                placeholder="'Subir foto'" uploaded="uploaded"></div>
+        </div>
+    </div>
+</div>
+
+<div id="agregarObservacion" class="modal hide fade">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>Agregar observación</h3>
+    </div>
+    <div class="modal-body">
+        <span style="display: inline-block; margin-top: 15px;">Observaciones:
+            <div class="pull-right btn-group" style="margin-bottom: 8px"
+            data-toggle="buttons-radio">
+                <button class="btn" ng-class="(data.tipoObservacion == 'relevamiento') && 'active btn-info'"
+                ng-click="data.tipoObservacion = 'relevamiento'">Relevamiento</button>
+                <button class="btn" ng-class="(data.tipoObservacion == 'otra') && 'active btn-info'"
+                ng-click="data.tipoObservacion = 'otra'">Otra</button>
+            </div>
+            <textarea style="height:150px; width:500px" type="text" ng-disabled="!editando"
+            ng-model="data.observaciones" />
+            <div style="margin-top: 20px; margin-bottom: 20px">
+            <button class="btn" ng-class="(data.proximoHito == true) && 'active btn-info'"
+            ng-click="data.proximoHito = (!(data.proximoHito == true))">Proximo hito</button>
+            <input type="text" class="span2" ng-model="data.fechaProximoHito"
+            ng-show="data.proximoHito" datepicker style="margin-bottom: 0px;" />
+            </div>
+        </span>
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="btn" data-dismiss="modal">Cancelar</a>
+        <a href="#" class="btn btn-info" data-dismiss="modal" ng-click="agregarObser(true, data)">Agregar observación</a>
+    </div>
+</div>
+
+
+<script language="javascript" type="text/javascript">           
+    function mostra(nombrediv, muestraoculta) {
+            if(muestraoculta == 'm') {
+                    document.getElementById(nombrediv).style.display = '';
+            }
+            
+            if(muestraoculta == 'o') {
+                    document.getElementById(nombrediv).style.display = 'none';
+            }
+            
+            if(muestraoculta != 'm' && muestraoculta != 'o') {
+                    if(document.getElementById(nombrediv).style.display == '') {
+                            document.getElementById(nombrediv).style.display = 'none';
+                    } else {
+                            document.getElementById(nombrediv).style.display = '';
+                    }
+            }
+    }
+</script>

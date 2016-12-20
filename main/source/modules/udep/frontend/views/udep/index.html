@@ -1,0 +1,187 @@
+<style type="text/css">
+    html,body { 
+      overflow:hidden; 
+    }
+    label{
+        margin-left:0 !important;
+    }
+    .nav-list > li > div, #test,
+    .nav-list .nav-header {
+      padding: 9px 18px;
+      margin-top: 1px;
+      overflow: hidden;
+      font-size: 14px;
+      line-height: 1.4;
+      color: #737373;
+      text-overflow: ellipsis;
+      text-shadow: none;
+      background-color: #ffffff;
+      border-left: 2px solid transparent;
+      -webkit-transition: border 0.218s;
+         -moz-transition: border 0.218s;
+           -o-transition: border 0.218s;
+              transition: border 0.218s;
+    }
+
+    .nav-list > li > div:hover,
+    .nav-list > li > div:focus,
+    .nav-list > .active > div,
+    .nav-list > .active > div:hover,
+    .nav-list > .active > div:focus {
+      color: #262626;
+      text-shadow: none;
+      background-color: #f5f5f5;
+      border-color: #427fed;
+    }
+    
+    .nav-list > li > div,
+    .nav-list .nav-header {
+      margin-right: -15px;
+      margin-left: -15px;
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+    }
+    
+    .nav-list > li > div {
+      padding: 3px 15px;
+    }
+    
+    .nav-list > .active > div,
+    .nav-list > .active > div:hover,
+    .nav-list > .active > div:focus {
+      color: #ffffff;
+      text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
+      background-color: #3B3537;
+    }
+    a:hover, a:focus{
+        color:inherit;
+    }
+    #test{
+        padding:8px;
+        background-color: inherit;
+    }
+    .nav > li > div > a >span{
+        margin-top:5px;
+    }
+    .Height{
+        height:25px;
+    }
+</style>
+<div style="position: absolute;top: 50px;bottom: 0px;right: 20px;left: 20px;margin-bottom: 0px;" ng-controller="UDEPCtrl">
+    <div class="card" style="margin-top:0px; margin-bottom:0px; height:98%;padding-top:10px;">
+        <div class="card-actions pull-right no-print" style="margin: 0; padding: 0;height: 40px;">
+            <input placeholder="Nombre del Programa" type="text" class="span2" ng-model="filtro.nombreDelPrograma" title="Nombre del Programa" style="margin-bottom: 24px;" />
+            <input placeholder="Fecha Inicio" id="sel" type="text" class="span2" date ng-model="fechaInicio" title="Fecha Inicio" style="margin-bottom: 24px;width: 80px;"/>
+            <input placeholder="Fecha Fin" type="text" class="span2" date ng-model="fechaFin" title="Fecha Fin" style="margin-bottom: 24px;width: 80px;"/>
+            <!--<input placeholder="Cantidad de beneficiarios" type="text" class="span2" ng-model="filtro.presupuestoSolicitado" title="Cantidad de beneficiarios" style="margin-bottom: 24px;" />-->
+            <a href="#" class="btn btn-link" style="margin-right: 20px;margin-bottom: 20px;" ng-click="abrirFiltros()">Mas filtros...</a>
+            <a class="btn btn-link pull-right no-print"target="_blank" href="/api/udep-Csv/download" style="padding-left: 20px; padding-right: 20px;"><i class="icon-download-alt"></i> CSV</a>
+            <a href="/udep/nuevo" class="btn btn-link pull-right" style="margin-right: 20px;margin-bottom: 20px;margin-left: 25px;" ng-if=hasPermission('udep.administrador') ><i class="icon-plus"></i> Nuevo</a>
+        </div>
+        <h2 class="card-heading simple">Matriz UdEP</h2>
+        <div class="card-body" style="padding-left: 0px; padding-right: 0px; padding-bottom: 0px;margin-top:0px;">
+            <div class="form-horizontal" name="form" style="padding-left:48px; clear: both; background-color:rgb(219,219,219); padding-top:10px;">
+                <div class="row" style="padding-bottom: 10px;">
+                    <strong>
+                        <div class="span4" style="display: table-cell;"><a href="#" style="display: inline-block; color:#404040;">Formularios:</a></div>
+                        <div class="span2" style="display: table-cell;"><a href="#" style="display: inline-block; color:#404040;">Fecha Inicio:</a></div>
+                        <div class="span2" style="display: table-cell;"><a href="#" style="display: inline-block; color:#404040;">Fecha Fin:</a></div>
+                        <div class="span2" style="display: table-cell;"><a href="#" style="display: inline-block; color:#404040;">Presupuesto Solicitado:</a></div>
+                        <div class="span2" style="display: table-cell;"><a href="#" style="display: inline-block; color:#404040;">Porcentaje completado:</a></div>
+                    </strong>
+                </div>
+            </div>
+            <div style="overflow-y: scroll; overflow-x: hidden;position: absolute;top: 100px;bottom: 30px;right: 0px;left: 0px; margin-right:1px">
+                <ul class="nav nav-list">
+                    <li ng-repeat="i in udep | filter:filtro | filter:filtroFechas">
+                        <div href="/udep/{{i._id}}" ng-show="(hasPermission('udep.administrador') || (hasPermission('udep.editarJurisdiccion') && (user.jurisdiccion == i.jurisdiccion)))">
+                            <a href="/udep/{{i._id}}">
+                                <span class="span4 Height">{{i.nombreDelPrograma}}</span>
+                                <span class="span2 Height">{{i.fechaInicio}}</span>
+                                <span class="span2 Height">{{i.fechaFin}}</span>
+                                <span class="span2 Height">{{i.presupuestoSolicitado}}</span>
+                                <span class="span2">
+                                    <div class="progress" style="width:100%; margin:0px;padding-top: 0.; padding: 0px;border-color: rgb(232, 232, 232);height: 15px;" ng-class="{'progress-info':i.porcentajeCompletado>=85,'progress-danger':i.porcentajeCompletado<=25,'progress-warning':i.porcentajeCompletado>25 && i.porcentajeCompletado<=50, 'progress-success':i.porcentajeCompletado>50 && i.porcentajeCompletado<85}">
+                                        <div class="bar" ng-style="{'width': i.porcentajeCompletado + '%'}">
+                                           {{i.porcentajeCompletado}}<span ng-show="i.porcentajeCompletado>=1">%</span>
+                                        </div>
+                                    </div>
+                                </span>
+                            </a>
+                            <a id="test" href="/udep/nuevo/enviar/{{i._id}}"><i class="icon-envelope icon-white"></i></a>
+                        </div>
+                        <a style="padding-top: 8px;padding-bottom: 8px;" href="#" ng-hide="(hasPermission('udep.administrador') || (hasPermission('udep.editarJurisdiccion') && (user.jurisdiccion == i.jurisdiccion)))">
+                            <span class="span4">{{i.nombreDelPrograma}}</span>
+                            <span class="span2">{{i.fechaInicio}}</span>
+                            <span class="span2">{{i.fechaFin}}</span>
+                            <span class="span2">{{i.presupuestoSolicitado}}</span>
+                            <span class="span2">
+                                <div class="progress" style="width:100%; margin:0px;padding-top: 0.; padding: 0px;border-color: rgb(232, 232, 232);height: 15px;" ng-class="{'progress-info':i.porcentajeCompletado>=85,'progress-danger':i.porcentajeCompletado<=25,'progress-warning':i.porcentajeCompletado>25 && i.porcentajeCompletado<=50, 'progress-success':i.porcentajeCompletado>50 && i.porcentajeCompletado<85}">
+                                    <div class="bar" ng-style="{'width': i.porcentajeCompletado + '%'}">
+                                       {{i.porcentajeCompletado}}<span ng-show="i.porcentajeCompletado>=1">%</span>
+                                    </div>
+                                </div>
+                            </span>
+                        </a>
+                    </li>
+                    <li ng-if="!udep.length" class="text-center">
+                        <em>No hay cargas para visualizar</em>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal para mas filtros -->
+    <div id="filtros" class="modal hide fade" style="width:58%;left:40% !important;top:6%;">
+        
+        <legend>Filtros<button type="button" class="close pull-rigth" data-dismiss="modal" aria-hidden="true">&times;</button></legend>
+        <label class="span8">¿Diseñaste herramientas para medir que hayas entregado el producto en tiempo y forma?
+            <button type="button" class="btn pull-right" ng-click="filtro.pregunta1 = 'Si'" ng-hide="filtro.pregunta1 == 'Si'">No</button>        
+            <button type="button" class="btn pull-right" ng-click="filtro.pregunta1 = 'No'" ng-show="filtro.pregunta1 == 'Si'" ng-class="{'btn-info active': (filtro.pregunta1 == 'Si')}">Si</button>
+        </label>
+        <label class="span8">¿Diseñaste herramientas para medir que el producto es de calidad?
+            <button type="button" class="btn pull-right" ng-click="filtro.pregunta2 = 'Si'" ng-hide="filtro.pregunta2 == 'Si'">No</button>        
+            <button type="button" class="btn pull-right" ng-click="filtro.pregunta2 = 'No'" ng-show="filtro.pregunta2 == 'Si'" ng-class="{'btn-info active': (filtro.pregunta2 == 'Si')}">Si</button>
+        </label>
+        <label class="span8">¿Hiciste un cálculo realista del financiamiento necesario?
+            <button type="button" class="btn pull-right" ng-click="filtro.pregunta3 = 'Si'" ng-hide="filtro.pregunta3 == 'Si'">No</button>        
+            <button type="button" class="btn pull-right" ng-click="filtro.pregunta3 = 'No'" ng-show="filtro.pregunta3 == 'Si'" ng-class="{'btn-info active': (filtro.pregunta3 == 'Si')}">Si</button>
+        </label>
+        <label class="span8">¿Te aseguraste de contar con ese financiamiento al momento de lanzar el programa?
+            <button type="button" class="btn pull-right" ng-click="filtro.pregunta4 = 'Si'" ng-hide="filtro.pregunta4 == 'Si'">No</button>        
+            <button type="button" class="btn pull-right" ng-click="filtro.pregunta4 = 'No'" ng-show="filtro.pregunta4 == 'Si'" ng-class="{'btn-info active': (filtro.pregunta4 == 'Si')}">Si</button>
+        </label>
+        <label class="span8">¿Contás con los recursos humanos/técnicos necesarios para la correcta implementación de tu programa?
+            <button type="button" class="btn pull-right" ng-click="filtro.pregunta5 = 'Si'" ng-hide="filtro.pregunta5 == 'Si'">No</button>        
+            <button type="button" class="btn pull-right" ng-click="filtro.pregunta5 = 'No'" ng-show="filtro.pregunta5 == 'Si'" ng-class="{'btn-info active': (filtro.pregunta5 == 'Si')}">Si</button>
+        </label>
+        <label class="span8">¿Contemplaste alternativas de reajuste del programa en caso de no cumplirse alguno de tus supuestos?
+            <button type="button" class="btn pull-right" ng-click="filtro.pregunta6 = 'Si'" ng-hide="filtro.pregunta6 == 'Si'">No</button>        
+            <button type="button" class="btn pull-right" ng-click="filtro.pregunta6 = 'No'" ng-show="filtro.pregunta6 == 'Si'" ng-class="{'btn-info active': (filtro.pregunta6 == 'Si')}">Si</button>
+        </label>
+        <label class="span8">¿Estableciste tu población objetivo de manera realista?
+            <button type="button" class="btn pull-right" ng-click="filtro.pregunta7 = 'Si'" ng-hide="filtro.pregunta7 == 'Si'">No</button>        
+            <button type="button" class="btn pull-right" ng-click="filtro.pregunta7 = 'No'" ng-show="filtro.pregunta7 == 'Si'" ng-class="{'btn-info active': (filtro.pregunta7 == 'Si')}">Si</button>
+        </label>
+        <label class="span8">¿Pensás que los resultados de tu programa son realistas?
+            <button type="button" class="btn pull-right" ng-click="filtro.pregunta8 = 'Si'" ng-hide="filtro.pregunta8 == 'Si'">No</button>        
+            <button type="button" class="btn pull-right" ng-click="filtro.pregunta8 = 'No'" ng-show="filtro.pregunta8 == 'Si'" ng-class="{'btn-info active': (filtro.pregunta8 == 'Si')}">Si</button>
+        </label>
+        <label class="span8">¿Son tus actividades consistentes con los resultados del programa y los productos que estableciste?
+            <button type="button" class="btn pull-right" ng-click="filtro.pregunta9 = 'Si'" ng-hide="filtro.pregunta9 == 'Si'">No</button>        
+            <button type="button" class="btn pull-right" ng-click="filtro.pregunta9 = 'No'" ng-show="filtro.pregunta9 == 'Si'" ng-class="{'btn-info active': (filtro.pregunta9 == 'Si')}">Si</button>
+        </label>
+        <label class="span8">¿Corroboraste que tus indicadores cumplen con las características de un indicador EMARF (específicos, medibles, atribuibles, realistas y focalizados)?
+            <button type="button" class="btn pull-right" ng-click="filtro.pregunta10 = 'Si'" ng-hide="filtro.pregunta10 == 'Si'">No</button>        
+            <button type="button" class="btn pull-right" ng-click="filtro.pregunta10 = 'No'" ng-show="filtro.pregunta10 == 'Si'" ng-class="{'btn-info active': (filtro.pregunta10 == 'Si')}">Si</button>
+        </label>
+        <label class="span8">¿Revisaste que los medios de verificación propuestos sean viables?
+            <button type="button" class="btn pull-right" ng-click="filtro.pregunta11 = 'Si'" ng-hide="filtro.pregunta11 == 'Si'">No</button>        
+            <button type="button" class="btn pull-right" ng-click="filtro.pregunta11 = 'No'" ng-show="filtro.pregunta11 == 'Si'" ng-class="{'btn-info active': (filtro.pregunta11 == 'Si')}">Si</button>
+        </label>
+        <label class="span8">¿Explicitaste los supuestos de tu programa?
+            <button type="button" class="btn pull-right" ng-click="filtro.pregunta12 = 'Si'" ng-hide="filtro.pregunta12 == 'Si'">No</button>        
+            <button type="button" class="btn pull-right" ng-click="filtro.pregunta12 = 'No'" ng-show="filtro.pregunta12 == 'Si'" ng-class="{'btn-info active': (filtro.pregunta12 == 'Si')}">Si</button>
+        </label>
+    </div>
+</div>

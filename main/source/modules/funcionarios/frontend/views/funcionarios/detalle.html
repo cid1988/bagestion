@@ -1,0 +1,32 @@
+<div ng-controller="VerFuncionarioCtrl">
+
+<div class="well span9 offset2"  ng-hide="modificando">
+    <h3>Datos del Funcionario
+        <a class="btn pull-right" ng-click="modificar()" ng-hide="!puedeModificar()"><i class="icon-edit"></i> Modificar</a>
+    </h3>
+    <br />
+    <form class="form-horizontal">
+        <forminput read-only ng-model="funcionario.nombre" placeholder="Sin nombre" title="Nombre" />
+        <forminput read-only ng-model="funcionario.reparticion" placeholder="Sin repartición" title="Repartición" />
+        <forminput read-only ng-model="funcionario.jurisdiccion.nombre" placeholder="Sin jurisdiccion" title="Jurisdiccion" />        
+        <forminput read-only ng-model="funcionario.direccion" placeholder="Sin dirección" title="Dirección" />
+        <forminput read-only ng-model="funcionario.telefono" placeholder="Sin teléfono" title="Teléfono" />
+        <forminput read-only ng-model="funcionario.email" placeholder="Sin e-mail" title="E-mail" />
+    </form>
+</div>
+<div class="well span9 offset2" ng-show="modificando">
+    <h3>Datos del Funcionario
+        <a class="btn btn-success pull-right" ng-click="guardar()"><i class="icon-ok icon-white"></i> Guardar</a>
+    </h3>
+    <br />
+    <form class="form-horizontal">
+        <forminput ng-model="funcionario.nombre" placeholder="Sin nombre" title="Nombre" />
+    	<forminput ng-model="funcionario.reparticion" placeholder="Sin repartición" title="Repartición" />
+		<formselect ng-model="funcionario.jurisdiccion" source="jurisdicciones" placeholder="Seleccionar" title="Jurisdiccion" span="5" />
+        <forminput ng-model="funcionario.direccion" placeholder="Sin dirección" title="Dirección" />
+        <forminput ng-model="funcionario.telefono" placeholder="Sin teléfono" title="Teléfono" />
+        <forminput ng-model="funcionario.email" placeholder="Sin e-mail" title="E-mail" />
+    </form>
+</div>
+
+</div>

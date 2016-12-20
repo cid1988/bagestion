@@ -1,0 +1,215 @@
+<style>
+    .table {
+        border: 0;
+    }
+    .table th, .table td {
+        padding: 8px;
+        line-height: 20px;
+        text-align: left;
+        vertical-align: middle;
+        font-size: 16px !important;
+        border: 0;
+    }
+    .table th {
+        background-color: #dddddd !important;
+    }
+    .icon {
+        -webkit-transition: all .3s linear;
+        -o-transition: all .3s linear;
+        transition: all .3s linear;
+        position: absolute;
+        top: 75px;
+        right: 20px;
+        z-index: 0;
+        font-size: 100px;
+        color: rgba(0,0,0,0.08);
+    }
+</style>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+<div ng-controller="DashboardCtrl">
+    
+    <!-- PRIMERA FILA -->
+    
+    <div class="card" style="overflow-y: hidden; overflow-x: hidden;position: absolute;top: 50px;left: 0.5%; width: 24%; height: 250px;padding-top: 5px;">
+        <h2 class="card-heading simple">Obras</h2>
+        <div class="card-body" style="margin-top: 10px;">
+            <div class="icon">
+              <i class="fa fa-wrench"></i>
+            </div>
+            <span style="font-size: 15px; font-weight: 600;">Finalizan:</span>
+            <nvd3 options="options" data="data"></nvd3>
+        </div>
+    </div>
+    <div class="card" style="overflow-y: hidden; overflow-x: hidden;position: absolute;top: 50px;left: 25.5%;width: 24%; height: 250px;padding-top: 5px;">
+        <h2 class="card-heading simple">POA - Seguimiento 2015</h2>
+        <div class="card-body" style="text-align: center;margin-top: 75px;">
+            <div class="icon">
+              <i class="fa fa-bar-chart"></i>
+            </div>
+            <span style="font-size: 20px; font-weight: 600;">Esperando Datos...</span>
+        </div>
+    </div>
+    <div class="card" style="overflow-y: hidden; overflow-x: hidden;position: absolute;top: 50px;left: 50.5%;width: 24%; height: 250px;padding-top: 5px;">
+        <h2 class="card-heading simple">POA - Planificacion 2016</h2>
+        <div class="card-body" style="margin-top: 10px;">
+            <div class="icon">
+              <i class="fa fa-code-fork"></i>
+            </div>
+            <span style="font-size: 15px; font-weight: 600;">Proyectos: 390</span>
+            <nvd3 options="options" data="dataPOA"></nvd3>
+        </div>
+    </div>
+    <div class="card" style="overflow-y: hidden; overflow-x: hidden;position: absolute;top: 50px;left: 75.5%;width: 24%; height: 250px;padding-top: 5px;">
+        <h2 class="card-heading simple">Planificacion 2016 - 2019</h2>
+        <div class="card-body" style="margin-top: 10px;">
+            <div class="icon">
+              <i class="fa fa-calendar-o"></i>
+            </div>
+            <span style="font-size: 15px; font-weight: 600;">Iniciativas: 148</span>
+            <nvd3 options="options" data="dataP1619"></nvd3>
+        </div>
+    </div>
+    
+    <!-- SEGUNDA FILA -->
+    
+    <div class="card" style="overflow-y: hidden; overflow-x: hidden;position: absolute;top: 320px;left: 0.5%; width: 24%; height: 250px;padding-top: 5px;">
+        <h2 class="card-heading simple">Iniciativas</h2>
+        <div class="card-body" style="margin-top: 10px;">
+            <div class="icon">
+              <i class="fa fa-building-o"></i>
+            </div>
+            <span style="font-size: 15px; font-weight: 600;">Total: 148</span>
+            <nvd3 options="options" data="dataIniciativas"></nvd3>
+        </div>
+    </div>
+    <div class="card" style="overflow-y: hidden; overflow-x: hidden;position: absolute;top: 320px;left: 25.5%;width: 24%; height: 250px;padding-top: 5px;">
+        <h2 class="card-heading simple">SEMG - Indicadores</h2>
+        <div class="card-body" style="margin-top: 10px;">
+            <div class="icon">
+              <i class="fa fa-tachometer"></i>
+            </div>
+            <span style="font-size: 15px; font-weight: 600;">Total: 359</span>
+            <nvd3 options="options" data="dataIndicadores"></nvd3>
+        </div>
+    </div>
+    <div class="card" style="overflow-y: hidden; overflow-x: hidden;position: absolute;top: 320px;left: 50.5%;width: 24%; height: 250px;padding-top: 5px;">
+        <h2 class="card-heading simple">SEMG - Cartas Compromisos</h2>
+        <div class="card-body" style="margin-top: 10px;">
+            <div class="icon">
+              <i class="fa fa-file-text-o"></i>
+            </div>
+            <span style="font-size: 15px; font-weight: 600;">Total: 177</span>
+            <nvd3 options="options" data="dataCC"></nvd3>
+        </div>
+    </div>
+    <div class="card" style="overflow-y: hidden; overflow-x: hidden;position: absolute;top: 320px;left: 75.5%;width: 24%; height: 250px;padding-top: 5px;">
+        <h2 class="card-heading simple">Plan BA 2030</h2>
+        <div class="card-body" style="margin-top: 10px;">
+            <div class="icon">
+              <i class="fa fa-map-o"></i>
+            </div>
+            <span style="font-size: 15px; font-weight: 600;">Proyectos: 102</span>
+            <nvd3 options="options" data="dataP2030"></nvd3>
+        </div>
+    </div>
+    
+    <!-- TERCERA FILA -->
+    
+    <div class="card" style="overflow-y: hidden; overflow-x: hidden;position: absolute;top: 590px;left: 0.5%; width: 24%; height: 250px;padding-top: 5px;">
+        <h2 class="card-heading simple">ORM - Calendario</h2>
+        <div class="card-body" style="margin-top: 10px;">
+            <div class="icon">
+              <i class="icon-calendar"></i>
+            </div>
+            <button type="button" style="margin-bottom: 10px;font-size: 25px;height: 165px;" class="btn btn-large btn-block btn-success">
+            Faltan: 2hs 31min<br>
+            <span style="font-size: 23px;">Salud</span><br>
+            <span style="font-size: 17px;">Sala de Gabinete</span></button>
+        </div>
+    </div>
+    <div class="card" style="overflow-y: hidden; overflow-x: hidden;position: absolute;top: 590px;left: 25.5%;width: 24%; height: 250px;padding-top: 5px;">
+        <h2 class="card-heading simple">ORM - Compromisos</h2>
+        <div class="card-body" style="margin-top: 10px;">
+            <div class="icon">
+              <i class="fa fa-list-ul"></i>
+            </div>
+            <span style="font-size: 16px; font-weight: 600;">14/09/2015 - Centro único de Discapacidad – Certificados:</span>
+            <span style="font-size: 16px;">Presentar informe de auditoría de Nación sobre sistema online.</span>
+            <hr style="margin-top: 8px; margin-bottom: 8px;">
+            <span style="font-size: 16px; font-weight: 600;">15/09/2015 - Estructura de guardias – Comisiones y Refuerzos:</span>
+            <span style="font-size: 16px;">Definir la POF de 4 Hospitales Generales de Agudos.</span>
+        </div>
+    </div>
+    <div class="card" style="overflow-y: hidden; overflow-x: hidden;position: absolute;top: 590px;left: 50.5%;width: 24%; height: 250px;padding-top: 5px;">
+        <h2 class="card-heading simple">ORM - Minutas</h2>
+        <div class="card-body" style="margin-top: 10px;font-size: 16px;">
+            <div class="icon">
+              <i class="fa fa-file-text-o"></i>
+            </div>
+            <div><b class="ng-scope"><span>Recursos Humanos&nbsp;(A. Guevara)<br></span></b><ul class="ng-scope"><li><span><b>Estructura de Guardias.</b></span></li></ul><ul class="ng-scope"><ul><li><b>Comisiones y Refuerzos.</b></li></ul></ul><ul class="ng-scope"><ul><ul><li><span>Designados: 3523 / 150 en comisiones
+                en otros lugares.</span></li><li><span>Definir la POF de 4 Hospitales
+                Generales de Agudos (Obj. 15/SEP).</span></li></ul></ul></ul>
+            </div>
+        </div>
+    </div>
+    <div class="card" style="overflow-y: hidden; overflow-x: hidden;position: absolute;top: 590px;left: 75.5%;width: 24%; height: 250px;padding-top: 5px;">
+        <h2 class="card-heading simple">ORM - Participantes</h2>
+        <div class="card-body" style="margin-top: 10px;">
+            <div class="icon">
+              <i class="fa fa-users"></i>
+            </div>
+            <table class="table participantes">
+                <tr class="no-border" style="border-bottom: 1px solid #B3B3B3;">
+                    <td style="padding-top: 3px;padding-bottom: 3px;padding-right: 0px;padding-left: 0px;">
+                        <b>FIRVIDA,</b> Eduardo
+                    </td>
+                    <td style="padding-top: 3px;padding-bottom: 3px;padding-right: 0px;padding-left: 0px;">
+                        SSCYSG
+                    </td>
+                </tr>
+                <tr class="no-border" style="border-bottom: 1px solid #B3B3B3;">
+                    <td style="padding-top: 3px;padding-bottom: 3px;padding-right: 0px;padding-left: 0px;">
+                        <b>JAHN,</b> Luis
+                    </td>
+                    <td style="padding-top: 3px;padding-bottom: 3px;padding-right: 0px;padding-left: 0px;">
+                        SSCYSG
+                    </td>
+                </tr>
+                <tr class="no-border" style="border-bottom: 1px solid #B3B3B3;">
+                    <td style="padding-top: 3px;padding-bottom: 3px;padding-right: 0px;padding-left: 0px;">
+                        <b>ZANETTI,</b> Dino
+                    </td>
+                    <td style="padding-top: 3px;padding-bottom: 3px;padding-right: 0px;padding-left: 0px;">
+                        SBASE
+                    </td>
+                </tr>
+                <tr class="no-border" style="border-bottom: 1px solid #B3B3B3;">
+                    <td style="padding-top: 3px;padding-bottom: 3px;padding-right: 0px;padding-left: 0px;">
+                        <b>GOWLAND,</b> Alberto
+                    </td>
+                    <td style="padding-top: 3px;padding-bottom: 3px;padding-right: 0px;padding-left: 0px;">
+                        SBASE
+                    </td>
+                </tr>
+                <tr class="no-border" style="border-bottom: 1px solid #B3B3B3;">
+                    <td style="padding-top: 3px;padding-bottom: 3px;padding-right: 0px;padding-left: 0px;">
+                        <b>DI MAIO,</b> Alberto
+                    </td>
+                    <td style="padding-top: 3px;padding-bottom: 3px;padding-right: 0px;padding-left: 0px;">
+                        MDUGC
+                    </td>
+                </tr>
+                <tr class="no-border" style="border-bottom: 1px solid #B3B3B3;">
+                    <td style="padding-top: 3px;padding-bottom: 3px;padding-right: 0px;padding-left: 0px;">
+                        <b>JOLIAS,</b> Jorge
+                    </td>
+                    <td style="padding-top: 3px;padding-bottom: 3px;padding-right: 0px;padding-left: 0px;">
+                        SBASE
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+

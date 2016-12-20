@@ -1,0 +1,198 @@
+<style type="text/css">
+    .cuadrado{
+        height:25px;
+        width:25px;
+        border-radius:25px;
+    }
+    .rojo{background-color:#EF5350;}
+    .verde{background-color:#66BB6A;}
+    .amarillo{background-color:#FFEE58;}
+    .gris{background-color:#78909C;}
+    input{
+        border-radius:5px;
+        margin-bottom:0 !important;
+    }
+    input:focus{
+        border-color:rgba(82, 168, 236, 0.8) !important;
+        box-shadow:inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6) !important;
+    }
+    .barraSeparadora{    
+        font-size: 2em;
+        padding-left: 5px;
+        padding-right: 5px;
+        vertical-align:middle;
+        -webkit-touch-callout: none; /* iOS Safari */
+        -webkit-user-select: none;   /* Chrome/Safari/Opera */
+        -moz-user-select: none;      /* Firefox */
+    }
+    td{vertical-align:middle !important;}
+    thead{background-color:#BDBDBD;}
+    .paddingCero{
+        padding:0 !important;
+    }
+    .fuenteVerde{color:#4CAF50}
+    .fuenteVerde:hover{color:#9CCC65;}
+    /*
+        Eliminar 
+    */
+    .alert-success{
+        display:none;
+    }
+    .alert-success:last-child{
+        display:block;
+        margin-bottom:10px;
+    }
+</style>
+<div class="card body" ng-controller="MatrizSEMGDetalleCtrl">
+    <div class="card-heading simple clearfix">
+        <span>Detalle de Indicador: {{matrizMonitoreo.indicadorImpacto}} {{moment().millisecond()}}</span>
+        <span ng-init="editando=false">
+            <button type="button" class="btn btn-link no-underline pull-right" ng-click="editando=true" title="Activar edición" ng-hide="editando"><i class="icon-edit"></i> Editar</button>
+            <button type="button" class="btn btn-link no-underline pull-right" ng-click="guardar()" title="Guardar Matriz Indicador {{anio}}" ng-show="editando"><i class="icon-save"></i> Guardar</button>
+        </span>
+    </div>
+    <div class="card-body" style="overflow-x:auto">
+        <table class="table table-striped">
+            <thead>
+                <tr style="cursor:default">
+                    <th>Mes</th>
+                    <th title="El dato del indicador debe ser completado de forma acumulativa (Ej. Mes 1: dato de Mes 1; Mes 2: dato de Mes 1 + Mes 2; etc.)">Dato del indicador</th>
+                    <th>Formato</th>
+                    <th title="Incluir los valores absolutos utilizados en el método de cálculo">Números absolutos</th>
+                    <th title="Muestra el estado de avance en relación a la meta anual">Estado de avance</th>
+                    <th title="Una vez validado solo alguien de la Secretaría">Validación</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="i in matrizMonitoreo.formulario[anio]">
+                    <td>{{i.nombre}} - 16</td>
+                    <td>
+                        <input type="number" placeholder="Dato del indicador" ng-change="i.avanceEstudio=calcularConSemaforo(i.datoIndicador,matrizMonitoreo.semaforizacion)"  ng-model="i.datoIndicador" title="El valor no debe ser mayor a 100" ng-disabled="!editando || !elMesEsEditable($index) || i.validado"/>
+                    </td>
+                    <td>{{matrizMonitoreo.formato}}</td>
+                    <td>
+                        <input type="text" ng-model="i.numeroAbsUno" ng-disabled="!editando || !elMesEsEditable($index) || i.validado"/>
+                        <span ng-show="matrizMonitoreo.codigoFormato<=3">
+                            <span class="barraSeparadora"> / </span>
+                            <input type="text" ng-model="i.numeroAbsDos" ng-disabled="!editando || !elMesEsEditable($index) || i.validado"/>
+                        </span>
+                    </td>
+                    <td>
+                        <div class="cuadrado" title="{{armarTitle(matrizMonitoreo)}}" ng-class="i.avanceEstudio" ng-init="i.avanceEstudio=calcularConSemaforo(i.datoIndicador,matrizMonitoreo.semaforizacion)"></div>
+                    </td>
+                    <td>
+                        <button type="button" class="btn" ng-class="{'btn-info':i.validado}" ng-disabled="habilitarValidacion(editando,i.validado,$index)" ng-click="i.validado=cambiarValides(i.validado,$index)"><span ng-show="i.validado">Validado</span><span ng-hide="i.validado">No Validado</span></button>
+                    </td><!--!elMesEsEditable($index) || !editando || (i.validado && !hasPermission('semg.validarSecretaria'))--> <!--i.validado=cambiarValides(i.validado, $index)-->
+                    <td>
+                        <button type="button" ng-class="{'fuenteVerde':i.comentarios.length}" ng-click="abrirModal($index, 'modalComentariosMatriz', 'comentarios')" class="btn"><i class="icon-comment"></i></button>
+                        <button type="button" ng-class="{'fuenteVerde':i.archivos.length}" ng-click="abrirModal($index,'modalArchivosMatriz', 'archivos')" class="btn"><i class="icon-file"></i></button>
+                    </td>
+                </tr>
+            </tbody> 
+        </table>
+    </div>
+    
+    <!-- Modal Comentarios-->
+    <div id="modalComentariosMatriz" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="labelComentarios" aria-hidden="true" style="max-height: 70vh;">
+        <div class="modal-header simple paddingCero">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true" title="Cerrar" style="background-color: #bdc0c7;"></button>
+            <h3 id="labelComentarios" style="padding-bottom:10px">Comentarios</h3>
+        </div>
+        <div class="modal-body">
+            <div class="container-fluid paddingCero">
+                <div class="row-fluid">
+                    <div class="clearfix" ng-init="pensamientoComentario=''">
+                        <div class="span12">
+                            <textarea id="textAreaModalComentario" ng-model="pensamientoComentario" placeholder="¿Qué estás pensando?" rows="5" class="input-block-level" style="resize: none;font-size: 1.1em;color: #757575;padding-top:5px"></textarea>
+                        </div>
+                        <div class="span3 pull-right">
+                            <div>
+                                <button type="button" ng-click="publicarComentario(pensamientoComentario, anio, indiceMesModal, 'pensamientoComentario', 'textAreaModalComentario')" class="btn btn-info input-block-level" title="Enviar comentario">Publicar</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix">
+                        <div class="span12" style="text-align:center">
+                            <hr style="margin-bottom:10px; box-shadow: 0 10px 20px rgba(0,0,0,0.30), 0 23px 12px rgba(0,0,0,0.22);"/>
+                            <span class="help-block">Los comentarios se ordenan desde el mas nuevo hasta el primero</span>
+                        </div>
+                    </div>
+                    <div style="overflow-y:auto;max-height:34vh;" class="container-fluid">
+                        <div ng-repeat="i in matrizMonitoreo.formulario[anio][indiceMesModal].comentarios | orderBy:'fechaComentario':true" class="row-fluid">
+                            <div class="span11">
+                                <blockquote>
+                                    <span>{{i.comentario}}</span>
+                                    <small>
+                                        <strong style="text-transform: capitalize;">{{i.usuario}}</strong>
+                                        <cite title="Source Title"> a las {{retornarHoraYMinuto(i.fechaComentario)}} el {{retornarAnnoMesDia(i.fechaComentario)}}</cite>
+                                    </small>
+                                </blockquote>
+                            </div>
+                            <div class="span1">
+                                <button type="button" ng-if="hasPermission('semg.validarSecretaria')" ng-click="eliminarComentario(indiceMesModal,$index,anio)" class="btn btn-link input-block-level pull-right" title="Eliminar"><i class="icon-trash"></i></button>
+                            </div>
+                        </div>
+                        <span ng-show="!matrizMonitoreo.formulario[anio][indiceMesModal].comentarios.length" class="help-block">Escribe un comentario...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn pull-right" data-dismiss="modal" aria-hidden="true" title="Cerrar Ventana de Comentarios">Cerrar</button>
+        </div>
+    </div>
+    
+    <!-- Modal Archivos-->
+    <div id="modalArchivosMatriz" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="labelArchivos" aria-hidden="true" style="max-height: 70vh;">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true" title="Cerrar" style="background-color: #bdc0c7;"></button>
+            <h3 id="labelArchivos" class="card-heading simple">Archivos</h3>
+        </div>
+        <div class="modal-body">
+            <div class="container-fluid">
+                <div class="row-fluid">
+                    <div class="clearfix" ng-init="nombreArchivo=''">
+                        <div class="span8" style="display:none"></div>
+                        
+                        <div class="span8 offset2">
+                            <input type="text" id="nombreArchivoId" class="input-block-level" ng-model="nombreArchivo" placeholder="Nombre Archivo"/>
+                        </div>
+                        <div class="span8 offset2" style="margin-top:10px">
+                            <div style="width: 100%" fine-uploader destination="'/upload/'" placeholder="'Examinar'" uploaded="uploadedFile"></div>
+                        </div>
+                        <div class="span8 offset2">
+                            <button type="button" class="btn btn-info pull-right" ng-click="subirArchivo(nombreArchivo, 'nombreArchivo',anio, indiceMesModal, 'nombreArchivoId')" title="Subir Archivo: {{nombreArchivo}}">Subir</button>                            
+                        </div>
+                    </div>
+                    <div class="clearfix">
+                        <div class="span12" style="text-align:center">
+                            <hr style="margin-bottom:10px; box-shadow: 0 10px 20px rgba(0,0,0,0.30), 0 23px 12px rgba(0,0,0,0.22);"/>
+                            <span class="help-block">Los archivos se ordenan desde el mas nuevo hasta el primero</span>
+                        </div>
+                    </div>
+                    <div style="overflow-y:auto;max-height:28vh;" class="container-fluid">
+                        <div ng-repeat="i in matrizMonitoreo.formulario[anio][indiceMesModal].archivos | orderBy:'fechaSubida':true" class="row-fluid">
+                            <div class="span11">
+                                <blockquote>
+                                    <span><a href="/file/{{i.idArchivo}}" target="_blank" download="{{i.nombreArchivo}}">{{i.nombreArchivo}} <span class="label">{{i.formato}}</span></a></span>
+                                    <small>
+                                        <strong style="text-transform: capitalize;">{{i.usuario}}</strong>
+                                        <cite title="Source Title"> a las {{retornarHoraYMinuto(i.fechaSubida)}} el {{retornarAnnoMesDia(i.fechaSubida)}}</cite>
+                                    </small>
+                                </blockquote>
+                            </div>
+                            <div class="span1">
+                                <button type="button" ng-if="hasPermission('semg.validarSecretaria')" ng-click="eliminarArchivo(indiceMesModal,$index,anio)" class="btn btn-link input-block-level pull-right" title="Eliminar"><i class="icon-remove"></i></button>
+                            </div>
+                        </div>
+                        <span class="help-block">Escribe un comentario...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn pull-right" data-dismiss="modal" aria-hidden="true" title="Cerrar Ventana de Comentarios">Cerrar</button>
+        </div>
+    </div>
+</div>

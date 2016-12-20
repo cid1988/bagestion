@@ -1,0 +1,32 @@
+<div class="card span11 offset1">
+    <div class="card-actions pull-right" style="margin: 0; padding: 0">
+        <a ng-click="guardar()" class="btn btn-link pull-right" type="button"><i class="icon-ok"></i></a>
+    </div>
+    <h3 class="card-heading simple">Nuevo Evento</h3>
+    <div class="card-body control-group">
+        <forminput required ng-model="evento.nombre" placeholder="Sin nombre"
+        title="Nombre" />
+        <forminput ng-model="evento.nombreCorto" placeholder="Sin nombre corto"
+        title="Nombre corto" />
+        <forminput ng-model="evento.nombreLargo" placeholder="Sin nombre largo"
+        title="Nombre largo" />
+        <forminput required date ng-model="evento.fecha" placeholder="Sin fecha"
+        title="Fecha" />
+        <div class="control-group">
+            <label class="control-label">Dirección:</label>
+            <div class="controls">
+                <input ng-model="evento.calle" style="width: 400px" placeholder="Calle del evento"
+                type="text" source="calles"></typeahead>
+                <input type="text" style="width: 40px" ng-model="evento.altura"                />
+            </div>
+        </div>
+        <forminput ng-model="evento.lugar" placeholder="Sin lugar" title="Lugar" />
+        <div class="control-group  ng-pristine ng-valid">
+            <label class="control-label">Descripción:</label>
+            <div class="controls">
+                <textarea style="width:95%" placeholder="Sin descripcion" type="text" ng-model="evento.descripcion" name="evento.descripcion" rows="4" class="ng-pristine ng-valid">
+                </textarea>
+            </div>
+        </div>
+    </div>
+</div>

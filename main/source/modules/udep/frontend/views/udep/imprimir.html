@@ -1,0 +1,142 @@
+<style>
+    form>div{
+        margin-left:10px;
+    }
+    .alLado{
+        display:inline-block;
+    }
+    h4{
+        margin-top:20px;
+    }
+    form{
+        margin-top:10px !important;
+    }
+</style>
+<div ng-controller="UDEPDetalleCtrl" class="card" style="padding-top: 0px; padding-left: 15px;">
+    <legend class="no-print">Imprimir: {{fud.nombreDelPrograma}}  <a ng-show="!editando" ng-click="imprimir()" class="btn btn-link pull-right no-underline" style="margin-right: 20px; margin-top:5px;margin-bottom:0%;" href="/udep/imprimir/{{fud._id}}"><i class="icon-print icon-white"></i></a></legend>
+    <div class="row" style="margin: 0px">
+    
+        <h3 class="control-label" ng-show="fud.nombreDelPrograma" align="center">{{fud.nombreDelPrograma}}</h3>
+
+        <h4 class="card-heading simple">Introducción</h4>
+        <form class="card-body control-group form-inline">
+            <div class="controls">
+                <label class="control-label" ng-show="fud.resumenDelPrograma">Breve resumen del programa:</label>
+                <p class="alLado">{{fud.resumenDelPrograma}}</p>
+                <br>
+            </div>
+        </form>
+        
+        <h4 class="card-heading simple">Evaluación de Necesidad</h4>
+        <form class="card-body control-group form-inline">
+            <div class="controls">
+                <label class="control-label" ng-show="fud.necesidadExplicacion">Explicá brevemente la/s necesidad/es a las que este programa busca dar respuesta:</label>
+                <p ng-repeat="t in fud.necesidadExplicacion">{{t.explicacion}}</p>
+                <br>
+                <label class="control-label" ng-show="fud.necesidadesDescripcion">Describí las causas que considerás dan origen a esta necesidad:</label>
+                <p ng-repeat="t in fud.necesidadesDescripcion">{{t.causa}}</p>
+                <br>
+                <label class="control-label" ng-show="fud.poblacionObjetivo">Indicá la población objetivo a la que el programa se dirige:</label>
+                <p class="alLado">{{fud.poblacionObjetivo}}</p>
+                <br>
+                <label class="control-label" ng-show="fud.beneficiarios">Dentro de la población objetivo identificada, indicá el número estimado de participantes/beneficiarios del programa en el lapso de un año:</label>
+                <p class="alLado">{{fud.beneficiarios}}</p>
+                <br>
+            </div>
+        </form>
+        
+        <h4 class="card-heading simple">Descripción del Programa</h4>
+        <form class="card-body control-group form-inline">
+            <div class="controls">
+                <label class="control-label" ng-show="fud.fechaInicio">Fecha de inicio del programa:</label>
+                <p class="alLado">{{fud.fechaInicio}}</p>
+                
+                <label class="control-label alLado" style="margin-left:50px" ng-show="fud.fechaFin">Fecha de finalización del programa:</label>
+                <p class="alLado">{{fud.fechaFin}}</p>
+                <br>
+                
+                <label class="control-label" ng-show="fud.personaResponsable">Persona Responsable:</label>
+                <p class="alLado">{{contactoPorId(fud.personaResponsable).apellidos}} {{contactoPorId(fud.personaResponsable).nombre}}</p>
+            </div>
+        </form>
+        
+        <h4 class="card-heading simple">Guía de preguntas</h4>
+        <form class="card-body control-group form-inline">
+            <div class="controls">
+                <label class="control-label">¿Diseñaste herramientas para medir que hayas entregado el producto en tiempo y forma?: </label>
+                <p class="alLado">{{fud.pregunta1}}</p>
+                <br>
+                <label class="control-label">¿Diseñaste herramientas para medir que el producto es de calidad?: </label>
+                <p class="alLado">{{fud.pregunta2}}</p>
+                <br>
+                <label class="control-label">¿Hiciste un cálculo realista del financiamiento necesario?: </label>
+                <p class="alLado">{{fud.pregunta3}}</p>
+                <br>
+                <label class="control-label">¿Te aseguraste de contar con ese financiamiento al momento de lanzar el programa?: </label>
+                <p class="alLado">{{fud.pregunta4}}</p>
+                <br>
+                <label class="control-label">¿Contás con los recursos humanos/técnicos necesarios para la correcta implementación de tu programa?: </label>
+                <p class="alLado">{{fud.pregunta5}}</p>
+                <br>
+                <label class="control-label">¿Contemplaste alternativas de reajuste del programa en caso de no cumplirse alguno de tus supuestos?: </label>
+                <p class="alLado">{{fud.pregunta6}}</p>
+                <br>
+                <label class="control-label">¿Estableciste tu población objetivo de manera realista?: </label>
+                <p class="alLado">{{fud.pregunta7}}</p>
+                <br>
+                <label class="control-label">¿Pensás que tus propósitos son realistas?: </label>
+                <p class="alLado">{{fud.pregunta8}}</p>
+                <br>
+                <label class="control-label">¿Son tus actividades consistentes con el propósito y los componentes que estableciste?: </label>
+                <p class="alLado">{{fud.pregunta9}}</p>
+                <br>
+                <label class="control-label">¿Corroboraste que tus indicadores cumplen con las características de un indicador inteligente (realizable, específico, medible, enmarcado en el tiempo, independiente, relevante)?: </label>
+                <p class="alLado">{{fud.pregunta10}}</p>
+                <br>
+                <label class="control-label">¿Revisaste que los medios de verificación propuestos sean viables?: </label>
+                <p class="alLado">{{fud.pregunta11}}</p>
+                <br>
+                <label class="control-label">¿Explicitaste los supuestos de tu programa?: </label>
+                <p class="alLado">{{fud.pregunta12}}</p>
+            </div>
+        </form>
+        
+        <h4 class="card-heading simple" style="line-height:30px;">Si estás trabajando con alguna organización externa al gobierno o con algún gobierno, ministerio o subsecretaría, por favor brindanos la siguiente informacion:</h4>
+        <form class="card-body control-group form-inline">
+            <div class="controls">
+                <label class="control-label" ng-show="fud.organizacion">Organización: </label>
+                <p class="alLado">{{fud.organizacion}}</p>
+                <br>
+                <label class="control-label" ng-show="fud.email">Email: </label>
+                <p class="alLado">{{fud.email}}</p>
+                <br>
+                <label class="control-label" ng-show="fud.pagina">Página web: </label>
+                <p class="alLado">{{fud.pagina}}</p>
+                <br>
+                <label class="control-label" ng-show="fud.comentario">Comentario: </label>
+                <p class="alLado">{{fud.comentario}}</p>
+                <br>
+            </div>
+        </form>
+        
+        <h4 class="card-heading simple">Recursos financieros</h4>
+        <form class="card-body control-group form-inline">
+            <div class="controls">
+                <label class="control-label" ng-show="fud.presupuestoSolicitado">Presupuesto solicitado: </label>
+                <p class="alLado">{{fud.presupuestoSolicitado}}</p>
+                <br>
+                <label class="control-label" ng-show="fud.presupuestoGestion">Presupuesto Gestión: </label>
+                <p class="alLado">{{fud.presupuestoGestion}}</p>
+                <br>
+                <label class="control-label" ng-show="fud.financiamientoExternoMonto">Indica si contás con financiamiento externo (Monto e institución):: </label>
+                <p class="alLado">{{fud.financiamientoExternoMonto}}</p>
+                <br>
+            </div>
+        </form>
+        
+        <h4 class="card-heading simple" ng-show="fud.comentarios">Comentarios</h4>
+        <form class="card-body control-group form-inline">
+            <p> {{fud.comentarios}}</p>
+        </form>
+    </div>
+</div>

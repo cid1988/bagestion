@@ -1,0 +1,67 @@
+<div ng-model="instancia" changes-watch="temas,suspendida,comentarios"
+ng-show="instancia" edit-model="live" ng-controller="InstanciaAgendaCtrl"
+class="card animated fadeInDown" style="padding-top: 15px;">
+    <div class="card-actions pull-right" ng-hide="editando" style="margin: 0">
+        <a type="button" ng-click="volver()" class="btn btn-link">
+            <i class="icon-remove"></i></a>
+    </div>
+    <div class="card-actions pull-right" ng-hide="editando" style="margin: 0">
+        <a type="button" href="agenda/enviarMail/{{instancia._id}}" class="btn btn-link">
+            <i class="icon-envelope"></i></a>
+    </div>
+    <div class="card-actions pull-right" ng-show="editando" style="margin: 0">
+        <a type="button" ng-click="guardar()" class="btn btn-link">
+            <i class="icon-ok"></i></a>
+    </div>
+    <div class="card-actions pull-right" ng-show="editando" style="margin: 0">
+        <a class="btn btn-link" ng-show="hasPermission('agenda.borrar')" ng-click="eliminar()"><i class="icon-trash"></i></a>
+    </div>
+    <h3 class="card-heading simple">
+        <span style="white-space: nowrap">
+            <span style="margin-bottom: 0;background-color: {{colorAgenda(agendaPorId(live.agenda))}}; width: 1.7em; height: 1.7em; display: inline-block; -moz-border-radius: 20px; border-radius: 20px; ">&nbsp;</span>&nbsp;
+            {{agenda.nombre}}
+        </span>
+    </h3>
+    <div class="card-body" style="margin-bottom: 20px;">
+        <h4 style="margin-bottom: 17px;">
+        <span class="pull-right">{{instancia.desdeHora}} a {{instancia.hastaHora}}</span>
+        {{instancia.fecha}} </h4>
+        <span>Titulo de la reunion:</span>
+        <input type="text" placeholder="Título..." ng-disabled="!editando" ng-model="instancia.titulo" style="margin-top: 3px; width: 95%;margin-bottom: 10px;">
+        <span>Lugar:</span>
+        <input type="text" placeholder="Lugar..." ng-disabled="!editando" ng-model="instancia.lugar" style="margin-top: 3px; width: 95%;margin-bottom: 10px;">
+        <h3 class="card-heading simple" style="padding-left: 0px;">Temario</h3>
+        <div class="btn-group btn-block">
+            <a type="button" href="/agenda/temarios/{{instancia._id}}/blanco" onClick="window.open(this.href, this.target, 'width=520,height=650'); return false;" style="margin-bottom: 10px;margin-top: 13px;width: 28%;padding-top: 3px;padding-bottom: 3px;" target="_blank" class="btn"><b>Ver</b></a>
+            <a type="button" href="/agenda/temarios/{{instancia._id}}" style="margin-bottom: 10px;margin-top: 13px;width: 28%;padding-top: 3px;padding-bottom: 3px;" class="btn" title="Editar Temario"><b>Editar</b></a>
+            <a type="button" href="/agenda/temarios/{{instancia._id}}/print" style="margin-bottom: 10px;margin-top: 13px;width: 29%;padding-top: 3px;padding-bottom: 3px;" class="btn"><b>Imprimir</b></a>
+        </div>
+        <h3 class="card-heading simple" style="padding-left: 0px;">Minuta</h3>
+        <div class="btn-group btn-block">
+            <a type="button" href="/agenda/{{instancia._id}}/minuta" style="margin-bottom: 10px;margin-top: 13px;width: 45%;padding-top: 3px;padding-bottom: 3px;" ng-show="hasPermission('agenda.editar')" class="btn"><b>Editar</b></a>
+            <a type="button" href="/agenda/minutas/{{instancia._id}}/print" style="margin-bottom: 10px;margin-top: 13px;width: 45%;padding-top: 3px;padding-bottom: 3px;" class="btn"><b>Imprimir</b></a>
+        </div>
+        <h3 class="card-heading simple" style="padding-left: 0px;">Participantes</h3>
+        <div class="btn-group btn-block">
+            <a type="button" href="/agenda/{{instancia._id}}/participantes" style="margin-bottom: 10px;margin-top: 13px;width: 45%;padding-top: 3px;padding-bottom: 3px;" ng-show="hasPermission('agenda.editar')" class="btn"><b>Editar</b></a>
+            <a type="button" href="/agenda/participantes/{{instancia._id}}/print" style="margin-bottom: 10px;margin-top: 13px;width: 45%;padding-top: 3px;padding-bottom: 3px;" class="btn"><b>Imprimir</b></a>
+        </div>
+        <h3 class="card-heading simple" style="padding-left: 0px;">Usuarios</h3>
+        <button type="button" href="#" ng-click="showUsers(false)" style="margin-bottom: 10px;margin-top: 13px;" ng-show="hasPermission('agenda.editar')" class="btn btn-block"><b>Agregar permiso a usuario</b></button>
+    </div>
+</div>
+
+
+<div id="confirmarEliminar" class="modal hide fade" ng-controller="InstanciaAgendaCtrl">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>Eliminar reunion</h3>
+    </div>
+    <div class="modal-body">
+        <p>Está a un paso de eliminar la reunion de {{agenda.nombre}}</p>
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="btn btn-info" data-dismiss="modal">Conservar el registro</a>
+        <a href="#" class="btn btn-danger" data-dismiss="modal" ng-click="eliminar(true)">Eliminar reunion</a>
+    </div>
+</div>

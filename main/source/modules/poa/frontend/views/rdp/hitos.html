@@ -1,0 +1,213 @@
+
+<style>
+    body {
+        background : none;
+    }
+    .navbar
+    {
+        display: none;
+    }
+    a:link {
+    color: #3B3537;
+    }
+    
+    /* visited link */
+    a:visited {
+        color: #3B3537;
+    }
+    
+    /* mouse over link */
+    a:hover {
+        color: #3B3537;
+    }
+    
+    /* selected link */
+    a:active {
+        color: #3B3537;
+    }
+#Layer1 {
+	position:absolute;
+	width:200px;
+	height:115px;
+	z-index:1;
+}
+#Layer2 {
+	position:absolute;
+	width:200px;
+	height:115px;
+	z-index:1;
+}
+
+</style>
+<link href="/views/rdp/global.css" rel="stylesheet" type="text/css">
+
+<div ng-controller="POARDPHitosCtrl">
+    <table width="100%" height="100%" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF">
+     <tbody><tr>
+    		<td height="66" width="230"> 
+                <img src="/views/rdp/empty.gif" height="66" width="50" style="height: 50px;width: 100px;"><a href="/poa/rdp"><img src="/views/rdp/logo_BA.png" alt="" height="66" style="border:none;width: 100px;"></a>
+            </td>
+            <td style="vertical-align:middle;">
+    
+            <table width="100%" border="0" cellspacing="2" cellpadding="5" style="table-layout:fixed; ">
+    			    
+                <tbody><tr height="2">
+                    <td style="background-color: #FFFFFF">
+                    </td>
+                     <td style="background-color: #FFFFFF">
+                    </td>
+                     <td style="background-color: #FFFFFF" width="85%">
+                    </td>
+                     <td style="background-color: #FFFFFF">
+                    </td>               
+    			</tr>
+                <tr class="menuContent">
+                    <td style="background-color: #FDEBB5" colspan="3" onclick="javascript: window.location=&#39;presentacion_inicio.asp?dep=2&#39;">
+                        <span style="font-family: Tahoma; font-size: 16px; font-weight: 700;">{{impactoPorId(proyecto.idObjImpacto).nombre}}</span>
+                    </td>
+    
+                    <td style="width: 50px; vertical-align:middle;" rowspan="3">
+                    <a href="/poa/rdp/proyecto/{{proyecto._id}}"><img src="/views/rdp/flecha_volver_gris.png" width="48" style="border:none;" onclick=""></a>
+                    </td>
+    			</tr>
+               
+                <tr class="menuContent" onmouseout="" onmouseover="">
+                    <td style="width: 40">
+                    <img src="/views/rdp/empty.gif" width="5">
+                    </td>
+                    <td style="background-color: #E5B8B7; width: 90%;" colspan="2" onclick="javascript: window.location=&#39;presentacion_objetivos.asp?OBJ_IMP=133&amp;dep=2&#39;">
+                        <span style="font-family: Tahoma; font-size: 14px; font-weight: 600;">{{ministerialPorId(proyecto.idObjMinisterial).nombre}}</span>
+                    </td>
+    			</tr>
+                 <tr class="menuContent" onmouseout="" onmouseover="" onclick="javascript: window.location=&#39;#&#39;">
+                    <td style="width: 50px">
+                    &nbsp;
+                    </td>
+                    <td style="width: 50px">
+                    &nbsp;
+                    </td>
+                    <td style="background-color: #D4E3F4;width: 90%;" onclick="javascript: window.location=&#39;presentacion_objetivos.asp?OBJ_IMP=133&amp;dep=2&#39;">
+                        <span style="font-family: Tahoma; font-size: 14px; font-weight: 500;">{{operativoPorId(proyecto.idObjOperativo).nombre}}</span>
+                    </td>
+    			</tr>
+    		</tbody></table>
+    
+            </td>
+      </tr>
+      <tr>
+    		<td colspan="2" bgcolor="#FFFFFF" height="1" style="padding-left:30px; padding-right: 30px;">
+                <br>
+                 <div style="font-family: Tahoma; font-weight: 500; font-size: 18px;margin-top: 5px;">PROYECTO: <span style="font-family: Tahoma; font-weight: 500; font-size: 20px; color:#1A1A1A;">{{proyecto.nombre}}</span>
+                 </div>
+               
+    		</td>
+      </tr>
+        
+    	<tr>
+    		<td colspan="2" bgcolor="#ffffff" align="center" valign="middle" style="padding-left:30px; padding-right: 30px;">
+     <hr style="margin-bottom: 8px; margin-top: 12px; border-top: 2px solid #a5a5a5;">
+         <div id="contenido" class="contenido">
+            <table width="98%" border="0" cellspacing="0">
+            
+    		
+    		
+    		<tbody><tr height="30">
+                    <td style="border: 1px solid #808080; background-color: #FFFFFF !important; color:#333 !important; width:auto; vertical-align: middle;  " class="asimetrico_1010_generico">
+                        <span style="font-family: Tahoma; font-size: 18px; font-weight: 500; text-decoration: none; padding-left: 12px;">
+                          Camino Critico (Hito / Actividad) </span>
+                    </td>
+              
+                   <!-- <td colspan=2 style="border: 1px solid #808080; background-color: #FFFFFF; width: 55px; padding-right: 2px; vertical-align: middle;" class="asimetrico_0101_generico">
+                     <span style="font-family: Tahoma; font-size: 18px; font-weight: 500; text-decoration: none; padding-left: 2px;"> Estado </span>
+                    </td> -->
+    
+                    <td style="background-color: #FFFFFF; width: 24px;
+                        text-align: center;">
+                        &nbsp;
+                    </td>
+    
+                    <td style="border: 1px solid #808080; background-color: #CCCCCC; width:90px; vertical-align: middle; text-align:center; white-space:nowrap">
+                    <span style="font-family: Tahoma; font-size: 18px; font-weight: 500; text-decoration: none; padding-left: 2px;"> Fecha plan</span>
+                    </td>
+                    <td style="border: none; background-color: #FFFFFF; width: 3px;">
+                       <img src="/views/rdp/empty.gif" style="width: 3px;">
+                    </td>
+                          
+                    <td style="border: 1px solid #808080; background-color: #CCCCCC; width:90px; vertical-align: middle; text-align:center; white-space:nowrap">
+                    <span style="font-family: Tahoma; font-size: 18px; font-weight: 500; text-decoration: none; padding-left: 2px;"> Fecha fin</span>
+                    </td>
+                    <td style="border: none; background-color: #FFFFFF; width: 3px;">
+                       <img src="/views/rdp/empty.gif" style="width: 3px;">
+                    </td>
+                </tr>
+                <tr style=" height: 10px;"><td colspan="4"></td></tr><!-- tr para espaciar -->
+    
+    
+                
+                <tr height="30" ng-repeat-start="h in hitos">
+                    <td style="border: 1px solid #808080; background-color: #FFFFFF; width:auto; vertical-align: middle; cursor:pointer;" class="asimetrico_1010_generico">
+                        <span style="font-family: Tahoma; font-size: 16px; font-weight: 700; text-decoration: none; padding-left: 12px;">
+                            {{h.nombre}}</span>
+                    </td>
+                  
+                    
+                    <!--  Aca se calcula el estado y a partir de alli se asigna el color -->
+                    
+                    
+                    
+                    <td style="background-color: #FFFFFF; width: 24px;
+                        text-align: center;">
+                        &nbsp;
+                    </td>
+                    <td style="border: none; background-color: #7C7B7B; width:120px; vertical-align: middle; text-align:center; white-space:nowrap">
+                        <div style="font-family: Tahoma; font-size: 14px; font-weight: 700; text-decoration: none; color:#FFFFFF">
+                        {{h.fechaFinPlanificada}}
+                        </div>
+                    </td>
+                    <td style="background-color: #FFFFFF; width: 24px;
+                        text-align: center;">
+                        &nbsp;
+                    </td>
+                    <td style="border: none; background-color: #7C7B7B; width:120px; vertical-align: middle; text-align:center; white-space:nowrap">
+                        <div style="font-family: Tahoma; font-size: 14px; font-weight: 700; text-decoration: none; color:#FFFFFF">
+                        {{dameFecha(h)}}
+                        </div>
+                    </td>
+                </tr>  
+                <tr ng-repeat-end style="height: 8px;"><td colspan="4"></td></tr><!-- tr para espaciar -->
+                
+            </tbody></table>
+        </div>
+        
+    	<!-- finaliza el contenido -->
+       </td>
+    	</tr>
+        </tbody></table>
+            <!-- Pie de Pagina -->
+        <footer id="footer" style="position: absolute; bottom: 0px; right: 0px; left: 0px; margin-bottom: 0px;">
+            <table style=" width:100%; height: 50px; vertical-align: middle;"><tbody>
+        <tr>
+    	    <td colspan="2" bgcolor="#FFFFFF" height="20">
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #FFFFFF">
+                <tbody><tr>    
+                <td style="width:20px;"><img src="/views/rdp/borde_tab_amarillo_izq.png" height="20" border="none" style="height: 20px;"></td>
+                <td bgcolor="#Fed317" nowrap="nowrap" align="center" style="vertical-align: middle"> <span style="font-family: Tahoma; font-weight: 600; font-size: 11px;"> DG Planificación Estratégica</span></td>
+                <td style="width:20px;"><img src="/views/rdp/borde_tab_amarillo_der.png" height="20" border="none" style="height: 20px;"></td>
+                <td style="width:40%;">&nbsp;</td>
+                <td style="width:20px;"><img src="/views/rdp/borde_tab_amarillo_izq.png" height="20" border="none" style="height: 20px;"></td>
+                <td bgcolor="#Fed317" nowrap="nowrap" align="center" style="vertical-align: middle"> <span style="font-family: Tahoma; font-weight: 600; font-size: 11px;"> Jefatura de Gabinete de Ministros</span></td>
+                <td style="width:20px;"><img src="/views/rdp/borde_tab_amarillo_der.png" height="20" border="none" style="height: 20px;"></td>
+                </tr>
+            </tbody></table>
+            </td>
+      	</tr>
+        <tr>
+    	    <td colspan="2" bgcolor="#000000" height="1" style="padding-top: 0px; padding-bottom: 0px;">        </td>
+      	</tr>
+    	<tr>
+    	    <td height="33" style="padding-right:10px; vertical-align:middle; background-color: #FFD504;"> <img src="/views/rdp/LOGO-BuenosAiresCiudad.jpg" alt="" height="33" style="width: 137px;"></td>
+            <td height="33" align="right" style="padding-right:10px; vertical-align:middle; background-color: #FFD504;"> <span style="font-family: MS Sans Serif; font-weight: bolder; font-size: 16px">EN TODO ESTÁS VOS</span></td>
+        </tr>
+    </tbody></table>
+    </footer>
+</div>

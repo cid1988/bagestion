@@ -1,0 +1,65 @@
+<style>
+    .table {
+        border: 0;
+    }
+    .table th, .table td {
+        padding: 8px;
+        line-height: 20px;
+        text-align: left;
+        vertical-align: middle;
+        border: 0;
+    }
+    .table th {
+        background-color: #dddddd !important;
+    }
+</style>
+<div class="card" ng-controller="DashboardCompromisosORMCtrl" style="position: absolute;top: 50px;bottom: 0px;right: 20px;left: 20px;margin-bottom: 10px;">
+    <h2 class="card-heading simple">Dashboard - Compromisos Importantes ORM</h2>
+    <div class="card-body">
+        <table border="1" class="table table-striped">
+            <tr bgcolor= "#FFFFFF">
+                <th width="17%"><a href="#" style="display: inline-block; color:#404040;">Tema</a></th>
+                <th width="3%"><a href="#" style="display: inline-block; color:#404040;">P</a></th>
+                <th width="35%"><a href="#" style="display: inline-block; color:#404040;">Compromiso</a></th>
+                <th width="10%"><a href="#" style="display: inline-block; color:#404040;">Fecha</a></th>
+                <th width="15%"><a href="#" style="display: inline-block; color:#404040;">Responsable</a></th>
+                <th width="10%"><a href="#" style="display: inline-block; color:#404040;">Vencimiento</a></th>
+                <th width="10%"></th>
+            </tr>
+        </table>
+        <div style="overflow-y: scroll; overflow-x: hidden;position: absolute;top: 120px;bottom: 12px;right: 20px;left: 20px;">
+            <div ng-repeat="t in temasPrincipales | orderBy:ordenTema">
+                <table border="1" class="table table-striped">
+                    <tr>
+                        <th colspan="7"><div ng-if="(t == 'zzz0')">Fuera de Tema</div><div ng-if="(t != 'zzz0')">{{temaPorId(t).nombre}}</div></th>
+                    </tr>
+                    <tr ng-repeat="h in compromisos | orderBy:orden | filter:{temaPrincipal:t}">
+                        <td width="17%" ng-hide="!h.tema">{{temaPorId(h.tema).nombre}}</td><td width="17%" ng-show="!h.tema">{{h.titulo}}</td>
+                        <td width="3%"><div>A+</div></td>
+                        <td width="35%"><div>{{h.tarea}}</div></td>
+                        <td width="10%"><div>{{h.instancia.fecha}}</div></td>
+                        <td width="15%"><div ng-repeat="u in h.responsables" style="display:inline-block; margin-top: 0px; margin-bottom: 0px">
+                                <a href="#" data-toggle="tooltip" title="{{contactoPorId(u).apellidos}} {{contactoPorId(u).nombre}}">{{contactoPorId(u).apellidos}} {{contactoPorId(u).nombre}}</a>,&nbsp
+                            </div></td>
+                        <td width="10%"><div>{{h.fecha}}</div></td>
+                        <td width="10%">
+                            <button ng-if="(h.fechaMili<hoy)" class="btn btn-danger" title="Avance Alto" style="margin-left: 13px;"></button>
+                            <button ng-if="(h.fechaMili>hoy)" class="btn btn-success" title="Avance Alto" style="margin-left: 13px;"></button>
+                            <button ng-if="(!h.fechaMili)" class="btn btn-warning" title="Avance Alto" style="margin-left: 13px;"></button>
+                            <div class="btn-group">
+                                <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                  <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                  <li><a href="/orm/reuniones/{{h.instancia._id}}/minuta">Ver Minuta</a></li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+

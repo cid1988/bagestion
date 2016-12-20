@@ -1,0 +1,37 @@
+<style type="text/css">
+    #h3Titulo>div>span{word-break: break-all;}
+    .adv{font-weight: bold;}
+    .error{color: #DB4B39;}
+    .good{color:#24AD1F;}
+    .neutral{color:#7C827C;}
+    .btn-block{margin-bottom: 10px}
+</style>
+<div class="card animated fadeInDown">
+    <h3 class="card-heading simple"id="h3Titulo">
+        <div>
+            <span style="margin:0;background-color: {{reunion.color}}; width: 1em; height: 1em; display: inline-block; ">&nbsp;</span>&nbsp;-
+            <span>{{reunion.nombre}}</span>
+        </div>
+    </h3>
+    <div class="card-body">
+        <div class="control-group">
+            <h4 class="pull-right">{{horaDesde}} a {{horaHasta}}</h4>
+            <h3>{{fechaDesde}}<h3>
+        </div>
+        <div class="control-group">
+            <div ng-switch on="instancia.cita.version">
+                <span ng-switch-default class="adv neutral">Nunca enviado</span>
+                <span ng-switch-when="propuesta" class="adv good">Propuesta Enviada</span>
+                <span ng-switch-when="final" class="adv good">Propuesta enviado</span>
+                <span ng-switch-when="temario" class="adv good">Temario y Recordatorio enviados</span>
+                <span ng-switch-when="recordatorio" class="adv good">Recordatorio enviado</span>
+                <span ng-switch-when="modificacion" class="adv good">Modificacion enviada</span>
+                <span ng-switch-when="cancelado" class="adv error">Cita cancelada</span>
+            </div>
+            <button ng-if="hasPermission('orm.envioMailsTemario')" type="button" ng-click="enviarTemario()" class="btn btn-block">Temario definitivo y recordatorio</button>
+            <button ng-if="hasPermission('orm.envioMailsTemario')" type="button" ng-click="recordarCita()" class="btn btn-block">Recordatorio</button>
+            <button ng-if="hasPermission('orm.envioMailsTemario')" type="button" ng-click="modificarCita()" class="btn btn-block">Modificacion</button>
+            <button ng-if="hasPermission('orm.envioMailsTemario')" type="button" ng-click="cancelar()" class="btn btn-block btn-danger">Cancelación</button>
+        </div>
+    </div>
+</div>

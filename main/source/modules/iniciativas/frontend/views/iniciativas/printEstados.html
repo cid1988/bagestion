@@ -1,0 +1,61 @@
+<script type "text/javascript" src="/views/iniciativas/h2c.js"></script>
+<style type="text/css">
+    body {
+        background-image: none !important;
+    }
+    input.disabled, input[disabled] {
+        background-color: #ffffff;
+    }
+</style>
+
+<a class="btn btn-info btn-large no-print" href="javascript:window.print()"
+ng-show="printReady"><i class="icon-print icon-white"></i> Imprimir</a><h3>Iniciativas</h3>
+<div ng-repeat="l in listado">
+    <div class="span12">
+        <hr style="margin-top:5px; margin-bottom:5px"/>
+        <hr style="margin-top:5px; margin-bottom:5px"/>
+        <h3>{{l.nombre}}</h3>
+        <hr style="margin-top:5px; margin-bottom:5px"/>
+        <span style="display: inline-block"> Nombre Corto:<br /> 
+            <input class="span3" type="text" ng-disabled="!editando" placeholder="Denominación Corta" ng-model="l.nombre" />
+        </span>
+        <span style="display: inline-block"> Nombre Largo:<br /> 
+            <input class="span8" type="text" ng-disabled="!editando" placeholder="Denominación Larga de la Iniciativa" ng-model="l.nombre_largo" />
+        </span>
+    </div>
+    <div class="span12">
+        <hr style="margin-top:5px; margin-bottom:5px"/>
+        <span style="display: inline-block" ng-if="!editando"> Estado:<br /> 
+            <input class="span2" type="text" ng-disabled="!editando" ng-model="l.estado.nombre" />
+        </span>
+        <div class="span11">
+            <h4>Comentarios</h4>
+            <div class="card-body">
+                <div ng-hide="l.comentariosEstado.length">No se ha cargardo ningun comentario aún</div>
+                <div ng-repeat="o in reverse(l.comentariosEstado)"
+                style="clear:both; min-height: 40px; margin-top: 5px; margin-bottom: 5px" ng-show="l.comentariosEstado.length">
+                    <div class="pull-left" style="display: inline-block; margin-right: 10px; margin-top: 20px">
+                        <button ng-show="o.tipoComentario == 'solicitada'" type="button"
+                        class="btn disabled btn-info">Solicitada</button>
+                        <button ng-show="o.tipoComentario == 'propuesta'" type="button"
+                        class="btn disabled btn-info">Propuesta</button>
+                        <button ng-show="o.tipoComentario == 'aprobada'" type="button"
+                        class="btn disabled btn-info">Aprobada</button>
+                        <button type="button" ng-show="o.tipoComentario == 'pospuesta'"
+                        class="btn disabled btn-info">Sin Financiamiento</button>
+                        <button type="button" ng-show="o.tipoComentario == 'rechazada'"
+                        class="btn disabled btn-info">Rechazada</button>
+                    </div>
+                    <span style="display: inline-block"> Quien:<br /> 
+                        <input class="span4" type="text" value="{{o.quien.nombre}} {{o.quien.apellidos}}" ng-disabled="true"/>
+                    </span>
+                    <span style="display: inline-block"> Cuando:<br /> 
+                        <input class="span2" type="text" bs-datepicker data-date-format="dd/mm/yyyy" ng-model="o.cuando" ng-disabled="true"/>
+                    </span><br>
+                    <span style="width:95%" ng-disabled="true">{{o.comentario}}</span>
+                    <hr style="margin-top:5px; margin-bottom:5px"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

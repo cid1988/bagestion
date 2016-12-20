@@ -1,0 +1,283 @@
+<style> 
+    #mapaPrincipal1>div>div:first-child {
+        width: 768px;
+        height: 385px;
+    }
+</style>
+
+<div style="margin-bottom: 20px; position: relative;">
+    <div class="card span8" style="padding-top: 0px;margin-top: 0px;">
+        <div id="mapaPrincipal1" style="width: 768px; height: 385px;"></div>
+    </div>
+    <div class="card span4" style="padding-left: 10px; border-right-width: 1px; margin-top: 0px; padding-top: 5px;padding-right: 10px;">
+        <h4 style="margin-top: 0px; display: inline-block;">Referencias:</h4><a ng-click="reordenar()" style="display: inline-block; color:#404040;" class="pull-right">({{factorOrden}})</a>
+        <div ng-repeat="s in situaciones">
+            <span style="display: inline-block; width: 10px; height: 10px" ng-style="{'background-color': s.color}">&nbsp;</span>
+            <a href="/constituyentes?situacion={{s.nombre}}" style="color:#404040">{{s.nombre}}: </a>
+            <span class="pull-right">{{s.total}} ({{porcentaje(s.total,todosEspacios.length)}}%)</span>
+        </div>
+        <div style="margin-top: 7px;">
+            <a href="/constituyentes" style="color:#404040; font-size:16px">Total: </a>
+            <span class="pull-right">{{todosEspacios.length}}</span>
+            <br />
+            <br />
+            <div style="width: 350px; height: 180px" ng-hide="espacioSeleccionado.fotos.length">
+                <nvd3 options="options" data="data"></nvd3>
+            </div>
+            <div class="progress" style="height:18px;">
+              <div class="bar bar-success" style="font-size: 12px; width: {{porcentaje(progreso,100)}}%;">
+                <a href="#" id="blob" style="color:white" data-placement= "bottom">
+                    {{porcentaje(progreso,100)}}%
+                </a>
+              </div>
+            </div>
+        </div>
+        <div style="margin-top: 10px;" ng-show="espacioSeleccionado.fotos.length">
+            <div>Última foto:</div>
+            <a data-toggle="modal" href="javascript:$('#foto').modal()"
+            class="thumbnail" style="display:inline-block">
+                <img src="/file/{{espacioSeleccionado.fotos[espacioSeleccionado.fotos.length - 1]}}" height="175" width="175">
+            </a>
+            <div id="foto" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class='modal-header'>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                </div>
+                <div class='modal-content'>
+                    <img src="/file/{{espacioSeleccionado.fotos[espacioSeleccionado.fotos.length - 1]}}">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card span12" ng-if="!espacioSeleccionado">
+    <div class="card-body" style="margin-top:0px">
+        <div>
+            <div class="row" style="padding-bottom: 10px;">
+                <div class="span4" style="display: table-cell;">DIRECCIÓN:</div>
+                <div class="span2" style="display: table-cell">SITUACIÓN:</div>
+                <div class="span2" style="display: table-cell">TIPO:</div>
+                <div class="span2" style="display: table-cell">TRASPASO AUSA:</div>
+                <div style="float: right"></div>
+            </div>
+        </div>
+        <hr style="margin-top: 0px; margin-bottom: 10px;">
+        <div class="row" ng-repeat="i in listado" style="padding-bottom: 10px;">
+            <div class="span4" style="display: table-cell"><span style="display: inline-block; -moz-border-radius: 20px; border-radius: 20px; padding: 6px; float: left; border: 2px solid #000; margin-top: 3px; margin-right: 10px " ng-style="{'background-color': color(i.situacion)}"></span> {{i.calle}} {{i.altura}}</div>
+            <div class="span2" style="display: table-cell">{{i.situacion}}</div>
+            <div class="span2" style="display: table-cell">{{i.tipo}}</div>
+            <div class="span2" style="display: table-cell">{{i.trasp_ausa}}</div>
+            <div style="float: right">
+                <a type="button" class="btn btn-link no-print" ng-click="seleccionar(i)"><i class="icon-zoom-in"></i> Ver detalle</a>
+            </div>
+        </div>
+        <div ng-show="!espacios.length">No hay ningun espacio.</div>
+    </div>
+</div>
+
+<div>
+    <div class="card span8" ng-if="espacioSeleccionado" style="padding-bottom: 10px">
+        <div class="card-actions pull-right" style="margin: 0; padding: 0">
+            <!--
+            <a ng-click="trackChanges()" style="margin-left: 10px" class="btn pull-right"
+            ng-hide="trackingChanges"><i class="icon-eye-open"></i> Seguir cambios</a>
+            <a ng-click="trackChanges()" style="margin-left: 10px" class="btn pull-right active"
+            ng-hide="!trackingChanges"><i class="icon-eye-open"></i> Seguir cambios</a>-->
+            <a ng-click="modificar()" class="btn btn-link" ng-if=hasPermission('constituyentes.editar')
+            ng-hide="(editando || !puedeModificar())" ng-class="{'disabled': (!espacioSeleccionado || editando || ui.puedeModificar())}"><i
+                class="icon-edit"></i></a>
+            <a ng-click="cancelar()" class="btn btn-link" ng-show="editando"><i class="icon-undo"></i></a>
+            <a ng-click="guardar()" ng-show="editando" class="btn btn-link"><i class="icon-ok icon-white"></i></a>
+        </div>
+        <h3 class="card-heading simple">{{espacioSeleccionado.calle}} {{espacioSeleccionado.altura}}</h3>
+        <div class="card-body">
+            <span style="display: inline-block">Tipo:
+                <br />
+                <input type="text" class="span2" data-provide="typeahead" data-items="4" ng-model="espacioSeleccionado.tipo" id="tipo-typeahead" ng-disabled="!editando" data-source={{tiposNombres}} >
+            </span>
+            <span style="display: inline-block">Situación:
+                <br />
+                <input type="text" class="span2" data-provide="typeahead" ng-model="espacioSeleccionado.situacion" id="situacion-typeahead" ng-disabled="!editando" data-source={{situacionesNombres}} >
+            </span>
+            <span style="display: inline-block">Estado:
+                <br />
+                <input type="text" class="span2" data-provide="typeahead" ng-model="espacioSeleccionado.estado" id="estado-typeahead" ng-disabled="!editando" data-source={{estadosNombres}} >
+            </span>
+            <span style="display: inline-block">Traspaso AUSA:
+                <br />
+                <input class="span2" type="text" ng-disabled="!editando" ng-model="espacioSeleccionado.trasp_ausa"
+                />
+            </span>
+            <span style="display: inline-block">Calle:
+                <br />
+                <input type="text" class="span3" data-provide="typeahead" ng-model="espacioSeleccionado.calle" ng-disabled="!editando" data-source={{calles}} >
+            </span>
+            <span style="display: inline-block">Altura:
+                <br />
+                <input class="span1" type="text" ng-disabled="!editando" ng-model="espacioSeleccionado.altura"
+                />
+            </span>
+            <span style="display: inline-block">Piso:
+                <br />
+                <input class="span1" type="text" ng-disabled="!editando" ng-model="espacioSeleccionado.piso"
+                />
+            </span>
+            <span style="display: inline-block">Depto.:
+                <br />
+                <input class="span1" type="text" ng-disabled="!editando" ng-model="espacioSeleccionado.departamento"
+                />
+            </span>
+            <span style="display: inline-block">Última modificación:
+                <br />
+                <input class="span2" type="text" ng-disabled=true placeholder="Sin modificaciones"
+                ng-model="espacioSeleccionado.fechaUltimaModificacion" />
+            </span>
+            <span style="display: inline-block">Otras alturas:
+                <br />
+                <input class="span2" type="text" ng-disabled="!editando" ng-model="espacioSeleccionado.otras_alturas"
+                />
+            </span>
+            <span style="display: inline-block">Vivienda:
+                <br />
+                <input class="span1" type="text" ng-disabled="!editando" ng-model="espacioSeleccionado.vivienda"
+                />
+            </span>
+            <span style="display: inline-block">Circuscrip.:
+                <br />
+                <input class="span1" type="text" ng-disabled="!editando" ng-model="espacioSeleccionado.circuscripcion"
+                />
+            </span>
+            <span style="display: inline-block">Sección:
+                <br />
+                <input class="span1" type="text" ng-disabled="!editando" ng-model="espacioSeleccionado.seccion"
+                />
+            </span>
+            <span style="display: inline-block">Manzana:
+                <br />
+                <input class="span1" type="text" ng-disabled="!editando" ng-model="espacioSeleccionado.manzana"
+                />
+            </span>
+            <span style="display: inline-block">Parcela:
+                <br />
+                <input class="span1" type="text" ng-disabled="!editando" ng-model="espacioSeleccionado.parcela"
+                />
+            </span>
+            <span style="display: inline-block">Unidad Funcional:
+                <br />
+                <input class="span1" type="text" ng-disabled="!editando" ng-model="espacioSeleccionado.unidad_funcional"
+                />
+            </span>
+            <h4>Fotos</h4>
+            <div ng-hide="espacioSeleccionado.fotos.length">No se ha cargardo ninguna foto aún</div>
+            <div ng-if="espacioSeleccionado.fotos.length" id="myCarousel" class="carousel slide">
+                <div class="carousel-inner">
+                  <div ng-class="{active : $first}" class="item" ng-repeat="f in espacioSeleccionado.fotos">
+                    <img src="/file/{{f}}" width="100%">
+                    <button type="button" ng-click="eliminarElemento(espacioSeleccionado.fotos,f)" style="margin-left: 10px" class="btn btn-danger" ng-if="editando"><i class="icon-trash icon-white"></i></button>
+                  </div>
+                </div>
+            	<a class="left carousel-control" href="#" data-target="#myCarousel" style="top:47%" data-slide="prev">‹</a>
+        		<a class="right carousel-control" href="#" data-target="#myCarousel" style="top:47%" data-slide="next">›</a>
+            </div>
+            <div style="width: 300px" ng-if="editando" fine-uploader destination="'/upload/'"
+                    placeholder="'Subir foto'" uploaded="uploaded"></div>
+        </div>
+    </div>
+    <div class="card span4" ng-show="espacioSeleccionado" style="padding-bottom: 10px">
+        <div class="card-actions pull-right" style="margin: 0; padding: 0">
+            <a ng-click="modificarProcuracion()" class="btn btn-link" ng-if=hasPermission('constituyentes.editar')
+            ng-hide="(editandoProcuracion || !puedeModificarProcuracion())" ng-class="{true:'disabled',false:''}[(!espacioSeleccionado || editando || ui.puedeModificarProcuracion())]"><i
+                class="icon-edit"></i></a>
+            <a ng-click="cancelar()" class="btn btn-link" ng-show="editandoProcuracion"><i class="icon-undo"></i></a>
+            <a ng-click="guardar()" ng-show="editandoProcuracion" class="btn btn-link"><i class="icon-ok icon-white"></i></a>
+        </div>
+        <h3 class="card-heading simple">Procuración:</h3>
+        <div class="card-body">
+            <span style="display: inline-block" class="span3" ng-show="espacioSeleccionado.afectacion || editandoProcuracion">Afectación:
+                <br />
+                <input class="span3" type="text" ng-disabled="!editandoProcuracion" ng-model="espacioSeleccionado.afectacion"
+                />
+            </span>
+            <span style="display: inline-block" class="span3" ng-show="espacioSeleccionado.autos || editandoProcuracion">Autos:
+                <br />
+                <input class="span3" type="text" ng-disabled="!editandoProcuracion" ng-model="espacioSeleccionado.autos"
+                />
+            </span>
+            <span style="display: inline-block" class="span3" ng-show="espacioSeleccionado.estado_procesal || editandoProcuracion">Estado Procesal:
+                <br />
+                <input class="span3" type="text" ng-disabled="!editandoProcuracion" ng-model="espacioSeleccionado.estado_procesal"
+                />
+            </span>
+            <span style="display: inline-block" class="span3" ng-show="espacioSeleccionado.juzgado || editandoProcuracion">Juzgado:
+                <br />
+                <input class="span3" type="text" ng-disabled="!editandoProcuracion" ng-model="espacioSeleccionado.juzgado"
+                />
+            </span>
+            <span style="display: inline-block" class="span3" ng-show="espacioSeleccionado.inscripcion || editandoProcuracion">Inscripción:
+                <br />
+                <input class="span3" type="text" ng-disabled="!editandoProcuracion" ng-model="espacioSeleccionado.inscripcion"
+                />
+            </span>
+            <span style="display: inline-block" class="span3" ng-show="espacioSeleccionado.lanzamiento || editandoProcuracion">Lanzamiento:
+                <br />
+                <input class="span3" type="text" ng-disabled="!editandoProcuracion" ng-model="espacioSeleccionado.lanzamiento"
+                />
+            </span>
+        </div>
+    </div>
+    <div class="card span4" ng-show="espacioSeleccionado" style="padding-bottom: 10px">
+        <div class="card-actions pull-right" style="margin: 0; padding: 0">
+            <a class="btn btn-link" ng-click="agregarObser()" ng-hide="(!editando || !puedeModificar())"><i class="icon-plus"></i></a>
+        </div>
+        <h3 class="card-heading simple">Observaciones:</h3>
+        <div class="card-body">
+            <div ng-hide="espacioSeleccionado.observaciones.length">No se ha cargardo ninguna observación aún</div>
+            <div ng-repeat="o in espacioSeleccionado.observaciones"
+            style="clear:both; min-height: 40px; margin-top: 20px; margin-bottom: 20px">
+                <div class="pull-left" style="display: inline-block; margin-right: 10px">
+                    <button ng-show="o.tipoObservacion == 'relevamiento'" type="button"
+                    class="btn disabled btn-info">Relevamiento</button>
+                    <button ng-show="o.tipoObservacion == 'procuracion'" type="button"
+                    class="btn disabled btn-info">Procuracion General</button>
+                    <button type="button" ng-show="o.tipoObservacion == 'otra'"
+                    class="btn disabled btn-info">Otra</button>
+                    <button type="button" ng-click="eliminarElemento(espacioSeleccionado.observaciones,o)" style="margin-left: 10px" class="btn btn-danger" ng-hide="(!editando || !puedeModificar())"><i class="icon-trash icon-white"></i> Eliminar</button>
+                </div>
+                <p>{{o.observaciones}}</p>
+                <div ng-show="o.proximoHito"><br />Proximo hito: {{o.fechaProximoHito}}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="agregarObservacion" class="modal hide fade">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>Agregar observación</h3>
+    </div>
+    <div class="modal-body">
+        <span style="display: inline-block; margin-top: 15px;">Observaciones:
+            <div class="pull-right btn-group" style="margin-bottom: 8px"
+            data-toggle="buttons-radio">
+                <button class="btn" ng-class="(data.tipoObservacion == 'relevamiento') && 'active btn-info'"
+                ng-click="data.tipoObservacion = 'relevamiento'">Relevamiento</button>
+                <button class="btn" ng-class="(data.tipoObservacion == 'procuracion') && 'active btn-info'"
+                ng-click="data.tipoObservacion = 'procuracion'">Procuracion General</button>
+                <button class="btn" ng-class="(data.tipoObservacion == 'otra') && 'active btn-info'"
+                ng-click="data.tipoObservacion = 'otra'">Otra</button>
+            </div>
+            <textarea style="height:150px; width:500px" type="text" ng-disabled="!editando"
+            ng-model="data.observaciones" />
+            <div style="margin-top: 20px; margin-bottom: 20px">
+            <button class="btn" ng-class="(data.proximoHito == true) && 'active btn-info'"
+            ng-click="data.proximoHito = (!(data.proximoHito == true))">Proximo hito</button>
+            <input type="text" class="span2" ng-model="data.fechaProximoHito"
+            ng-show="data.proximoHito" datepicker style="margin-bottom: 0px;" />
+            </div>
+        </span>
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="btn" data-dismiss="modal">Cancelar</a>
+        <a href="#" class="btn btn-info" data-dismiss="modal" ng-click="agregarObser(true, data)">Agregar observación</a>
+    </div>
+</div>

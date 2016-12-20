@@ -1,0 +1,26 @@
+<div class="span12 card" style="padding-top: 10px; margin-top: 0px;">
+  <h3 class="card-heading simple">
+  <span class="pull-right input-append" ng-controller="UPEJOLNuevoHitoCtrl" style="margin-bottom: 0" ng-show="permisoHito()" >
+      <input type="text" ng-model="nueva.nombre" placeholder="Agregar..." />
+      <a ng-click="crear()" ng-disabled="!nueva.nombre" class="btn btn-default"><i class="icon icon-plus"></i></a>
+    </span>
+    Hitos</h3>
+  <div class="card-body" style="padding: 0; margin-top: 0; border-bottom: 0">
+    <div style="font-size: 14px;padding-top: 4px;padding-bottom: 4px;margin-bottom: 10px;margin-left: 33px;margin-top: 5px;"><span class="span6" style="margin-left: 26px; width: 627px;">Nombre</span><span class="span1" style="text-align: center;width: 113px;">Fecha Planificada</span><span class="span1" style="text-align: center;width: 113px;">Fecha Estimada</span><span class="span1" style="text-align: center;width: 113px;">Fecha Real</span></div>
+    <hr style="margin-bottom: 0px;">
+    <ul class="nav nav-list">
+      <li ng-repeat="a in tabCtrl.hitos|filter:{idActividad:tabCtrl.filtro.actividad._id} | orderBy:'codIdentificacion'">
+        <a style="font-size: 18px" href="javascript:" ng-click="tabCtrl.filtro.hito = a">
+            <strong class="pull-right" ng-if="a.codIdentificacion">{{a.codIdentificacion}}</strong>
+            <span class="span6" style="width: 625px;">{{a.nombre}}</span>
+            <span class="span1" style="text-align: center;width: 113px;">{{a.fechaPlanificada}}</span>
+            <span class="span1" style="text-align: center;width: 113px;">{{a.fechaEstimada}}</span>
+            <span class="span1" style="text-align: center;width: 113px;">{{a.fechaReal}}</span>
+        </a>
+      </li>
+      <li ng-if="!(tabCtrl.hitos|filter:{idActividad:tabCtrl.filtro.actividad._id}).length" class="text-center" style="padding-top: 10px; padding-bottom: 10px;">
+        <em>No hay hitos ni hitos asociados</em>
+      </li>
+    </ul>
+  </div>
+</div>

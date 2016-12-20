@@ -1,0 +1,149 @@
+<style>
+    .table {
+        border: 0;
+    }
+    .table th, .table td {
+        padding: 6px;
+        line-height: 20px;
+        text-align: left;
+        border: 0;
+        vertical-align: middle;
+    }
+    .table th {
+        background-color: #dddddd !important;
+    }
+</style>
+<div class="card body" style="margin-top: 0px;padding-top: 0px;" ng-controller="IndicadorSEMGPlanDesarrolloCtrl">
+    <div style="margin-bottom: 0px">
+        <ul class="breadcrumb" style="margin-bottom: 0px;">
+          <li><a href="/semg/indicadores/{{anio}}" style="color:#404040;">Matriz de Indicadores {{anio}}</a> <span class="divider">/</span></li>
+          <li class="active">Plan de Desarrollo de Indicadores - {{organigramaPorId(plan.dependencia).nombreCompleto}}</li>
+        </ul>
+    </div>
+    <a ng-click="modificar()" class="btn btn-link pull-right" ng-hide="editando" ng-if="(hasPermission('semg.editar') || hasPermission('semg.editarJurisdiccion'))" style="margin-right: 20px;" ><i class="icon-edit"></i> Editar</a>
+    <a ng-click="guardar()" href="/semg/indicadores/{{anio}}" class="btn btn-link pull-right" ng-show="editando" style="margin-right: 20px;"><i class="icon-ok icon-white"></i> Guardar</a>
+    
+    <h3 class="card-heading simple">
+        Plan de Desarrollo de Indicadores - {{organigramaPorId(plan.dependencia).nombreCompleto}}
+    </h3>
+    
+    <div class="card-body">
+        <h4>Sabemos el desafío que implica la formulación de indicadores, la sistematización de información, y el diseño de instrumentos que den cuenta de las acciones que las jurisdicciones se proponen alcanzar.<br>
+            Para acompañarlos en este proceso de mejora continua hemos creado el  Plan de Desarrollo de Indicadores, un espacio en el que pueden volcar aquellos indicadores que les gustaría desarrollar o aquellos temas para los cuales les gustaría contar con indicadores y las razones por las cuales aún no han podido desarrollarlos.<br>
+            Desde la Dirección General de Planeamiento Estratégico nos proponemos hacer un análisis agregado de las necesidades y problemas para el desarrollo de indicadores que enfrentan las jurisdicciones y una priorización a fin de tomar acciones que nos permitan mejora la toma de decisiones basada en la evidencia.<br><br>
+            Muchas gracias por ayudarnos a fortalecer las capacidades de monitoreo y evaluación dentro del GCBA.</h4>
+        <div style="margin-bottom: 70px;">
+            <div class="control-group" style="margin-bottom: 5px;display: inline-block;">
+                <div class="controls">
+                    <span class="span3" style="margin-left: 2px;margin-top: 30px;"><b>Objetivo de Impacto</b></span>
+                    <span class="span3" style="margin-left: 10px;margin-top: 30px;"><b>Especificar Indicador o tema que les gustaría desarrollar</b></span>
+                    <span class="span3" style="margin-left: 17px;margin-top: 30px;"><b>Necesidades</b></span>
+                    <span class="span2" style="margin-left: 17px;margin-top: 30px;"><b>Tiempo estimado que llevaría su desarrollo</b></span>
+                </div>
+            </div>
+            <div class="control-group" style="margin-bottom: 5px;">
+                <div class="controls">
+                    <select ui-select2 class="span3" ng-disabled="!editando" type="text" ng-model="data.objetivo" ng-options="i as i for i in ministeriales">
+                        <option ng-disabled="true" value="">Especificar el objetivo...</option>
+                    </select>
+                    <input class="span3" ng-disabled="!editando" type="text" ng-model="data.indicador" placeholder="Especificar el indicador.." style="margin-left: 10px; margin-bottom: 22px;" />
+                    <input class="span3" ng-disabled="!editando" type="text" ng-model="data.necesidades" placeholder="Especificar las necesidades.." style="margin-left: 10px; margin-bottom: 22px;" />
+                    <input class="span2" ng-disabled="!editando" type="text" ng-model="data.tiempoDesarrollo" placeholder="Especificar el tiempo de desarrollo.." style="margin-left: 10px; margin-bottom: 22px;" />
+                    <button class="btn" style="margin-bottom:22px; margin-left: 5px" ng-disabled="!editando" ng-click="plan.indicadores.push(data);data={objetivo:'',indicador:'',necesidades:'',tiempoDesarrollo:''}"><i class="icon-ok"></i></button>
+                </div>
+            </div>
+            <hr style="border-top: 2px solid #DEDEDE;margin-top: 6px;">
+            <div class="control-group" ng-repeat="t in plan.indicadores" style="margin-bottom: 0px;">
+                <div class="controls">
+                    <table border="1" class="table table-striped" style="width: 90%;margin-left: 10px;margin-bottom: 0px;">
+                        <tr bgcolor= "#FFFFFF">
+                            <th style="width: 480px;">Objetivo de Impacto</th>
+                            <th>Indicador o tema</th>
+                            <th>Necesidades</th>
+                            <th>Tiempo estimado que llevaría su desarrollo</th>
+                            <th></th>
+                        </tr> 
+                        <tr>
+                            <td>{{t.objetivo}}</td>
+                            <td>{{t.indicador}}</td>
+                            <td>{{t.necesidades}}</td>
+                            <td>{{t.tiempoDesarrollo}}</td>
+                            <td><a class="btn btn-link pull-right" href="#" style="margin-left: 10px" ng-show="editando" ng-click="eliminarListaElem(t, plan.indicadores)"><i class="icon-trash"></i></a></td>
+                        </tr>
+                    </table>
+                    <table border="1" class="table table-striped" style="width: 90%;margin-left: 10px;">
+                        <tr bgcolor= "#FFFFFF">
+                            <th style="width: 480px;">Especificar los factores de dificultad para formular el indicador propuesto</th>
+                            <th>Si / No</th>
+                            <th>Profundicen</th>
+                            <th><span style="font-size: 11px;">Prioridad para desarrollar este indicador (en términos de cuán útiles serán para reflejar el desempeño del ministerio)</span></th>
+                        </tr> 
+                        <tr>
+                            <td>Desconocimiento del universo sobre el cual se está midiendo</td>
+                            <td><div class="btn-group" data-toggle="buttons-radio" style="margin-left: 0px; margin-right: 0px;">
+                                <button ng-disabled="!editando" class="btn" ng-class="(t.desconocimiento.valor == 'si') && 'active btn-info'" ng-click="t.desconocimiento.valor='si'">Si</button>
+                                <button ng-disabled="!editando" class="btn" ng-class="(t.desconocimiento.valor == 'no') && 'active btn-info'" ng-click="t.desconocimiento.valor='no'">No</button>
+                            </div></td>
+                            <td><textarea class="span5" type="text" rows="1" ng-disabled="!editando" ng-model="t.desconocimiento.comentario" style="margin-bottom: 0px;margin-left: 1px;height: 35px;" ></textarea></td>
+                            <td>
+                                <select class="span2" ng-disabled="!editando" type="text" ng-model="t.prioridad" style="float:none !important">
+                                    <option ng-disabled="true" value="">Prioridad...</option>
+                                    <option value="Alta">Alta</option>
+                                    <option value="Moderada">Moderada</option>
+                                    <option value="Baja">Baja</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Ausencia de un Sistema de Información</td>
+                            <td><div class="btn-group" data-toggle="buttons-radio" style="margin-left: 0px; margin-right: 0px;">
+                                <button ng-disabled="!editando" class="btn" ng-class="(t.ausencia.valor == 'si') && 'active btn-info'" ng-click="t.ausencia.valor='si'">Si</button>
+                                <button ng-disabled="!editando" class="btn" ng-class="(t.ausencia.valor == 'no') && 'active btn-info'" ng-click="t.ausencia.valor='no'">No</button>
+                            </div></td>
+                            <td><textarea class="span5" type="text" rows="1" ng-disabled="!editando" ng-model="t.ausencia.comentario" style="margin-bottom: 0px;margin-left: 1px;height: 35px;" ></textarea></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Cantidad del Personal</td>
+                            <td><div class="btn-group" data-toggle="buttons-radio" style="margin-left: 0px; margin-right: 0px;">
+                                <button ng-disabled="!editando" class="btn" ng-class="(t.personal.valor == 'si') && 'active btn-info'" ng-click="t.personal.valor='si'">Si</button>
+                                <button ng-disabled="!editando" class="btn" ng-class="(t.personal.valor == 'no') && 'active btn-info'" ng-click="t.personal.valor='no'">No</button>
+                            </div></td>
+                            <td><textarea class="span5" type="text" rows="1" ng-disabled="!editando" ng-model="t.personal.comentario" style="margin-bottom: 0px;margin-left: 1px;height: 35px;" ></textarea></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Capacidades Técnicas del personal</td>
+                            <td><div class="btn-group" data-toggle="buttons-radio" style="margin-left: 0px; margin-right: 0px;">
+                                <button ng-disabled="!editando" class="btn" ng-class="(t.capacidades.valor == 'si') && 'active btn-info'" ng-click="t.capacidades.valor='si'">Si</button>
+                                <button ng-disabled="!editando" class="btn" ng-class="(t.capacidades.valor == 'no') && 'active btn-info'" ng-click="t.capacidades.valor='no'">No</button>
+                            </div></td>
+                            <td><textarea class="span5" type="text" rows="1" ng-disabled="!editando" ng-model="t.capacidades.comentario" style="margin-bottom: 0px;margin-left: 1px;height: 35px;" ></textarea></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Falta de acceso a datos pertenecientes a fuentes externas</td>
+                            <td><div class="btn-group" data-toggle="buttons-radio" style="margin-left: 0px; margin-right: 0px;">
+                                <button ng-disabled="!editando" class="btn" ng-class="(t.acceso.valor == 'si') && 'active btn-info'" ng-click="t.acceso.valor='si'">Si</button>
+                                <button ng-disabled="!editando" class="btn" ng-class="(t.acceso.valor == 'no') && 'active btn-info'" ng-click="t.acceso.valor='no'">No</button>
+                            </div></td>
+                            <td><textarea class="span5" type="text" rows="1" ng-disabled="!editando" ng-model="t.acceso.comentario" style="margin-bottom: 0px;margin-left: 1px;height: 35px;" ></textarea></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Otros</td>
+                            <td><div class="btn-group" data-toggle="buttons-radio" style="margin-left: 0px; margin-right: 0px;">
+                                <button ng-disabled="!editando" class="btn" ng-class="(t.otros.valor == 'si') && 'active btn-info'" ng-click="t.otros.valor='si'">Si</button>
+                                <button ng-disabled="!editando" class="btn" ng-class="(t.otros.valor == 'no') && 'active btn-info'" ng-click="t.otros.valor='no'">No</button>
+                            </div></td>
+                            <td><textarea class="span5" type="text" rows="1" ng-disabled="!editando" ng-model="t.otros.comentario" style="margin-bottom: 0px;margin-left: 1px;height: 35px;" ></textarea></td>
+                            <td></td>
+                        </tr>
+                    </table>
+                    <hr style="border-top: 2px solid #DEDEDE;">
+                </div>
+            </div>
+            <a ng-click="guardar()" href="/semg/indicadores/{{anio}}" class="btn btn-info pull-right" ng-show="editando" style="margin-right: 20px;margin-top: 0px;"><i class="icon-ok icon-white"></i> Guardar</a>
+        </div>
+    </div>
+</div>

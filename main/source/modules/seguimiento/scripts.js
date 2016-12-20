@@ -1,0 +1,1 @@
+exports = module.exports = ['/scripts/controllers/seguimiento/expedientes.js', '/scripts/controllers/seguimiento/nuevo_expediente.js', '/scripts/controllers/seguimiento/detalle_expediente.js', '/scripts/controllers/seguimiento/print.js', '/scripts/controllers/seguimiento/print_detalle.js'];

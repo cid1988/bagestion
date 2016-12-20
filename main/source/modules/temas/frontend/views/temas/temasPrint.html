@@ -1,0 +1,107 @@
+<style type="text/css">
+    body {
+        background-image: none !important;
+    }
+    input.disabled, input[disabled] {
+        background-color: #ffffff;
+    }
+    hr{
+        height:1px;
+        margin-top: 0;
+        margin-bottom: 0;
+        border-top-width: 0 !important;
+        border-left-width: 0;
+        border-right-width: 0;
+        border: 1px solid #B3ACAC;
+    }
+    div[ng-repeat]{
+        padding-bottom: 0;
+        margin-left: 70px;
+    }
+    div[ng-repeat^="r in temas"]{
+        margin-left:30px;
+    }
+    .icon-plus{
+        margin-right: 10px;
+    }
+    .card-body{
+        margin-bottom: 20px;
+    }
+    a [class*="icon-"]{
+        display:inline-block !important;
+    }
+    .iconoPequenno{
+        vertical-align: middle;
+        font-size: 9px;
+        margin-bottom: 3px;
+        display:inline-block !important
+    }
+    .sinFondo{
+        color: #3B3537;
+        cursor: pointer;
+        border-color: transparent;
+        -webkit-border-radius: 0;
+        -moz-border-radius: 0;
+        border-radius: 0;
+        background-color: transparent;
+        background-image: none;
+        -webkit-box-shadow: none;
+        -moz-box-shadow: none;
+        display:inline-block;
+        box-shadow: none;
+    }
+    .sinFondo:hover{
+        background-color:transparent;
+    }
+</style>
+<div ng-controller="TemasPrint">
+    <h3 class="card-heading simple">EDTe (Estructura de Descomposición de Temas) <br>{{temaPrint.nombre}}
+		<a class="btn btn-info no-print pull-right" href="javascript:window.print()"><i class="icon-print icon-white"></i> Imprimir</a>
+        <a type="button" class="btn no-print pull-right" href="/temas"><i class="icon-arrow-left"></i> Volver</a>
+    </h3>
+    <div class="card-body">
+        <div class="row">
+            <div ng-repeat="r in temas | orderBy:'orden' | filter:filtroPrimeros"> 
+                <a class="btn sinFondo">
+                    <i ng-class="r.tieneHijos==1 ? 'icon-chevron-down' : 'icon-circle iconoPequenno'"></i> {{r.nombre}}
+                </a>
+                <hr>
+                <div id="segundos_{{r._id}}">
+                    <div ng-repeat="p in temas | orderBy:'orden' | filter:{temaSuperior:r._id}">
+                        <a class="btn sinFondo">
+                            <i ng-class="p.tieneHijos==1 ? 'icon-chevron-down' : 'icon-circle iconoPequenno'"></i> {{p.nombre}}
+                        </a>
+                        <hr>
+                        <div id="terceros_{{p._id}}">
+                            <div ng-repeat="q in temas | orderBy:'orden' | filter:{temaSuperior:p._id}">
+                                <a class="btn sinFondo">
+                                    <i ng-class="q.tieneHijos==1 ? 'icon-chevron-down' : 'icon-circle iconoPequenno'"></i> {{q.nombre}}
+                                </a>
+                                <hr>
+                                <div id="cuartos_{{q._id}}">
+                                    <div ng-repeat="o in temas | orderBy:'orden' | filter:{temaSuperior:q._id}">
+                                        <a class="btn sinFondo">
+                                            <i ng-class="o.tieneHijos==1 ? 'icon-chevron-down' : 'icon-circle iconoPequenno'"></i> {{o.nombre}}
+                                        </a>
+                                        <hr>
+                                        <div id="quintos_{{o._id}}">
+                                            <div ng-repeat="l in temas | orderBy:'orden' | filter:{temaSuperior:o._id}">
+                                                <a class="btn sinFondo">
+                                                    <i ng-class="tieneSubtemas(l._id) ? 'icon-chevron-down' : 'icon-circle iconoPequenno'"></i> {{l.nombre}}
+                                                </a>
+                                                <hr>
+                                                <div id="sextos_{{l._id}}" class="collapse" style="margin-left: 50px;">
+                                                
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

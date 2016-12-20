@@ -1,0 +1,1 @@
+exports = module.exports = ["bag2.fiscales", "bag2.fiscales-search"];

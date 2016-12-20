@@ -1,0 +1,151 @@
+<style>
+    .table-hover tbody tr:hover > td,
+    .table-hover tbody tr:hover > th {
+      background-color: #eeeeee !important;
+    }
+    
+    table tr td a {
+        display:block;
+        height:100%;
+        width:100%;
+    }
+</style>
+<div class="card body" style="margin-top: 0px;padding-top: 0px;" ng-controller="ES2015DetalleHitoCtrl">
+    <table class="pull-right" border="1" cellspacing="0" cellpadding="5" style=" margin: auto 2 auto auto; text-align: center; vertical-align: middle; margin-left: 20px; margin-bottom: 8px; margin-top: 5px; margin-right: 20px;">
+        <tbody><tr height="21" style=" background-color: #404040; color: #FFFFFF;">
+            <td height="43" rowspan="2" style="vertical-align: middle; padding: 4px; border-right: 1 solid #FFFFFF;">
+                RESPONSABLE</td>
+            <td height="43" rowspan="2" style="vertical-align: middle; padding: 4px; border-right: 1 solid #FFFFFF;">
+                ELECTORES</td>
+            <td rowspan="2" style="vertical-align: middle;padding: 4px; border-right: 1 solid #FFFFFF;">
+                MESAS</td>
+            <td rowspan="2" style="vertical-align: middle; border-right: 1 solid #FFFFFF;">
+                %</td>
+            <td colspan="2" style="vertical-align: middle; padding: 2px;border-bottom: 1 solid #FFFFFF;">
+                LEG. NAC.</td>
+            <td rowspan="2" style="vertical-align: middle; padding: 4px; border-right: 1 solid #FFFFFF;border-left: 1 solid #FFFFFF;">
+                GDOR.</td>
+            <td colspan="2" style="vertical-align: middle; padding: 2px;border-bottom: 1 solid #FFFFFF;">
+                LEG. PROV.</td>
+            <td rowspan="2" style="vertical-align: middle; padding: 4px;border-left: 1 solid #FFFFFF;">
+                INT.</td>
+        </tr>
+        <tr height="22" style=" background-color: #404040; color: #FFFFFF;">
+            <td height="22" style="vertical-align: middle; padding: 2px;border-right: 1 solid #FFFFFF;">
+                SEN.</td>
+            <td style="vertical-align: middle; padding: 2px;">
+                DIP.</td>
+            <td style="vertical-align: middle; padding: 2px;border-right: 1 solid #FFFFFF;">
+                SEN</td>
+            <td style="vertical-align: middle; padding: 2px;">
+                DIP</td>
+        </tr>
+        
+        <tr height="21" style=" background-color: #FFFFFF; font-weight:600 !important; font-size: 14px;">
+            <td height="21" style=" background-color: #FFFFFF; font-weight:600 !important;border-right: 1 solid #CCCCCC;">
+                {{distrito.responsable}}</td>
+            <td height="21" style=" background-color: #FFFFFF; font-weight:600 !important;border-right: 1 solid #CCCCCC;">
+                {{distrito.electores}}</td>
+            <td style=" background-color: #FFFFFF; font-weight:600 !important;border-right: 1 solid #CCCCCC;">
+                {{distrito.mesas}}</td>
+            <td style=" background-color: #FFFFFF; font-weight:600 !important;border-right: 1 solid #CCCCCC; padding-left: 5px; padding-right: 5px;">
+                {{distrito.porcentaje}}</td>
+            <td style=" background-color: #FFFFFF; font-weight:600 !important;border-right: 1 solid #CCCCCC;">
+                {{distrito.senadoresln}}</td>
+            <td style=" background-color: #FFFFFF; font-weight:600 !important;border-right: 1 solid #CCCCCC;">
+                {{distrito.diputadosln}}</td>
+            <td style=" background-color: #FFFFFF; font-weight:600 !important;border-right: 1 solid #CCCCCC;">
+                {{distrito.gobernador}}</td>
+            <td style=" background-color: #FFFFFF; font-weight:600 !important;border-right: 1 solid #CCCCCC;">
+                {{distrito.senadoreslp}}</td>
+            <td style=" background-color: #FFFFFF; font-weight:600 !important;border-right: 1 solid #CCCCCC;">
+                {{distrito.diputadoslp}}</td>
+            <td style=" background-color: #FFFFFF; font-weight:600 !important;">
+                {{distrito.intendentes}}</td>
+        </tr>
+        </tbody>
+    </table>
+    <div style="margin-bottom: 0px">
+        <ul class="breadcrumb" style="margin-bottom: 0px;">
+          <li><a href="/es2015" style="color:#404040;">Distritos</a> <span class="divider">/</span></li>
+          <li><a href="/es2015/{{distrito._id}}" style="color:#404040;">{{distrito.nombre}}</a> <span class="divider">/</span></li>
+          <li><a href="/es2015/{{distrito._id}}/hitos?estructura={{estructura._id}}" style="color:#404040;">{{estructura.nombre}}</a> <span class="divider">/</span></li>
+          <li class="active">{{hito.titulo}}</li>
+        </ul>
+    </div>
+    <h2 style="margin-top: 15px; margin-left: 15px; margin-bottom: 0px;">{{hito.titulo}}</h2>
+    <hr style="margin-top: 8px;margin-bottom: 20px;border-top-width: 5px;border-bottom-width: 1px;">
+    <div class="card-body" ng-init="miTotal = 0" style="margin-top: 0px;margin-bottom: 10px;">
+        <a ng-click="editando=true" class="btn pull-right" type="button" ng-hide="editando || !hasPermission('es2015.editar')" style="margin-left: 10px;" ><i class="icon-edit"></i> Editar</a>
+        <a ng-click="guardar()" href="/es2015/{{distrito._id}}/hitos?estructura={{estructura._id}}" class="btn btn-success pull-right" ng-show="editando" type="button" style="margin-left: 10px;"><i class="icon-ok icon-white"></i> Guardar</a>
+        <a ng-click="eliminar(false)" class="btn btn-danger pull-right" ng-show="editando && hasPermission('es2015.admin')" type="button" style="margin-left: 10px;"><i class="icon-trash icon-white"></i> Eliminar</a>
+        <div class="row" style="padding-bottom: 0px;">
+            <form class="form-horizontal" style="margin-bottom: 0px !important;">
+                <div class="control-group" style="margin-left: 50px;margin-bottom: 0px;">
+            		<forminput ng-model="distrito.nombre" title="Distrito" read-only />
+                    <forminput ng-model="estructura.nombre" title="Estructura de Actividad" read-only />
+                    <div class="control-group">
+                        <label class="control-label">Título:</label>
+                        <div class="controls">
+                            <input class="ng-pristine ng-valid" type="text" ng-disabled="!editando" data-provide="typeahead" placeholder="Sin titulo" ng-model="hito.titulo" style="display: inline-block; width: 425px;" id="titulo-typeahead" data-source={{titulos}}>
+                            <label style="display: inline-block; margin-left: 10px;">Orden:</label>
+                            <input class="span1" type="text" placeholder="Sin orden" ng-disabled="!editando" ng-model="hito.orden"  style="display: inline-block;" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Descripción:</label>
+                        <div class="controls">
+                            <textarea type="text" style="height: 60px; width: 556px;" ng-disabled="!editando" ng-model="hito.descripcion" placeholder="Descripción de la actividad" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Fecha Inicio:</label>
+                        <div class="controls">
+                            <input type="text" ng-disabled="!editando" date ng-model="hito.fechaInicio" style="display: inline-block; width: 100px;" />
+                            <label style="display: inline-block; margin-left: 10px;">Fecha Fin:</label>
+                            <input type="text" ng-disabled="!editando" date ng-model="hito.fechaFin" style="width: 100px;" />
+                            <a ng-click="reprogramacion=true" class="btn btn-link" title="Reprogramar fecha de fin" type="button" ng-show=hasPermission('es2015.editar')><i class="icon-share"></i></a>
+                            <input type="text" ng-if="reprogramacion" date ng-model="hito.fechaFinAnterior" style="width: 100px;" />
+                            <a ng-click="guardarRepro()" class="btn btn-link" type="button" ng-if="reprogramacion"><i class="icon-save"></i></a>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Iniciado:</label>
+                        <label class="checkbox" style="display: inline-block; padding-left: 0px; height: 15px; margin-bottom: 0px;">
+                            <input type="checkbox" ng-model="hito.iniciado" ng-disabled="!editando" style="margin-left: 20px; margin-top: 8px;">
+                        </label>
+                        <label style="display: inline-block; margin-left: 50px;">Cumplido:</label>
+                        <label class="checkbox" style="display: inline-block; padding-left: 0px; height: 15px; margin-bottom: 0px;">
+                            <input type="checkbox" ng-model="hito.cumplido" ng-disabled="!editando" style="margin-left: 20px; margin-top: 8px;" class="ng-pristine ng-valid">
+                        </label>
+                    </div>
+                </div>
+            </form>
+            <div class="span6" style="margin-left: 230px;" ng-show="hasPermission('es2015.admin')">
+                <h4>Documentos
+                <div class="card-actions pull-right" style="margin: 0; padding: 0">
+                    <a class="btn btn-link" ng-click="agregarDocumentacion()" ng-show="editando"><i class="icon-plus"></i></a>
+                </div></h4>
+                <div ng-if="!hito.documentos.length">No se ha cargardo ningun documento aún</div>
+                <div ng-repeat="d in hito.documentos">
+                    {{d.nombre}} ({{d.fecha}}) - <a href="/file/{{d.archivoId}}" target="_blank">Descargar</a><br>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+    <div id="confirmarEliminar" class="modal hide fade">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3>Eliminar Actividad</h3>
+        </div>
+        <div class="modal-body">
+            <p>Está a un paso de eliminar la actividad</p>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn btn-info" data-dismiss="modal">Conservar el registro</a>
+            <a href="#" class="btn btn-danger" data-dismiss="modal" ng-click="eliminar(true)">Eliminar</a>
+        </div>
+    </div>
+</div>

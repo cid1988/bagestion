@@ -1,0 +1,118 @@
+<style>
+    .table-hover tbody tr:hover > td,
+    .table-hover tbody tr:hover > th {
+      background-color: #eeeeee !important;
+    }
+    
+    table tr td a {
+        display:block;
+        height:100%;
+        width:100%;
+    }
+    
+    .btn-circle {
+      width: 35px;
+      height: 35px;
+      line-height: 40px;
+      padding:0;
+      border-radius: 50%;
+    }
+</style>
+<div class="card body" style="margin-top: 0px;padding-top: 0px;" ng-controller="ES2015HitosCtrl">
+    <table class="pull-right" border="1" cellspacing="0" cellpadding="5" style=" margin: auto 2 auto auto; text-align: center; vertical-align: middle; margin-left: 0px; margin-bottom: 8px; margin-top: 5px; margin-right: 20px;">
+        <tbody><tr height="21" style=" background-color: #404040; color: #FFFFFF;">
+            <td height="43" rowspan="2" style="vertical-align: middle; padding: 4px; border-right: 1 solid #FFFFFF;">
+                RESPONSABLE</td>
+            <td height="43" rowspan="2" style="vertical-align: middle; padding: 4px; border-right: 1 solid #FFFFFF;">
+                ELECTORES</td>
+            <td rowspan="2" style="vertical-align: middle;padding: 4px; border-right: 1 solid #FFFFFF;">
+                MESAS</td>
+            <td rowspan="2" style="vertical-align: middle; border-right: 1 solid #FFFFFF;">
+                %</td>
+            <td colspan="2" style="vertical-align: middle; padding: 2px;border-bottom: 1 solid #FFFFFF;">
+                LEG. NAC.</td>
+            <td rowspan="2" style="vertical-align: middle; padding: 4px; border-right: 1 solid #FFFFFF;border-left: 1 solid #FFFFFF;">
+                GDOR.</td>
+            <td colspan="2" style="vertical-align: middle; padding: 2px;border-bottom: 1 solid #FFFFFF;">
+                LEG. PROV.</td>
+            <td rowspan="2" style="vertical-align: middle; padding: 4px;border-left: 1 solid #FFFFFF;">
+                INT.</td>
+        </tr>
+        <tr height="22" style=" background-color: #404040; color: #FFFFFF;">
+            <td height="22" style="vertical-align: middle; padding: 2px;border-right: 1 solid #FFFFFF;">
+                SEN.</td>
+            <td style="vertical-align: middle; padding: 2px;">
+                DIP.</td>
+            <td style="vertical-align: middle; padding: 2px;border-right: 1 solid #FFFFFF;">
+                SEN</td>
+            <td style="vertical-align: middle; padding: 2px;">
+                DIP</td>
+        </tr>
+        
+        <tr height="21" style=" background-color: #FFFFFF; font-weight:600 !important; font-size: 14px;">
+            <td height="21" style=" background-color: #FFFFFF; font-weight:600 !important;border-right: 1 solid #CCCCCC;">
+                {{distrito.responsable}}</td>
+            <td height="21" style=" background-color: #FFFFFF; font-weight:600 !important;border-right: 1 solid #CCCCCC;">
+                {{distrito.electores}}</td>
+            <td style=" background-color: #FFFFFF; font-weight:600 !important;border-right: 1 solid #CCCCCC;">
+                {{distrito.mesas}}</td>
+            <td style=" background-color: #FFFFFF; font-weight:600 !important;border-right: 1 solid #CCCCCC; padding-left: 5px; padding-right: 5px;">
+                {{distrito.porcentaje}}</td>
+            <td style=" background-color: #FFFFFF; font-weight:600 !important;border-right: 1 solid #CCCCCC;">
+                {{distrito.senadoresln}}</td>
+            <td style=" background-color: #FFFFFF; font-weight:600 !important;border-right: 1 solid #CCCCCC;">
+                {{distrito.diputadosln}}</td>
+            <td style=" background-color: #FFFFFF; font-weight:600 !important;border-right: 1 solid #CCCCCC;">
+                {{distrito.gobernador}}</td>
+            <td style=" background-color: #FFFFFF; font-weight:600 !important;border-right: 1 solid #CCCCCC;">
+                {{distrito.senadoreslp}}</td>
+            <td style=" background-color: #FFFFFF; font-weight:600 !important;border-right: 1 solid #CCCCCC;">
+                {{distrito.diputadoslp}}</td>
+            <td style=" background-color: #FFFFFF; font-weight:600 !important;">
+                {{distrito.intendentes}}</td>
+        </tr>
+        </tbody>
+    </table>
+    <div style="margin-bottom: 0px">
+        <ul class="breadcrumb" style="margin-bottom: 0px;">
+          <li><a href="/es2015" style="color:#404040;">Distritos</a> <span class="divider">/</span></li>
+          <li><a href="/es2015/{{distrito._id}}" style="color:#404040;">{{distrito.nombre}}</a> <span class="divider">/</span></li>
+          <li class="active">{{estructura.nombre}}</li>
+        </ul>
+    </div>
+    <h2 style="margin-top: 15px; margin-left: 15px; margin-bottom: 0px;">{{estructura.nombre}}</h2>
+    <hr style="margin-top: 8px;margin-bottom: 5px;border-top-width: 5px;border-bottom-width: 1px;">
+    <div class="card-body" ng-init="miTotal = 0" style="margin-top: 0px;margin-bottom: 10px;">
+        <div class="row" style="padding-bottom: 0px; font-size:16px">
+            <div class="span" style="display: table-cell; width:75%">
+                <a href="#" ng-click="orden = 'titulo'" style="color:#404040;"><b>Actividad:</b></a>
+            </div>
+            <div class="pull-right" style="width:13%">
+                <b>Fecha Fin:</b>
+                <a href="/es2015/{{distrito._id}}/nuevoHito?estructura={{estructura._id}}" class="pull-right" style="color:#404040;" ng-if=hasPermission('es2015.editar')><i class="icon-plus"></i></a>
+            </div>
+            <div class="pull-right" style="width:7%">
+                <b>Estado:</b>
+            </div>
+        </div>
+        <div style="overflow-y: scroll; overflow-x: hidden; position: absolute;top: 200px;background: white;bottom: 12px;right: 20px;left: 20px;border: 1px solid #FFD300;border-top: transparent;padding-left: 21px">
+            <table class="table table-hover">
+                <tbody>
+                    <tr height="25" ng-repeat="h in hitos | orderBy:'orden'">
+                        <td width="80%">
+                            <a href="/es2015/hitos/{{h._id}}" style="color:#404040;"><span style="font-family: Tahoma; font-size: 18px; font-weight: 500; text-decoration: none;"><sub>{{h.orden}}</sub> {{h.titulo}} </span></a>
+                        </td>
+                         
+                        <td width="7%" style="padding-top: 1px; padding-bottom: 0px;">
+                            <a class="btn btn-circle" ng-class="color(h)" href="/es2015/hitos/{{h._id}}">&nbsp;</a>
+                        </td>
+                         
+                        <td width="13%">
+                            <span style="font-family: Tahoma; font-size: 18px; font-weight: 500; text-decoration: none;"> {{h.fechaFin}} <sub ng-if="h.reprogramaciones" title="Fecha anterior: {{h.fechaFinAnterior}}">({{h.reprogramaciones}})</sub></span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

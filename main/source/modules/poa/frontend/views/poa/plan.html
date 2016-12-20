@@ -1,0 +1,92 @@
+<style>
+  ul.nav.nav-list {
+    border-bottom: 0;
+    border-left: 0;
+    border-right: 0;
+    padding-left: 15px;
+    margin-left: 2px
+  }
+  
+  ul.nav.nav-list > li {
+    overflow: visible;
+    padding-left: 11px;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  ul.nav.nav-list > li > a {
+    clear: both;
+  }
+  
+  A:link {text-decoration:none;color:#3B3537;} 
+
+  A:visited {text-decoration:none;color:#3B3537;} 
+
+  A:active {text-decoration:none;color:#3B3537;} 
+
+  A:hover {text-decoration:underline;color:#3B3537;} 
+</style>
+
+<div class="container" ng-if="error">
+  <div class="row">
+    <div class="span12">
+      <div class="alert alert-danger">
+      <button type="button" class="close" ng-click="error=null">&times;</button>
+      {{error}}</div> 
+    </div>
+  </div>
+</div>
+
+<div class="container">.
+    <ul class="breadcrumb" style="margin-bottom: 0px;">
+      <li ng-if="!tabCtrl.filtro.jurisdiccion" class="active">{{nombrePlan}}</li>
+      <li ng-if="tabCtrl.filtro.jurisdiccion"><a ng-click="tabCtrl.filtro = {}" href="#">{{nombrePlan}}</a></li>
+      <li ng-if="tabCtrl.filtro.jurisdiccion && !tabCtrl.filtro.objImpacto" class="active"><span class="divider">/</span> {{tabCtrl.filtro.jurisdiccion.nombre}} </li>
+      <li ng-if="tabCtrl.filtro.jurisdiccion && tabCtrl.filtro.objImpacto"><span class="divider">/</span> <a href="#" ng-click="tabCtrl.filtro = {jurisdiccion: tabCtrl.filtro.jurisdiccion}">{{tabCtrl.filtro.jurisdiccion.nombre}}</a> </li>
+      <li ng-if="tabCtrl.filtro.objImpacto && !tabCtrl.filtro.objMinisterial" class="active"><span class="divider">/</span> {{tabCtrl.filtro.objImpacto.nombre}} </li>
+      <li ng-if="tabCtrl.filtro.objImpacto && tabCtrl.filtro.objMinisterial"><span class="divider">/</span> <a href="#" ng-click="tabCtrl.filtro = {jurisdiccion: tabCtrl.filtro.jurisdiccion, objImpacto: tabCtrl.filtro.objImpacto}">{{tabCtrl.filtro.objImpacto.nombre}}</a> </li>
+      <li ng-if="tabCtrl.filtro.objMinisterial && !tabCtrl.filtro.objOperativo" class="active"><span class="divider">/</span> {{tabCtrl.filtro.objMinisterial.nombre}} </li>
+      <li ng-if="tabCtrl.filtro.objMinisterial && tabCtrl.filtro.objOperativo"><span class="divider">/</span> <a href="#" ng-click="tabCtrl.filtro = {jurisdiccion: tabCtrl.filtro.jurisdiccion, objImpacto: tabCtrl.filtro.objImpacto, objMinisterial: tabCtrl.filtro.objMinisterial}">{{tabCtrl.filtro.objMinisterial.nombre}}</a> </li>
+      <li ng-if="tabCtrl.filtro.objOperativo && !tabCtrl.filtro.proyecto" class="active"><span class="divider">/</span> {{tabCtrl.filtro.objOperativo.nombre}} </li>
+      <li ng-if="tabCtrl.filtro.objOperativo && tabCtrl.filtro.proyecto"><span class="divider">/</span> <a href="#" ng-click="tabCtrl.filtro = {jurisdiccion: tabCtrl.filtro.jurisdiccion, objImpacto: tabCtrl.filtro.objImpacto, objMinisterial: tabCtrl.filtro.objMinisterial, objOperativo: tabCtrl.filtro.objOperativo}">{{tabCtrl.filtro.objOperativo.nombre}}</a> </li>
+      <li ng-if="tabCtrl.filtro.proyecto && !tabCtrl.filtro.actividad && !tabCtrl.filtro.obra" class="active"><span class="divider">/</span> {{tabCtrl.filtro.proyecto.nombre}} </li>
+      <li ng-if="tabCtrl.filtro.proyecto && (tabCtrl.filtro.actividad || tabCtrl.filtro.obra)"><span class="divider">/</span> <a href="#" ng-click="tabCtrl.filtro = {jurisdiccion: tabCtrl.filtro.jurisdiccion, objImpacto: tabCtrl.filtro.objImpacto, objMinisterial: tabCtrl.filtro.objMinisterial, objOperativo: tabCtrl.filtro.objOperativo, proyecto: tabCtrl.filtro.proyecto}">{{tabCtrl.filtro.proyecto.nombre}}</a> </li>
+      <li ng-if="tabCtrl.filtro.actividad" class="active"><span class="divider">/</span> {{tabCtrl.filtro.actividad.nombre}} </li>
+      <li ng-if="tabCtrl.filtro.obra === true" class="active"><span class="divider">/</span> Nueva obra </li>
+      <li ng-if="tabCtrl.filtro.obra && (tabCtrl.filtro.obra !== true)" class="active"><span class="divider">/</span> Editar obra </li>
+    </ul>
+  <div class="row" scroll-glue="true" target="body">
+    <div ng-if="tabCtrl.filtro.jurisdiccion" ng-hide="tabCtrl.filtro.objImpacto" ng-include="'/views/poa/plan-jurisdiccion.html'">
+    </div>
+    <div ng-if="!tabCtrl.filtro.jurisdiccion" ng-include="'/views/poa/plan-jurisdicciones.html'">
+    </div>
+    <div ng-if="tabCtrl.filtro.objImpacto" ng-hide="tabCtrl.filtro.objMinisterial" ng-include="'/views/poa/plan-obj-impacto.html'">    
+    </div>
+    <div ng-if="tabCtrl.filtro.jurisdiccion && !tabCtrl.filtro.objImpacto" ng-include="'/views/poa/plan-objs-impacto.html'">    
+    </div>
+    <div ng-if="tabCtrl.filtro.objMinisterial" ng-hide="tabCtrl.filtro.objOperativo" ng-include="'/views/poa/plan-obj-ministerial.html'">    
+    </div>
+    <div ng-if="tabCtrl.filtro.objImpacto && !tabCtrl.filtro.objMinisterial" ng-include="'/views/poa/plan-objs-ministeriales.html'">    
+    </div>
+    <div ng-if="tabCtrl.filtro.objOperativo" ng-hide="tabCtrl.filtro.proyecto" ng-include="'/views/poa/plan-obj-operativo.html'">    
+    </div>
+    <div ng-if="tabCtrl.filtro.objMinisterial && !tabCtrl.filtro.objOperativo" ng-include="'/views/poa/plan-objs-operativos.html'">    
+    </div>
+    <div ng-if="tabCtrl.filtro.proyecto" ng-hide="(tabCtrl.filtro.actividad || tabCtrl.filtro.obra)" ng-include="'/views/poa/plan-proyecto.html'">    
+    </div>
+    <div ng-if="tabCtrl.filtro.objOperativo && !tabCtrl.filtro.proyecto" ng-include="'/views/poa/plan-proyectos.html'">    
+    </div>
+    <div ng-if="tabCtrl.filtro.actividad" ng-hide="tabCtrl.filtro.obra" ng-include="'/views/poa/plan-actividad.html'">    
+    </div>
+    <div ng-if="!tabCtrl.filtro.actividad && !tabCtrl.filtro.obra && tabCtrl.filtro.proyecto" ng-include="'/views/poa/plan-actividades.html'">    
+    </div>
+    <div ng-if="tabCtrl.filtro.obra === true" ng-hide="tabCtrl.filtro.actividad" ng-include="'/views/poa/plan-obra.html'">    
+    </div>
+    <div ng-if="tabCtrl.filtro.obra && (tabCtrl.filtro.obra !== true)" ng-hide="tabCtrl.filtro.actividad" ng-include="'/views/poa/plan-obraEdicion.html'">    
+    </div>
+    <div ng-if="!tabCtrl.filtro.actividad && !tabCtrl.filtro.obra && tabCtrl.filtro.proyecto" ng-include="'/views/poa/plan-obras.html'">    
+    </div>
+    <!-- <div ng-if="!tabCtrl.filtro.actividad && !tabCtrl.filtro.obra && tabCtrl.filtro.proyecto" ng-include="'/views/poa/plan-indicadores.html'">    
+    </div> -->
+  </div>
+</div>

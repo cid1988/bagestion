@@ -1,0 +1,40 @@
+<div ng-controller="CRMCtrl" class="card">
+    <!--Filtro-->
+    <input type="text" style="margin-right:10px; margin-bottom:10px;width: 180px;" class="input-level-block search-query pull-right" placeholder="Buscar por..." ng-model="filtro" />
+    
+    <div style="text-align:center" class="form-horizontal">
+        <a style="padding:0px" ng-class="{'btn-inverse': l == letraSeleccionada}" class="btn" ng-click="seleccionarLetra(l)" href="#" ng-repeat="l in abecedario">{{l}}</a>
+        <a style="padding:0px" ng-class="{'btn-inverse': 'Todos' == letraSeleccionada}" class="btn" ng-click="seleccionarLetra('Todos')" href="#" >&nbsp;Todos&nbsp;</a>
+    </div>
+    
+    <div class="form-horizontal" name="form" style="margin-left:10px; padding-top: 16px; clear: both">
+        <div class="row" style="padding-bottom: 10px;">
+            <div ng-show="!tipoOrdenApellidos" class="span3" style="display: table-cell;margin-left: 70px;"><a href="#" ng-click="orden = 'apellidos'; tipoOrdenApellidos=true" style="display: inline-block; color:#404040;">Nombre:</a></div>
+            <div ng-show="tipoOrdenApellidos" class="span3" style="display: table-cell;margin-left: 70px;"><a href="#" ng-click="orden = '-apellidos'; tipoOrdenApellidos=false" style="display: inline-block; color:#404040;">Nombre:</a></div>
+            
+            <div ng-show="!tipoOrdenSexo" class="span2" style="display: table-cell"><a href="#" ng-click="orden = 'sexo'; tipoOrdenSexo=true" style="display: inline-block; color:#404040;">Sexo:</a></div>
+            <div ng-show="tipoOrdenSexo" class="span2" style="display: table-cell"><a href="#" ng-click="orden = '-sexo'; tipoOrdenSexo=false" style="display: inline-block; color:#404040;">Sexo:</a></div>
+            
+            <div ng-show="!tipoOrdenCargo" class="span2" style="display: table-cell"><a href="#" ng-click="orden = 'cargo'; tipoOrdenCargo=true" style="display: inline-block; color:#404040;">Cargo:</a></div>
+            <div ng-show="tipoOrdenCargo" class="span2" style="display: table-cell"><a href="#" ng-click="orden = '-cargo'; tipoOrdenCargo=false" style="display: inline-block; color:#404040;">Cargo:</a></div>
+            
+            <div class="span2" style="display: table-cell">Celular personal:</div>
+            
+            <div class="span3" style="display: table-cell"><a href="#" ng-click="orden = valorCorreo" style="display: inline-block; color:#404040;">Email Personal:</a> <a href="#" ng-click="traerDatosORM()" style="display: inline-block; color:#404040;">    ORM</a></div>
+        </div>
+    </div>
+    <hr style="margin-bottom: 0px;margin-top: 0px;">
+    <ul class="nav nav-list">
+      <li ng-repeat="c in contactos | orderBy:'apellidos' | orderBy:orden | filter:letra | filter:filtro">
+        <a style="font-size: 12px;padding-top: 8px;padding-bottom: 8px;" href="/crm/detalle/{{c._id}}">
+        <span class="span3">{{c.apellidos}}, {{c.nombre}} {{c.segundoNombre || ""}}</span>
+        <span class="span2"><div ng-if="c.sexo == 'M'">Masculino</div><div ng-if="c.sexo == 'F'">Femenino</div></span>
+        <span class="span2">{{c.cargo}}</span>
+        <span class="span2">{{valorCelular(c)}}</span>
+        <span class="span3">{{valorCorreo(c)}}</span></a>
+      </li>
+      <li ng-if="!contactos.length" class="text-center">
+        <em>No hay cargas aún</em>
+      </li>
+    </ul>
+</div>

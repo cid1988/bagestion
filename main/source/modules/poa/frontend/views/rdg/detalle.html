@@ -1,0 +1,208 @@
+<style type="text/css">
+    body {
+        background : none;
+    }
+    .navbar
+    {
+        display: none;
+    }
+</style>
+
+<script type="text/javascript">
+
+    function limpiarChecks() {
+        
+        this.frm_header.prioridad_A.checked = false;
+        this.frm_header.prioridad_AAA.checked = false;
+        this.frm_header.prioridad_B.checked = false;
+        this.frm_header.prioridad_C.checked = false;
+		this.frm_header.prioridad_NP.checked = false;
+    }
+
+    function limpiarCheckTodos() {
+
+        this.frm_header.prioridad_todos.checked = false;
+    }
+
+</script>
+<link href="/views/rdg/RDG.css" rel="stylesheet" type="text/css">
+
+
+<div id="wrapper" ng-controller="POARDGDetalleCtrl">
+<section class="content" style="margin-bottom: 20px;">
+<div id="header" class="header" style="margin-top: 4px;">
+    <form action="./PLAN ESTRATÉGICO 2014 15_files/PLAN ESTRATÉGICO 2014 15.html" method="post" id="frm_header">
+    <table width="100%" border="0" cellspacing="4" cellpadding="0" style="background-image: url(&#39;/views/rdg/fdoAmarilloCabecera.png&#39;); background-repeat: repeat-x; background-attachment: fixed; background-position: top">
+        <tbody><tr height="68">
+            <td style=" padding-left: 40px; width: 80px;">
+                <img src="/views/rdg/globoBA_93x93_fdoBco.png" style="height: 72px; width: 72px;" onclick="history.back();">
+            </td>
+            <td style=" vertical-align: middle;"><span style="font-family: Tahoma; font-size: 20px; font-weight: 600; padding-left: 15px; color: #FFFFFF;">MÓDULO PRESENTACIONES</span></td>
+            <td title="Gestion 2014 PRD" style=" vertical-align: middle; border-left: 1px solid #FFFFFF;"><span style="font-family: Tahoma; font-size: 20px; font-weight: 600; padding-left: 15px; color: #FFFFFF;">TABLERO DE GESTIÓN {{anio}}</span></td>
+            <td style=" vertical-align: middle;"><img src="/views/rdg/empty.gif" style="width: 38px; height: 38px;"><a class="pull-right" href="/poa/rdg" style="margin-top: 3px; margin-right: 3px;"><img src="/views/rdg/arrow-left.png"></a></td>
+        </tr>
+            <tr height="38">
+                <td colspan="4">
+                    <table class="borde_redondeado_asimetrico_1110 pull-right" style="background-color: #CCCCCC; border: none; margin: 0 7 auto auto; width: 1000px;margin-bottom: 7px !important;">
+                            <tbody><tr>
+                                <td style="width: 55%; vertical-align: middle; border-right: 1px solid #FFFFFF; padding-left: 10; text-align: center; height:60px;">
+                                <span style="font-family: Tahoma; font-size: 20px; font-weight: 600;">{{organigrama.nombreCompleto}}</span><br>
+                                <span style="font-family: Tahoma; font-size: 16px; font-weight: 600;">
+                                &nbsp;&nbsp;&nbsp;
+                                
+                                {{organigrama.sigla}}</span>
+                                </td>
+                               
+                                <td title="Meta producto" style="vertical-align: top;border-right: 1px solid #FFFFFF; padding-left: 5px;font-family: Tahoma; font-size: 16px; font-weight: 600;">
+                                {{proyecto.metaProducto}}
+                                </td>
+                                <td title="Meta cuantificación" style="vertical-align: top; padding-left: 5px;font-family: Tahoma; font-size: 16px; font-weight: 600;">
+                                {{proyecto.metaCuantificacion}}
+                                </td>
+                            </tr>
+                        </tbody></table>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4">
+                    <!-- parte insertada -->
+                    <table width="100%" border="0">
+                        <tbody><tr height="38">
+                            <!-- inicio panel  -->
+                            <td class="asimetrico_1110_generico" style="background-color:  #33AD33;
+                                    border: none; width: 500px; vertical-align: middle;" title="Consolidar en los habitantes y usuarios de la Ciudad de Buenos Aires todos los beneficios de la conectividad por la red BA Wifi, de manera tal que se potencien sus capacidades digitales, creativas, productivas y de ocio y se convierta en una herramienta adicional de inclusión.">
+                                    <table border="0" cellspacing="2">
+                                        <tbody><tr>
+                                            <td>
+                                               <span style="font-family: Tahoma; font-size: 18px; font-weight: 600; color: #FFFFFF; padding-left: 15px;"> {{proyecto.nombre}} </span>
+                                            </td>
+                                        </tr>
+                                    </tbody></table>
+                            </td>
+                            <td style="width: 1px;">
+                                <img src="/views/rdg/empty.gif" style="width: 1px;">
+                            </td>
+                            <td title="Fecha de fin planificada" class="asimetrico_1110_generico" style="background-color:#253887; border: none; width:100px;">
+                                    <table border="0" cellspacing="0" cellpadding="4" style="width:100%;">
+                                        <tbody><tr nowrap="nowrap">
+                                            <td style="color: #FFFFFF; font-size: 12px; font-weight: 600; border-bottom: 1px solid #FFFFFF; width:100%; text-align:center;">
+                                            Finalización
+                                            
+                                            </td>
+                                        </tr>
+                                         <tr nowrap="nowrap">
+                                            <td style="color: #FFFFFF; font-size: 12px; font-weight: 600; text-align:center;">
+                                            {{proyecto.fechaFin}}&nbsp;
+                                        </td></tr>
+                                    </tbody></table>
+                            </td>
+                            <td style="width: 1px;">
+                                <img src="/views/rdg/empty.gif" style="width: 1px;">
+                            </td>
+                              
+                            
+                        <!-- fin panel  -->
+                        </tr>
+                        </tbody></table>
+                        </td>
+                    </tr>
+                </tbody></table>
+    </form>
+    </div>
+<!-- armado del recordset para mostrar proyectos y la logica para los filtros-->
+
+<!-- comienza el contenido -->
+<div id="contenido" class="contenido">
+        <table width="98%" border="0" cellspacing="0">
+
+
+
+        <tbody><tr height="30">
+                <td style="border: 1px solid #808080; background-color: #FFFFFF !important; color:#333 !important; width:auto; vertical-align: middle; border-right: 1px solid #FFFFFF; " class="asimetrico_1010_generico">
+                    <span style="font-family: Tahoma; font-size: 18px; font-weight: 500; text-decoration: none; padding-left: 12px;">
+                      Camino Critico (Hito / Actividad) </span>
+                </td>
+          
+                <td colspan="2" style="border: 1px solid #808080; background-color: #FFFFFF; width: 55px; padding-right: 2px; vertical-align: middle;" class="asimetrico_0101_generico">
+                 <span style="font-family: Tahoma; font-size: 18px; font-weight: 500; text-decoration: none; padding-left: 2px;"> Estado </span>
+                </td>
+
+                <td style="background-color: #FFFFFF; width: 24px;
+                    text-align: center;">
+                    &nbsp;
+                </td>
+
+                <td style="border: 1px solid #808080; background-color: #CCCCCC; width:90px; vertical-align: middle; text-align:center; white-space:nowrap">
+                <span style="font-family: Tahoma; font-size: 18px; font-weight: 500; text-decoration: none; padding-left: 2px;"> Fecha inicio</span>
+                </td>
+                <td style="border: none; background-color: #FFFFFF; width: 3px;">
+                   <img src="/views/rdg/empty.gif" style="width: 3px;">
+                </td>
+                      
+                <td style="border: 1px solid #808080; background-color: #CCCCCC; width:90px; vertical-align: middle; text-align:center; white-space:nowrap">
+                <span style="font-family: Tahoma; font-size: 18px; font-weight: 500; text-decoration: none; padding-left: 2px;"> Fecha fin</span>
+                </td>
+                <td style="border: none; background-color: #FFFFFF; width: 3px;">
+                   <img src="/views/rdg/empty.gif" style="width: 3px;">
+                </td>
+            </tr>
+            <tr style=" height: 8px;"><td colspan="4"></td></tr><!-- tr para espaciar -->
+
+            
+            <tr height="30" ng-repeat-start="h in hitos">
+                <td style="border: 1px solid #808080; background-color: #FFFFFF; width:auto; vertical-align: middle; cursor:pointer;" class="asimetrico_1010_generico">
+                    <span style="font-family: Tahoma; font-size: 16px; font-weight: 700; text-decoration: none; padding-left: 12px;">
+                        {{h.nombre}}</span>
+                </td>
+              
+                
+                <!--  Aca se calcula el estado y a partir de alli se asigna el color -->
+                
+                 <td style=" border-left: 1px solid #CCCCCC; border-bottom: 1px solid #CCCCCC; border-top: 1px solid #CCCCCC; border-right: none; background-color: #FFFFFF; width: 35px;">
+                   
+                   <img src="/views/rdg/empty.gif" style="width: 28px;">
+                    <!-- aca estaba el if cumplido, para dibujar la manito-->
+                </td>
+                <td style=" border-left: none; border-bottom: 1px solid #CCCCCC; border-right: 1px solid #CCCCCC; border-top: 1px solid #CCCCCC; background-color: #FFFFFF; width: 15px;vertical-align: middle;" class="asimetrico_0101_generico">
+                   
+                   <div class="indicadorEstado" style="background-color: {{colorEstado(h)}}"></div>
+                   
+                </td>
+                <td style="background-color: #FFFFFF; width: 24px;
+                    text-align: center;">
+                    &nbsp;
+                </td>
+                <td style="border: none; background-color: #7C7B7B; width:120px; vertical-align: middle; text-align:center; white-space:nowrap">
+                    <div style="font-family: Tahoma; font-size: 14px; font-weight: 700; text-decoration: none; color:#FFFFFF">
+                    {{dameFechaInicio(h)}}&nbsp;
+                    </div>
+                </td>
+                <td style="background-color: #FFFFFF; width: 24px;
+                    text-align: center;">
+                    &nbsp;
+                </td>
+                <td style="border: none; background-color: #7C7B7B; width:120px; vertical-align: middle; text-align:center; white-space:nowrap">
+                    <div style="font-family: Tahoma; font-size: 14px; font-weight: 700; text-decoration: none; color:#FFFFFF">
+                    {{dameFecha(h)}}&nbsp;
+                    </div>
+                </td>
+            </tr>  
+            <tr ng-repeat-end style=" height: 8px;"><td colspan="4"></td></tr><!-- tr para espaciar -->
+            
+        </tbody></table>
+    </div>
+</section>
+</div>
+<footer id="footer" style="position: absolute; bottom: 0px; right: 0px; left: 0px; margin-bottom: 0px;">
+    <table style=" width:100%; height: 50px; vertical-align: middle;">
+        <tbody><tr>
+        <td style=" text-align: left; vertical-align: middle;">
+                   <img src="/views/rdg/LOGO-BuenosAiresCiudad.jpg" style="height: 46px;">
+        </td>
+        <td style=" text-align: right; vertical-align: middle;">
+                   <h1 style="margin-right: 20px;">EN TODO ESTAS VOS   </h1> 
+        </td>
+
+        </tr>
+    </tbody></table>
+</footer>

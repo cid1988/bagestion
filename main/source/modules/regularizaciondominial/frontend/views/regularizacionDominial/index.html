@@ -1,0 +1,145 @@
+<style>
+    .table {
+        border: 0;
+    }
+    .table th, .table td {
+        padding: 3px;
+        line-height: 20px;
+        text-align: left;
+        border: 0;
+        vertical-align: middle;
+    }
+    .table th {
+        background-color: #dddddd !important;
+    }
+</style>
+
+<div style="margin-bottom: 20px;">
+    <div class="card span8" style="padding-top: 0px;margin-top: 0px;">
+    
+        <div id="mapaPrincipal" style="width: 768px; height: 430px;"></div>
+        
+    </div>
+    <div class="card span4" style="padding-left: 10px; border-right-width: 1px; margin-top: 0px; padding-top: 0px;padding-right: 10px; padding-bottom: 10px;">
+        <ul id="myTab" class="nav nav-pills">
+          <li class="active"><a href="#" onclick="mostra('tipo', 'm'), mostra('barrios', 'o'), mostra('comunas', 'o')" data-toggle="tab">Tipos</a></li>
+          <li><a href="#" onclick="mostra('comunas', 'm'), mostra('tipo', 'o'), mostra('barrios', 'o')" data-toggle="tab">Comunas</a></li>
+          <li><a href="#" onclick="mostra('barrios', 'm'), mostra('tipo', 'o'), mostra('comunas', 'o')" data-toggle="tab">Barrios</a></li>
+        </ul>
+          <div id="tipo">
+            <div ng-repeat="s in tipos | orderBy:'-total'">
+                <span style="display: inline-block; width: 15px; height: 15px" ng-style="{'background-color': s.color}">&nbsp;</span>
+                <a href="/regularizacionDominial?tipo={{s.nombre}}" style="color:#404040">{{s.nombre}}: </a>
+                <span class="pull-right">{{s.total}} ({{porcentaje(s.total,todosDominios.length)}}%)</span>
+            </div><br>
+            <div style="margin-top: 7px;">
+                <a href="/regularizacionDominial" style="color:#404040; font-size:16px">Total: </a>
+                <span class="pull-right">{{todosDominios.length}}</span>
+            </div>
+          </div>
+          <div id="barrios" style = "display:none">
+            <div style="overflow-y: scroll; overflow-x: hidden; height: 246px;">
+            <div ng-repeat="b in barrios | orderBy:'nombre'">
+                <span style="display: inline-block; width: 10px; height: 10px" ng-style="{'background-color': b.color}">&nbsp;</span>
+                <a href="/regularizacionDominial?barrio={{b.nombre}}" style="color:#404040">{{b.nombre}}: </a>
+                <span class="pull-right">{{b.total}} ({{porcentaje(b.total,todosDominios.length)}}%)</span>
+            </div>
+            </div>
+            <div style="margin-top: 7px;">
+                <a href="/regularizacionDominial" style="color:#404040; font-size:16px">Total: </a>
+                <span class="pull-right">{{todosDominios.length}}</span>
+            </div>
+          </div>
+          <div id="comunas" style = "display:none">
+            <div style="overflow-y: scroll; overflow-x: hidden; height: 246px;">
+            <div ng-repeat="c in comunas | orderBy:'numero'">
+                <span style="display: inline-block; width: 10px; height: 10px" ng-style="{'background-color': c.color}">&nbsp;</span>
+                <a href="/regularizacionDominial?comuna={{c.nombre}}" style="color:#404040">{{c.nombre}}: </a>
+                <span class="pull-right">{{c.total}} ({{porcentaje(c.total,todosDominios.length)}}%)</span>
+            </div>
+            </div>
+            <div style="margin-top: 7px;">
+                <a href="/regularizacionDominial" style="color:#404040; font-size:16px">Total: </a>
+                <span class="pull-right">{{todosDominios.length}}</span>
+            </div>
+          </div>
+    </div>
+</div>
+<div class="card span12" style="padding-top: 0px;">
+    <div class="card-body" style="padding-left: 10px; padding-right: 10px; margin-top: 10px;">
+        <table border="1" class="table table-striped">
+            <tr bgcolor= "#FFFFFF">
+                <th style="min-width:140px"><a ng-click="orden = 'denominacion'" href="#" style="display: inline-block; color:#404040;margin-left: 5px;">Denominacion</a></th>
+                <th><a ng-click="orden = 'numero'" href="#" style="display: inline-block; color:#404040;">Numero</a></th>
+                <th><a ng-click="orden = 'tipo'" href="#" style="display: inline-block; color:#404040;">Tipo</a></th>
+                <th><a ng-click="orden = 'utiu'" href="#" style="display: inline-block; color:#404040;">UTIU</a></th>
+                <th><a ng-click="orden = 'barrio'" href="#" style="display: inline-block; color:#404040;">Barrio</a></th>
+                <th><a ng-click="orden = 'comuna'" href="#" style="display: inline-block; color:#404040;">Comuna</a></th>
+                <th><a ng-click="orden = 'regularizacion'" href="#" style="display: inline-block; color:#404040;">Regularizacion</a></th>
+                <th><a href="/regularizacionDominial/nueva" class="btn btn-link pull-right" title="Nuevo" ng-if="(hasPermission('regularizacionDominial.edicion') || hasPermission('regularizacionDominial.edicionIdentificacion'))" style="padding-left: 0px; padding-right: 0px;"><i class="icon-plus"></i></a></th>
+            </tr>
+            <tr ng-repeat="i in listado | orderBy:orden" bgcolor="#FFFFFF">
+                <td style="min-width:140px"><div><span style="display: inline-block; -moz-border-radius: 20px; border-radius: 20px; padding: 7px; float: left; border: 0px solid #000; margin-top: 3px; margin-right: 10px; margin-left: 5px;" ng-style="{'background-color': color(i.tipo)}"></span> {{i.denominacion}}</div></td>
+                <td><div>{{i.numero}}</div></td>
+                <td><div>{{i.tipo}}</div></td>
+                <td><div>{{i.utiu}}</div></td>
+                <td><div>{{i.barrio}}</div></td>
+                <td><div>{{i.comuna}}</div></td>
+                <td><div><span ng-show="i.regularizacion">Si</span><span ng-hide="i.regularizacion">No</span></div></td>
+                <td><div><a class="btn btn-link pull-right" type="button" href="/regularizacionDominial/{{i._id}}" title="Ver detalle" style="padding-left: 0px; padding-right: 0px;"><i class="icon-edit"></i></a></td>
+            </tr>
+        </table>
+        <div class="row-fluid" ng-show="!dominios.length">No hay ningun dominio.</div>
+    </div>
+</div>
+
+<div id="agregarObservacion" class="modal hide fade">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>Agregar observación</h3>
+    </div>
+    <div class="modal-body">
+        <span style="display: inline-block; margin-top: 15px;">Observaciones:
+            <div class="pull-right btn-group" style="margin-bottom: 8px"
+            data-toggle="buttons-radio">
+                <button class="btn" ng-class="(data.tipoObservacion == 'relevamiento') && 'active btn-info'"
+                ng-click="data.tipoObservacion = 'relevamiento'">Relevamiento</button>
+                <button class="btn" ng-class="(data.tipoObservacion == 'otra') && 'active btn-info'"
+                ng-click="data.tipoObservacion = 'otra'">Otra</button>
+            </div>
+            <textarea style="height:150px; width:500px" type="text" ng-disabled="!editando"
+            ng-model="data.observaciones" />
+            <div style="margin-top: 20px; margin-bottom: 20px">
+            <button class="btn" ng-class="(data.proximoHito == true) && 'active btn-info'"
+            ng-click="data.proximoHito = (!(data.proximoHito == true))">Proximo hito</button>
+            <input type="text" class="span2" ng-model="data.fechaProximoHito"
+            ng-show="data.proximoHito" datepicker style="margin-bottom: 0px;" />
+            </div>
+        </span>
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="btn" data-dismiss="modal">Cancelar</a>
+        <a href="#" class="btn btn-info" data-dismiss="modal" ng-click="agregarObser(true, data)">Agregar observación</a>
+    </div>
+</div>
+
+
+<script language="javascript" type="text/javascript">           
+    function mostra(nombrediv, muestraoculta) {
+            if(muestraoculta == 'm') {
+                    document.getElementById(nombrediv).style.display = '';
+            }
+            
+            if(muestraoculta == 'o') {
+                    document.getElementById(nombrediv).style.display = 'none';
+            }
+            
+            if(muestraoculta != 'm' && muestraoculta != 'o') {
+                    if(document.getElementById(nombrediv).style.display == '') {
+                            document.getElementById(nombrediv).style.display = 'none';
+                    } else {
+                            document.getElementById(nombrediv).style.display = '';
+                    }
+            }
+    }
+</script>

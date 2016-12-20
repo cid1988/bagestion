@@ -1,0 +1,1 @@
+exports = module.exports = ["bag2.seguimiento", "bag2.seguimiento.detalle", "bag2.seguimiento.nuevo", "bag2.seguimiento.print", "bag2.seguimiento.printdetalle"];

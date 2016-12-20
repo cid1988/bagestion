@@ -1,0 +1,20 @@
+
+
+<h4>Tematicas</h4>
+<form class="form-horizontal">
+    <a ng-click="guardar()" class="btn btn-success pull-right" type="button"><i class="icon-ok icon-white"></i> Guardar</a>
+    <div class="control-group">
+        <forminput required ng-model="tematica.nombre" placeholder="Sin nombre" title="Nombre" />
+    </div>
+</form>
+
+<h4>Temas</h4>
+<form class="form-horizontal">
+    <a ng-click="guardar2()" class="btn btn-success pull-right" type="button"><i class="icon-ok icon-white"></i> Guardar</a>
+    <div class="control-group">
+        <formselect required ng-model="tema.tematica" source="tematicas" placeholder="Seleccionar"
+        title="Evento" />
+        <forminput required ng-model="tema.nombre" placeholder="Sin nombre"
+        title="Nombre" />
+    </div>
+</form>

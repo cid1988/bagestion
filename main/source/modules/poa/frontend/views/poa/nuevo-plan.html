@@ -1,0 +1,176 @@
+<style>
+  .card-body > .container > .row > * {
+    margin-left: 15px;
+  }
+  .table {
+        border: 0;
+    }
+    .table th, .table td {
+        padding: 8px;
+        line-height: 20px;
+        text-align: left;
+        vertical-align: middle;
+        border: 0;
+    }
+    .table th {
+        background-color: #dddddd !important;
+    }
+    a:link{ color: #3B3537; text-decoration: none}
+    a:active{ color: #3B3537; text-decoration: none}
+    a:visited{ color: #3B3537; text-decoration: none}
+    a:hover{ color: #3B3537; text-decoration: underline}
+</style>
+<div class="container" ng-if="error">
+  <div class="row">
+    <div class="span12">
+      <div class="alert alert-danger">{{error}}</div> 
+    </div>
+  </div>
+</div>
+<div class="container" ng-if="exito">
+  <div class="row">
+    <div class="span12">
+      <div class="alert alert-success text-center">
+        <a style="float: none" ng-if="exito" ng-href="/poa/plan/{{exito.anio}}/{{exito.etapa}}" class="btn btn-info span2"><i class="icon icon-ok"></i>&nbsp;Abrir plan</a>
+      </div> 
+    </div>
+  </div>
+</div>
+<div class="container">
+  <div class="row">
+    <div class="card span12" style="padding-top: 0;">
+      <div class="card-body" style="margin-top: 14px">
+        <div class="container">
+          <div class="row">
+            <label class="control-label text-right span2" style="padding-top: 5px;"><strong>Año:</strong></label>
+            <div class="controls span2">
+              <select ng-model="plan.anio" style="width: 100%">
+                <option value="2013">2013</option>
+                <option value="2014">2014</option>
+                <option value="2015">2015</option>
+                <option value="2016">2016</option>
+                <option value="2017">2017</option>
+                <option value="2018">2018</option>
+                <option value="2019">2019</option>
+                <option value="2020">2020</option>
+              </select>
+            </div>
+            <label class="control-label text-right span2" style="padding-top: 5px;"><strong>Etapa:</strong></label>
+            <div class="controls span2">
+              <select ng-model="plan.etapa" style="width: 100%">
+                <option value="planificacion">Planificación</option>
+                <option value="seguimiento">Seguimiento</option>
+              </select>
+            </div>
+            <button ng-disabled="exito" ng-click="crear()" ng-disabled="exito" type="button" class="btn btn-success span2 pull-right" style="margin-right: 45px"><i class="icon icon-ok"></i>&nbsp;Crear plan</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="span7" style="margin-left: 0px;" ng-controller="POAEditarJurisdiccionesPlanCtrl as ctrl">
+        <div class="card span7" style="padding-bottom: 15px;">
+          <div class="pull-right no-print" style="margin-right: 10px;">
+            <select ui-select2 class="span4" type="text" ng-model="ctrl.nuevaJurisdiccion" ng-options="i as i.nombreCompleto for i in jurisdicciones | orderBy:'nombreCompleto'">
+                <option ng-disabled="true" value="">Asociar jurisdiccion...</option>
+            </select>
+          </div>
+          <h3 class="card-heading simple">Jurisdicciones</h3>
+          <ul class="nav nav-list" style="padding-bottom: 0px; border-bottom-width: 0px;">
+            <li ng-repeat="j in plan.jurisdicciones" style="overflow: visible;padding-top: 10px;padding-bottom: 10px;" ng-hide="j.idOrmOrganigrama == '0'">
+              <span class="pull-right btn-group">
+                <button ng-disabled="exito" type="button" ng-click="plan.jurisdicciones.splice($index, 1)" class="btn btn-danger pull-right" style="padding: 0; cursor: pointer;"><i class="icon icon-remove"></i></button>
+              </span>
+              <span style="font-size: 18px">{{j.nombre}}</span>
+            </li>
+            <li ng-if="!plan.jurisdicciones.length" class="text-center" style="padding-top: 10px;padding-bottom: 10px;">
+              <em>No hay ninguna jurisdicción asociada a este plan aún</em>
+            </li>
+          </ul>
+        </div>
+        <div class="card span7" style="padding-bottom: 15px;">
+          <div class="pull-right no-print" style="margin-right: 10px;">
+            <div class="input-append">
+              <input class="span3" type="text" ng-model="textoJurisdiccion" style="width: 305px;" />
+              <button class="btn" type="button" ng-click="jurisdiccionEscrita()" style="padding-right: 5px; padding-left: 5px;"><i class="icon-plus"></i></button>
+            </div>
+          </div>
+          <h3 class="card-heading simple">Otras</h3>
+          <ul class="nav nav-list" style="padding-bottom: 0px; border-bottom-width: 0px;">
+            <li ng-repeat="j in plan.jurisdicciones" style="overflow: visible;padding-top: 10px;padding-bottom: 10px;" ng-hide="j.idOrmOrganigrama !== '0'">
+              <span class="pull-right btn-group">
+                <button ng-disabled="exito" type="button" ng-click="asignarJurisdicciones(j)" class="btn" style="cursor: pointer;"><i class="icon icon-plus"></i> Asignar Jurisdicciones</button>
+                <button ng-disabled="exito" type="button" ng-click="plan.jurisdicciones.splice($index, 1)" class="btn btn-danger" style="padding: 0; cursor: pointer;"><i class="icon icon-remove"></i></button>
+              </span>
+              <span style="font-size: 18px">{{j.nombre}}</span>
+            </li>
+            <li ng-if="!plan.jurisdicciones.length" class="text-center" style="padding-top: 10px;padding-bottom: 10px;">
+              <em>No hay ninguna jurisdicción asociada a este plan aún</em>
+            </li>
+          </ul>
+        </div>
+        
+        <div id="asignarJurisdiccion" class="modal hide fade" style="top: 40px;">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h3>Asignar jurisdicciones a {{seleccionado.nombre}}</h3>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" style="margin-bottom: 0px !important;">
+                    <select ui-select2 class="span4" type="text" ng-model="jurisSeleccionada" ng-options="i as i.nombreCompleto for i in jurisdicciones | orderBy:'nombreCompleto'">
+                        <option ng-disabled="true" value="">Asociar jurisdiccion...</option>
+                    </select>
+                    <button ng-disabled="exito" type="button" ng-click="seleccionado.idsOrmOrganigrama.push(jurisSeleccionada._id)" class="btn" style="cursor: pointer;"><i class="icon icon-ok"></i></button>
+                    
+                    <div class="control-group">
+                        <div class="control-group span5" style="margin-left: 0px; margin-right: 8px; margin-bottom: 0px;width: 450px;" ng-repeat="i in seleccionado.idsOrmOrganigrama">
+                            <input class="span5" type="text" ng-disabled="true" style="margin-bottom: 0px;width: 350px;" value="{{organigramaPorId(i).nombreCompleto}}" />
+                            <a class="btn btn-link" ng-click="seleccionado.idsOrmOrganigrama.splice($index, 1)" style="padding-left: 0px; padding-right: 0px;"><i class="icon icon-trash"></i></a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer" style="padding-top: 0px;">
+                <a href="#" class="btn pull-right" data-dismiss="modal">Cerrar</a>
+            </div>
+        </div>
+    </div>
+    <div class="span5">
+        <div class="card span5">
+          <h3 class="card-heading simple">Responsables</h3>
+          <div class="card-body" style="margin-top: 8px;">
+            <div class="control-group span5" style="margin-left: 0px; margin-right: 5px; margin-bottom: 0px;">
+                <select class="span3" placeholder="Sin responsable" ui-select2 type="text" ng-model="dataRespon">
+                    <option value="">Sin responsable</option>
+                    <option ng-repeat="c in contactos | orderBy: 'apellidos'" value="{{c._id}}">{{c.apellidos}} {{c.nombre}}</option>
+                </select>
+                <button class="btn" style="margin-bottom:10px; margin-left: 5px" ng-click="agregarResponsable(dataRespon)"><i class="icon-plus"></i></button>
+            </div>
+            <div class="span4" style="margin-left: 0px;margin-bottom: 20px;">
+                <div class="control-group" ng-repeat="c in plan.responsables" style="margin-left: 0px; margin-right: 5px;margin-bottom: 0px;">
+                    <input class="span3" type="text" ng-disabled="true" value="{{contactoPorId(c).apellidos}} {{contactoPorId(c).nombre}}" style="margin-bottom: 0px;" />
+                    <a href="#" style="margin-left: 10px" ng-click="eliminarListaElem(c, plan.responsables)"><i class="icon-trash"></i></a>
+                </div>
+            </div>
+          </div>
+        </div>
+    
+        <div class="card span5">
+          <h3 class="card-heading simple">Proyectos existentes</h3>
+          <div class="card-body" style="padding-left: 0px; padding-right: 0px; margin-top: 0px;">
+              <table border="1" class="table table-striped" >
+                <tr ng-repeat="o in proyectos" bgcolor="#FFFFFF">
+                    <td style="padding-bottom: 4px; padding-top: 4px;"><div style="margin-left: 10px;"><a href="/obras/{{o._id}}">{{o.nombre}}</a></div></td>
+                    <td style="padding-bottom: 0px; padding-top: 0px;"><center><div class="btn-group">
+                          <button ng-click="o.enPlanSiguiente = 'Si';" class="btn" ng-class="{'active btn-success': o.enPlanSiguiente == 'Si'}">Si</button>
+                          <button ng-click="o.enPlanSiguiente = 'No';" class="btn" ng-class="{'active btn-danger': o.enPlanSiguiente == 'No'}">No</button>
+                        </div></center>
+                    </td>
+                </tr>
+            </table>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,57 @@
+<div class="card span12" style="padding-top: 10px; margin-top: 0px;margin-bottom: 10px;">
+  <h3 class="card-heading simple">
+  <span class="btn-group pull-right">
+    <a ng-if="!activada && !detalle" ng-click="verDetalle()" class="btn"><i class="icon icon-zoom-in"></i> Ver detalle</a>
+    <a ng-if="!activada && detalle" ng-click="cancelarDetalle()" class="btn"><i class="icon icon-zoom-out"></i> Ocultar</a>
+  </span>
+  <span class="pull-right" style="margin-right: 10px;margin-left: 20px;">Objetivo operativo</span>
+  <strong style="margin-right: 1em">{{tabCtrl.filtro.objOperativo.nombre}}</strong></h3>
+  <div class="card-body" ng-if="detalle">
+    <form class="form-horizontal">
+      <div class="control-group" style="width: 975px; display: inline-block;margin-bottom: 0px;">
+        <label class="control-label">Nombre:</label>
+        <div class="controls" style="margin-right: 20px;">
+          <input type="text"  ng-disabled="!activada" ng-model="objOperativo.nombre" style="width: 100%;">
+        </div>
+      </div>
+      <div class="btn-group">
+        <button class="btn" ng-class="{'active btn-info': objOperativo.validado}" ng-click="objOperativo.validado = !objOperativo.validado" ng-disabled="!activada">Validado</button>
+        <button class="btn" ng-class="{'active btn-info': objOperativo.aprobado}" ng-click="objOperativo.aprobado = !objOperativo.aprobado" ng-disabled="!activada || !hasPermission('poa.administrador')">Aprobado</button>
+      </div>
+    </form>
+    <form class="form-horizontal">
+      <div class="control-group">
+        <label class="control-label" style="width: 166px; text-align: right; padding-right: 14px;margin-left: 0px;">Descripción:</label>
+        <textarea ng-disabled="!activada" ng-model="objOperativo.descripcion" style="width: 57%; resize: vertical" rows="3"></textarea>
+        <label style="width: 140px; text-align: right; padding-right: 14px;display: inline-block;">Cód. Identificación:</label>
+        <input type="text" ng-disabled="!activada" ng-model="objOperativo.codIdentificacion" style="width: 90px;"/>
+      </div>
+    </form>
+    <!--<form class="form-inline">
+        <label style="width: 162px; text-align: right; padding-right: 14px;">Cód. Identificación:</label>
+        <input type="text" ng-disabled="!activada" ng-model="objOperativo.codIdentificacion" />
+        <label style="width: 162px; text-align: right; padding-right: 14px;">Tipo de producción:</label>
+        <select type="text" ng-model="objOperativo.tipoProduccion" ng-disabled="!activada" style="width: 224px">
+            <option ng-disabled="true" value="">{{objOperativo.tipoProduccion}}</option>
+            <option value="Produccion Externa">Produccion Externa</option>
+            <option value="Produccion Organizacional">Produccion Organizacional</option>
+            <option value="Produccion Interna">Produccion Interna</option>
+        </select>
+    </form>
+    <h4 style="margin-left: 30px;">Población objetivo</h4>
+    <form class="form-inline">
+      <label style="width: 162px; text-align: right; padding-right: 14px;">Género:</label>
+      <select type="text" ng-model="objOperativo.generoPoblacionObjetivo" ng-disabled="!activada" style="width: 224px">
+            <option ng-disabled="true" value="">{{objOperativo.generoPoblacionObjetivo}}</option>
+            <option value="No aplica">No aplica</option>
+            <option value="Mujer">Mujer</option>
+            <option value="Varon">Varon</option>
+      </select>
+      <label style="width: 102px; text-align: right; padding-right: 14px;">Grupos etáreos:</label>
+      <input type="text" ng-disabled="!activada" ng-model="objOperativo.gruposEtareosPoblacionObjetivo" />
+      <label style="width: 122px; text-align: right; padding-right: 14px;">Grupos vulnerables:</label>
+      <input type="text" ng-disabled="!activada" ng-model="objOperativo.gruposVulnerablesPoblacionObjetivo" />
+    </form> -->
+  </div>
+</div>
+

@@ -1,0 +1,16 @@
+<div class="card animated fadeInDown">
+    <h3 class="card-heading simple">
+        <span style="white-space: nowrap">
+            <span style="margin-bottom: 0;background-color: {{agenda.color || 'grey'}}; width: 1.7em; height: 1.7em; display: inline-block; ">&nbsp;</span>&nbsp;
+            <span>{{agenda.nombre}}</span>
+        </span>
+    </h3>
+    <div class="card-body">
+        <div class="control-group">
+            <h3 ng-if="instancia.titulo">{{instancia.titulo}}</h3>
+            <hr ng-if="instancia.titulo">
+            <h4 class="pull-right">{{horaDesde}} a {{horaHasta}}</h4>
+            <h3>{{fechaDesde}}<h3>
+        </div>
+    </div>
+</div>

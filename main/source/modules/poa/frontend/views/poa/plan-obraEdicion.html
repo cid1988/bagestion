@@ -1,0 +1,165 @@
+<script>
+    $(document).ready(function() { $("#e1").select2(); });
+    $(document).ready(function() { $("#e2").select2(); });
+    $(document).ready(function() { $("#e3").select2(); });
+    $(document).ready(function() { $("#e4").select2(); });
+    $(document).ready(function() { $("#e5").select2(); });
+    $(document).ready(function() { $("#e6").select2(); });
+</script>
+
+<div class="card span12" ng-controller="POAEditarObraCtrl" style="padding-top: 10px; margin-top: 0px;">
+  <h3 class="card-heading simple">
+  <span class="btn-group pull-right">
+    <a ng-click="volver()" class="btn btn-default"><i class="icon icon-arrow-up"></i> Volver</a>
+    <a ng-if="activada" ng-click="cancelar()" class="btn btn-default"><i class="icon icon-undo"></i> Cancelar</a>
+    <a ng-if="activada" ng-click="eliminar()" class="btn btn-default"><i class="icon icon-trash"></i> Eliminar</a>
+    <a ng-if="activada" ng-click="guardar()" class="btn btn-default"><i class="icon icon-save"></i> Guardar</a>
+    <a ng-if="!activada" ng-click="activar()" class="btn btn-default" ng-show="obra.cargadaEnPOA && permisoObra()"><i class="icon icon-edit"></i> Modificar</a>
+    <a ng-if="!activada" ng-click="desvincularObra()" class="btn btn-default" ng-show="!obra.cargadaEnPOA && permisoObra()"> Desvincular</a>
+  </span>
+  <span class="pull-right" style="margin-right: 10px;margin-left: 20px;">Obra</span>
+  <strong style="margin-right: 1em">{{obra.nombre}}</strong></h3>
+    <div class="card-body">
+        <form class="form-horizontal" style="margin-bottom: 0px !important;">
+            <div class="control-group" style="margin-left: 40px;">
+                <div class="control-group" style="margin-left: 0px; margin-right: 8px; margin-bottom: 0px;display: inline-block;">
+                    <label style="margin-bottom: 0px">Nombre:</label>
+                    <input class="span4" type="text" ng-disabled="!activada" ng-model="obra.nombre" />
+                </div>
+                <div class="control-group" style="margin-left: 0px; margin-right: 8px; margin-bottom: 0px;display: inline-block;">
+                    <label style="margin-bottom: 0px">Nombre completo:</label>
+                    <input class="span7" type="text" ng-disabled="!activada" ng-model="obra.nombre_largo"/>
+                </div>
+                <h4 class="span11" style="margin-top: 15px;margin-bottom: 5px;margin-left: 0px;">Ubicación</h4>
+                <div class="control-group" style="display: inline-block">
+                    <span style="display: inline-block"> Calle:<br /> 
+                        <input class="span3" type="text" ng-disabled="!activada" data-provide="typeahead" placeholder="Nombre de Calle" ng-model="obra.calle" data-source={{calles}} />
+                    </span>
+                    <span style="display: inline-block"> Altura:<br /> 
+                        <input class="span2" type="text" ng-disabled="!activada" placeholder="Nro" ng-model="obra.altura" />
+                    </span>
+                    <span style="display: inline-block"> Cruce:<br /> 
+                        <input class="span3" type="text" ng-disabled="!activada" data-provide="typeahead" placeholder="Nombre de calle" ng-model="obra.cruce" data-source={{calles}} />
+                    </span>
+                    <span style="display: inline-block"> Barrio:<br /> 
+                        <input class="span3" type="text" ng-disabled="!activada" placeholder="Barrio" ng-model="obra.barrio" />
+                    </span>
+                    <div class="span11" style="margin-left: 0px;margin-top: 10px;">
+                        <form class="form-inline" style="margin-bottom: 5px;">
+                            <label style="width: 60px; text-align: right; padding-right: 14px;margin-bottom: 0px;">Comunas:</label>
+                            <select ui-select2 ng-show="activada" style="width: 290px;" type="text" ng-model="dataComuna" ng-options="i._id as i.nombre for i in comunas | filter: filtroComuna" ng-click="agregarComuna(dataComuna)"></select>
+                            <div class="btn-group" ng-repeat="e in obra.comuna" style="margin-bottom: 0px;margin-left: 5px;margin-right: 0px;">
+                                <button class="btn active">{{comunaPorId(e).nombre}}</button>
+                                <button class="btn active" ng-show="activada" ng-click="eliminarListaElem(e, obra.comuna)"><i class="icon-remove"></i></button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="span6" style="margin-left: 0px; width: 530px;">
+                    <h4 style="margin-top: 0px;margin-bottom: 5px;">Presupuesto Gestión</h4>
+                    <div class="control-group" style="display: inline-block;margin-bottom: 0px;">
+                        <span type="number" min="0" style="display: inline-block"> Monto:<br /> 
+                            <input class="span2" type="text" ng-disabled="!activada" ng-model="obra.nombrar[obra.nombrar.length-1].monto"/>
+                        </span>
+                        <span style="display: inline-block"> Fecha de presupuestación:<br /> 
+                            <input class="span2" type="text" ng-disabled="!activada" date ng-model="obra.nombrar[obra.nombrar.length-1].fecha_valor" ng-disabled="true"/>
+                        </span>
+                        <span style="display: inline-block"> Año:<br /> 
+                            <input class="span1" type="text" ng-disabled="!activada" ng-model="obra.nombrar[obra.nombrar.length-1].partida_anio" />
+                        </span>
+                    </div>
+                    <div class="control-group span3" style="margin-left: 0px; margin-right: 8px; margin-bottom: 0px;" ng-if="hasPermission('poa.administrador')">
+                        <h4 style="margin-top: 18px;margin-bottom: 5px;">Prioridad:</h4>
+                        <select class="span3" id="e1" type="text" ng-disabled="!activada" ng-model="obra.relevancia" ng-options="i._id as i.nombre for i in relevancias track by i._id | orderBy:'nombre'">
+                            <option value="" ng-disabled="true">{{relevanciaPorId(obra.relevancia).nombre}}</option>
+                        </select>
+                    </div>
+                    <div class="control-group span2" style="margin-left: 0px; margin-right: 8px; margin-bottom: 0px;">
+                        <h4 style="margin-top: 18px;margin-bottom: 5px;">Plan:</h4>
+                        <input class="span2" type="text" ng-disabled="true" value="{{obra.plan}}" />
+                    </div>
+                </div>
+                <div class="span6" style="margin-left: 0px; width: 530px;">
+                    <h4 style="margin-top: 0px;margin-bottom: 5px;">Descripción Alcance</h4>
+                    <div class="card-body" style="margin-top: 5px; padding-left: 0px;">
+                        <div class="control-group span3" style="margin-left: 0px; margin-bottom: 0px; margin-right: 0px; margin-bottom: 10px;width: 324px;">
+                            <label style="margin-bottom: 1px;">Quien:</label>
+                            <select class="span2" id="e2" ng-disabled="!activada" type="text" ng-model="obra.descripcionesAlcance[obra.descripcionesAlcance.length-1].quien" style="margin-bottom: 0px;width: 320px;" ng-options="i._id as i.apellidos + ' ' + i.nombre for i in contactos | orderBy:'apellidos'">
+                                <option value="" ng-disabled="true">{{contactoPorId(obra.descripcionesAlcance[obra.descripcionesAlcance.length-1].quien).apellidos}}, {{contactoPorId(obra.descripcionesAlcance[obra.descripcionesAlcance.length-1].quien).nombre}}</option>
+                            </select>
+                        </div>
+                        <span style="display: inline-block">Cuando:<br>
+                            <input class="span2" type="text" ng-disabled="!activada" date ng-model="obra.descripcionesAlcance[obra.descripcionesAlcance.length-1].cuando" date style="width: 135px;"/>
+                        </span>
+                        <textarea style="height:62px; width:90%;margin-top: 0px;" ng-disabled="!activada" type="text" ng-model="obra.descripcionesAlcance[obra.descripcionesAlcance.length-1].descripcion" placeholder="Descripcion..." />
+                    </div>
+                </div>
+                <div class="span6" style="margin-left: 0px; width: 530px;">
+                    <!-- <h4 style="margin-top: 0px;margin-bottom: 5px;">Proyecto:</h4>
+                    <div class="control-group span4" style="margin-left: 0px; margin-right: 8px; margin-bottom: 0px;width: 145px;">
+                        <label style="margin-bottom: 0px">Fecha:</label>
+                        <input class="span4" type="text" date ng-model="obra.fechaProy" style="margin-bottom: 0px;width: 130px;" />
+                    </div>
+                    <div class="control-group span2" style="margin-left: 0px; margin-right: 8px; margin-bottom: 0px;width: 335px;">
+                        <label style="margin-bottom: 0px">Fuente:</label>
+                        <select class="span2" ui-select2 type="text" ng-model="obra.fuenteProy" style="margin-bottom: 0px;width: 320px;" ng-options="i._id as i.apellidos + ' ' + i.nombre for i in contactos | orderBy:'apellidos'"></select>
+                    </div> -->
+                    <h4 style="margin-top: 15px;margin-bottom: 5px;">Inicio:</h4>
+                    <div class="control-group span4" style="margin-left: 0px; margin-right: 8px; margin-bottom: 0px;width: 145px;">
+                        <label style="margin-bottom: 0px">Fecha:</label>
+                        <input class="span4" type="text" ng-disabled="!activada" date ng-model="obra.inicios[obra.inicios.length-1].fecha" style="margin-bottom: 0px;width: 130px;" />
+                    </div>
+                    <div class="control-group span2" style="margin-left: 0px; margin-right: 8px; margin-bottom: 0px;width: 335px;">
+                        <label style="margin-bottom: 0px">Fuente:</label>
+                        <select class="span2" id="e3" ng-disabled="!activada" type="text" ng-model="obra.inicios[obra.inicios.length-1].fuente" style="margin-bottom: 0px;width: 320px;" ng-options="i._id as i.apellidos + ' ' + i.nombre for i in contactos | orderBy:'apellidos'">
+                            <option value="" ng-disabled="true">{{contactoPorId(obra.inicios[obra.inicios.length-1].fuente).apellidos}}, {{contactoPorId(obra.inicios[obra.inicios.length-1].fuente).nombre}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="span6" style="margin-left: 0px; width: 530px;">
+                    <!-- <h4 style="margin-top: 0px;margin-bottom: 5px;">Contrato:</h4>
+                    <div class="control-group span4" style="margin-left: 0px; margin-right: 8px; margin-bottom: 0px;width: 145px;">
+                        <label style="margin-bottom: 0px">Fecha:</label>
+                        <input class="span4" type="text" date ng-model="obra.fechaCont" style="margin-bottom: 0px;width: 130px;" />
+                    </div>
+                    <div class="control-group span2" style="margin-left: 0px; margin-right: 8px; margin-bottom: 0px;width: 335px;">
+                        <label style="margin-bottom: 0px">Fuente:</label>
+                        <select class="span2" ui-select2 type="text" ng-model="obra.fuenteCont" style="margin-bottom: 0px;width: 320px;" ng-options="i._id as i.apellidos + ' ' + i.nombre for i in contactos | orderBy:'apellidos'"></select>
+                    </div> -->
+                    <h4 style="margin-top: 15px;margin-bottom: 5px;">Final:</h4>
+                    <div class="control-group span4" style="margin-left: 0px; margin-right: 8px; margin-bottom: 0px;width: 145px;">
+                        <label style="margin-bottom: 0px">Fecha:</label>
+                        <input class="span4" type="text" ng-disabled="!activada" date ng-model="obra.final[obra.final.length-1].fecha" style="margin-bottom: 0px;width: 130px;" />
+                    </div>
+                    <div class="control-group span2" style="margin-left: 0px; margin-right: 8px; margin-bottom: 0px;width: 335px;">
+                        <label style="margin-bottom: 0px">Fuente:</label>
+                        <select class="span2" id="e4" ng-disabled="!activada" type="text" ng-model="obra.final[obra.final.length-1].fuente" style="margin-bottom: 0px;width: 320px;" ng-options="i._id as i.apellidos + ' ' + i.nombre for i in contactos | orderBy:'apellidos'">
+                            <option value="" ng-disabled="true">{{contactoPorId(obra.final[obra.final.length-1].fuente).apellidos}}, {{contactoPorId(obra.final[obra.final.length-1].fuente).nombre}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="span6" style="margin-left: 0px; width: 530px;margin-top: 15px;">
+                    <h4 style="margin-top: 0px;margin-bottom: 5px;">Jurisdiccion:</h4>
+                    <div class="control-group span4" style="margin-left: 0px; margin-right: 8px; margin-bottom: 0px;width: 335px;" ng-hide="(tabCtrl.filtro.jurisdiccion.idOrmOrganigrama == '0')">
+                        <input class="span4" type="text" ng-disabled="true" value="{{organigramaPorId(obra.jurisdiccion).nombreCompleto}}" style="margin-bottom: 0px;width: 455px;" />
+                    </div>
+                    <div class="control-group span4" style="margin-left: 0px; margin-right: 8px; margin-bottom: 0px;" ng-show="(tabCtrl.filtro.jurisdiccion.idOrmOrganigrama == '0')">
+                        <select class="span4" id="e5" ng-disabled="!activada" type="text" ng-model="obra.jurisdiccion" style="margin-bottom: 0px;" ng-options="i._id as i.nombreCompleto for i in organigrama | orderBy:'nombreCompleto'">
+                            <option value="" ng-disabled="true">{{organigramaPorId(obra.jurisdiccion).nombre}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="span6" style="margin-left: 0px; width: 530px;margin-top: 15px;">
+                    <h4 style="margin-top: 0px;margin-bottom: 5px;">Dependencia:</h4>
+                    <div class="control-group span4" style="margin-left: 0px; margin-right: 8px; margin-bottom: 0px;width: 335px;" ng-show="(obra.dependencia)">
+                        <input class="span4" type="text" ng-disabled="true" value="{{organigramaPorId(obra.dependencia).nombreCompleto}}" style="margin-bottom: 0px;width: 455px;" />
+                    </div>
+                    <div class="control-group span4" style="margin-left: 0px; margin-right: 8px; margin-bottom: 0px;" ng-hide="(obra.dependencia)">
+                        <select class="span4" id="e6" type="text" ng-disabled="!activada" ng-model="obra.dependencia" style="margin-bottom: 0px;" ng-options="i._id as i.nombreCompleto for i in organigrama | orderBy:'nombreCompleto'"></select>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+

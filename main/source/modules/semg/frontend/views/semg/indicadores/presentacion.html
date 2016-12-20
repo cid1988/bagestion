@@ -1,0 +1,43 @@
+<style>
+    .table {
+        border: 0;
+    }
+    .table th, .table td {
+        padding: 8px;
+        line-height: 20px;
+        text-align: center;
+        border: 0;
+        padding-top: 0px;
+        padding-bottom: 0px;
+        vertical-align: middle;
+    }
+    .table th {
+        background-color: #dddddd !important;
+    }
+    
+    span.rotate {
+      -ms-writing-mode: tb-rl; /* vieja sintaxis IE */
+      -webkit-writing-mode: vertical-rl;
+      -moz-writing-mode: vertical-rl; /*¿a futuro?*/
+      -ms-writing-mode: vertical-rl;
+      writing-mode: vertical-rl; /* nueva sintaxis */            
+    }
+</style>
+<div class="card" ng-controller="PresentacionSEMGCtrl">
+    <h2 class="card-heading simple">SEMG - Presentacion</h2>
+    <div class="card-body">
+        <table border="1" class="table">
+            <tr ng-repeat="i in impactos">
+                <td style="background-color: {{dameColor($index)}}; width: 150px;border-bottom: 10px solid white;"><h4><b>{{i.nombre}}</b></h4></td>
+                <td>
+                    <a ng-repeat="m in ministeriales | filter:{idObjImpacto:i._id}" href="/semg/indicadores/{{anio}}/presentacion/{{m._id}}" style="color: black">
+                        <div class="span12" style="margin-left: 10px; background-color: {{dameColor($parent.$index)}}; margin-bottom: 5px; margin-top: 5px; width: 100%; position: relative;"> <!-- onmouseover="this.style.backgroundColor='#999'" onmouseout="this.style.backgroundColor=dameColor($parent.$index)"> -->
+                            <center ng-hide="descripcion" style="margin-left: 5px;margin-right: 5px; width: 90%;"><h4>{{m.nombre}}</h4></center>
+                            <div style="bottom: 0.5em;position: absolute;right: 0.5em;">{{cantIndicadores(m._id)}}</div>
+                        </div>
+                    </a>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

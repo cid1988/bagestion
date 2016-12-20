@@ -1,0 +1,27 @@
+
+<div class="span12 card" style="padding-top: 10px; margin-top: 0px;" ng-controller="POAObrasCtrl"  ng-show="(tabCtrl.filtro.proyecto.proyectoInversion==true)">
+  <h3 class="card-heading simple">
+    <span class="pull-right input-append" style="margin-bottom: 0" ng-show="permisoObra()" >
+      <a href="javascript:" ng-click="tabCtrl.filtro.obra = true" class="btn btn-default"><i class="icon icon-plus"></i></a>
+    </span>
+    Obras</h3> 
+  <div class="card-body" style="padding: 0; margin-top: 0; border-bottom: 0">
+    <div style="font-size: 14px;padding-top: 4px;padding-bottom: 4px;margin-bottom: 10px;margin-left: 33px;margin-top: 5px;"><span class="span5">Nombre</span><span class="span2" style="text-align: center;">Presupuesto</span><span class="span1" style="width: 85px;text-align: center;">Prioridad</span><span class="span1" style="width: 85px;text-align: center;">Inicio</span><span class="span1" style="width: 85px;text-align: center;">Final</span></div>
+    <hr style="margin-bottom: 0px;">
+    <ul class="nav nav-list">
+      <li ng-repeat="a in tabCtrl.obras | filter:filtroObras | orderBy:'orden2'">
+        <a style="font-size: 18px" ng-click="tabCtrl.filtro.obra = a" href="javascript:">
+            <strong class="pull-right" ng-if="a.codIdentificacion">{{a.orden2}}</strong>
+            <span class="span5">{{a.nombre}}</span>
+            <span class="span2" style="text-align: center;">{{a.nombrar[a.nombrar.length-1].monto}}</span>
+            <span class="span1" style="width: 85px;text-align: center;">{{prioridadPorId(a.relevancia).nombre}}</span>
+            <span class="span1" style="width: 85px;text-align: center;">{{a.inicios[a.inicios.length-1].fecha}}</span>
+            <span class="span1" style="width: 85px;text-align: center;">{{a.final[a.final.length-1].fecha}}</span>
+        </a>
+      </li>
+      <li ng-if="!(tabCtrl.obras|filter:filtroObras).length" class="text-center" style="padding-top: 10px; padding-bottom: 10px;">
+        <em>No hay obras asociadas</em>
+      </li>
+    </ul>
+  </div>
+</div>

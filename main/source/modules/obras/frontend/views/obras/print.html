@@ -1,0 +1,169 @@
+<style>
+    @media print {
+        body, span, div, table, tr, tbody, tfoot, td, hr { 
+            -webkit-print-color-adjust: exact !important;
+        }
+    }
+    #imgStyle{
+        border-width: 2px;border-style:solid; border-color:#FFD300; border-radius: 15px 15px 15px 15px;margin-left:0px
+    }
+</style>
+
+<div class="card no-print" style="padding-bottom:50px">
+    <thead>
+        <a href="/obras/print" style="margin-right:10px" class="btn pull-right" ng-show="hasPermission('obras.escritura')" ng-click="imprimir()"><i class="icon-print"></i></a>
+        <div style="margin-left:10px;margin-right:10px;margin-bottom:5px">
+            <input type="text" style="margin-bottom:0px;width:25%;no print" placeholder="Nombre" class="no print" ng-model="filtro.nombre">
+            <select type="text" style="width:20%" placeholder="Segmento" ui-select2 ng-model="filtro.orden1">
+                <option value=""></option>
+                <option value="">Todos los segmentos</option>
+                <option ng-repeat="e in ordenes | orderBy: 'orden'" value="{{e._id}}">{{e.nombre}}</option>
+            </select>
+            <select type="text" style="width:10%" placeholder="Grupo" ui-select2 ng-model="filtro.grupo">
+                <option value=""></option>
+                <option value="">Todos los grupos</option>
+                <option ng-repeat="e in grupos | orderBy:'orden'" value="{{e._id}}">{{e.nombre}}</option>
+            </select>
+            <select type="text" style="width:25%" placeholder="Jurisdiccion" ui-select2 ng-model="filtro.jurisdiccion">
+                <option value=""></option>
+                <option value="">Todas las jurisdicciones</option>
+                <option ng-repeat="e in jurisdicciones" value="{{e._id}}">{{e.nombreCompleto}}</option>
+            </select>
+            <select type="text" style="width:11%" placeholder="Estado" ui-select2 ng-model="filtro.estado">
+                <option value=""></option>
+                <option value="">Todos los estados</option>
+                <option ng-repeat="e in estados" value="{{e._id}}">{{e.nombre}}</option>
+            </select>
+        </div>
+        
+        <div style="margin-left:10px;margin-right:10px">
+            <div data-toggle="multiselect buttons-radio" class="control-group pull-right span4" style="width: 250px !important">
+                Prioridad:
+                <div class="btn-group">
+                    <a style="padding-left: 0px;padding-right: 0px; min-width:21px; font-weight: 700" class="btn" ng-class="{'active btn-info': filtrandoPrioridad('SP')}" ng-click="cambiarFiltroPrioridad('SP')">SP</a>
+                    <a ng-repeat="c in relevancias | orderBy:'_id'" style="padding-left: 0px;padding-right: 0px; min-width:21px; font-weight: 700" class="btn" ng-class="{'active btn-info': filtrandoPrioridad(c)}" ng-click="cambiarFiltroPrioridad(c)">{{c.nombre}}</a>
+                    <a class="btn" ng-class="{'active btn-info': todasLasPrioridadesEstanFiltradas(c)}" style="font-weight: 700" ng-click="togglePrioridades()"><div ng-show="todasLasPrioridadesEstanFiltradas(c)">Ninguna</div><div ng-show="!todasLasPrioridadesEstanFiltradas(c)">Todas</div></a>
+                </div>
+            </div>
+            <div data-toggle="multiselect buttons-radio" class="control-group pull-right span4" style="margin-left: 0px; width: 540px !important;margin-right: 0px;">
+                Comuna:
+                <div class="btn-group">
+                    <a ng-repeat="c in comunas | orderBy:'numero'" style="padding-left: 0px;padding-right: 0px; min-width:21px; font-weight: 700" class="btn" ng-class="{'active btn-info': filtrandoComuna(c) }" ng-click="cambiarFiltroComuna(c)">{{c.numero}}</a>
+                    <a class="btn" ng-class="{'active btn-info': todasLasComunasEstanFiltradas(c)}" style="font-weight: 700" ng-click="toggleComunas()"><div ng-show="todasLasComunasEstanFiltradas(c)">Ninguna</div><div ng-show="!todasLasComunasEstanFiltradas(c)">Todas</div></a>
+                </div>
+            </div>
+        </div>
+    </thead>
+</div>
+
+<div class="" style="background-color:white;top: 0px;left: initial;width: 905px;max-width:905px; height: 100%;margin-top: 0px;margin-bottom: 0px;padding-top: 0px;margin:auto">
+    <div ng-repeat="f in listado | filter:filtro | filter:filtroComunas | filter:filtroPrioridades | filter:filtrosVarios" style="{{!$first && 'page-break-before: always' || ''}}">
+		<div style="background-color:#FFD300 !important;-webkit-print-color-adjust: exact !important;border-style:solid;border-color:#FFD300;border-radius: 15px 15px 15px 15px;margin-bottom:20px;display:inline-block;width:900px"><h4 style="font-weight: bold">{{f.nombre}}</h4></div>
+		<div class="span4" style="border-width: 2px; border-style:solid;border-color:#FFD300; margin-left:0px; margin-right: 26px; height:524px; width: 390px;border-radius: 15px 15px 15px 15px;">
+			<div style="margin-left:5px; margin-top:5px">
+				<table>
+					<tr>
+						<td valign="top" style="border-right-color: #FFD300;border-right-width: 1px;border-right-style: solid;font-size: 11px;padding-bottom: 15px">Detalle</td>
+						<td style="padding-bottom: 15px">
+							<table>
+								<tr>
+									<td style="width:10px;color:#FFD300;vertical-align:top;padding-right: 0px;padding-left: -1;padding-left: 0px;">►</td>
+									<td ng-show="!mostrarLetras">{{f.detalleComunicacion | limitTo:500}}<a href="#" ng-show="f.detalleComunicacion.length > '500'" ng-click="mostrarLetras = true">...<i class="icon-plus"></i></a></td>
+									<td ng-show="mostrarLetras">{{f.detalleComunicacion}}<a href="#" ng-click="mostrarLetras = false">...<i class="icon-minus"></i></a></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" style="border-right-color: #FFD300;border-right-width: 1px;border-right-style: solid;font-size: 11px;padding-bottom: 15px">Comuna</td>
+						<td style="padding-bottom: 15px">
+							<table>
+								<tr>
+									<td style="width:10px;color:#FFD300;vertical-align:top;padding-right: 0px;padding-left: -1;padding-left: 0px;">►</td>
+									<td ng-repeat="c in f.comuna">{{comunaPorId(c).nombre}}</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" style="border-right-color: #FFD300;border-right-width: 1px;border-right-style: solid;font-size: 11px;padding-bottom: 15px">Ubicación</td>
+						<td style="padding-bottom: 15px">
+							<table>
+								<tr>
+									<td style="width:10px;color:#FFD300;vertical-align:top;padding-right: 0px;padding-left: -1;padding-left: 0px;">►</td>
+									<td ng-show="!mostrarLetrasUbi">{{f.ubicacionPres | limitTo:112}}<a href="#" ng-show="f.ubicacionPres.length > '112'" ng-click="mostrarLetrasUbi = true">...<i class="icon-plus"></i></a></td>
+									<td ng-show="mostrarLetrasUbi">{{f.ubicacionPres}}<a href="#" ng-click="mostrarLetrasUbi = false">...<i class="icon-minus"></i></a></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" style="border-right-color: #FFD300;border-right-width: 1px;border-right-style: solid;font-size: 11px;padding-bottom: 15px">Responsable</td>
+						<td style="padding-bottom: 15px">
+							<table>
+								<tr>
+									<td style="width:10px;color:#FFD300;vertical-align:top;padding-right: 0px;padding-left: -1;padding-left: 0px;">►</td>
+									<td>{{jurisdiccionPorId(f.dependencia).nombreCompleto}}</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" style="border-right-color: #FFD300;border-right-width: 1px;border-right-style: solid;font-size: 11px;padding-bottom: 10px">Prioridad</td>
+						<td style="padding-bottom: 10px">
+							<table>
+								<tr>
+									<td style="width:10px;color:#FFD300;vertical-align:top;padding-right: 0px;padding-left: -1;padding-left: 0px;">►</td>
+									<td>{{prioridadPorId(f.relevancia).nombre}}</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" style="border-right-color: #FFD300;border-right-width: 1px;border-right-style: solid;font-size: 11px">Inicio - Fin</td>
+						<td>
+							<table>
+								<tr>
+									<td style="width:10px;color:#FFD300;vertical-align:top;padding-right: 0px;padding-left: -1;padding-left: 0px;">►</td>
+									<td>{{formatoFecha(f.inicioPres) | uppercase}} - {{formatoFecha(f.finPres) | uppercase}}</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<div>
+    		<div id="imgStyle" ng-hide="f.foto12 || f.foto13 || f.foto24 || f.foto1234" class="span2" style="margin-bottom:20px;margin-right:20px; width:228px; height:250px">
+    			<img ng-show="f.foto1 == true" src="/file/{{f.foto1}}" width="100%" style="max-height: 250px; border-radius: 15px 15px 15px 15px">
+    		</div>
+    		<div id="imgStyle" ng-hide="f.foto12 || f.foto13 || f.foto24 || f.foto1234" class="span2" style="margin-bottom:20px;width:228px; height:250px">
+    			<img src="/file/{{f.foto2}}" width="100%" style="max-height: 2500px; border-radius: 15px 15px 15px 15px">
+    		</div>
+    		<div id="imgStyle" ng-show="f.foto12" class="span2" style="margin-bottom:20px;width:480px; height:250px">
+    			<img src="/file/{{f.foto12}}" width="100%" style="max-height: 250px; border-radius: 15px 15px 15px 15px">
+    		</div>
+    		
+    		<div id="imgStyle" ng-hide="f.foto34 || f.foto13 || f.foto24 || f.foto1234" class="span2" style="margin-right:20px; width:228px; height:250px">
+    			<img src="/file/{{f.foto3}}" width="100%" style="max-height: 250px; border-radius: 15px 15px 15px 15px">
+    		</div>
+    		<div id="imgStyle" ng-hide="f.foto34 || f.foto13 || f.foto24 || f.foto1234" class="span2" style="width:228px; height:250px">
+    			<img src="/file/{{f.foto4}}" width="100%" style="max-height: 250px; border-radius: 15px 15px 15px 15px">
+    		</div>
+    		
+    		<div id="imgStyle" ng-show="f.foto1234" class="span2" style="width:480px; height:520px">
+    			<img ng-show="/file/{{f.foto1234}}" src="/file/{{f.foto1234}}" width="100%" style="max-height: 250px; border-radius: 15px 15px 15px 15px">
+    		</div>
+    		<div id="imgStyle" ng-show="f.foto13" class="span2" style="margin-right:20px; width:225px; height:520px">
+    			<img src="/file/{{f.foto13}}" width="100%" style="max-height: 520px; border-radius: 15px 15px 15px 15px">
+    		</div>
+    		<div id="imgStyle" ng-show="f.foto34" class="span2" style="width:480px; height:250px">
+    			<img src="/file/{{f.foto34}}" width="100%" style="max-height: 250px; border-radius: 15px 15px 15px 15px">
+    		</div>
+    		<div id="imgStyle" ng-show="f.foto24" class="span2" style="width:225px; height:520px">
+    			<img src="/file/{{f.foto24}}" width="100%" style="max-height: 520px; border-radius: 15px 15px 15px 15px">
+    		</div>
+		</div>
+		<div style="margin-top:50px"></div>
+	</div>
+</div>

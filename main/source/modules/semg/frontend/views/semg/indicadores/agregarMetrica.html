@@ -1,0 +1,14 @@
+<div class="modal-header" style="padding-bottom: 10px;">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>Agregar métrica</h3>
+    </div>
+    <div class="modal-body">
+        <span style="display: inline-block"> Nombre:<br /> 
+            <input class="span5" type="text" placeholder="Métrica" ng-model="data.nombre" />
+        </span>
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="btn" data-dismiss="modal">Cancelar</a>
+        <a href="#" class="btn btn-info" data-dismiss="modal" ng-click="agregarMetrica(true, data)">Agregar métrica</a>
+    </div>
+</div>

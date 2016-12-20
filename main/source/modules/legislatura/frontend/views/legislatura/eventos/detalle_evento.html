@@ -1,0 +1,64 @@
+
+<div class="card span11 offset1" ng-hide="modificando">
+    <h3 class="card-heading simple">Datos del Evento
+    <a class="btn pull-right btn-link no-print" style="margin-left: 10px" ng-click="eliminar()" ng-class="{true:'', false:'disabled'}[ui.legislatura.nuevoEvento.tienePermisos()]"><i class="icon-trash"></i></a>
+    <a style="margin-left: 10px" ng-click="modificar()" ng-class="{true:'', false:'disabled'}[ui.legislatura.nuevoEvento.tienePermisos()]" class="btn pull-right btn-link btn-link no-print"><i class="icon-edit"></i></a>
+    <a style="margin-left: 10px" href="/preguntas/eventos/print/{{evento._id}}" class="btn pull-right btn-link no-print"><i class="icon-print"></i></a>
+	</h3>
+	<div class="card-body container-fluid">
+		<forminput read-only ng-model="evento.nombre" placeholder="Sin nombre" title="Nombre" />
+		<forminput read-only ng-model="evento.nombreCorto" placeholder="Sin nombre corto" title="Nombre corto" />
+        <forminput read-only ng-model="evento.nombreLargo" placeholder="Sin nombre largo" title="Nombre largo" />
+		<forminput read-only ng-model="evento.fecha" placeholder="Sin fecha" title="Fecha" />
+        <div class="control-group">
+            <label class="control-label">Dirección:</label>
+            <div class="controls">
+                <input type="text" style="width: 400px" disabled ng-model="evento.calle" placeholder="Calle del evento" />
+                <input disabled type="text" style="width: 40px" ng-model="evento.altura"
+                />
+            </div>
+        </div>
+        <forminput read-only ng-model="evento.lugar" placeholder="Sin lugar" title="Lugar" />
+		<forminput read-only lines="4" ng-model="evento.descripcion" placeholder="Sin descripcion" title="Descripcion" />
+	</div>
+    
+    <a style="margin-left: 10px;margin-right: 10px;margin-bottom: 20px;" class="btn pull-right no-print" href="/preguntas/buscar?evento={{evento._id}}"><i class="icon-zoom-in"></i> Ver preguntas del evento</a>
+    
+</div>
+<div class="card span11 offset1" ng-show="modificando">
+    <h3 class="card-heading simple">Datos del Evento
+		<a class="btn btn-link no-print pull-right" ng-click="cancelar()" style="margin-left: 10px;"><i class="icon-remove"></i></a>
+        <a class="btn btn-link no-print pull-right" ng-click="guardar()"><i class="icon-ok icon-white"></i></a>
+    </h3>
+	<div class="card-body container-fluid">
+        <forminput required ng-model="evento.nombre" placeholder="Sin nombre" title="Nombre" />
+        <forminput ng-model="evento.nombreCorto" placeholder="Sin nombre corto" title="Nombre corto" />
+        <forminput ng-model="evento.nombreLargo" placeholder="Sin nombre largo" title="Nombre largo" />
+    	<forminput required date ng-model="evento.fecha" placeholder="Sin fecha" title="Fecha" />
+        <div class="control-group">
+            <label class="control-label">Dirección:</label>
+            <div class="controls">
+                <input ng-model="evento.calle" style="width: 400px" placeholder="Calle del evento"
+                type="text" source="calles"></typeahead>
+                <input type="text" style="width: 40px" ng-model="evento.altura"
+                />
+            </div>
+        </div>
+    	<forminput ng-model="evento.lugar" placeholder="Sin lugar" title="Lugar" />
+		<div class="control-group  ng-pristine ng-valid ng-valid-required"><label class="control-label">Descripcion:</label><div class="controls"><textarea style="width:95%" required="" placeholder="Sin descripcion" type="text" ng-model="evento.descripcion" name="evento.descripcion" rows="4" class="ng-pristine ng-valid ng-valid-required"></textarea></div></div>
+    </div>
+</div>
+
+<div id="confirmarEliminar" class="modal hide fade">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h3>Eliminar evento</h3>
+  </div>
+  <div class="modal-body">
+    <p>Está a un paso de eliminar el evento</p>
+  </div>
+  <div class="modal-footer">
+    <a href="#" class="btn btn-info" data-dismiss="modal">Conservar el registro</a>
+    <a href="#" class="btn btn-danger"  data-dismiss="modal" ng-click="eliminar(true)">Eliminar el evento</a>
+  </div> 
+</div>

@@ -1,0 +1,1 @@
+exports = module.exports = ['/scripts/controllers/obras.js','/scripts/controllers/detalleObra.js','/scripts/controllers/nuevaObra.js','/scripts/controllers/relevamientos.js','/scripts/controllers/reportesObras.js'];

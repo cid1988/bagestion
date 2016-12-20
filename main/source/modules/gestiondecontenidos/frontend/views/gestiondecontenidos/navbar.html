@@ -1,0 +1,4 @@
+<ul class="nav">
+    <li ng-class="{'active': state.current.section == 'gestiondecontenidos'}"><a  ng-href="/gestiondecontenidos">Gestion de Contenidos</a></li>
+    <li ng-class="{'active': state.current.section == 'gestiondecontenidos.administracion'}" ng-if=hasPermission('gestiondecontenidos.editar')><a ng-href="/gestiondecontenidos/administracion">Administracion</a></li>
+</ul>

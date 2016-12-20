@@ -1,0 +1,5 @@
+<div class="btn-group pull-right" style="margin-right: 7px" ng-controller="CRMNavBarCtrl">
+    <a class="btn btn-link" ng-hide="editando" href="/crm/nuevo" ng-if=hasPermission('crm.editar')><i class="icon-plus"></i>&nbsp;Nuevo Contacto</a>
+    <a class="btn btn-link" ng-hide="editando" href="#" style="margin-left: 10px" ng-click="abrirModal()" ng-if=hasPermission('crm.editar')><i class="icon-plus"></i>&nbsp;Nuevo Reporte</a>
+    <a class="btn btn-link" target="_blank" style="margin-left: 10px" href="/api/crm-csv/download"><i class="icon-download-alt"></i> Descargar CSV</a>
+</div>

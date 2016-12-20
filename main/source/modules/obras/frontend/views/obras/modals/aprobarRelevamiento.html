@@ -1,0 +1,77 @@
+<style>
+    .modal{
+        top:10px !important;
+        width:600px !important;
+    }
+</style>
+<div class="modal-header" style="padding-bottom:0px">
+    <!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>-->
+    <ul id="myTab" style="margin-bottom:0px" class="nav nav-pills">
+        <li ng-class="{'active': datos.tab == 'info'}"><a href="#" ng-click="datos.tab='info'" data-toggle="tab">Info</a></li>
+        <li ng-class="{'active': datos.tab == 'imagenes'}"><a href="#" ng-click="datos.tab='imagenes'" data-toggle="tab">Imagenes</a></li>
+    </ul>
+</div>
+
+<div ng-show="datos.tab == 'info'">
+    <div class="modal-body">
+        <span style="display: inline-block">
+            <!--<label><h4>Tipo de relevamiento: {{tipoObraRel.tipoRelevamiento}}</h4></label>-->
+            <!--<div><b>Fecha de visita:</b> {{relevamientoSel.fechaVisita}}</div>-->
+            <div><b>Ubicación:</b> {{relevamientoSel.ubicacion}}</div>
+            <div><b>Fecha inicio:</b> {{relevamientoSel.fechaInicio}}</div>
+            <div><b>Fecha de fin:</b> {{relevamientoSel.fechaFin}}</div>
+            <br>
+            <span><b>Nº Visita:</b> {{relevamientoSel.visitaN}}</span>
+            <span style="margin-left:10px"><b>Relevador:</b> {{relevamientoSel.relevador}}</span>
+            <span style="margin-left:10px"><b>Fecha visita:</b> {{relevamientoSel.fechaVisita}}</span>
+            <br>
+            <span><b>Obrador:</b> {{relevamientoSel.obrador}}</span>
+            <span style="margin-left:10px"><b>Cartel de gestion:</b> {{relevamientoSel.cartelGestion}}</span>
+            <span style="margin-left:10px"><b>En actividad:</b> {{relevamientoSel.enActividad}}</span>
+            <span style="margin-left:10px"><b>Cant personal:</b> {{relevamientoSel.cantidadPersonal}}</span>
+            <span style="margin-left:0px"><b>Jefe de la obra:</b> {{relevamientoSel.jefeObra}}</span><br>
+            <span style="margin-left:0px"><b>Apellido y Nombre:</b> {{relevamientoSel.apellidoNombre}}</span>
+            <span style="margin-left:10px"><b>N° contacto:</b> {{relevamientoSel.numeroContacto}}</span>
+            <span style="margin-left:10px"><b>Estado:</b> {{relevamientoSel.estadoRel}}</span>
+            <br><br>
+            
+            <button ng-class="{'btn-info active': relevamientoSel.tipoRel.inicio}" ng-click="relevamientoSel.tipoRel.inicio = !relevamientoSel.tipoRel.inicio" type="button" class="btn">Inicio</button>
+            <button ng-class="{'btn-info active': relevamientoSel.tipoRel.avance}" ng-click="relevamientoSel.tipoRel.avance = !relevamientoSel.tipoRel.avance" type="button" class="btn">Avance</button>
+            <button ng-class="{'btn-info active': relevamientoSel.tipoRel.final}" ng-click="relevamientoSel.tipoRel.final = !relevamientoSel.tipoRel.final" type="button" class="btn">Final</button>
+            
+            <br>
+            <div><b>Obra limpia:</b> {{relevamientoSel.obraLimpia}}</div>
+            <div><b>Fecha de finalización:</b> {{relevamientoSel.fechaFinalizacion}}</div>
+            <div><b>Avance fisico:</b> {{relevamientoSel.avanceFisico}}</div>
+            <div><b>En condiciones de ser recorrida:</b> {{relevamientoSel.condRecorrida}}</div>
+            <br>
+            <label>Comentarios del relevador:</label>
+            <textarea readonly style="height:50px; width:530px" type="text" ng-model="relevamientoSel.comentarioRelevador"/>
+            <br>
+            <label>Comentarios:</label>
+            <textarea style="height:50px; width:530px" type="text" ng-model="relevamientoSel.comentarios"/>
+        </span>
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="btn" data-dismiss="modal">Cancelar</a>
+        <a href="#" class="btn btn-info" data-dismiss="modal" ng-click="aprobar(relevamientoSel,true,true)">Relev. concuerda</a>
+        <a href="#" class="btn btn-info" data-dismiss="modal" ng-click="aprobar(relevamientoSel,true,false)">Relev. no concuerda</a>
+        <a href="#" class="btn btn-danger" data-dismiss="modal" ng-click="borrarRelevamiento(relevamientoSel)">Eliminar</a>
+    </div>
+</div>
+
+<div ng-show="datos.tab == 'imagenes'">
+    <a ng-repeat="o in relevamientoSel.fotos" data-toggle="modal" href="" class="thumbnail" style="display:inline-block">
+        <span><img src="/file/{{o.fotoId}}" width="128" height="96"></span>
+    </a>
+    <a ng-repeat="o in relevamientoSel.imagenesFisico" data-toggle="modal" href="" class="thumbnail" style="display:inline-block">
+        <span><img src="/file/{{o.fotoId}}" width="128" height="96"></span>
+    </a>
+    <!--
+    <label>Fin</label>
+    <div ng-repeat="o in relevamientoSel.fotos" class="accordion-group">
+        <a data-toggle="modal" href="" class="thumbnail" style="display:inline-block">
+            <span ng-repeat="f in o.fotos"><img src="/file/{{f.fotoId}}" width="128" height="96"></span>
+        </a>
+    </div>-->
+</div>

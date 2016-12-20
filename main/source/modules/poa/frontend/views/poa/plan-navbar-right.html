@@ -1,0 +1,12 @@
+<div ng-controller="NavbarPoaController">
+    <div class="btn-group pull-right" style="margin-right: 7px">
+        <a class="btn btn-link" target="_blank" style="margin-left: 10px" href="/api/tablaGeneral-csv/download/{{plan}}" ng-show=hasPermission('poa.verTodos')>
+            <i class="icon-download-alt"></i> Descargar Tabla General</a>
+        <a class="btn btn-link" target="_blank" style="margin-left: 10px" href="/api/poaproyectos-csv/download" ng-show=hasPermission('poa.verTodos')>
+            <i class="icon-download-alt"></i> Descargar Proyectos CSV</a>
+        <a class="btn btn-link" target="_blank" style="margin-left: 10px" href="/api/poahitos-csv/download" ng-show=hasPermission('poa.verTodos')>
+            <i class="icon-download-alt"></i> Descargar Caminos Críticos CSV</a>
+        <a class="btn btn-link" ng-hide="editando" href="/poa/configuracion" ng-if="(hasPermission('poa.administrador') && (((etapa == 'planificacion') && hasPermission('poa.planificacion')) || ((etapa == 'seguimiento') && hasPermission('poa.seguimiento'))))" >
+            <i class="icon-cog"></i>&nbsp;Configuración</a>
+    </div>
+</div>

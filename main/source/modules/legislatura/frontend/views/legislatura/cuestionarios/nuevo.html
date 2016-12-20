@@ -1,0 +1,34 @@
+<div class="card span11 offset1">
+    <h3 class="card-heading simple">Nuevo Cuestionario
+        <a ng-click="guardar()" class="btn btn-link pull-right" type="button"><i class="icon-ok icon-white"></i></a>
+    </h3>
+    <div class="card-body control-group">
+        <formselect required ng-model="cuestionario.evento" source="eventos" placeholder="Seleccionar"
+        title="Evento" span="5" />
+        <forminput required ng-model="cuestionario.nombre" placeholder="Sin nombre"
+        title="Nombre" />
+        <forminput ng-model="cuestionario.nombreCorto" placeholder="Sin nombre corto"
+        title="Nombre corto" />
+        <forminput ng-model="cuestionario.nombreLargo" placeholder="Sin nombre largo"
+        title="Nombre largo" />
+        <forminput date ng-model="cuestionario.fecha_nota" placeholder="Sin fecha de nota"
+        title="Fecha de nota" />
+        <forminput required date ng-model="cuestionario.fecha_recepcion" placeholder="Sin fecha de nota"
+        title="Fecha de recepción" />
+        <forminput ng-model="cuestionario.nro_nota" placeholder="Sin numero de nota"
+        title="Nro de nota" />
+        <div class="control-group  ng-pristine ng-valid">
+            <label class="control-label">Descripción:</label>
+            <div class="controls">
+                <textarea style="width:95%" placeholder="Sin descripcion" type="text" ng-model="cuestionario.descripcion" name="cuestionario.descripcion" rows="4" class="ng-pristine ng-valid">
+                </textarea>
+            </div>
+        </div>
+        <formselect ng-model="cuestionario.bloque" source="bloques" placeholder="Seleccionar"
+        title="Bloque" />
+        <forminput ng-model="cuestionario.legislador" placeholder="Sin legislador"
+        title="Legislador" />
+        <forminput required ng-model="cuestionario.via_recepcion" placeholder="Sin via de recepcion"
+        title="Via de recepción" />
+    </div>
+</div>

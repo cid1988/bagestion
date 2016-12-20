@@ -1,0 +1,12 @@
+<ul class="nav">
+    <li ng-class="{'active': state.current.section == 'obras'}"><a ng-href="/obras">Obras</a></li>
+    <li ng-class="{'active': state.current.section == 'nuevaObra'}"><a ng-show="hasPermission('obras.escritura')" ng-href="/obras/nueva">Nueva obra</a></li>
+    <li ng-class="{'active': state.current.section == 'admin'}"><a ng-show="hasPermission('obras.administrador')" ng-href="/obras/admin">Admin</a></li>
+    <li ng-class="{'active': (state.current.section == 'organigrama') || (state.current.section == 'contactos')}" class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" ng-show="hasPermission('obras.relevador') || hasPermission('obras.directorRelevamientos')" style="padding-top: 9px; padding-bottom: 5px;padding-left: 5px;"><i class="icon-th"></i></a>
+        <ul class="dropdown-menu">
+            <li><a href="/obras/fichaRelevador" ng-show="hasPermission('obras.relevador')" class="btn btn-link"><i class="icon-th"></i> Ficha Relevador</a></li>
+            <li><a href="/obras/relevamientos" ng-show="hasPermission('obras.directorRelevamientos')" class="btn btn-link"><i class="icon-th"></i> Relevamientos</a></li>
+        </ul>
+    </li>
+</ul>

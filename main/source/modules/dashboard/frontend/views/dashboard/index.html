@@ -1,0 +1,179 @@
+<style>
+    .table {
+        border: 0;
+    }
+    .table th, .table td {
+        padding: 8px;
+        line-height: 20px;
+        text-align: left;
+        vertical-align: middle;
+        font-size: 16px !important;
+        border: 0;
+    }
+    .table th {
+        background-color: #dddddd !important;
+    }
+    .icon {
+        -webkit-transition: all .3s linear;
+        -o-transition: all .3s linear;
+        transition: all .3s linear;
+        position: absolute;
+        top: 75px;
+        right: 20px;
+        z-index: 0;
+        font-size: 100px;
+        color: rgba(0,0,0,0.08);
+    }
+    
+    .miMarquesina{
+    width:80%; height:40px; overflow:hidden; position:relative; margin:0 auto;
+    
+    }
+    .scroller{
+    display:block; height:40px; position:absolute; left:0; top:0;
+    -moz-animation-iteration-count: infinite;
+    -moz-animation-timing-function: linear;
+    -moz-animation-duration:30s;
+    -moz-animation-name: scroll;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-timing-function: linear;
+    -webkit-animation-duration:30s;
+    -webkit-animation-name: scroll;
+    }
+    .scroller span{
+    font-size:22px; line-height:40px; float:left; color:#444444; font-weight:bold; padding:0 10px; 
+    }
+    
+    .scroller div a{
+    color:#444444;
+    }
+    
+    .scroller:hover{
+    -moz-animation-play-state: paused;
+    }
+    
+    
+    @-webkit-keyframes scroll{
+    0% {left:0;}
+    100% {left: -100%;}
+    }
+    
+    .scroller:hover{
+    -webkit-animation-play-state: paused;
+    }
+</style>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+<div ng-controller="DashboardCtrl">
+    
+    <!-- PRIMERA FILA -->
+    
+    <div class="card" style="overflow-y: hidden; overflow-x: hidden;position: absolute;top: 50px;left: 0.5%; width: 55%; bottom: 55px;padding-top: 5px;">
+        <a href="/dashboard/obras" style="text-decoration: none;"><h2 class="card-heading simple">Obras</h2></a>
+        <div class="card-body" style="margin-top: 5px;">
+            <div class="icon">
+              <i class="fa fa-file-text-o"></i>
+            </div>
+            <table border="1" class="table table-striped">
+                <tr bgcolor= "#FFFFFF">
+                    <th width="38%" style="padding-bottom: 4px; padding-top: 4px;"><a href="#" style="display: inline-block; color:#404040;font-size: 14px;">Segmento</a></th>
+                    <th width="10%" style="padding-bottom: 4px; padding-top: 4px;text-align: right;"><a href="#" style="display: inline-block; color:#404040;font-size: 14px;">Q</a></th>
+                    <th width="20%" style="padding-bottom: 4px; padding-top: 4px;text-align: right;"><a href="#" style="display: inline-block; color:#404040;font-size: 14px;">$</a></th>
+                    <th width="15%" style="padding-bottom: 4px; padding-top: 4px;text-align: right;"><a href="#" style="display: inline-block; color:#404040;font-size: 14px;">No Ini</a></th>
+                    <th width="15%" style="padding-bottom: 4px; padding-top: 4px;text-align: right;"><a href="#" style="display: inline-block; color:#404040;font-size: 14px;">Ini</a></th>
+                    <th width="15%" style="padding-bottom: 4px; padding-top: 4px;text-align: right;"><a href="#" style="display: inline-block; color:#404040;font-size: 14px;">Fin</a></th>
+                    <th width="2%" style="padding-bottom: 4px; padding-top: 4px;"></th>
+                </tr>
+                <tr ng-repeat-start="g in grupos | filter:{nuevo:true} | orderBy:'nombre'" bgcolor="#FFFFFF" style="border-bottom: 1px solid #bbbbbb;">
+                    <th width="38%" style="padding-bottom: 10px; padding-top: 10px;font-size: 15px !important;background-color: #Ececec !important;">{{g.nombre}}</th>
+                    <th width="10%" style="padding-bottom: 3px; padding-top: 3px;text-align: right;background-color: #Ececec !important;"></th>
+                    <th width="20%" style="padding-bottom: 3px; padding-top: 3px;text-align: right;background-color: #Ececec !important;"></th>
+                    <th width="15%" style="padding-bottom: 3px; padding-top: 3px;text-align: right;background-color: #Ececec !important;"></th>
+                    <th width="15%" style="padding-bottom: 3px; padding-top: 3px;text-align: right;background-color: #Ececec !important;"></th>
+                    <th width="15%" style="padding-bottom: 3px; padding-top: 3px;text-align: right;background-color: #Ececec !important;"></th>
+                    <th width="2%" style="padding-bottom: 5px; padding-top: 5px;background-color: #Ececec !important;"></th>
+                </tr>
+                <tr ng-repeat-end ng-repeat="s in segmentos | filter:{grupo:g._id}" ng-show="g.nombre=='Grandes obras'">
+                    <td width="38%" style="padding-bottom: 3px; padding-top: 3px;padding-left: 20px;"><div>{{s.nombre}}</div></td>
+                    <td width="10%" style="padding-bottom: 3px; padding-top: 3px;text-align: right;"><div>20</div></td>
+                    <td width="20%" style="padding-bottom: 3px; padding-top: 3px;text-align: right;"><div>$4.916</div></td>
+                    <td width="15%" style="padding-bottom: 3px; padding-top: 3px;text-align: right;"><div>3</div></td>
+                    <td width="15%" style="padding-bottom: 3px; padding-top: 3px;text-align: right;"><div>12</div></td>
+                    <td width="15%" style="padding-bottom: 3px; padding-top: 3px;text-align: right;"><div>5</div></td>
+                    <td width="2%" style="padding-bottom: 4px; padding-top: 4px;"><button class="btn btn-success" title="Avance Medio" style="margin-left: 13px;"></button></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="card" style="overflow-y: hidden; overflow-x: hidden;position: absolute;top: 50px;left: 56.5%;width: 43%; height: 440px;padding-top: 5px;">
+        <a href="/dashboard/compromisosORM" style="text-decoration: none;"><h2 class="card-heading simple">Compromisos Importantes</h2></a>
+        <div class="card-body" style="margin-top: 5px;">
+            <div class="icon">
+              <i class="fa fa-file-text-o"></i>
+            </div>
+            <table border="1" class="table table-striped">
+                <tr bgcolor= "#FFFFFF">
+                    <th width="53%" style="padding-bottom: 3px; padding-top: 3px;"><a href="#" style="display: inline-block; color:#404040;font-size: 14px;">Tema Principal</a></th>
+                    <th width="15%" style="padding-bottom: 1px; padding-top: 1px;text-align: center;"><a href="#" style="display: inline-block; color:#404040;font-size: 14px;"><button class="btn btn-success"></button></a></th>
+                    <th width="15%" style="padding-bottom: 1px; padding-top: 1px;text-align: center;"><a href="#" style="display: inline-block; color:#404040;font-size: 14px;"><button class="btn btn-warning"></button></a></th>
+                    <th width="15%" style="padding-bottom: 1px; padding-top: 1px;text-align: center;"><a href="#" style="display: inline-block; color:#404040;font-size: 14px;"><button class="btn btn-danger"></button></a></th>
+                    <th width="2%" style="padding-bottom: 3px; padding-top: 3px;"></th>
+                </tr>
+                <tr ng-repeat="t in temas | orderBy:'orden'">
+                    <td width="53%" style="padding-bottom: 3px; padding-top: 3px;"><div>{{t.nombre}}</div></td>
+                    <td width="15%" style="text-align: center;padding-bottom: 3px; padding-top: 3px;"><div>{{t.verde}}</div></td>
+                    <td width="15%" style="text-align: center;padding-bottom: 3px; padding-top: 3px;"><div>{{t.amarillo}}</div></td>
+                    <td width="15%" style="text-align: center;padding-bottom: 3px; padding-top: 3px;"><div>{{t.rojo}}</div></td>
+                    <td width="2%" style="padding-bottom: 3px; padding-top: 3px;"></td>
+                </tr>
+                <tr>
+                    <td width="53%" style="padding-bottom: 3px; padding-top: 3px;"><div>Fuera de Tema</div></td>
+                    <td width="15%" style="text-align: center;padding-bottom: 3px; padding-top: 3px;"><div>{{fueraTema.verde}}</div></td>
+                    <td width="15%" style="text-align: center;padding-bottom: 3px; padding-top: 3px;"><div>{{fueraTema.amarillo}}</div></td>
+                    <td width="15%" style="text-align: center;padding-bottom: 3px; padding-top: 3px;"><div>{{fueraTema.rojo}}</div></td>
+                    <td width="2%" style="padding-bottom: 3px; padding-top: 3px;"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    
+    <!-- SEGUNDA FILA -->
+    
+    <div class="card" style="overflow-y: hidden; overflow-x: hidden;position: absolute;top: 505px;left: 56.5%;width: 43%; bottom: 55px;padding-top: 5px;">
+        <h2 class="card-heading simple">Agenda Legislativa</h2>
+        <div class="card-body" style="margin-top: 10px;">
+            <div class="icon" style="top: 125px;">
+              <i class="fa fa-code-fork"></i>
+            </div>
+            <table border="1" class="table table-striped">
+                <tr bgcolor= "#FFFFFF">
+                    <th><a href="#" style="display: inline-block; color:#404040;font-size: 14px;">Tema</a></th>
+                    <th><a href="#" style="display: inline-block; color:#404040;font-size: 14px;">Proyecto</a></th>
+                    <th><a href="#" style="display: inline-block; color:#404040;font-size: 14px;">Descripcion</a></th>
+                    <th><a href="#" style="display: inline-block; color:#404040;font-size: 14px;">Vencimiento</a></th>
+                    <th><a href="#" style="display: inline-block; color:#404040;font-size: 14px;">Prioridad</a></th>
+                </tr>
+            </table>
+        </div>
+    </div>
+    
+    <!-- TERCERA FILA -->
+    
+    <div class="card" style="overflow-y: hidden; overflow-x: hidden;position: absolute; bottom: 0px;left: 0; width: 100%; height: 60px;padding-top: 0px; margin-bottom: 0px; background-color: #F8C301;">
+        <div class="card-body" style="margin-top: 0px;padding-top: 0px;">
+            <div class="icon">
+              <i class="icon-calendar"></i>
+            </div>
+            <div class="miMarquesina pull-left" style="margin-top: 10px;">
+               <div class="scroller">
+                  <span>{{facts}}</span>
+               </div>
+            </div>
+            <div class="pull-right">
+                <img src="/views/dashboard/images/bsas.jpg" width="180">
+            </div>
+        </div>
+    </div>
+</div>
+
+

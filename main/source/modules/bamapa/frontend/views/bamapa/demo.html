@@ -1,0 +1,59 @@
+<script src="servicios.usig.buenosaires.gov.ar/usig-js/3.1/usig.MapaInteractivo.min.js" type="text/javascript"></script> 
+<script type="text/javascript">
+	jQuery(document).ready(function($) {
+		
+		$('#mapa').css('width', 600).css('height', 450);
+		
+		var mapa = new usig.MapaInteractivo('mapa', {
+			rootUrl: '../',
+			debug: true,
+			onReady: function() {
+				
+				var markerId1 = mapa.addMarker('corrientes 1234', false);
+				var markerId2 = mapa.addMarker('peru 1234', false);
+				var markerId3 = mapa.addMarker('corrientes y callao', false);				
+				var markerId4 = mapa.addMarker('asdf', false);
+				var markerId5 = mapa.addMarker('sarmiento 1500', false);
+				var markerId6 = mapa.addMarker(
+						'perú 652', 
+						false, 
+						'Banco',
+						{
+							iconUrl: 'http://servicios.usig.buenosaires.gov.ar/symbols/mapabsas/bancos.png',
+							iconWidth: 41,
+							iconHeight: 41,
+							offsetX: 5,
+							offsetY: 5
+						}
+				);
+			}
+		});
+
+		
+	});	
+	</script>
+<style>
+    .titulo {
+        font-family: Arial;
+        font-size:20px;
+        color: #777777;
+        font-weight: normal;
+        padding: 15px;
+        padding-left: 7px;
+        border-bottom: solid 1px #CCCCCC;
+        margin-bottom: 5px;
+    }
+</style>
+
+<div ng-controller="mapaIndex" class="card" style="padding: 5px;">
+<div id="page">
+      <div id="header">
+        <div id="logo"><h1>USIG - Mapa Interactivo de Buenos Aires 3.1 (Demo)</h1></div>
+      </div>
+	    <div id="mapa"></div>
+      <div id="footer">
+        <p>&copy; 2011-2012 USIG - Unidad de Sistemas de Información Geográfica</p>
+      </div>
+    </div>
+<!-- Fin del div del controller -->  
+</div>

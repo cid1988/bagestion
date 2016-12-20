@@ -1,0 +1,241 @@
+<script>
+    $(document).ready(function() { $("#e1").select2(); });
+    $(document).ready(function() { $("#e2").select2(); });
+    $(document).ready(function() { $("#e3").select2(); });
+</script>
+<style>
+    .table {
+        border: 0;
+    }
+    .table th, .table td {
+        padding: 8px;
+        line-height: 20px;
+        text-align: left;
+        vertical-align: middle;
+        border: 0;
+    }
+    .table th {
+        background-color: #dddddd !important;
+    }
+</style>
+
+<div class="container">
+    <div class="row">
+        <div ng-controller="FiscalesDetalleCtrl" class="card span12" style="padding-bottom: 20px;">
+            <div class="card-actions pull-right" style="margin: 0; padding-right: 0">
+                <!-- <a ng-show="editando" ng-click="eliminar(false, e._id)" class="btn btn-link no-underline"><i class="icon-trash"></i></a> -->
+                <a ng-show="!editando" ng-click="editar()" class="btn btn-link no-underline" style="margin-right: 10px;"><i class="icon-edit"></i> Editar tus datos</a>
+                <a ng-show="editando" ng-click="guardar()" class="btn btn-link no-underline" style="margin-right: 10px;"><i class="icon-ok"></i> Guardar</a>
+            </div>
+            <h3 class="card-heading simple">Detalle - {{contacto.apellido}}, {{contacto.nombre}}</h3>
+            <div class="card-body">
+                <span style="display: inline-block;margin-left: 60px;"> Nombre:<br />
+                    <input class="span3" style="width:90%" ng-disabled="!editando" type="text" ng-model="contacto.nombre" />
+                </span>
+                <span style="display: inline-block"> Apellido:<br />
+                    <input class="span3" style="width:90%" ng-disabled="!editando" type="text" ng-model="contacto.apellido" />
+                </span>
+                <div class="control-group" ng-class="{'error': dniDuplicado}" style="display: inline-block">
+                    <span style="display: inline-block"> DNI:<br />
+                        <input class="span3" style="width:90%" ng-disabled="!editando" type="text" ng-model="contacto.dni" />
+                    </span>
+                    <span style="display: inline-block"> Sexo:<br />
+                        <div class="btn-group" data-toggle="buttons-radio" ng-disabled="!editando" style="margin-left: 0px; margin-bottom: 0px; margin-right: 0px;">
+                            <button class="btn" ng-class="(contacto.sexo == 'M') && 'active btn-info'" ng-click="contacto.sexo='M'" ng-disabled="!editando" style="margin-bottom: 10px;">Masculino</button>
+                            <button class="btn" ng-class="(contacto.sexo == 'F') && 'active btn-info'" ng-click="contacto.sexo='F'" ng-disabled="!editando" style="margin-bottom: 10px;">Femenino</button>
+                        </div>
+                    </span>
+                    <div class="alert" ng-show="dniDuplicado && dniDuplicadoCandidatos.length < 10">
+                        <p>Por favor verifique que este contacto no esté duplicado.</p>
+                        <ol>
+                            <li ng-repeat="cd in dniDuplicadoCandidatos">
+                                <a class="btn btn-link" href="/fiscales/detalle/{{cd._id}}" target="_blank">{{cd.apellido}}, {{cd.nombre}} (DNI: {{cd.dni}})</a>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="btn-group pull-right" data-toggle="buttons-radio" ng-disabled="!editando" style="margin-left: 0px; margin-bottom: 0px; margin-right: 0px;display: inline-block">
+                    <button class="btn btn-large" ng-class="(contacto.confirmado == 'Si') && 'active btn-info'" ng-show="contacto.confirmado == 'Si'" ng-click="contacto.confirmado='No'; guardar()" style="margin-bottom: 0px;margin-left: 0px;padding-top: 5px;padding-bottom: 5px;height: 37px;">Confirmado</button>
+                    <button class="btn btn-large" ng-class="(contacto.confirmado == 'No')" ng-show="!(contacto.confirmado == 'Si')" ng-click="contacto.confirmado='Si'; guardar()" style="margin-bottom: 0px;margin-left: 0px;padding-top: 5px;padding-bottom: 5px;height: 37px;">Confirmar</button>
+                </div>
+                <br>
+                <span style="display: inline-block;margin-left: 60px;"> Mail Personal:<br />
+                    <input class="span3" style="width:90%;margin-bottom: 0px;" ng-disabled="!editando" type="text" ng-model="contacto.mail" />
+                </span>
+                <span style="display: inline-block"> Celular Personal:<br />
+                    <input class="span3" style="width:90%;margin-bottom: 0px;" ng-disabled="!editando" type="text" ng-model="contacto.celular" />
+                </span>
+                <span style="display: inline-block"> Domicilio:<br />
+                    <input class="span3" style="width:90%;margin-bottom: 0px;" ng-disabled="!editando" type="text" ng-model="contacto.domicilio" />
+                </span>
+                <span style="display: inline-block"> Comuna:<br />
+                    <select id="e1" type="text" ng-model="contacto.comuna" style="width: 150px;" ng-disabled="!editando" ng-options="i.nombre as i.nombre for i in comunas">
+                        <option value="" ng-disabled="true">{{contacto.comuna}}</option>
+                    </select>
+                </span>
+                <br>
+                <hr>
+                <h4 style="color: #666;"><b>Invitá a otros a participar:</b><a ng-click="agregarContacto(false, contacto._id);" href="" class="btn btn-link pull-right" style="padding-top: 0px; padding-bottom: 0px;"><i class="icon-plus"></i> <b></b>Agregar</b></a></h4>
+                <table border="1" class="table table-striped" >
+                    <tr bgcolor= "#FFFFFF">
+                        <th><a ng-click="orden = 'dni'" href="#" style="display: inline-block; color:#404040;">DNI</a></th>
+                        <th><a ng-click="orden = 'nombre'" href="#" style="display: inline-block; color:#404040;">Nombre</a></th>
+                        <th><a ng-click="orden = 'sexo'" href="#" style="display: inline-block; color:#404040;">Sexo</a></th>
+                        <th><a ng-click="orden = 'celular'" href="#" style="display: inline-block; color:#404040;">Celular</a></th>
+                        <th><a ng-click="orden = 'mail'" href="#" style="display: inline-block; color:#404040;">Mail Personal</a></th>
+                        <th><a ng-click="orden = 'comuna'" href="#" style="display: inline-block; color:#404040;">Comuna</a></th>
+                        <th style="padding-top: 0px; padding-bottom: 0px;"></th>
+                    </tr>
+                    <tr ng-repeat="i in apadrinados | orderBy:orden" bgcolor="#FFFFFF">
+                        <td><div>{{i.dni}}</div></td>
+                        <td><div>{{i.apellido}}, {{i.nombre}}</div></td>
+                        <td><div ng-if="i.sexo == 'M'">Masculino</div><div ng-if="i.sexo == 'F'">Femenino</div></td>
+                        <td><div>{{i.celular}}</div></td>
+                        <td><div>{{i.mail}}</div></td>
+                        <td><div>{{i.comuna}}</div></td>
+                        <td style="padding-top: 0px;padding-bottom: 0px;"><a href="#" class="btn btn-link no-print pull-right" ng-click="modificarContacto(false, i)" style="padding-left: 0px; padding-right: 0px;"><i class="icon-edit"></i> Editar</a>
+                            <!-- <a href="#" class="btn btn-link no-print pull-right" ng-click="enviar(i)" ng-show="editando" style="padding-left: 0px; padding-right: 0px;"><i class="icon-envelope"></i></a> -->
+                        </td>
+                    </tr>
+                </table>
+                <span ng-if="!apadrinados.length">No se han cargado personas</span>
+            </div>
+            <!--Modal eliminar contacto-->
+            <div id="modalEliminar" class="modal hide fade">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h3>Eliminar contacto</h3>
+                </div>
+                <div class="modal-body">
+                    <p>Está a un paso de eliminar el contacto, al eliminar el contacto no se
+                        lo podrá utilizar para nuevas reuniones ni se lo mostrará en la lista de
+                        contactos, pero se mantendrá la información histórica.</p>
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-info" data-dismiss="modal">Conservar el contacto</a>
+                    <a href="#" class="btn btn-danger" data-dismiss="modal" ng-click="eliminar(true)">Eliminar el contacto</a>
+                </div>
+            </div>
+            
+            <div id="mailEnviado" class="modal hide fade">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h3>Mail Enviado</h3>
+                </div>
+                <div class="modal-body">
+                    <p>La invitacion se ha enviado con exito.</p>
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-info" data-dismiss="modal">Cerrar</a>
+                </div>
+            </div>
+            
+            <div id="modalContacto" class="modal hide fade">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h3>Nuevo Fiscal</h3>
+                </div>
+                <div class="modal-body" style="height: 280px;">
+                    <span style="display: inline-block"> Nombre:<br />
+                        <input class="span3" style="width:90%" type="text" ng-model="nuevo.nombre" />
+                    </span>
+                    <span style="display: inline-block"> Apellido:<br />
+                        <input class="span3" style="width:90%" type="text" ng-model="nuevo.apellido" />
+                    </span>
+                    <div class="control-group" ng-class="{'error': dniDuplicadoNuevo}" style="display: inline-block;margin-bottom: 0px;">
+                        <span style="display: inline-block"> DNI:<br />
+                            <input class="span3" style="width:90%" type="text" ng-model="nuevo.dni" />
+                        </span>
+                        <span style="display: inline-block"> Sexo:<br />
+                            <div class="btn-group" data-toggle="buttons-radio" style="margin-left: 0px; margin-bottom: 0px; margin-right: 0px;">
+                                <button class="btn" ng-class="(nuevo.sexo == 'M') && 'active btn-info'" ng-click="nuevo.sexo='M'" style="margin-bottom: 10px;">Masculino</button>
+                                <button class="btn" ng-class="(nuevo.sexo == 'F') && 'active btn-info'" ng-click="nuevo.sexo='F'" style="margin-bottom: 10px;">Femenino</button>
+                            </div>
+                        </span>
+                        <div class="alert" ng-show="dniDuplicadoNuevo && dniDuplicadoCandidatosNuevo.length < 10">
+                            <p>Por favor verifique que este contacto no esté duplicado.</p>
+                            <ol>
+                                <li ng-repeat="cd in dniDuplicadoCandidatosNuevo">
+                                    <a class="btn btn-link" href="/fiscales/detalle/{{cd._id}}" target="_blank">{{cd.apellido}}, {{cd.nombre}} (DNI: {{cd.dni}})</a>
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
+                    <br>
+                    <span style="display: inline-block;margin-bottom: 10px;"> Mail Personal:<br />
+                        <input class="span3" style="width:90%;margin-bottom: 0px;" type="text" ng-model="nuevo.mail" />
+                    </span>
+                    <span style="display: inline-block"> Celular Personal:<br />
+                        <input class="span3" style="width:90%;margin-bottom: 0px;" type="text" ng-model="nuevo.celular" />
+                    </span>
+                    <span style="display: inline-block"> Domicilio:<br />
+                        <input class="span3" style="width:90%;margin-bottom: 0px;" type="text" ng-model="nuevo.domicilio" />
+                    </span>
+                    <span style="display: inline-block"> Comuna:<br />
+                        <select ui-select2 type="text" ng-model="nuevo.comuna" style="width: 150px;" ng-options="i.nombre as i.nombre for i in comunas">
+                            <option value=""></option>
+                        </select>
+                    </span><br><br>
+                    <span>Al guardar se enviara a la persona ingresada un mail de tu parte invitando a confirmar datos.</span>
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="btn pull-right" data-dismiss="modal">Cerrar</a>
+                    <a class="btn btn-info pull-right" href="#" ng-click="agregarContacto(true)" style="margin-right: 10px;">Guardar</a>
+                </div>
+            </div>
+            
+            <div id="modificaContacto" class="modal hide fade">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h3>Modificacion de Fiscal</h3>
+                </div>
+                <div class="modal-body" style="height: 280px;">
+                    <span style="display: inline-block"> Nombre:<br />
+                        <input class="span3" style="width:90%" type="text" ng-model="fiscalM.nombre" />
+                    </span>
+                    <span style="display: inline-block"> Apellido:<br />
+                        <input class="span3" style="width:90%" type="text" ng-model="fiscalM.apellido" />
+                    </span>
+                    <div class="control-group" ng-class="{'error': dniDuplicadoNuevo}" style="display: inline-block;margin-bottom: 0px;">
+                        <span style="display: inline-block"> DNI:<br />
+                            <input class="span3" style="width:90%" type="text" ng-model="fiscalM.dni" />
+                        </span>
+                        <span style="display: inline-block"> Sexo:<br />
+                            <div class="btn-group" data-toggle="buttons-radio" style="margin-left: 0px; margin-bottom: 0px; margin-right: 0px;">
+                                <button class="btn" ng-class="(fiscalM.sexo == 'M') && 'active btn-info'" ng-click="fiscalM.sexo='M'" style="margin-bottom: 10px;">Masculino</button>
+                                <button class="btn" ng-class="(fiscalM.sexo == 'F') && 'active btn-info'" ng-click="fiscalM.sexo='F'" style="margin-bottom: 10px;">Femenino</button>
+                            </div>
+                        </span>
+                        <div class="alert" ng-show="dniDuplicadoNuevo && dniDuplicadoCandidatosNuevo.length < 10">
+                            <p>Por favor verifique que este contacto no esté duplicado.</p>
+                            <ol>
+                                <li ng-repeat="cd in dniDuplicadoCandidatosNuevo">
+                                    <a class="btn btn-link" href="/fiscales/detalle/{{cd._id}}" target="_blank">{{cd.apellido}}, {{cd.nombre}} (DNI: {{cd.dni}})</a>
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
+                    <br>
+                    <span style="display: inline-block;margin-bottom: 10px;"> Mail Personal:<br />
+                        <input class="span3" style="width:90%;margin-bottom: 0px;" type="text" ng-model="fiscalM.mail" />
+                    </span>
+                    <span style="display: inline-block"> Celular Personal:<br />
+                        <input class="span3" style="width:90%;margin-bottom: 0px;" type="text" ng-model="fiscalM.celular" />
+                    </span>
+                    <span style="display: inline-block"> Domicilio:<br />
+                        <input class="span3" style="width:90%;margin-bottom: 0px;" type="text" ng-model="fiscalM.domicilio" />
+                    </span>
+                    <span style="display: inline-block"> Comuna:<br />
+                        <select ui-select2 type="text" ng-model="fiscalM.comuna" style="width: 150px;" ng-options="i.nombre as i.nombre for i in comunas">
+                            <option value="" ng-disabled="true">{{fiscalM.comuna}}</option>
+                        </select>
+                    </span>
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="btn pull-right" data-dismiss="modal">Cerrar</a>
+                    <a class="btn btn-info pull-right" data-dismiss="modal" href="#" ng-click="modificarContacto(true)" style="margin-right: 10px;">Guardar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

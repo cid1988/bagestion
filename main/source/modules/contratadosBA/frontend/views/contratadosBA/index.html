@@ -1,0 +1,68 @@
+<style>
+    .table {
+        border: 0;
+    }
+    .table th, .table td {
+        padding: 8px;
+        line-height: 20px;
+        text-align: left;
+        vertical-align: middle;
+        border: 0;
+    }
+    .table th {
+        background-color: #dddddd !important;
+    }
+</style>
+
+<div ng-controller="ContratadosBACtrl" class="card">
+    <div class="card-actions pull-right no-print" style="margin: 0; padding: 0">
+        <input placeholder="Apellido..." type="text" ng-model="filtro.apellido" title="Apellido" style="width:150px;margin-bottom: 22px;"/>
+        <div style="margin-left: 0px; display: inline-block;width: 320px;">
+            <select ui-select2 type="text" ng-model="filtro.reparticion" class="span2" title="Dirección General" style="width: 320px;">
+                <option value="">Todas las direcciones...</option>
+                <option value="522e05fde5fd3d320e000029">Dirección General de Control de Gestión</option>
+                <option value="522e068ee5fd3d320e00002d">Dirección General de Planificación Estratégica</option>
+                <option value="522e063de5fd3d320e00002a">Dirección General de Evaluación del Gasto</option>
+            </select>
+        </div>
+        <input placeholder="Área..." type="text" ng-model="filtro.area" title="Área" style="width:180px;margin-bottom: 22px;"/>
+        <div style="margin-left: 0px; display: inline-block; ">
+            <select ui-select2 type="text" ng-model="filtro.categoria" class="span2" title="Categoría" style="width:200px;">
+                <option value="">Todas las categorías...</option>
+                <option value="Estudiante Universitario">Estudiante Universitario</option>
+                <option value="Joven Profesional">Joven Profesional</option>
+                <option value="Profesional Junior">Profesional Junior</option>
+                <option value="Profesional Senior">Profesional Senior</option>
+            </select>
+        </div>
+        <a href="/contratadosBA/nuevo" class="btn btn-link pull-right" style="margin-right: 20px;margin-bottom: 20px;margin-left: 25px;" ng-if=hasPermission('contratadosBA.editar') ><i class="icon-plus"></i> Nuevo</a>
+    </div>
+    
+    <h2 class="card-heading simple">Contratados BA</h2>
+    <div class="card-body" style="padding-left: 0px; padding-right: 0px; padding-bottom: 0px;">
+        <div class="form-horizontal" name="form" style="margin-left:10px; padding-top: 16px; clear: both">
+            <div class="row" style="padding-bottom: 10px;">
+                <div class="span3" style="display: table-cell;margin-left: 50px;"><a href="#" style="display: inline-block; color:#404040;">Nombre y Apellido:</a></div>
+                <div class="span3" style="display: table-cell"><a href="#" style="display: inline-block; color:#404040;">Repartición:</a></div>
+                <div class="span3" style="display: table-cell"><a href="#" style="display: inline-block; color:#404040;">Área:</a></div>
+                <div class="span2" style="display: table-cell"><a href="#" style="display: inline-block; color:#404040;">Categoria:</a></div>
+                <div class="span1" style="display: table-cell"><a href="#" style="display: inline-block; color:#404040;">Antigüedad:</a></div>
+            </div>
+        </div>
+        
+        <ul class="nav nav-list">
+            <li ng-repeat="i in contratados | orderBy:'ordenG' | filter:filtro | filter:filtroFin">
+                <a style="font-size: 12px;padding-top: 8px;padding-bottom: 8px;padding-left: 0px;padding-right: 0px;" href="/contratadosBA/{{i._id}}">
+                <span class="span3">{{i.apellido}}, {{i.nombre}}</span>
+                <span class="span3">{{organigramaPorId(i.reparticion).nombreCompleto}}</span>
+                <span class="span3">{{i.area}}</span>
+                <span class="span2">{{i.categoria}}</span>
+                <span class="span1">{{calcularAntiguedad(i.fechaIngreso, i.fechaEgreso)}} años</span>
+                </a>
+            </li>
+            <li ng-if="!contratados.length" class="text-center">
+                <em>No hay cargas aún</em>
+            </li>
+        </ul>
+    </div>
+</div>

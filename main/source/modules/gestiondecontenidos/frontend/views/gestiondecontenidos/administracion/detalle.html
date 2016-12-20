@@ -1,0 +1,164 @@
+<script>
+    $(document).ready(function() { $("#e1").select2(); });
+    $(document).ready(function() { $("#e2").select2(); });
+</script>
+<style type="text/css">
+    .comentario{
+        word-wrap: break-word;
+    }
+</style>
+</style>
+<div ng-controller="GestionDeContenidosAdminDetalleCtrl">
+    <div class="span card" style="width:60%">
+        <span style="display: inline-block; -moz-border-radius: 18px; border-radius: 18px; padding: 7px; float: left; border: 0px solid #000; margin-right: 10px; margin-left: 20px; margin-top:13px; " ng-style="{'background-color': compararMilisegundos(pieza.vencimiento)}"></span>
+        <h3 class="card-heading simple">{{pieza.titulo}}</h3>
+        <div style="margin: 20px;height: 700px;">
+           <div style="height: 700px;">
+             	<a id="verPDF"></a> 
+           </div>
+        </div>
+    </div>
+    
+    <div style="width:35%; display:inline-block;">
+        <div class="span" style="width:100%">
+            <div class="card" style="margin-bottom: 0px;">
+                <span style="display: inline-block; -moz-border-radius: 18px; border-radius: 18px; padding: 7px; float: left; border: 0px solid #000; margin-right: 10px; margin-left: 20px; margin-top:13px; " ng-style="{'background-color': compararMilisegundos(pieza.vencimiento)}"></span>
+                <h3 class="card-heading simple">{{pieza.titulo}}
+                    <a style="margin-right: 5px;margin-top: 5px;" ng-click="editar(false)" class="btn btn-link pull-right" ng-show="(hasPermission('gestiondecontenidos.editar') && !editando)" style="margin-right: 5px;" ><i class="icon-edit"></i></a>
+                </h3>
+                <div class="card-body" style="margin-top: 14px;padding-right: 13px;">
+                <div>
+                    <h4>Archivos Relacionados</h4>
+                    <table border="0" class="table table-striped">
+                         <tr bgcolor= "#FFFFFF">
+                            <th>Archivo</th>
+                            <th>Estado</th>
+                         </tr>
+                         <tr ng-repeat="t in pieza.archivosRelacionados">
+                             <td><div><a href="/gestiondecontenidos/administracion/{{t}}"></div>{{archivoPorId(t).titulo}}</a></div></td>
+                             <td><div><span style="display: inline-block; -moz-border-radius: 20px; border-radius: 20px; padding: 7px; float: left; border: 0px solid #000; margin-top: 3px; margin-right: 10px; margin-left: 5px;" ng-style="{'background-color': compararMilisegundos(i.vencimiento)}"></span></div></td>
+                         </tr>
+                    </table>
+                </div>
+                </div>
+            </div>
+        </div> 
+        
+        <div class="span" style="width:100%">
+            <div class="card">
+                <h3 class="card-heading simple">Comentarios </h3>
+                <div class="card-body" style="margin-bottom: 14px;padding-right: 13px;">
+                <div>
+                    <textarea type="text" placeholder="Comentario..." ng-model="data.comentario" rows="4" style="margin-top: 0px; width: 95%;margin-bottom: 0px;"> </textarea>
+                    <div class="card-actions pull-right">
+                      <a href="#" ng-click="agregarComentario()" class="btn btn-primary">Enviar</a>
+                    </div>
+                    <hr style=" margin-top: 40px; margin-bottom: 5px;">
+                    <div ng-repeat="r in reverse(pieza.comentarios)">
+                        <div style="text-align: left;margin-top: 0px;margin-bottom: 0px;padding-top: 5px;">
+                            <span class="pull-right" style="font-size: 10px;">{{dameFecha(r.fecha)}}hs</span>
+                            <b>{{r.usuario}}</b> dijo:<br>
+                            {{r.comentario}}
+                            <a ng-click="eliminarComentario(pieza.comentarios,r)" class="btn btn-link pull-right" style="padding-right: 0px; padding-left: 0px" ng-show=hasPermission('gestiondecontenidos.editar')><i class="icon-trash icon-white"></i></a></h3></th>
+                            
+                            <hr style="margin-top: 5px; margin-bottom: 5px;">
+                        </div>
+                    </div>
+                    <span ng-hide="pieza.comentarios.length">No hay comentarios aún</span>
+                </div>
+                </div>
+            </div>
+        </div> 
+    </div>
+
+    <!--Ventana para confirmar eliminar archivo-->
+    <div id="confirmarEliminar" class="modal hide fade">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h3>Eliminar Archivo</h3>
+        </div>
+        <div class="modal-body">
+            <p>Está a un paso de eliminar el Archivo</p>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn btn-info" data-dismiss="modal">Conservar el archivo</a>
+            <a href="#" class="btn btn-danger" data-dismiss="modal" ng-click="eliminar(true)">Eliminar</a>
+        </div>
+    </div>
+    
+    <!--Ventana para editar archivo-->
+    <div id="ventanaEditar" class="modal hide fade">
+     <div class="modal-header">
+         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+         <h3>Editar: {{pieza.titulo}}</h3>
+     </div>
+        <div class="control-group" style="margin-left: 50px;margin-bottom: 0px;overflow-y: scroll; overflow-x: hidden; height: 430px;">
+            <div class="control-group">
+                <label class="control-label">Titulo:</label>
+                <div class="controls">
+                    <input class="span3" type="text" ng-model="pieza.titulo" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Tipo de Pieza:</label>
+                <div class="controls">
+                    <select class="span3" id="e2" type="text" ng-model="pieza.tipoPieza">
+                        <option ng-disabled="true" value="">{{devolverTema(pieza.tipoPieza)}}</option>
+                        <option value="tipo1">Gestión</option>
+                        <option value="tipo2">E</option>
+                        <option value="tipo3">iGestiòn</option>
+                    </select>
+                </div>
+            </div>
+            <br><br>
+            <div class="control-group">
+                <label class="control-label">Tema:</label>
+                <div class="controls">
+                    <input class="span3" type="text" placeholder="Sin Tema" ng-model="pieza.tema" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Jurisdiccion:</label>
+                <div class="controls">                                                                                   
+                    <select id="e1" class="span3" style="margin-right: 110px;" type="text" ng-model="pieza.jurisdiccion" ng-options="i._id as i.nombreCompleto for i in jurisdicciones | orderBy:'nombreCompleto'">
+                        <option ng-disabled="true" value="">{{jurisdiccionPorId(pieza.jurisdiccion).nombreCompleto}}</option>
+                    </select>
+                </div>
+            </div>
+            <br><br>
+            <div class="control-group">
+                <label class="control-label">Fecha:</label>
+                <div class="controls">
+                    <input class="span3" type="text" date ng-model="pieza.fecha" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Vencimiento:</label>
+                <div class="controls">
+                    <input class="span3" type="text" date ng-model="pieza.vencimiento" />
+                </div>
+            </div>
+            
+            <div class="control-group" style="margin-bottom: 5px;">
+                <label class="control-label">Relacionados:</label>
+                <div class="controls">                                                      <!-- Trae el titulo de _id  -->
+                    <select ui-select2 class="span3" type="text" ng-model="relacion" ng-options="i._id as i.titulo for i in gestiones">
+                        <option ng-disabled="true" value=""></option>
+                    </select>
+                    <button class="btn" style="margin-bottom:10px; margin-left: 5px" ng-click="agregarRelacion(relacion)"><i class="icon-plus"></i></button>
+                </div>
+            </div>
+            <div class="control-group" ng-repeat="t in pieza.archivosRelacionados" style="margin-bottom: 0px;">
+                <div class="controls">
+                    <input class="span3" type="text" ng-disabled="true" value="{{archivoPorId(t).titulo}}" />
+                    <a href="#" style="margin-left: 10px" ng-click="eliminarListaElem(t, pieza.archivosRelacionados)"><i class="icon-trash"></i></a>
+                </div>
+            </div>
+            
+        </div>
+        <div class="modal-footer">
+            <a href="/gestiondecontenidos/administracion" class="btn btn-info" data-dismiss="modal" ng-click="editar(true)">Guardar</a>
+            <a href="/gestiondecontenidos/administracion" class="btn btn-danger" data-dismiss="modal" ng-click="eliminar(false)">Eliminar</a>
+        </div>
+    </div>
+</div>

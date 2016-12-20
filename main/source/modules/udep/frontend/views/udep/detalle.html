@@ -1,0 +1,593 @@
+<style>
+    .alCien{
+     width:75%;
+    }
+    .min11{
+        margin-top:10px;
+    }
+    table tr td>input{
+        margin-top:20px;
+    }
+    .sinMargin{
+        margin-top:0px !important; 
+    }
+    .min12{
+        margin-bottom:10px;
+    }
+</style>
+
+<script>
+    $(document).ready(function() { $("#e1").select2(); });
+    $(document).ready(function() { $("#e2").select2(); });
+</script>
+
+<div ng-controller="UDEPDetalleCtrl" class="card" style="padding-top: 0px; padding-left: 15px;">
+    <div class="card-header" style="vertical-align:middle;">
+        <div class="pull-right" style="display:inline-block; margin-top:15px;margin-left: 20px;">
+            <a href="/udep/registro/{{fud._id}}" class="btn btn-link no-underline pull-left"><i class="icon-list-alt"></i> Reporte</a>
+            <a ng-show="editando" ng-click="guardar()" href="/udep" class="btn btn-link no-underline pull-right" ><i class="icon-ok"></i> Guardar</a>
+            <a ng-show="!editando" ng-click="editar()"  class="btn btn-link pull-right no-underline" style="margin-top:0%;margin-bottom:0%;" ng-if=hasPermission('udep.editar')><i class="icon-edit icon-white"></i> Editar</a>
+            <a ng-show="!editando" class="btn btn-link pull-right no-underline" style="margin-top:0%;margin-bottom:0%;" href="/udep/imprimir/{{fud._id}}"><i class="icon-print icon-white"></i> Imprimir</a>
+            <a class="btn btn-link pull-right no-underline" style="margin-top:0%;margin-bottom:0%;" href="/udep/nuevo/enviar/{{fud._id}}" ng-if=hasPermission('udep.administrador')><i class="icon-envelope icon-white"></i> Enviar</a>
+            <a ng-show="editando" ng-click="eliminar(false)" class="btn btn-link pull-right no-underline" style=" margin-top:0%;margin-bottom:0%;" ng-if=hasPermission('udep.editar')><i class="icon-trash icon white"></i> Eliminar</a>
+        </div>
+        <div align="center" class="progress active pull-right span2" style="height:20px; margin-top:17px; padding:0px; vertical-align:middle;" ng-class="{'progress-info':valorPorcentaje>=85,'progress-danger':valorPorcentaje<=25,'progress-warning':valorPorcentaje>25 && valorPorcentaje<=50, 'progress-success':valorPorcentaje>50 && valorPorcentaje<85}">
+            <div class="bar" ng-style="{width: tamannoProgress(32) + '%'}">
+               <div class="sr-only" ng-show="tamannoProgress(32)>50">{{valorPorcentaje}}%</div>
+            </div>
+            <div class="sr-only" ng-show="tamannoProgress(32)<=50; ">{{valorPorcentaje}}%</div>
+        </div>
+        <h2 class="card-heading" style="padding-left: 0px; font-size:14px;padding-right: 0px;height: 45px;margin-bottom: 10px;" ng-init="tab='descripcion'">
+            <ul id="myTab" class="nav nav-pills">
+                <li ng-class="{'active': tab == 'descripcion'}"><a href="#" ng-click="tab='descripcion'" data-toggle="tab"><h4>Descripción</h4></a></li>
+                <li ng-class="{'active': tab == 'diseno'}"><a href="#" ng-click="tab='diseno'" data-toggle="tab"><h4>Diseño</h4></a></li>
+                <li ng-class="{'active': tab == 'implementacion'}"><a href="#" ng-click="tab='implementacion'" data-toggle="tab"><h4>Implementación</h4></a></li>
+                <li ng-class="{'active': tab == 'evaluacion'}"><a href="#" ng-click="tab='evaluacion'" data-toggle="tab"><h4>Evaluación</h4></a></li>
+                <li ng-class="{'active': tab == 'financiamiento'}"><a href="#" ng-click="tab='financiamiento'" data-toggle="tab"><h4>Financiamiento</h4></a></li>
+            </ul>
+        </h2>
+    </div>
+
+    <div class="card-body " style="margin-top: 30px;margin-bottom: 10px;margin-left:25px;">
+        <div class="row">
+            <div ng-show="tab=='descripcion'">
+                <h4 style=" margin-bottom: 0px;margin-top: 0px; margin-left:0px;" class="span12">Introducción</h4>
+                <hr style=" margin-top: 0px;margin-bottom: 10px;border-top-width: 2px; margin-left:0px;" class="span12">
+                <form class="control-group span12">
+                    <div class="controls">
+                        <label class="control-label" style="display: inline-block; width: 80%;">Nombre del programa:
+                            <input class="span11" type="text" ng-model="fud.nombreDelPrograma" placeholder="Nombre del programa" ng-class="{'escrito': tieneTexto(fud.nombreDelPrograma)}" autofocus ng-disabled="!editando" style="width: 910px;"/>
+                        </label>
+                        <a class="btn btn-large" href="/file/guia_metodologica_udep.pdf" target="_blank" style="height: 47px;width: 157px;font-size: inherit;line-height: inherit;margin-top: 0px;"><center style="margin-bottom: 7px;"><img src="/views/semg/pdf_icono.png" style="width: 25px;"/></center>Guía Metodológica UdEP</a>
+                        <label class="control-label">Breve resumen del programa:<br>
+                            <textarea class="span9" rows="3" type="text" ng-model="fud.resumenDelPrograma" placeholder="Breve resumen del programa" style="max-width:90%;min-width:83%;" ng-class="{'escrito': tieneTexto(fud.resumenDelPrograma)}" ng-disabled="!editando"></textarea>
+                            <div class="btn-group" style="margin-bottom: 10px;">
+                                <button class="btn" ng-class="{'active btn-info': fud.validado}" ng-click="fud.validado = !fud.validado" ng-disabled="!editando">Validado</button>
+                                <button class="btn" ng-class="{'active btn-info': fud.aprobado}" ng-click="fud.aprobado = !fud.aprobado" ng-disabled="!editando">Aprobado</button>
+                            </div>
+                        </label>
+                        <label class="control-label span5" style="margin-left:0px;" ng-show=hasPermission('udep.administrador')>Jurisdiccion:<br/>
+                            <select class="span4" type="text" id="e2" ng-model="fud.jurisdiccion" ng-options="i._id as i.nombreCompleto for i in organigrama | orderBy:'apellidos' | filter:{ministerio:true}" ng-class="{'escrito': tieneTexto(fud.jurisdiccion)}" ng-disabled="!editando">
+                                <option ng-disabled="true" value="">{{organigramaPorId(fud.jurisdiccion).nombreCompleto}}</option>
+                            </select>
+                        </label>
+                        <label class="control-label span5" style="margin-left:0px;" ng-hide=hasPermission('udep.administrador')>Jurisdiccion:<br/>
+                            <input class="span4" type="text" ng-disabled="true" value="{{organigramaPorId(fud.jurisdiccion).nombreCompleto}}" />
+                        </label>
+                    </div>
+                </form>
+
+                <h4 style=" margin-bottom: 0px;margin-top: 15px; margin-left:0px;" class="span12">Evaluación de Necesidad</h4>
+                <hr style=" margin-top: 0px;margin-bottom: 10px;border-top-width: 2px; margin-left:0px;"class="span12">
+                <form class="control-group span12">
+                    <div class="controls ">
+                        <label class="control-label" style="margin-left:0px;">Explicá brevemente la/s necesidad/es a las que este programa busca dar respuesta:
+                            <textarea class="span11" rows="3" type="text" ng-model="necesidades.explicacion" placeholder="Explicá brevemente la/s necesidad/es a las que este programa busca dar respuesta" ng-class="{'escrito': tieneTexto(fud.necesidadExplicacion)}" ng-disabled="!editando"></textarea>
+                            <button class="btn" ng-click="agregarExplicacionNecesidad(necesidades)" title="Agregar Explicación" ng-disabled="!editando"><i class="icon-ok"></i></button>
+                        </label>
+                        <label ng-repeat="t in fud.necesidadExplicacion">
+                            <textarea type="text" class="span11" rows="2" ng-disabled="true">{{t.explicacion}}</textarea>
+                            <a href="#" ng-click="eliminarRegistro(t, fud.necesidadExplicacion)" class="btn btn-link" ng-hide="!editando"><i class="icon-trash"></i></a>
+                        </label>
+                        <label style="margin-left:0px;">Describí las causas que considerás dan origen a esta necesidad:<br>
+                            <textarea class="span11" rows="3" type="text" ng-model="necesidades.causa" placeholder="Describí las causas que considerás dan origen a esta necesidad" ng-class="{'escrito': tieneTexto(fud.necesidadesDescripcion)}" ng-disabled="!editando"></textarea>
+                            <button class="btn" ng-click="agregarDescripcionNecesidad(necesidades)" title="Agregar despcripción de causa" ng-disabled="!editando"><i class="icon-ok"></i></button>
+                        </label>
+                        <label>
+                            <div ng-repeat="t in fud.necesidadesDescripcion">
+                                <textarea type="text" class="span11" rows="2" ng-disabled="true" ng-disabled="!editando">{{t.causa}}</textarea>
+                                <a href="#" ng-click="eliminarRegistro(t, fud.necesidadesDescripcion)" class="btn btn-link" ng-hide="!editando"><i class="icon-trash"></i></a>
+                            </div>
+                        </label>
+                        <label class="control-label">Indicá la población objetivo a la que el programa se dirige:
+                            <input class="span11" type="text" ng-model="fud.poblacionObjetivo" placeholder="Ejemplo: 2000 mujeres de entre 18 y 30 años con educación primaria incompleta en CABA" ng-class="{'escrito': tieneTexto(fud.poblacionObjetivo)}" ng-disabled="!editando"/>
+                        </label>
+                        <label class="control-label" style="margin-left:0px;">Dentro de la población objetivo identificada, indicá el número estimado de participantes/beneficiarios del programa en el lapso de un año:
+                            <input class="span11" type="text" ng-model="fud.beneficiarios" placeholder="Dentro de la población objetivo identificada, indicá el número estimado de participantes/beneficiarios del programa en el lapso de un año" ng-class="{'escrito': tieneTexto(fud.beneficiarios)}" ng-disabled="!editando"/>
+                        </label>
+                    </div>
+                </form>
+
+                <h4 style=" margin-bottom: 0px;margin-top: 15px; margin-left:0px;" class="span12">Descripción del Programa</h4>
+                <hr style=" margin-top: 0px;margin-bottom: 10px;border-top-width: 2px; margin-left:0px;"class="span12">
+                <form class="control-group span12" style="margin-left:0px;">
+                    <div class="controls ">
+                        <div class="controls span12" >
+                            <label class="control-label span4" style="margin-left:0px;">Fecha de inicio del programa:
+                                <input class="span3" date type="text" ng-model="fud.fechaInicio" placeholder="Fecha de inicio del programa" ng-class="{'escrito': tieneTexto(fud.fechaInicio)}" ng-disabled="!editando"/>
+                            </label>
+                            <label class="control-label span4" style="margin-left:0px;">Fecha de finalización del programa:
+                                <input class="span3" date type="text" ng-model="fud.fechaFin" placeholder="Fecha de finalización del programa" ng-class="{'escrito': tieneTexto(fud.fechaFin)}" ng-disabled="!editando"/>
+                            </label>
+                            <label class="control-label span5" style="margin-left:0px;">Persona Responsable:<br/>
+                                <select class="span3" type="text" id="e1" ng-model="fud.personaResponsable" ng-options="i._id as i.apellidos + ' ' + i.nombre for i in contactos | orderBy:'apellidos'" ng-class="{'escrito': tieneTexto(fud.personaResponsable)}" ng-disabled="!editando">
+                                    <option ng-disabled="true" value="">{{contactoPorId(fud.personaResponsable).apellidos}} {{contactoPorId(fud.personaResponsable).nombre}}</option>
+                                </select>
+                            </label>
+                        </div>
+                    </div>
+                </form>
+            </div><!--FIN tab=='descripcion' -->
+                
+
+            <div ng-show="tab=='diseno'">
+                <style>
+                    .divs{
+                        width:172px; 
+                        margin-bottom:10px; 
+                        text-align:center; 
+                        padding:10px;
+                        border-radius:20px;
+                        text-align: -webkit-center;
+                    }
+                    div.divs:hover {
+                        animation-duration:1s;          /*Duracion de la animacion 1s */
+                        animation-fill-mode: forwards;  /*Mantener ultimo fotograma siempre que se cumpla el hover */
+                        animation-name: slidein;        /*Nombre de la animacion a ejecutar cuando se cumpla el hover */
+                    }
+                    @keyframes slidein {
+                        from{
+                        }
+                        to{
+                            background-color:rgba(38, 138, 148, 0.72);
+                            border-radius:50px;
+                        }
+                    }
+                    .imagen:nth-child(n+2)
+                    {
+                        margin-left:50px;
+                    }
+                    .imagen
+                    {
+                        width:192px;
+                    }
+                    .texto{
+                        color:#FFF2D2;
+                        font-weight: bold;
+                    }
+                    .igualQImg
+                    {
+                        margin-bottom:0 !important;
+                        width:176px;
+                    }
+                    .formP
+                    {
+                        margin:0;
+                        display:inline-block;
+                        width:192px;
+                    }
+                    .formP:nth-child(n+2)
+                    {
+                        margin-left:45px;
+                    }
+                </style>
+                <script>
+                    //$('#example').popover(options);
+                </script>
+                <h4 style=" margin-bottom: 0px;margin-top: 15px; margin-left:0px;" class="span12">Cadena de Resultados 
+                    <a href="#" class="btn btn-link pull-right" title="Guía de uso" ng-click="abrirGuia()">Guía de uso</a>
+                </h4>
+                <hr style=" margin-top: 0px;margin-bottom: 10px;border-top-width: 2px; margin-left:0px;" class="span12">
+                    <!-- La altura maxima de los divs se soluciona poniendo al padre position:relative, a los hijos position:absolute y height:100%-->
+                    <div style="display:inline-block; margin-left:40px; width:100%">
+                        <img class="imagen" src="/views/udep/imagenes/actividades.png" alt="Actividades" title="Actividades" ng-click="reiniciarArray(0)"/>
+                        <img class="imagen" src="/views/udep/imagenes/productos.png" alt="Productos" title="Productos" ng-click="reiniciarArray(1)"/>
+                        <img class="imagen" src="/views/udep/imagenes/resultados.png" alt="Resultados del Programa" title="Resultados del programa" ng-click="reiniciarArray(2)"/>
+                        <img class="imagen" src="/views/udep/imagenes/impactos.png" alt="Impactos a largo Plazo" title="Impactos a Largo Plazo" ng-click="reiniciarArray(3)"/>
+                    </div>
+                    <div style="margin-left:40px; margin-top:10px;">
+                        <form class="formP">
+                            <input type="text" class="igualQImg" ng-model="actividades.valor" ng-show="(editando) && (campo[0])" autofocus/>
+                            <button type="submit"ng-click="actividades.insumos=[]; agregarFlowActividad(actividades,fud.actividades); actividades='';" ng-hide="true"></button>
+                        </form>
+                        <form class="formP">
+                            <input type="text" class="igualQImg" ng-model="productoSolo.valor"  ng-class="{'escrito': tieneTexto(fud.productoSolo)}" ng-show="(editando) && (campo[1])" autofocus/>
+                            <button type="submit"ng-click="agregarFlow(productoSolo,fud.productoSolo); productoSolo='';" ng-hide="true"></button>
+                        </form>
+                        <form class="formP">
+                            <input type="text" class="igualQImg" ng-model="resultadoSolo.valor" ng-class="{'escrito': tieneTexto(fud.resultadoSolo)}" ng-show="(editando) && (campo[2])" autofocus/>
+                            <button type="submit"ng-click="agregarFlow(resultadoSolo,fud.resultadoSolo); resultadoSolo='';" ng-hide="true"></button>
+                        </form>
+                        <form class="formP">
+                            <input type="text" class="igualQImg" ng-model="impactoSolo.valor" ng-class="{'escrito': tieneTexto(fud.impactoSolo)}" ng-show="(editando) && (campo[3])" autofocus/>
+                            <button type="submit"ng-click="agregarFlow(impactoSolo,fud.impactoSolo); impactoSolo='';" ng-hide="true"></button>
+                        </form>
+                    </div>
+                    <div class="control-group span12" style="margin-left:30px; height:auto; position:relative; margin-top:10px">
+                        <div class="pull-left" style="display:inline-block; margin-left:10px;width:172px; ">
+                            <div ng-repeat="i in fud.actividades" class="divs" style="background-color:#BD7751" id="{{i.id}}" ng-click="funcionLoca(0,i.id,$index,1)" ng-dblclick="funcionMasLoca(0,i.id,$index)">
+                                <span class="texto">{{i.valor}}</span>
+                            </div>
+                            <span>&nbsp;</span>
+                        </div>
+                        <div style="display:inline-block; margin-left:20px; width:50px; height:100%; position:absolute" class="pull-left">
+                            <svg>
+                                <line ng-repeat="i in fud.actividades" x1="0" y1="{{sety1($index,fud.actividades)}}" x2="50" y2="{{sety2($index,fud.actividades,fud.productoSolo,1)}}" stroke="black" ng-if="sety2($index,fud.actividades,fud.productoSolo,1)"/>
+                                <line ng-repeat="i in fud.actividades" x1="0" y1="{{sety1($index,fud.actividades)}}" x2="50" y2="{{sety2($index,fud.actividades,fud.productoSolo,2)}}" stroke="black" ng-if="sety2($index,fud.actividades,fud.productoSolo,2)"/>
+                            </svg>
+                        </div>
+                        <div class="pull-left" style="display:inline-block; margin-left:70px;width:172px">
+                            <div ng-repeat="i in fud.productoSolo" class="divs" style="background-color:#BF9A4F" id="{{i.id}}" ng-click="funcionLoca(1,i.id,$index)" ng-dblclick="funcionMasLoca(1,i.id,$index)">
+                                <span class="texto">{{i.valor}}</span>
+                            </div>
+                            <span>&nbsp;</span>
+                        </div>
+                        <div style="display:inline-block; margin-left:20px; width:50px; height:100%; position:absolute" class="pull-left">
+                            <svg>
+                                <line ng-repeat="i in fud.productoSolo " x1="0" y1="{{sety1($index,fud.productoSolo)}}" x2="50" y2="{{sety2($index,fud.productoSolo,fud.resultadoSolo,1)}}" stroke="black" ng-if="sety2($index,fud.productoSolo,fud.resultadoSolo,1)"/>
+                                <line ng-repeat="i in fud.productoSolo " x1="0" y1="{{sety1($index,fud.productoSolo)}}" x2="50" y2="{{sety2($index,fud.productoSolo,fud.resultadoSolo,2)}}" stroke="black" ng-if="sety2($index,fud.productoSolo,fud.resultadoSolo,2)"/>
+                            </svg>
+                        </div>
+                        <div class="pull-left" style="display:inline-block; margin-left:70px;width:172px">
+                            <div ng-repeat="i in fud.resultadoSolo" class="divs" style="background-color:#BCBB56" id="{{i.id}}" ng-click="funcionLoca(2,i.id,$index)" ng-dblclick="funcionMasLoca(2,i.id,$index)">
+                                <span class="texto">{{i.valor}}</span>
+                            </div>
+                            <span>&nbsp;</span>
+                        </div>
+                        <div style="display:inline-block; margin-left:20px; width:50px; height:100%; position:absolute" class="pull-left">
+                            <svg>
+                                <line ng-repeat="i in fud.resultadoSolo " x1="0" y1="{{sety1($index,fud.resultadoSolo)}}" x2="50" y2="{{sety2($index,fud.resultadoSolo,fud.impactoSolo,1)}}" stroke="black" ng-if="sety2($index,fud.resultadoSolo,fud.impactoSolo,1)"/>
+                                <line ng-repeat="i in fud.resultadoSolo " x1="0" y1="{{sety1($index,fud.resultadoSolo)}}" x2="50" y2="{{sety2($index,fud.resultadoSolo,fud.impactoSolo,2)}}" stroke="black" ng-if="sety2($index,fud.resultadoSolo,fud.impactoSolo,2)"/>
+                            </svg>
+                        </div>
+                        <div class="pull-left" style="display:inline-block; margin-left:70px;width:172px">
+                            <div ng-repeat="i in fud.impactoSolo" class="divs" style="background-color:#9BBA59" id="{{i.id}}" ng-click="funcionLoca(3,i.id,$index)" ng-dblclick="funcionMasLoca(3,i.id,$index)">
+                                <span class="texto">{{i.valor}}</span>
+                            </div>
+                            <span>&nbsp;</span>
+                        </div>
+                    </div>
+                <h4 style=" margin-bottom: 0px;margin-top: 15px; margin-left:0px;" class="span12">Matriz</h4>
+                <hr style=" margin-top: 0px;margin-bottom: 10px;border-top-width: 2px; margin-left:0px;" class="span12">
+                <div class="control-group span12" >
+                    <table class="table table-striped">
+                        <tr>
+                            <th></th>
+                            <th>Indicadores</th>
+                            <th>Medios de verificación</th>
+                            <th>Supuestos <a ng-show="!editando" class="btn btn-link pull-right no-underline" style="margin-right: 20px; margin-top:0%;margin-bottom:0%;" href="/udep/imprimirMatriz/{{fud._id}}"><i class="icon-print icon-white"></i></a></th>
+                        </tr>
+                        <tr>
+                            <td title="Impactos a largo plazo">
+                                <span>Impactos a largo plazo:</span><br>
+                                <span  ng-repeat="t in fud.impactoSolo" style="display:block;">
+                                    <input type="text" class="alCien" value="{{t.valor}}" ng-disabled="true"/>  
+                                    <button ng-click="eliminarRegistro(t, fud.impactoSolo)" class="btn min12 btn-link" ng-hide="!editando"><i class="icon-trash"></i></button>
+                                </span>
+                            </td>
+                            <td>
+                                <input type="text" class="alCien" ng-model="indicadoresImpacto" ng-click="input2=true" ng-class="{'escrito': tieneTexto(fud.indicadoresImpacto)}" ng-disabled="!editando"/>
+                                <button class="btn min11" ng-click="agregarRegistro(indicadoresImpacto,fud.indicadoresImpacto); indicadoresImpacto='';input2=false" title="Agregar Explicación" ng-show="input2"><i class="icon-ok"></i></button> 
+                                <span ng-repeat="t in fud.indicadoresImpacto" style="display:block;">
+                                    <input type="text" class="alCien"  value="{{t}}" ng-disabled="true" ng-disabled="!editando"/>
+                                    <button ng-click="eliminarRegistro(t, fud.indicadoresImpacto)" class="btn min12 btn-link" ng-hide="!editando"><i class="icon-trash"></i></button>
+                                </span>
+                            </td>
+                            <td>
+                                <input type="text" class="alCien" ng-model="mediosImpacto" ng-click="input3=true" ng-class="{'escrito': tieneTexto(fud.mediosImpacto)}" ng-disabled="!editando"/>
+                                <button class="btn min11" ng-click="agregarRegistro(mediosImpacto,fud.mediosImpacto); mediosImpacto='';input3=false" title="Agregar Explicación" ng-show="input3"><i class="icon-ok"></i></button>
+                                <span ng-repeat="t in fud.mediosImpacto" style="display:blomediosImpactock;">
+                                    <input type="text" class="alCien" value="{{t}}" ng-disabled="true"/>
+                                    <button ng-click="eliminarRegistro(t, fud.mediosImpacto)" class="btn min12 btn-link" ng-hide="!editando"><i class="icon-trash"></i></button>
+                                </span>
+                            </td>
+                            <td>
+                                <input type="text" class="alCien" ng-model="supuestosImpacto" ng-click="input4=true" ng-class="{'escrito': tieneTexto(fud.supuestosImpacto)}" ng-disabled="!editando"/>
+                                <button class="btn min11" ng-click="agregarRegistro(supuestosImpacto,fud.supuestosImpacto);supuestosImpacto=''; input4=false" title="Agregar Explicación" ng-show="input4"><i class="icon-ok"></i></button>
+                                <span ng-repeat="t in fud.supuestosImpacto" style="display:block;">
+                                    <input type="text" class="alCien"value="{{t}}" ng-disabled="true"/>
+                                    <button ng-click="eliminarRegistro(t, fud.supuestosImpacto)" class="btn min12 btn-link" ng-hide="!editando"><i class="icon-trash"></i></button>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td title="Resultados del programa">
+                                <span>Resultados del programa:</span><br>
+                                <span  ng-repeat="t in fud.resultadoSolo" style="display:block;">
+                                    <input type="text" class="alCien" value="{{t.valor}}" ng-disabled="true"/>  
+                                    <button ng-click="eliminarRegistro(t, fud.resultadoSolo)" class="btn min12 btn-link" ng-hide="!editando"><i class="icon-trash"></i></button>
+                                </span>
+                            </td>
+                            <td>
+                                <input type="text" class="alCien" ng-model="indicadoresResultado" ng-click="input6=true" ng-class="{'escrito': tieneTexto(fud.indicadoresResultado)}" ng-disabled="!editando"/>
+                                <button class="btn min11" ng-click="agregarRegistro(indicadoresResultado,fud.indicadoresResultado);indicadoresResultado=''; input6=false" title="Agregar Explicación" ng-show="input6"><i class="icon-ok"></i></button>
+                                <span ng-repeat="t in fud.indicadoresResultado"  style="display:block;">
+                                    <input type="text" class="alCien" value="{{t}}" ng-disabled="true"/>
+                                    <button ng-click="eliminarRegistro(t, fud.indicadoresResultado)" class="btn min12 btn-link" ng-hide="!editando"><i class="icon-trash"></i></button>
+                                </span>
+                            </td>
+                            <td>
+                                <input type="text" class="alCien" ng-model="mediosResultado" ng-click="input7=true" ng-class="{'escrito': tieneTexto(fud.mediosResultado)}" ng-disabled="!editando"/>
+                                <button class="btn min11" ng-click="agregarRegistro(mediosResultado,fud.mediosResultado); mediosResultado='';input7=false" title="Agregar Explicación" ng-show="input7"><i class="icon-ok"></i></button>
+                                <span ng-repeat="t in fud.mediosResultado" style="display:block;">
+                                    <input type="text" class="alCien"  value="{{t}}" ng-disabled="true">
+                                    <button ng-click="eliminarRegistro(t, fud.mediosResultado)" class="btn min12 btn-link" ng-hide="!editando"><i class="icon-trash"></i></button>
+                                </span>
+                            </td>
+                            <td>
+                                <input type="text" class="alCien" ng-model="supuestosResultado" ng-click="input8=true" ng-class="{'escrito': tieneTexto(fud.supuestosResultado)}" ng-disabled="!editando"/>
+                                <button class="btn min11" ng-click="agregarRegistro(supuestosResultado,fud.supuestosResultado);supuestosResultado=''; input8=false" title="Agregar Explicación" ng-show="input8"><i class="icon-ok"></i></button>
+                                <span ng-repeat="t in fud.supuestosResultado" style="display:block;">
+                                    <input type="text" class="alCien" value="{{t}}" ng-disabled="true"/>
+                                    <button ng-click="eliminarRegistro(t, fud.supuestosResultado)" class="btn min12 btn-link" ng-hide="!editando"><i class="icon-trash"></i></button>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td title="Productos">
+                                <span>Productos:</span><br>
+                                <span  ng-repeat="t in fud.productoSolo" style="display:block;">
+                                    <input type="text" class="alCien" value="{{t.valor}}" ng-disabled="true"/>  
+                                    <button ng-click="eliminarRegistro(t, fud.productoSolo)" class="btn min12 btn-link" ng-hide="!editando"><i class="icon-trash"></i></button>
+                                </span>
+                            </td>
+                            <td>
+                                <input type="text" class="alCien" ng-model="indicadoresProducto" ng-click="input10=true" ng-class="{'escrito': tieneTexto(fud.indicadoresProducto)}" ng-disabled="!editando"/>
+                                <button class="btn min11" ng-click="agregarRegistro(indicadoresProducto,fud.indicadoresProducto);indicadoresProducto=''; input10=false" title="Agregar Explicación" ng-show="input10"><i class="icon-ok"></i></button>
+                                <span   ng-repeat="t in fud.indicadoresProducto" style="display:block;">
+                                    <input type="text" class="alCien" value="{{t}}" ng-disabled="true" />    
+                                    <button ng-click="eliminarRegistro(t, fud.indicadoresProducto)" class="btn min12 btn-link" ng-hide="!editando"><i class="icon-trash"></i></button>
+                                </span>
+                            </td>
+                            <td>
+                                <input type="text" class="alCien" ng-model="mediosProducto" ng-click="input11=true" ng-class="{'escrito': tieneTexto(fud.mediosProducto)}" ng-disabled="!editando"/>
+                                <button class="btn min11" ng-click="agregarRegistro(mediosProducto,fud.mediosProducto); mediosProducto='';input11=false" title="Agregar Explicación" ng-show="input11"><i class="icon-ok"></i></button>
+                                <span  ng-repeat="t in fud.mediosProducto" style="display:block;">
+                                    <input type="text" class="alCien"  value="{{t}}" ng-disabled="true"/> 
+                                    <button ng-click="eliminarRegistro(t, fud.mediosProducto)" class="btn min12 btn-link" ng-hide="!editando"><i class="icon-trash"></i></button>
+                                </span>
+                            </td>
+                            <td>
+                                <input type="text" class="alCien" ng-model="supuestosComponentes" ng-click="input12=true" ng-class="{'escrito': tieneTexto(fud.supuestosComponentes)}" ng-disabled="!editando"/>
+                                <button class="btn min11" ng-click="agregarRegistro(supuestosComponentes,fud.supuestosComponentes); supuestosComponentes='';input12=false" title="Agregar Explicación" ng-show="input12"><i class="icon-ok"></i></button>
+                                <span  ng-repeat="t in fud.supuestosComponentes"  style="display:block;">
+                                    <input type="text" class="alCien" value="{{t}}" ng-disabled="true"/>    
+                                    <button ng-click="eliminarRegistro(t, fud.supuestosComponentes)" class="btn min12 btn-link" ng-hide="!editando"><i class="icon-trash"></i></button>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td title="Actividades">
+                                <span>Actividades:</span><br>
+                                <span  ng-repeat="t in fud.actividades"  style="display:block;">
+                                    <input type="text" class="alCien" value="{{t.valor}}" ng-disabled="true" /> 
+                                    <button ng-click="eliminarRegistro(t, fud.actividades)" class="btn min12 btn-link" ng-hide="!editando"><i class="icon-trash"></i></button>
+                                </span>
+                            </td>
+                            <td>
+                                <input type="text" class="alCien" ng-model="indicadoresActividades" ng-click="input14=true" ng-disabled="!editando"/>
+                                <button class="btn min11" ng-click="agregarRegistro(indicadoresActividades,fud.indicadoresActividades); indicadoresActividades=''; input14=false" title="Agregar Explicación" ng-show="input14"><i class="icon-ok"></i></button>
+                                <span  ng-repeat="t in fud.indicadoresActividades"  style="display:block;">
+                                    <input type="text" class="alCien" value="{{t}}" ng-disabled="true" /> 
+                                    <button ng-click="eliminarRegistro(t, fud.indicadoresActividades)" class="btn min12 btn-link" ng-hide="!editando"><i class="icon-trash"></i></button>
+                                </span>
+                            </td>
+                            <td>
+                                <input type="text" class="alCien" ng-model="mediosActividades" ng-click="input15=true" ng-disabled="!editando"/>
+                                <button class="btn min11" ng-click="agregarRegistro(mediosActividades,fud.mediosActividades); mediosActividades=''; input15=false" title="Agregar Explicación" ng-show="input15"><i class="icon-ok"></i></button>
+                                <span   ng-repeat="t in fud.mediosActividades"  style="display:block;">
+                                    <input type="text" class="alCien"  value="{{t}}" ng-disabled="true"/>  
+                                    <button ng-click="eliminarRegistro(t, fud.mediosActividades)" class="btn min12 btn-link" ng-hide="!editando"><i class="icon-trash"></i></button>
+                                </span>
+                            </td>
+                            <td>
+                                <input type="text" class="alCien" ng-model="supuestosActividades" ng-click="input16=true" ng-disabled="!editando"/>
+                                <button class="btn min11" ng-click="agregarRegistro(supuestosActividades,fud.supuestosActividades); supuestosActividades=''; input16=false" title="Agregar Explicación" ng-show="input16"><i class="icon-ok"></i></button>
+                                <span   ng-repeat="t in fud.supuestosActividades"   style="display:block;">
+                                    <input type="text" class="alCien" value="{{t}}" ng-disabled="true"/>
+                                    <button ng-click="eliminarRegistro(t, fud.supuestosActividades)" class="btn min12 btn-link" ng-hide="!editando"><i class="icon-trash"></i></button>
+                                </span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <h4 style=" margin-bottom: 0px;margin-top: 15px; margin-left:0px;" class="span12">Insumos para:</h4>
+                <hr style=" margin-top: 0px;margin-bottom: 10px;border-top-width: 2px; margin-left:0px;" class="span12">
+                <div ng-repeat="t in fud.actividades">
+                    <h4 class="span12" style="margin-bottom: 0px;">{{t.valor}}:
+                    <button class="btn pull-right" ng-click="agregarRegistro(insumo,t.insumos); insumo='';" title="Agregar Explicación" ng-hide="!editando"><i class="icon-ok"></i></button>
+                    <input type="text" class="span3 pull-right" ng-model="insumo" style="margin-left: 10px;margin-bottom: 0px;" ng-hide="!editando" /></h4>
+                    <span class="span11" ng-repeat="i in t.insumos"  style="display:block;margin-left: 50px;">
+                        <li>{{i}}  <a href="#" ng-click="eliminarRegistro(i, t.insumos)" ng-hide="!editando"><i class="icon-trash"></i></a></li>
+                    </span>
+                    <hr class="span12" style="margin-top: 10px; margin-bottom: 0px;">
+                </div>
+            </div>
+
+            <div ng-show="tab=='implementacion'">
+                <h4 style=" margin-bottom: 0px;margin-top: 15px; margin-left:0px;" class="span12">Gantt de Implementación</h4>
+                <hr style=" margin-top: 0px;margin-bottom: 10px;border-top-width: 2px; margin-left:0px;"class="span12">
+                <div class="control-group span12" style="margin-bottom:0px; height: 55px;margin-left: 0px;" ng-class="{'escrito': tieneTexto(gantt.data)}">
+                    <div class="controls ">
+                        <label class="control-label span4" style="margin-left:0px;">Describí actividad:<br/>
+                            <input type="text" style="width:93%;" ng-model="data.text" placeholder="Describí actividad" ng-disabled="!editando"/>
+                        </label>
+                        <label class="control-label span2" style="margin-left:0px;">Fecha inicio:<br/>
+                            <input type="text" date style="width:85%;" id="i1" ng-model="data.start_date" ng-disabled="!editando"/>
+                        </label>
+                        <label class="control-label span2" style="margin-left:0px;">Fecha fin:<br/>
+                            <input type="text" date style="width:85%;" id="i2" ng-model="data.end_date" ng-disabled="!editando"/>
+                        </label>
+                        <button class="btn" style="margin-top:20px;" ng-click="agregarGantt();" ng-disabled="!editando" title="Agregar"><i class="icon-ok"></i></button>
+                    </div>
+                </div>
+                <div data="gantt" dhx-gantt style="height:300px; width:100%;display: inline-block;">
+                    <div gantt-column label="Actividad">{{task.text}}</div>
+                    <div gantt-column align="center" width="200"  label="Duración">{{task.duration}}</div>
+            		<div gantt-template="task_text">
+            			{{task.text | uppercase}}
+            		</div>
+            	</div>
+
+                <h4 style=" margin-bottom: 0px;margin-top: 20px; margin-left:0px;"class="span12">Guía de preguntas</h4>
+                <hr style=" margin-top: 0px;margin-bottom: 10px;border-top-width: 2px; margin-left:0px;"class="span12">
+                <div class="control-group span12" ng-init="fud.pregunta1='No';fud.pregunta2='No';fud.pregunta3='No';fud.pregunta4='No';fud.pregunta5='No';fud.pregunta6='No';fud.pregunta7='No';fud.pregunta8='No';fud.pregunta9='No';fud.pregunta10='No';fud.pregunta11='No';fud.pregunta12='No'">
+                    <label class="span7" style="margin-left:0px;">¿Diseñaste herramientas para medir que hayas entregado el producto en tiempo y forma?
+                        <button type="button" class="btn pull-right" ng-click="fud.pregunta1 = 'Si'" ng-show="fud.pregunta1 == 'No'" ng-disabled="!editando">No</button>        
+                        <button type="button" class="btn pull-right" ng-click="fud.pregunta1 = 'No'" ng-hide="fud.pregunta1 == 'No'" ng-show="fud.pregunta1 == 'Si'" ng-class="{'btn-info active': fud.pregunta1}" ng-disabled="!editando">Si</button>
+                    </label>
+                    <label class="span7" style="margin-left:0px; margin-top:10px;">¿Diseñaste herramientas para medir que el producto es de calidad?
+                        <button type="button" class="btn pull-right" ng-click="fud.pregunta2 = 'Si'" ng-show="fud.pregunta2 == 'No'" ng-disabled="!editando">No</button>        
+                        <button type="button" class="btn pull-right" ng-click="fud.pregunta2 = 'No'" ng-hide="fud.pregunta2 == 'No'" ng-show="fud.pregunta2 == 'Si'" ng-class="{'btn-info active': fud.pregunta2}" ng-disabled="!editando">Si</button>
+                    </label>
+                    <label class="span7" style="margin-left:0px; margin-top:10px;">¿Hiciste un cálculo realista del financiamiento necesario?
+                        <button type="button" class="btn pull-right" ng-click="fud.pregunta3 = 'Si'" ng-show="fud.pregunta3 == 'No'" ng-disabled="!editando">No</button>        
+                        <button type="button" class="btn pull-right" ng-click="fud.pregunta3 = 'No'" ng-hide="fud.pregunta3 == 'No'" ng-show="fud.pregunta3 == 'Si'" ng-class="{'btn-info active': fud.pregunta3}" ng-disabled="!editando">Si</button>
+                    </label>
+                    <label class="span7" style="margin-left:0px; margin-top:10px;">¿Te aseguraste de contar con ese financiamiento al momento de lanzar el programa?
+                        <button type="button" class="btn pull-right" ng-click="fud.pregunta4 = 'Si'" ng-show="fud.pregunta4 == 'No'" ng-disabled="!editando">No</button>        
+                        <button type="button" class="btn pull-right" ng-click="fud.pregunta4 = 'No'" ng-hide="fud.pregunta4 == 'No'" ng-show="fud.pregunta4 == 'Si'" ng-class="{'btn-info active': fud.pregunta4}" ng-disabled="!editando">Si</button>
+                    </label>
+                    <label class="span7" style="margin-left:0px; margin-top:10px;">¿Contás con los recursos humanos/técnicos necesarios para la correcta implementación de tu programa?
+                        <button type="button" class="btn pull-right" ng-click="fud.pregunta5 = 'Si'" ng-show="fud.pregunta5 == 'No'" ng-disabled="!editando">No</button>        
+                        <button type="button" class="btn pull-right" ng-click="fud.pregunta5 = 'No'" ng-hide="fud.pregunta5 == 'No'" ng-show="fud.pregunta5 == 'Si'" ng-class="{'btn-info active': fud.pregunta5}" ng-disabled="!editando">Si</button>
+                    </label>
+                    <label class="span7" style="margin-left:0px; margin-top:10px;">¿Contemplaste alternativas de reajuste del programa en caso de no cumplirse alguno de tus supuestos?
+                        <button type="button" class="btn pull-right" ng-click="fud.pregunta6 = 'Si'" ng-show="fud.pregunta6 == 'No'" ng-disabled="!editando">No</button>        
+                        <button type="button" class="btn pull-right" ng-click="fud.pregunta6 = 'No'" ng-hide="fud.pregunta6 == 'No'" ng-show="fud.pregunta6 == 'Si'" ng-class="{'btn-info active': fud.pregunta6}" ng-disabled="!editando">Si</button>
+                    </label>
+                    <label class="span7" style="margin-left:0px; margin-top:10px;">¿Estableciste tu población objetivo de manera realista?
+                        <button type="button" class="btn pull-right" ng-click="fud.pregunta7 = 'Si'" ng-show="fud.pregunta7 == 'No'" ng-disabled="!editando">No</button>        
+                        <button type="button" class="btn pull-right" ng-click="fud.pregunta7 = 'No'" ng-hide="fud.pregunta7 == 'No'" ng-show="fud.pregunta7 == 'Si'" ng-class="{'btn-info active': fud.pregunta7}" ng-disabled="!editando">Si</button>
+                    </label>
+                    <label class="span7" style="margin-left:0px; margin-top:10px;">¿Pensás que los resultados de tu programa son realistas?
+                        <button type="button" class="btn pull-right" ng-click="fud.pregunta8 = 'Si'" ng-show="fud.pregunta8 == 'No'" ng-disabled="!editando">No</button>        
+                        <button type="button" class="btn pull-right" ng-click="fud.pregunta8 = 'No'" ng-hide="fud.pregunta8 == 'No'" ng-show="fud.pregunta8 == 'Si'" ng-class="{'btn-info active': fud.pregunta8}" ng-disabled="!editando">Si</button>
+                    </label>
+                    <label class="span7" style="margin-left:0px; margin-top:10px;">¿Son tus actividades consistentes con los resultados del programa y los productos que estableciste?
+                        <button type="button" class="btn pull-right" ng-click="fud.pregunta9 = 'Si'" ng-show="fud.pregunta9 == 'No'" ng-disabled="!editando">No</button>        
+                        <button type="button" class="btn pull-right" ng-click="fud.pregunta9 = 'No'" ng-hide="fud.pregunta9 == 'No'" ng-show="fud.pregunta9 == 'Si'" ng-class="{'btn-info active': fud.pregunta9}" ng-disabled="!editando">Si</button>
+                    </label>
+                    <label class="span7" style="margin-left:0px;">¿Corroboraste que tus indicadores cumplen con las características de un indicador EMARF (específicos, medibles, atribuibles, realistas y focalizados)?
+                        <button type="button" class="btn pull-right" ng-click="fud.pregunta10 = 'Si'" ng-show="fud.pregunta10 == 'No'" ng-disabled="!editando">No</button>        
+                        <button type="button" class="btn pull-right" ng-click="fud.pregunta10 = 'No'" ng-hide="fud.pregunta10 == 'No'" ng-show="fud.pregunta10 == 'Si'" ng-class="{'btn-info active': fud.pregunta10}" ng-disabled="!editando">Si</button>
+                    </label>
+                    <label class="span7" style="margin-left:0px; margin-top:10px;">¿Revisaste que los medios de verificación propuestos sean viables?
+                        <button type="button" class="btn pull-right" ng-click="fud.pregunta11 = 'Si'" ng-show="fud.pregunta11 == 'No'" ng-disabled="!editando">No</button>        
+                        <button type="button" class="btn pull-right" ng-click="fud.pregunta11 = 'No'" ng-hide="fud.pregunta11 == 'No'" ng-show="fud.pregunta11 == 'Si'" ng-class="{'btn-info active': fud.pregunta11}" ng-disabled="!editando">Si</button>
+                    </label>
+                    <label class="span7" style="margin-left:0px; margin-top:10px;">¿Explicitaste los supuestos de tu programa?
+                        <button type="button" class="btn pull-right" ng-click="fud.pregunta12 = 'Si'" ng-show="fud.pregunta12 == 'No'" ng-disabled="!editando">No</button>        
+                        <button type="button" class="btn pull-right" ng-click="fud.pregunta12 = 'No'" ng-hide="fud.pregunta12 == 'No'" ng-show="fud.pregunta12 == 'Si'" ng-class="{'btn-info active': fud.pregunta12}" ng-disabled="!editando">Si</button>
+                    </label>
+                </div>
+            </div>
+
+            <div ng-show="tab=='evaluacion'">
+                <h4 style=" margin-bottom: 0px;margin-top: 15px; margin-left:0px;"class="span12">Pregunta central para la evaluación del programa</h4>
+                <hr style=" margin-top: 0px;margin-bottom: 10px;border-top-width: 2px; margin-left:0px;"class="span12">
+                <div class="control-group span12" style="margin-left:25px;" ng-class="{'escrito': tieneTexto(fud.preguntaCentral)}">
+                    <div class="controls" style="margin-left:0px;">
+                        <span> La respuesta a la pregunta debería permitir afirmar/ refutar si fuimos exitosos en el cumplimiento del objetivo del programa.<br>
+                                Esta pregunta frecuentemente toma la forma de: ¿el programa X (ayuda/ mejora) (el acceso de la población beneficiaria a…/ el rendimiento de la población beneficiaria en…)?
+                        </span>
+                        <textarea class="span7" rows="2" ng-model="fud.preguntaCentral" placeholder="Pregunta central para la evaluación del programa" style="max-width: 100%;" ng-disabled="!editando"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div ng-show="tab=='financiamiento'">
+                <h4 style=" margin-bottom: 0px;margin-top: 5px; margin-left:0px;" class="span12">Si estás trabajando con alguna organización externa al gobierno o con algún gobierno, ministerio o subsecretaría, por favor brindanos la siguiente informacion:</h4>
+                <hr style=" margin-top: 0px;margin-bottom: 10px;border-top-width: 2px; margin-left:0px;"class="span12">
+                <div class="control-group span12" style="margin-top:10px;">
+                    <div class="controls">
+                        <label class="control-label">Organización:<br/>
+                            <input class="span7" type="text" ng-model="fud.organizacion" placeholder="Organización" ng-class="{'escrito': tieneTexto(fud.organizacion)}" ng-disabled="!editando"/>
+                        </label>
+                        <label class="control-label">Email:<br/>
+                            <input class="span7" type="email" ng-model="fud.email" placeholder="Email" ng-class="{'escrito': tieneTexto(fud.email)}" ng-disabled="!editando"/>
+                        </label>
+                        <label class="control-label">Página web:<br/>
+                            <input class="span7" type="text" ng-model="fud.pagina" placeholder="Página web" ng-class="{'escrito': tieneTexto(fud.pagina)}" ng-disabled="!editando"/>
+                        </label>
+                        <label class="control-label">Comentario:<br/>
+                            <input class="span7" type="text" ng-model="fud.comentario" placeholder="Comentario" ng-class="{'escrito': tieneTexto(fud.comentario)}" ng-disabled="!editando"/>
+                        </label>
+                    </div>
+                </div>
+
+                <h4 style="margin-bottom: 0px;margin-top: 15px; margin-left:0px;" class="span12">Recursos financieros</h4>
+                <hr style=" margin-top: 0px;margin-bottom: 10px;border-top-width: 2px;"class="span12">
+                <div class="control-group span12">
+                    <div class="controls" style="margin-left:0px;">
+                        <label class="control-label" style="margin-left:0px;">Presupuesto solicitado:<br/>
+                            <input class="span7" type="text" ng-model="fud.presupuestoSolicitado" placeholder="Presupuesto solicitado" ng-class="{'escrito': tieneTexto(fud.presupuestoSolicitado)}" ng-disabled="!editando"/>
+                        </label>
+                        <label class="control-label" style="margin-left:0px;">Presupuesto Gestión:<br/>
+                            <input class="span7" type="text" ng-model="fud.presupuestoGestion" placeholder="Presupuesto Gestión" ng-class="{'escrito': tieneTexto(fud.presupuestoGestion)}" ng-disabled="!editando"/>
+                        </label>
+                        <label class="control-label" ng-init="fud.financiamientoExterno='No'">Indica si contás con financiamiento externo (Monto e institución):<br/>
+                            <button type="button" style="margin-left:0px;" class="btn span1" ng-click="fud.financiamientoExterno = 'Si'" ng-show="fud.financiamientoExterno == 'No'" ng-disabled="!editando">No</button>        
+                            <button type="button" style="margin-left:0px;" class="btn span1" ng-click="fud.financiamientoExterno = 'No'" ng-hide="fud.financiamientoExterno == 'No'" ng-show="fud.financiamientoExterno == 'Si'" ng-class="{'btn-info active': fud.financiamientoExterno}" ng-disabled="!editando">Si</button>
+                            <input class="span5" type="text" ng-show="fud.financiamientoExterno == 'Si'" ng-model="fud.financiamientoExternoMonto" placeholder="Monto financiamiento externo" style="margin-left:1%; margin-bottom:0px;"/>
+                        </label>
+                    </div>
+                </div>
+
+                <h4 style=" margin-bottom: 0px;margin-top: 15px; margin-left:0px;"class="span12">Comentarios</h4>
+                <hr style=" margin-top: 0px;margin-bottom: 10px;border-top-width: 2px; margin-left:0px;"class="span12">
+                <div class="control-group span12" style="margin-left:25px;">
+                    <div class="controls" style="margin-left:0px;">
+                        <textarea class="span7" rows="3" ng-model="fud.comentarios" placeholder="Comentarios" style="max-width: 100%;" ng-disabled="!editando"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Ventana para confirmar eliminar archivo-->
+    <div id="confirmarEliminar" class="modal hide fade">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3>Eliminar</h3>
+        </div>
+        <div class="modal-body">
+            <p>Está a un paso de eliminar</p>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn btn-info" data-dismiss="modal">Conservar</a>
+            <a ng-click="eliminar(true)" href="/udep" class="btn btn-danger" data-dismiss="modal" >Eliminar</a>
+        </div>
+    </div>
+    <!--Ventana para guia de uso cadena de resultados-->
+    <div id="abrirGuia" class="modal hide fade">
+        <div class="modal-header" style="padding:0; margin-bottom:5px">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3>Guia de: "Cadena de resultados"</h3>
+        </div>
+        <hr style="position: absolute;left: 0;right: 0;margin-top: 0px;">
+        <div class="modal-body" style="margin-top:15px">
+            <p>Para agregar un elemento (actividad, producto, resultado o impacto) cliqueá  en el “+” que 
+                aparece en las flechas. Una vez que hayas escrito tu elemento, presioná “enter” y vas a poder 
+                agregar uno nuevo. </p>
+            <p> Si querés unir dos elementos para indicar su relación, cliqueá primero en el elemento de la 
+                izquierda y luego en el que elijas de la columna derecha.  Para agregar una nueva relación, repetí 
+                lo mismo haciendo doble click en ambos elementos. Por ejemplo, si ya uniste la actividad 1 con el 
+                producto 1, pero también querés unirla con el producto 2, hacé doble click en la actividad 1 y 
+                luego doble click en el producto 2. </p>
+            <p> Si necesitás eliminar un elemento, podés hacerlo cliqueando en el “tachito” que está en la matriz, 
+                debajo de la cadena de resultados. 
+                Cualquier consulta, escribinos a udep@buenosaires.gob.ar</p>
+        </div>
+    </div>
+</div> 

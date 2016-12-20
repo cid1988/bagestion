@@ -1,0 +1,266 @@
+<style>
+    .table-hover tbody tr:hover > td, .table-hover tbody tr:hover > th {
+        background-color: #f9f9f9 !important;
+    }
+    div p{
+        font-weight:bold;
+    }
+</style>
+<div class="card" style="padding-top:1px">
+    <div ng-init="tab = 'tabColecciones'" style="margin:10px">
+        <h3 class="card-heading simple" style="padding-left: 0px; font-size:14px;padding-right: 0px;height: 45px;margin-bottom: 10px;">
+            <ul class="nav nav-pills">
+                <li ng-class="{'active': tab == 'tabColecciones'}">
+                    <a ng-click="tab='tabColecciones'" href="#" data-toggle="tab">Colecciones</a>
+                </li>
+                <li ng-show="hasPermission('obras.administrador')" ng-class="{'active': tab == 'tabExcel'}">
+                    <a ng-click="tab='tabExcel'" href="#" data-toggle="tab">Importar Excel</a>
+                </li>
+            </ul>
+        </h3>
+        
+        <div ng-show="tab == 'tabColecciones'">
+            <legend>Colección: {{titulo}} <span ng-if="descripcion">(</span>{{descripcion}}<span ng-if="descripcion">)</span>
+                <button style="margin-left:5px" ng-show="!editando" class="btn pull-right" ng-click="editando = true"><i class="icon-edit"></i></button>
+                <button style="margin-left:5px" ng-show="editando" class="btn pull-right" ng-click="cancelar()"><i class="icon-remove"></i></button>
+                <button style="margin-left:5px;margin-bottom:9px" ng-if="seleccion.choice !== 'Relevador'" ng-show="editando" class="btn pull-right" ng-click="guardar()"><i class="icon-ok"></i></button>
+                <button style="margin-left:5px" ng-show="(editando && seleccion.choice) && seleccion.choice !== 'Relevador'" class="btn pull-right" ng-click="nuevoRegistro(seleccion.choice)"><i class="icon-plus"></i></button>
+            </legend>
+            
+            <select class="input-block-level span2" ng-click="seleccion(seleccion.choice)" placeholder="Tipo" ui-select2 type="text" ng-model="seleccion.choice">
+                <option value=""></option>
+                <option ng-repeat="e in colecciones" value="{{e}}">{{e}}</option>
+            </select>
+            
+            <div ng-if="seleccion.choice == 'Relevador'" class="span3">
+                <select ui-select2 style="width:100%" type="text" ng-model="user.relevador" ng-disabled="!editando" ng-options="i._id as i.apellidos + ' ' + i.nombre for i in users track by i._id | orderBy:'apellidos'">
+                    <option ng-disabled="true" value=""></option>
+                </select>
+            </div>
+            
+            <div ng-if="seleccion.choice == 'Relevador'" class="btn-group span2" style="margin-left:5px" data-toggle="buttons-radio">
+                <button class="btn" ng-disabled="!editando" ng-class="(user.relevador == true) && 'active btn-info'" ng-click="user.relevador = (user.relevador == true ? '' : true);guardarRelevador()" style="padding-left: 26px; padding-right: 26px;">Si</button>
+                <button class="btn" ng-disabled="!editando" ng-class="(user.relevador == false || user.relevador == undefined) && 'active btn-info'" ng-click="user.relevador = (user.relevador == false ? '' : false);guardarRelevador()" style="padding-left: 26px; padding-right: 26px;">No</button>
+            </div>
+            
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th style="width:20%"><span ng-if="seleccion.choice !== 'Relevador'">Nombre</span><span ng-if="seleccion.choice == 'Relevador'">Usuario</span></th>
+                        <th>
+                            <span ng-if="seleccion.choice !== 'Relevador' && seleccion.choice !== 'Subtipo'">En Obra?</span>
+                            <span ng-if="!l.obra && seleccion.choice == 'Subtipo'">Pertenece al Tipo:</span>
+                        </th>
+                        <th><span ng-if="seleccion.choice !== 'Relevador'">Orden</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-if="seleccion.choice == 'Relevador'" ng-repeat="r in users | filter:{relevador:true}">
+                        <td>
+                            <span>{{r.apellidos}}, {{r.nombre}}</span>
+                        </td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr ng-repeat="l in listado">
+                        <td style="width:20%" ng-if="seleccion.choice !== 'Relevador'">
+                            <input type="text" style="margin:0px" ng-if="seleccion.choice !== 'Relevador'" ng-disabled="!editando" ng-model="l.nombre"></input>
+                        </td>
+                        <td>
+                            <div ng-if="seleccion.choice == 'Estado'" class="btn-group span2" style="margin-left:5px" data-toggle="buttons-radio">
+                                <button class="btn" ng-disabled="!editando" ng-class="(l.obra == true) && 'active btn-info'" ng-click="l.obra = (l.obra == true ? '' : true)" style="padding-left: 26px; padding-right: 26px;">Si</button>
+                                <button class="btn" ng-disabled="!editando" ng-class="(l.obra == false || l.obra == undefined) && 'active btn-info'" ng-click="l.obra = (l.obra == false ? '' : false)" style="padding-left: 26px; padding-right: 26px;">No</button>
+                            </div>
+                            <span ng-if="!l.obra && seleccion.choice == 'Subtipo'">
+                                <select type="text" ui-select2 ng-disabled="!editando" class="span2" ng-model="l.tipo" ng-options="i._id as i.nombre for i in tipos">
+                                    <option ng-disabled="true" value="">{{tipoPorId(l.tipo).nombre}}</option>
+                                </select>
+                            </span>
+                        </td>
+                        <td>
+                            <span ng-if="seleccion.choice == 'Segmento' || seleccion.choice == 'Estado'">
+                                <input type="text" class="span2" style="margin:0px" ng-disabled="!editando" ng-disabled="!editando" ng-model="l.orden"></input>
+                            </span>
+                            <span ng-if="seleccion.choice == 'Relevador'"></span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div ng-if="tab == 'tabExcel'" ng-controller="ReporteRelevamientosCtrl">
+            <div class="pull-right">
+                <p style="margin:0px">El simbolo * indica que se esta mostrando el nombre a pesar de no contener diferencias con la base de datos.</p>
+                <p style="margin:0px">El formato del archivo excel admitido es .xlsx.</p>
+                <p style="margin:0px">Dar formato de fecha a las columnas "Fecha Inicio" y "Fecha Final" como DD/MM/AAAA en español de Argentina.</p>
+                <p style="margin:0px">Las celdas con fondo color gris indican que se modifico su fecha y su ultimo relevamiento concuerda.</p>
+            </div>
+            
+            <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="#importacion">Importación</a></li>
+                <li><a data-toggle="tab" href="#archivosCargados">Archivos Cargados</a></li>
+            </ul>
+            
+            <div class="tab-content">
+                <div id="importacion" class="tab-pane fade in active">
+                    <div class="row-fluid">
+                        <div id="myFile" ng-click="limpiar()" fine-uploader destination="'/upload/'" placeholder="'Cargar Excel'" uploaded="uploadedFile"></div>
+                        <div ng-show="cargando" style="margin-top:20px" class="alert alert-info">
+                            <i align="center" class="icon-spinner icon-spin"></i>&nbsp;Cargando tabla de diferencias
+                        </div>
+                    </div>
+                    
+                    <h4 align="center" ng-if="listadoDiferencias.length == 0">No se han encontrado diferencias con la base de datos</h4>
+                    <div ng-if="listadoDiferencias.length" style="margin-top:20px">
+                        <legend>Diferencias Obras - Excel
+                            <button ng-if="listadoDiferencias.length" class="btn pull-right" ng-click="guardarEnBd()">Guardar</button>
+                        </legend>
+                        <table class="table">
+                            <tr>
+                                <th>ID</th>
+                                <th>NOMBRE CORTO</th>
+                                <th>PRIORIDAD</th>
+                                <th style="min-width:160px">FECHA INICIO</th>
+                                <th style="min-width:160px">COMENTARIO INICIO</th>
+                                <th style="min-width:160px">FECHA FINAL</th>
+                                <th style="min-width:160px">COMENTARIO FINAL</th>
+                                <!--<th style="min-width:200px">MONTO</th>-->
+                            </tr>
+                            <tr ng-repeat="c in listadoDiferencias">
+                                <td>{{c.id}}</td>
+                                <td ng-if="!c.nombreBd">{{nombreObra(c.id)}}</td>
+                                <td ng-if="c.nombre">
+                                    <span ng-if="c.nombre || c.nombreBd">{{c.nombreBd}}</span> <br><br> <span>{{c.nombre}}</span>
+                                    <!--<table>-->
+                                    <!--    <tr>-->
+                                    <!--        <td>{{c.nombreBd}}</td>-->
+                                    <!--    </tr>-->
+                                    <!--    <tr>-->
+                                    <!--        <td>{{c.nombre}}</td>-->
+                                    <!--    </tr>-->
+                                    <!--</table>-->
+                                </td>
+                                <td>
+                                    <span ng-if="c.prioridad || c.prioridadBd">{{c.prioridadBd}}</span> <br><br> <span>{{c.prioridad}}</span>
+                                    <!--<table ng-if="c.prioridad || c.prioridadBd">-->
+                                    <!--    <tr>-->
+                                    <!--        <td>{{c.prioridadBd}}</td>-->
+                                    <!--    </tr>-->
+                                    <!--    <tr>-->
+                                    <!--        <td>{{c.prioridad}}</td>-->
+                                    <!--    </tr>-->
+                                    <!--</table>-->
+                                </td>
+                                <td ng-style="c.inicioConcuerda == true ? { 'background-color':'#f5f5f5'} : ''">
+                                    <span ng-if="c.fechaInicio || c.fechaInicioBd">{{c.fechaInicioBd}}</span> <br><br> <span>{{c.fechaInicio}}</span>
+                                    <!--<table ng-if="c.fechaInicio || c.fechaInicioBd">-->
+                                    <!--    <tr>-->
+                                    <!--        <td>{{c.fechaInicioBd}}</td>-->
+                                    <!--    </tr>-->
+                                    <!--    <tr>-->
+                                    <!--        <td>{{c.fechaInicio}}</td>-->
+                                    <!--    </tr>-->
+                                    <!--</table>-->
+                                </td>
+                                <td>
+                                    <span ng-if="c.comentarioInicio || c.comentarioInicioBd">{{c.comentarioInicioBd}}</span> <br><br> <span>{{c.comentarioInicio}}</span>
+                                    <!--<table ng-if="c.comentarioInicio || c.comentarioInicioBd">-->
+                                    <!--    <tr>-->
+                                    <!--        <td>{{c.comentarioInicioBd}}</td>-->
+                                    <!--    </tr>-->
+                                    <!--    <tr>-->
+                                    <!--        <td>{{c.comentarioInicio}}</td>-->
+                                    <!--    </tr>-->
+                                    <!--</table>-->
+                                </td>
+                                <td ng-style="c.finalConcuerda == true ? { 'background-color':'#f5f5f5'} : ''">
+                                    <span ng-if="c.fechaFinal || c.fechaFinalBd">{{c.fechaFinalBd}}</span> <br><br> <span>{{c.fechaFinal}}</span>
+                                    <!--<table ng-if="c.fechaFinal || c.fechaFinalBd">-->
+                                    <!--    <tr>-->
+                                    <!--        <td>{{c.fechaFinalBd}}</td>-->
+                                    <!--    </tr>-->
+                                    <!--    <tr>-->
+                                    <!--        <span ng-show="c.finalConcuerda">/</span>-->
+                                    <!--        <td>{{c.fechaFinal}}</td>-->
+                                    <!--    </tr>-->
+                                    <!--</table>-->
+                                </td>
+                                <td>
+                                    <span ng-if="c.comentarioFinal || c.comentarioFinalBd">{{c.comentarioFinalBd}}</span> <br><br> <span>{{c.comentarioFinal}}</span>
+                                    <!--<table ng-if="c.comentarioFinal || comentarioFinalBd">-->
+                                    <!--    <tr>-->
+                                    <!--        <td>{{c.comentarioFinalBd}}</td>-->
+                                    <!--    </tr>-->
+                                    <!--    <tr>-->
+                                    <!--        <td>{{c.comentarioFinal}}</td>-->
+                                    <!--    </tr>-->
+                                    <!--</table>-->
+                                </td>
+                                <!--<td>
+                                    <table ng-if="c.monto || c.montoBd">
+                                        <tr>
+                                            <td>{{c.montoBd}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>{{c.monto}}</td>
+                                        </tr>
+                                    </table>
+                                </td>-->
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div id="archivosCargados" class="tab-pane fade">
+                    <table class="table table-striped">
+                        <tr>
+                            <th>USUARIO</th>
+                            <th>FECHA</th>
+                            <th>DESCARGA</th>
+                        </tr>
+                        <tr ng-repeat="n in importExcelBd">
+                            <td>{{n.usuario}}</td>
+                            <td>{{formatearFecha(n.fecha)}}</td>
+                            <td><a href="/file/{{n.archivo}}" target="_blank"><i class="icon-download-alt"></i></a></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modalGuardando" class="modal hide fade">
+    <i class="icon-spinner icon-spin"></i>&nbsp;Guardando...
+</div>
+
+<div id="modalNuevoItem" class="modal hide fade">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>Agregar {{seleccion.choice}}</h3>
+    </div>
+    <div class="modal-body">
+        <div class="span3" style="margin-left:0px">
+            <label>Nombre:</label>
+            <input type="text" style="margin:0px" ng-model="nuevoCampo.nombre"></input>
+        </div>
+        <div class="span3" ng-show="seleccion.choice=='Segmento' || seleccion.choice=='Estado'" style="margin-left:0px">
+            <label>Orden:</label>
+            <input type="text" style="margin:0px" ng-model="nuevoCampo.orden"></input>
+        </div>
+        <div ng-if="seleccion.choice == 'Estado'" class="btn-group span2" style="margin-left:0px;margin-top:5px;margin-bottom:10px" data-toggle="buttons-radio">
+            <label>En Obra?</label>
+            <button class="btn" ng-class="(nuevoCampo.obra == true) && 'active btn-info'" ng-click="nuevoCampo.obra = (nuevoCampo.obra == true ? '' : true)" style="padding-left: 26px; padding-right: 26px;">Si</button>
+            <button class="btn" ng-class="(nuevoCampo.obra == false || nuevoCampo.obra == undefined) && 'active btn-info'" ng-click="nuevoCampo.obra = (nuevoCampo.obra == false ? '' : false)" style="padding-left: 26px; padding-right: 26px;">No</button>
+        </div>
+        <div class="span2" ng-show="seleccion.choice=='Subtipo'" style="margin-left:0px">
+            <label>Tipo:</label>
+            <select type="text" style="margin-bottom:0px" class="span2" ng-model="nuevoCampo.tipo" ng-options="i._id as i.nombre for i in tipos">
+                <option ng-disabled="true" value="">{{tipoPorId(nuevoCampo.tipo).nombre}}</option>
+            </select>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="btn btn-info" data-dismiss="modal" ng-click="nuevoRegistro(nuevoCampo,true)">Guardar</a>
+        <a href="#" class="btn btn-danger" data-dismiss="modal">Cancelar</a>
+    </div>
+</div>

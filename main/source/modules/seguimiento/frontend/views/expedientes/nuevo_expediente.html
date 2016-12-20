@@ -1,0 +1,113 @@
+<div class="card" ng-controller="NuevoExpedienteCtrl">
+    <h3 style="margin-top:0px;margin-left:20px">
+        Nuevo Expediente
+        <a ng-click="guardar()" class="btn btn-link pull-right" type="button"><i class="icon-ok"></i></a>
+        <a href="/expedientes" class="btn btn-link pull-right" data-dismiss="modal"><i class="icon-remove"></i></a>
+    </h3>
+    <hr>
+    
+    <div class="row" style="padding-bottom: 0px;margin-left:10px">
+        <div class="span6">
+            <form name="form" class="form-horizontal" style="margin-bottom: 0px !important;">
+                <!--<div class="control-group" style="margin-bottom: 10px;">-->
+                <!--    <label class="control-label">Proyecto:</label>-->
+                <!--    <div class="controls">-->
+                <!--        <input class="span6" type="text" ng-model="expediente.proyecto" placeholder="Sin Proyecto"/>-->
+                <!--    </div>-->
+                <!--</div>-->
+                <div class="control-group" style="margin-bottom: 10px;">
+                    <label class="control-label">Título:</label>
+                    <div class="controls">
+                        <input class="span6" type="text" ng-model="expediente.titulo" placeholder="Sin Título" />
+                    </div>
+                </div>
+                <div class="control-group" style="margin-bottom: 10px;">
+                    <label class="control-label">Tipo:</label>
+                    <div class="controls">
+                        <input class="span6" type="text" data-provide="typeahead" id="tema-typeahead" ng-model="expediente.tema" data-source={{temasSiglas}} />
+                    </div>
+                </div>
+                <div class="control-group" style="margin-bottom: 10px;width:900px">
+                    <label class="control-label">Nº expediente:</label>
+                    <div class="controls">
+                        <input type="text" style="width: 50px" maxlength="2" ng-model="expediente.tipo" placeholder="Tipo"/>
+                        <input type="text" style="width: 40px" maxlength="4" ng-model="expediente.ano" placeholder="Año"/>
+                        <input type="text" style="width: 130px" maxlength="15" ng-model="expediente.numero" placeholder="Numero"/>
+                        <input style="width: 100px" type="text" class="span2" data-provide="typeahead" placeholder="Reparticion" ng-model="expediente.reparticion" bs-typeahead="reparticionesSiglas" />
+                    </div>
+                </div>
+                <div required class="control-group" style="margin-bottom: 10px;">
+                    <label class="control-label">Jurisdicción:</label>
+                    <div class="controls">
+                        <select class="input-block-level span6" ui-select2 type="text" ng-model="expediente.jurisdiccion" ng-options="i._id as i.nombreCompleto for i in organigrama | orderBy:'nombreCompleto'">
+                            <option value="">{{findById(organigrama, expediente.jurisdiccion).nombreCompleto}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="control-group" style="margin-bottom: 10px;">
+                    <label class="control-label">Responsable:</label>
+                    <div class="controls">
+                        <select class="input-block-level span6" ui-select2 type="text" ng-model="expediente.responsable" ng-options="i._id as i.apellidos + ' ' + i.nombre for i in contactos | orderBy:'apellidos'">
+                            <option value="">{{findById(contactos, expediente.responsable).apellidos}} {{findById(contactos, expediente.responsable).nombre}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Interesados:</label>
+                    <div class="controls">
+                        <select class="span4" style="width:80%" ui-select2 type="text" ng-model="dataInteresado" ng-options="i._id as i.apellidos + ' ' + i.nombre for i in contactos | orderBy:'apellidos' | filter: filtrarInteresados">
+                            <option value="">{{contactoPorId(expediente.interesados).apellidos}} {{contactoPorId(expediente.interesados).nombre}}</option>
+                        </select>
+                        <button class="btn" style="margin-bottom:10px; margin-left: 5px" ng-click="agregarInteresado(dataInteresado)"><i class="icon-plus"></i></button>
+                    </div>
+                    <div class="span5" style="margin-left: 180px;">
+                        <div class="control-group" ng-repeat="t in expediente.interesados" style="margin-left: 0px; margin-right: 5px;margin-bottom: 0px;">
+                            <input class="span4" type="text" ng-disabled="true" value="{{contactoPorId(t).apellidos}} {{contactoPorId(t).nombre}}" style="margin-bottom: 0px;" />
+                            <a href="#" style="margin-left: 10px" ng-click="eliminarListaElem(t, expediente.interesados)"><i class="icon-trash"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="control-group" style="margin-bottom: 10px">
+                    <label class="control-label">Camino Refrendos:</label>
+                    <div class="controls">
+                        <input class="span6" type="text" data-provide="typeahead" placeholder="Camino Refrendos" ng-model="expediente.caminoRefrendos"/>
+                    </div>
+                </div>
+                <!--<div class="control-group" style="margin-bottom: 10px;">-->
+                <!--    <label class="control-label">Fecha de vencimiento:</label>-->
+                <!--    <div class="controls">-->
+                <!--        <input type="text" ng-model="expediente.fechaVencimiento" date placeholder="Sin fecha de vencimiento"/>-->
+                <!--    </div>-->
+                <!--</div>-->
+                <div class="control-group" style="margin-bottom: 10px;">
+                    <label class="control-label">F. proxima reunión de seguimiento:</label>
+                    <div class="controls">
+                        <input type="text" ng-model="expediente.fechaProxReunionSeg" date placeholder="Sin fecha de reunion"/>
+                    </div>
+                </div>
+                <div class="control-group" style="margin-bottom: 10px;">
+                    <label class="control-label">Descripción:</label>
+                    <div class="controls">
+                        <textarea class="span6" type="text" placeholder="Sin Descripción" ng-model="expediente.descripcion" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Temas:</label>
+                    <div class="controls">
+                        <select ui-select2 class="span4" style="width:80%" type="text" ng-model="dataTema" ng-options="i._id as i.nombre for i in temas2 | filter: filtrarTemas">
+                            <option ng-disabled="true" value=""></option>
+                        </select>
+                        <button class="btn" style="margin-bottom:10px; margin-left: 5px" ng-click="agregarTema(dataTema)"><i class="icon-plus"></i></button>
+                    </div>
+                        
+                    <div class="span5" style="margin-left: 180px;">
+                        <div class="control-group" ng-repeat="t in expediente.temas" style="margin-left: 0px; margin-right: 5px;margin-bottom: 0px;">
+                            <input class="span4" type="text" ng-disabled="true" value="{{temaPorId(t).nombre}}" style="margin-bottom: 0px;" />
+                            <a href="#" style="margin-left: 10px" ng-click="eliminarListaElem(t, expediente.temas)"><i class="icon-trash"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

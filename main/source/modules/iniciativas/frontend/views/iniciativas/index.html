@@ -1,0 +1,79 @@
+<style>
+    a:hover{
+        color:black;
+    }
+</style>
+<div class="card">
+    <div style="margin-left:10px">
+        <legend>Iniciativas
+            <a ng-show="hasPermission('iniciativas.escritura')" href="/iniciativas/nueva" class="btn btn-link pull-right"><i class="icon-plus"></i></a>
+        </legend>
+        <div style="margin-right:5px;margin-bottom:5px">
+            <input type="text" style="margin-bottom:0px;width:25%" placeholder="Nombre" ng-model="filtro.nombre">
+            <select type="text" style="width:15%" placeholder="Grupo" ui-select2 ng-model="filtro.grupo">
+                <option value=""></option>
+                <option value="">Todos los grupos</option>
+                <option ng-repeat="e in grupos | orderBy:'orden'" value="{{e._id}}">{{e.nombre}}</option>
+            </select>
+            <select ng-show="!hasPermission('iniciativas.comunero')" type="text" style="width:25%" placeholder="Jurisdiccion" ui-select2 ng-model="filtro.jurisdiccion2">
+                <option value=""></option>
+                <option value="">Todas las jurisdicciones</option>
+                <option ng-repeat="e in organigrama | orderBy:'nombreCompleto'" value="{{e._id}}">{{e.nombreCompleto}}</option>
+            </select>
+            <select ng-show="hasPermission('iniciativas.comunero')" type="text" style="width:25%" placeholder="Jurisdiccion" ui-select2 ng-model="filtro.jurisdiccion2">
+                <!--<option value=""></option>-->
+                <!--<option value="">Todas las jurisdicciones</option>-->
+                <option value=""></option>
+                <option value="52433a64295915d121000029">Secretaria de Gestión Comunal y Atención Ciudadana</option>
+                <option ng-repeat="e in organigrama | filter:filtroJurisdiccionComunero" value="{{e._id}}">{{e.nombreCompleto}}</option>
+            </select>
+            <select type="text" style="width:17%" placeholder="Estado" ui-select2 ng-model="filtro.estado">
+                <option value=""></option>
+                <option value="">Todos los estados</option>
+                <option ng-repeat="e in estados" value="{{e._id}}">{{e.nombre}}</option>
+            </select>
+            <select type="text" style="width:15%" placeholder="Plan" ui-select2 ng-model="filtro.plan">
+                <option value=""></option>
+                <option value="2">Todos los planes</option>
+                <option ng-repeat="e in planes | filter:{iniciativa:true} | orderBy:'nombre'" value="{{e._id}}">{{e.nombre}}</option>
+            </select>
+        </div>
+        <div style="margin-top:10px;padding-bottom:10px">
+            <div data-toggle="multiselect buttons-radio" class="control-group pull-right span4" style="width: 250px !important">
+                Prioridad:
+                <div class="btn-group">
+                    <a style="padding-left: 0px;padding-right: 0px; min-width:21px; font-weight: 700" class="btn" ng-class="{'active btn-info': filtrandoPrioridad('SP')}" ng-click="cambiarFiltroPrioridad('SP')">SP</a>
+                    <a ng-repeat="c in relevancias | orderBy:'_id'" style="padding-left: 0px;padding-right: 0px; min-width:21px; font-weight: 700" class="btn" ng-class="{'active btn-info': filtrandoPrioridad(c)}" ng-click="cambiarFiltroPrioridad(c)">{{c.nombre}}</a>
+                    <a class="btn" ng-class="{'active btn-info': todasLasPrioridadesEstanFiltradas(c)}" style="font-weight: 700" ng-click="togglePrioridades()"><div ng-show="todasLasPrioridadesEstanFiltradas(c)">Ninguna</div><div ng-show="!todasLasPrioridadesEstanFiltradas(c)">Todas</div></a>
+                </div>
+            </div>
+            <div data-toggle="multiselect buttons-radio" class="control-group pull-right span4" style="margin-left: 0px; width: 540px !important;margin-right: 0px;">
+                Comuna:
+                <div class="btn-group">
+                    <a ng-show="hasPermission('iniciativas.comunero')" ng-disabled="true" ng-repeat="c in comunas | orderBy:'numero'" style="padding-left: 0px;padding-right: 0px; min-width:21px; font-weight: 700" class="btn" ng-class="{'active btn-info': filtrandoComuna(c)}">{{c.numero}}</a>
+                    <a ng-show="!hasPermission('iniciativas.comunero')" ng-repeat="c in comunas | orderBy:'numero'" style="padding-left: 0px;padding-right: 0px; min-width:21px; font-weight: 700" class="btn" ng-class="{'active btn-info': filtrandoComuna(c) }" ng-click="cambiarFiltroComuna(c)">{{c.numero}}</a>
+                    <a class="btn" ng-class="{'active btn-info': todasLasComunasEstanFiltradas(c)}" ng-hide="hasPermission('iniciativas.comunero')" style="font-weight: 700" ng-click="toggleComunas()"><div ng-disabled="hasPermission('iniciativas.comunero')" ng-show="todasLasComunasEstanFiltradas(c)">Ninguna</div><div ng-show="!todasLasComunasEstanFiltradas(c)">Todas</div></a>
+                </div>
+            </div>
+        </div>
+        
+        <table class="table">
+            <tr>
+                <th><a ng-click="orden = 'nombre'" href="#" style="display: inline-block;color:#404040">NOMBRE:</a></th>
+                <th><a ng-click="orden = 'clase'" href="#" style="display:inline-block;color:#404040">CLASE:</a></th>
+                <th><a ng-click="orden = 'estado'" href="#" style="display:inline-block;color:#404040">ESTADO:</a></th>
+                <th><a ng-click="orden = 'comuna[0]'" href="#" style="display: inline-block;color:#404040">COMUNA:</a></th>
+                <th><a ng-click="orden = 'jurisdiccion'" href="#" style="display: inline-block;color:#404040">JURISDICCIÓN:</a></th>
+                <th><a ng-click="orden = 'plan'" href="#" style="display: inline-block;color:#404040">PLAN:</a></th>
+            </tr>
+            <tr ng-repeat="i in listado | filter:filtro | orderBy:orden | filter:filtroComunas | filter:filtroPrioridades" style="padding-bottom: 10px;">
+                <td><a href="/iniciativas/{{i._id}}">{{i.nombre}}</a></td>
+                <td>{{clasePorId(i.clase).nombre}}</td>
+                <td>{{estadoPorId(i.estado).nombre}}</td>
+                <td>{{comunaPorId(i.comuna[0]).nombre}}</td>
+                <td>{{organigramaPorId(i.jurisdiccion2).nombreCompleto}}</td>
+                <td>{{planPorId(i.plan).nombre}}</td>
+            </tr>
+        </table>
+    </div>
+</div>

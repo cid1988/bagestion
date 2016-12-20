@@ -1,0 +1,30 @@
+<table border="1" style="margin-top:10px" class="table table-bordered">
+    <select class="width: 5%;input-block-level" style="width: 20%" placeholder="Segmento" ui-select2 type="text" ng-model="filtro.orden1">
+        <option value=""></option>
+        <option value="">Todos los segmentos</option>
+        <option ng-repeat="e in ordenes | orderBy: 'orden'" value="{{e._id}}">{{e.nombre}}</option>
+    </select>
+    <select class="width: 5%;input-block-level" style="width: 30%" placeholder="Dependencia" ui-select2 type="text" ng-model="filtro2.dependencia">
+        <option value=""></option>
+        <option value="">Todas las dependencias</option>
+        <option ng-repeat="e in organigrama" value="{{e._id}}">{{e.nombreCompleto}}</option>
+    </select>
+    <span class="pull-right" style="margin-left:10px">Total obras: {{obras.length}}</span>
+    <tr bgcolor= "#FFFFFF">
+        <th style="text-align:center !important" rowspan="2"></th>
+        <th colspan="12" style="text-align:center !important" ng-repeat="a in [2014,2015]">{{a}}</th>
+        <!--<th colspan="12" style="text-align:center !important">Total</th>-->
+    </tr>
+    <tr bgcolor= "#FFFFFF">
+        <th style="text-align:center !important" ng-repeat="col in columnasMeses">{{col.nombreMes}}</th>
+    </tr>
+    <tr bgcolor= "#FFFFFF">
+        <tr ng-repeat="c in filasComunas" bgcolor= "#FFFFFF" style="text-align:center !important">
+            <td ng-if="c != 16">Comuna {{c}}</td>
+            <td ng-show="c == 16">Total: </td>
+            <td style="text-align:center !important" ng-repeat="col in columnasMeses">
+                {{matriz[c][col.anio][col.mes]}}
+            </td>
+        </tr>
+	</tr>
+</table>

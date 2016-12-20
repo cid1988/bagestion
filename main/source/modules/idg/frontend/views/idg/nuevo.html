@@ -1,0 +1,128 @@
+<style>
+    .control-group {
+      margin-bottom: 10px !important;
+    }
+</style>
+
+<div ng-controller="IDGNuevoCtrl" class="card">
+    <a ng-click="guardar()"  href="/idg" class="btn btn-link pull-right" style="margin-right: 20px; margin-top:0%;margin-bottom:0%;"><i class="icon-ok icon-white"></i> Guardar</a>
+    <h3 class="card-heading simple">IDG - Nuevo</h3>
+    <div class="card-body " style="margin-top: 0px;margin-bottom: 10px;">
+        <div class="card-body" style="padding-bottom: 0px;">
+            <form class="form-horizontal" style="margin-bottom: 0px !important;" autocomplete="on">
+                <div class="row">
+                    <div class="span6">
+                        <form class="form-horizontal" style="margin-bottom: 0px !important;">
+                            <div class="control-group" style="margin-left: 10px;margin-bottom: 0px;">
+                                <div class="control-group">
+                                    <label class="control-label">Nombre:</label>
+                                    <div class="controls">
+                                        <input class="span3" type="text" placeholder="Nombre" required ng-model="archivo.nombre" />
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">Tipo:</label>
+                                    <div class="controls">
+                                        <select type="text" ui-select2 ng-model="archivo.tipo" class="span3">
+                                            <option value="">Tipo...</option>
+                                            <option value="Documento Word (.doc)">Documento Word (.doc)</option>
+                                            <option value="Presentación Powerpoint (.ppt)">Presentación Powerpoint (.ppt)</option>
+                                            <option value="Planilla Excel (.xls)">Planilla Excel (.xls)</option>
+                                            <option value="Documento PDF (.pdf)">Documento PDF (.pdf)</option>
+                                            <option value="Mail">Mail</option>
+                                            <option value="Project">Project</option>
+                                            <option value="Bizagi">Bizagi</option>
+                                            <option value="Otros">Otros</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">Fecha:</label>
+                                    <div class="controls">
+                                        <input class="span3" type="text" date required ng-model="archivo.fecha" />
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">Autor:</label>
+                                    <div class="controls">
+                                        <input class="span3" type="text" placeholder="Autor/Interlocutor/Referente Jurisdicción" required ng-model="archivo.autor" />
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">Tema:</label>
+                                    <div class="controls">
+                                        <select class="span3" ui-select2 type="text" ng-model="archivo.tema" >
+                                            <option ng-repeat="r in temasFiltrados" ng-value="r._id">{{r.nombre}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">Descripción:</label>
+                                    <div class="controls">
+                                        <textarea class="span3" type="text" rows="4" placeholder="Descripción" required ng-model="archivo.descripcion"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="span6">
+                        <form class="form-horizontal" style="margin-bottom: 0px !important;">
+                            <div class="control-group" style="margin-left: 10px;margin-bottom: 0px;">
+                                <div class="control-group">
+                                    <label class="control-label">Referente DGCONTG:</label>
+                                    <div class="controls">
+                                        <input class="span3" ui-select2 type="text" ng-model="archivo.referente" placeholder="Referente DGCONTG" required/>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">Fuente:</label>
+                                    <div class="controls">
+                                        <select type="text"  ui-select2 ng-model="archivo.fuente" class="span3">
+                                            <option value="">Fuente...</option>
+                                            <option value="Reunión de Seguimiento (RS)">Reunión de Seguimiento (RS)</option>
+                                            <option value="Reunión Específica (RE)">Reunión Específica (RE)</option>
+                                            <option value="Referente Prensa Jurisdicción (RPJ)">Referente Prensa Jurisdicción (RPJ)</option>
+                                            <option value="Requerimiento Puntual (RP)">Requerimiento Puntual (RP)</option>
+                                            <option value="Reunión de Coordinación (RC)">Reunión de Coordinación (RC)</option>
+                                            <option value="Plan Operativo Anual (POA)">Plan Operativo Anual (POA)</option>
+                                            <option value="Otras Fuentes (especificar)">Otras Fuentes (especificar)</option>
+                                            <option value="Creación DGCONTG">Creación DGCONTG</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">Vencimiento:</label>
+                                    <div class="controls">
+                                        <input class="span3" type="text" date required ng-model="archivo.vencimiento" />
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">Jurisdicción:</label>
+                                    <div class="controls">
+                                        <select class="span3" type="text" ui-select2 placeholder="Jurisdicción" ng-model="archivo.jurisdiccion" ng-options="i._id as i.nombreCompleto for i in organigrama | orderBy:'nombre'"></select>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">Tags:</label>
+                                    <div class="controls">
+                                        <input class="span3" type="email" placeholder="Tags" required ng-model="archivo.tags"/>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">Adjuntar Archivo:</label>
+                                    <div class="controls">
+                                        <div ng-if="uploaded.length">{{uploaded[0].nombre}} (<a href="/file/{{uploaded[0].id}}" target="_blank">Descargar</a>)<br></div>
+                                        <div style="width: 274px" fine-uploader destination="'/upload/'"  placeholder="'Examinar'" uploaded="uploaded" ></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div> 
+            </form>
+        </div>
+    </div> 
+</div> 
+
+
+

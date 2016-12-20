@@ -1,0 +1,115 @@
+<style>
+    .table {
+        border: 0;
+    }
+    .table th, .table td {
+        padding: 8px;
+        line-height: 20px;
+        text-align: left;
+        vertical-align: middle;
+        border: 0;
+    }
+    .table th {
+        background-color: #dddddd !important;
+    }
+</style>
+<div class="card" ng-controller="PlanBA2030Ctrl" style="position: absolute;top: 50px;bottom: 0px;right: 20px;left: 20px;margin-bottom: 10px;">
+    <div class="card-actions pull-right no-print" style="margin: 0; padding: 0">
+        <input placeholder="Buscar por Proyecto..." type="text" class="span2" ng-model="filtro.nombreProyecto" style="margin-right: 0px;margin-left: 5px;margin-bottom: 25px;" />
+        <div style="margin-left: 5px; display: inline-block;">
+            <select class="span2" ui-select2 type="text" ng-model="filtro.eje">
+                <option value="">Todas los Ejes</option>
+                <option ng-repeat="e in ejes" value="{{e._id}}">{{e.nombre}}</option>
+            </select>
+        </div>
+        <div style="margin-left: 5px; display: inline-block;">
+            <select class="span2" ui-select2 type="text" ng-model="filtro.estrategia">
+                <option value="">Todas las Estrategias</option>
+                <option ng-repeat="e in estrategias | filter:{eje:filtro.eje}" value="{{e._id}}">{{e.nombre}}</option>
+            </select>
+        </div>
+        <div style="margin-left: 5px; display: inline-block;">
+            <select class="span3" ui-select2 type="text" ng-model="filtro.areaSponsor">
+                <option value="">Todas las Áreas</option>
+                <option ng-repeat="e in organigrama" value="{{e._id}}">{{e.nombreCompleto}}</option>
+            </select>
+        </div>
+        <a href="/planba2030/nuevo" class="btn btn-link pull-right" style="margin-right: 10px;margin-bottom: 20px;margin-left: 10px;" ng-if=hasPermission('planba2030.editar') ><i class="icon-plus"></i></a>
+        <div data-toggle="multiselect buttons-radio" class="control-group span4 pull-right" style="margin-right: 0px;width: 200px !important; margin-left: 10px;">
+            Prioridad:
+            <div class="btn-group">
+                <a style="padding-left: 0px;padding-right: 0px; min-width:21px; font-weight: 700" class="btn" ng-class="{'active btn-info': filtrandoPrioridad('A+')}" ng-click="cambiarFiltroPrioridad('A+')">A+</a>
+                <a style="padding-left: 0px;padding-right: 0px; min-width:21px; font-weight: 700" class="btn" ng-class="{'active btn-info': filtrandoPrioridad('A')}" ng-click="cambiarFiltroPrioridad('A')">A</a>
+                <a style="padding-left: 0px;padding-right: 0px; min-width:21px; font-weight: 700" class="btn" ng-class="{'active btn-info': filtrandoPrioridad('B')}" ng-click="cambiarFiltroPrioridad('B')">B</a>
+                <a style="padding-left: 0px;padding-right: 0px; min-width:21px; font-weight: 700" class="btn" ng-class="{'active btn-info': filtrandoPrioridad('C')}" ng-click="cambiarFiltroPrioridad('C')">C</a>
+                <a style="padding-left: 0px;padding-right: 0px; min-width:21px; font-weight: 700" class="btn" ng-class="{'active btn-info': filtrandoPrioridad('')}" ng-click="cambiarFiltroPrioridad('')">Sin</a>
+                <a style="padding-left: 0px;padding-right: 0px; min-width:21px; font-weight: 700" class="btn" ng-class="{'active btn-info': filtrandoPrioridad('L')}" ng-click="cambiarFiltroPrioridad('L')"><i class="icon-search"></i></a>
+            </div>
+        </div>
+    </div>
+    <h2 class="card-heading simple">Plan BA 2030 <sub>({{filtrados.length}})</sub></h2>
+    <div class="card-body">
+        <table border="1" class="table table-striped">
+            <tr bgcolor= "#FFFFFF">
+                <th width="12%"><a ng-click="orden = 'eje'" href="#" style="display: inline-block; color:#404040;">Eje</a></th>
+                <th width="19%"><a ng-click="orden = 'estrategia'" href="#" style="display: inline-block; color:#404040;">Estrategia</a></th>
+                <th width="26%"><a ng-click="orden = 'nombreProyecto'" href="#" style="display: inline-block; color:#404040;">Proyecto</a></th>
+                <th width="7%"><a ng-click="orden = 'areaResponsable'" href="#" style="display: inline-block; color:#404040;">Área</a></th>
+                <th width="7%"><a ng-click="orden = 'ordenPrioridad'" href="#" style="display: inline-block; color:#404040;">Priorización</a></th>
+                <!-- <th><a ng-click="orden = 'plazoEjecucion'" href="#" style="display: inline-block; color:#404040;">Plazo</a></th>
+                <th><a ng-click="orden = 'presupuestoEstimado'" href="#" style="display: inline-block; color:#404040;">Presupuesto Estimado</a></th>
+                <th><a ng-click="orden = 'comunasImpactadas'" href="#" style="display: inline-block; color:#404040;">Comunas</a></th> -->
+                <th width="5%"><a ng-click="orden = 'escalaDesarrollo'" href="#" style="display: inline-block; color:#404040;">Avance</a></th>
+                <th width="10%"><a ng-click="orden = 'statusOperativo'" href="#" style="display: inline-block; color:#404040;">Status Operativo</a></th>
+                <th width="14%"></th>
+            </tr>
+        </table>
+        <div style="overflow-y: scroll; overflow-x: hidden;position: absolute;top: 120px;bottom: 12px;right: 20px;left: 20px;">
+        <table border="1" class="table table-striped">
+            <tr ng-repeat="i in filtrados = (planes | orderBy:orden | filter:filtro | filter:filtroPrioridades | filter:filtroSoloPadres)">
+                <td width="12%"><div>{{ejePorId(i.eje).nombre}}</div></td>
+                <td width="19%"><div>{{estrategiaPorId(i.estrategia).nombre}}</div></td>
+                <td width="27%"><div>{{i.nombreProyecto}}</div></td>
+                <td width="7%"><div>{{organigramaPorId(i.areaSponsor).sigla}}</div></td>
+                <td width="7%"><div style="margin-left: 30px;">{{i.prioridad}}</div></td>
+                <!-- <td><div>{{i.plazoEjecucion}}</div></td>
+                <td><div>{{i.presupuestoEstimado}}</div></td>
+                <td><span ng-show="compararArrays(i.comunasImpactadas, ['50dcc0cd1dd1ce357600002a', '50dcc0cd1dd1ce357600002b', '50dcc0cd1dd1ce357600002c', '50dcc0cd1dd1ce357600002d', '50dcc0cd1dd1ce357600002e', '50dcc0cd1dd1ce357600002f', '50dcc0cd1dd1ce3576000030', '50dcc0cd1dd1ce3576000031', '50dcc0cd1dd1ce3576000032', '50dcc0cd1dd1ce3576000033', '50dcc0cd1dd1ce3576000034', '50dcc0cd1dd1ce3576000035', '50dcc0cd1dd1ce3576000036', '50dcc0cd1dd1ce3576000037', '50dcc0cd1dd1ce3576000038'])">Toda la Ciudad</span>
+                    <span ng-repeat="c in i.comunasImpactadas" ng-hide="compararArrays(i.comunasImpactadas, ['50dcc0cd1dd1ce357600002a', '50dcc0cd1dd1ce357600002b', '50dcc0cd1dd1ce357600002c', '50dcc0cd1dd1ce357600002d', '50dcc0cd1dd1ce357600002e', '50dcc0cd1dd1ce357600002f', '50dcc0cd1dd1ce3576000030', '50dcc0cd1dd1ce3576000031', '50dcc0cd1dd1ce3576000032', '50dcc0cd1dd1ce3576000033', '50dcc0cd1dd1ce3576000034', '50dcc0cd1dd1ce3576000035', '50dcc0cd1dd1ce3576000036', '50dcc0cd1dd1ce3576000037', '50dcc0cd1dd1ce3576000038'])">{{comunaPorId(c).nombre}}<span ng-hide="$last"> - </span></span></td> -->
+                <td width="5%"><button class="btn btn-success" ng-if="i.statusAvance=='Avance Alto'" title="Avance Alto" style="margin-left: 13px;"></button>
+                    <button class="btn btn-warning" ng-if="i.statusAvance=='Avance Medio'" title="Avance Medio" style="margin-left: 13px;"></button>
+                    <button class="btn btn-danger" ng-if="i.statusAvance=='Avance Bajo'" title="Avance Bajo" style="margin-left: 13px;"></button>
+                    <button class="btn" ng-if="i.statusAvance=='Activación en Espera'" title="Activación en Espera" style="margin-left: 13px;"></button></td>
+                <td width="10%"><div class="btn-group">
+                    <button class="btn" ng-if="i.statusOperativo[0]=='white'" title="Ficha" ng-click="mostrarFicha(i._id)">F</button>
+                    <button class="btn btn-danger" ng-if="i.statusOperativo[0]=='danger'" title="Ficha" ng-click="mostrarFicha(i._id)">F</button>
+                    <button class="btn btn-warning" ng-if="i.statusOperativo[0]=='warning'" title="Ficha" ng-click="mostrarFicha(i._id)">F</button>
+                    <button class="btn btn-success" ng-if="i.statusOperativo[0]=='success'" title="Ficha" ng-click="mostrarFicha(i._id)">F</button>
+                    <button class="btn" ng-if="i.statusOperativo[1]=='white'" title="Presupuesto" ng-click="mostrarPresupuesto(i._id)">P</button>
+                    <button class="btn btn-danger" ng-if="i.statusOperativo[1]=='danger'" title="Presupuesto" ng-click="mostrarPresupuesto(i._id)">P</button>
+                    <button class="btn btn-warning" ng-if="i.statusOperativo[1]=='warning'" title="Presupuesto" ng-click="mostrarPresupuesto(i._id)">P</button>
+                    <button class="btn btn-success" ng-if="i.statusOperativo[1]=='success'" title="Presupuesto" ng-click="mostrarPresupuesto(i._id)">P</button>
+                    <button class="btn" ng-if="i.statusOperativo[2]=='white'" title="Gantt">G</button>
+                    <button class="btn btn-danger" ng-if="i.statusOperativo[2]=='danger'" title="Gantt">G</button>
+                    <button class="btn btn-warning" ng-if="i.statusOperativo[2]=='warning'" title="Gantt">G</button>
+                    <button class="btn btn-success" ng-if="i.statusOperativo[2]=='success'" title="Gantt">G</button></div></td>
+                <td width="13%"><div><a class="btn btn-link pull-right" type="button" href="/planba2030/{{i._id}}" title="Ver detalle" style="padding-left: 0px;padding-right: 0px;" ng-if=hasPermission('planba2030.editar')><i class="icon-edit"></i></a>
+                        <a class="btn btn-link pull-right" type="button" href="#" ng-click="comentariosHRL(i._id)" title="Comentarios HRL" style="padding-left: 0px;padding-right: 0px;"><i ng-hide="comentarioNuevo(i)" class="icon-comment"></i><img src="views/planba2030/commentRojo.png" ng-show="comentarioNuevo(i)"></a>
+                        <a class="btn btn-link pull-right" type="button" href="#" ng-if="i.foco" title="En Foco" style="padding-left: 0px;padding-right: 0px;"><i class="icon-search"></i></a>
+                        <div class="btn-group pull-right">
+                            <a class="btn btn-link dropdown-toggle" data-toggle="dropdown" href="#" ng-if="(proyectosHijos(i._id).length)" title="Tiene Sub Proyectos" style="padding-left: 0px;padding-right: 0px;"><i class="icon-folder-open"></i></a>
+                            <ul class="dropdown-menu">
+                                <li ng-repeat="h in proyectosHijos(i._id)">
+                                    <a href="#" ng-click="mostrarFicha(h)" style="display:inline-block;padding-right: 10px;">{{proyectoPorId(h).nombreProyecto}}</a><a href="/planba2030/{{h}}" title="Ver detalle" style="display:inline-block;padding-left: 10px;"><i class="icon-edit"></i></a>
+                                </li>
+                            </ul> 
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        </div>
+    </div>
+</div>
+
+

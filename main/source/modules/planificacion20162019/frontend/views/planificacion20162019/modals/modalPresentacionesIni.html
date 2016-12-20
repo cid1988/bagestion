@@ -1,0 +1,13 @@
+<div class="modal-header" style="padding-bottom: 10px;">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h3>Presentaciones de {{iniciativaSeleccionada.nombreProyecto}}</h3>
+</div>
+<div class="modal-body" style="padding-top: 10px; padding-bottom: 10px;">
+    <div ng-if="!iniciativaSeleccionada.presentaciones.length" style="text-align: center; margin-top: 10px;">No se ha cargardo ninguna presentacion aún</div>
+    <div ng-repeat="d in iniciativaSeleccionada.presentaciones">
+        {{d.fecha}} - <b>{{d.nombre}}</b> (<a href="/file/{{d.archivoId}}" target="_blank">Descargar</a>) <a ng-click="eliminarElementoArea(iniciativaSeleccionada.presentaciones,d)" ng-show=hasPermission('planificacion20162019.editar') style="margin-left: 30px"><i class="icon-trash"></i></a><br>
+    </div>
+</div>
+<div class="modal-footer">
+    <a href="#" class="btn" data-dismiss="modal">Cerrar</a>
+</div>

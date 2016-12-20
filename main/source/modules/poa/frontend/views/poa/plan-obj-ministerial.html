@@ -1,0 +1,41 @@
+<div class="card span12" ng-controller="POAEditarObjMinisterialCtrl" style="padding-top: 10px; margin-top: 0px;margin-bottom: 10px;">
+  <h3 class="card-heading simple">
+  <span class="btn-group pull-right">
+    <a ng-click="volver()" class="btn btn-default"><i class="icon icon-arrow-up"></i> Volver</a>
+    <a ng-if="activada" ng-click="cancelar()" class="btn btn-default"><i class="icon icon-undo"></i> Cancelar</a>
+    <a ng-if="activada" ng-click="eliminar()" class="btn btn-default"><i class="icon icon-trash"></i> Eliminar</a>
+    <a ng-if="activada" ng-click="guardar()" class="btn btn-default"><i class="icon icon-save"></i> Guardar</a>
+    <a ng-if="!activada && detalle" ng-click="activar()" class="btn" ng-show="permisoMinisterial()"><i class="icon icon-edit"></i> Modificar</a>
+    <a ng-if="!activada && !detalle" ng-click="verDetalle()" class="btn"><i class="icon icon-zoom-in"></i> Ver detalle</a>
+    <a ng-if="!activada && detalle" ng-click="cancelarDetalle()" class="btn"><i class="icon icon-zoom-out"></i> Ocultar</a>
+  </span>
+  <span class="pull-right" style="margin-right: 10px;margin-left: 20px;">Objetivo ministerial</span>
+  <strong style="margin-right: 1em">{{tabCtrl.filtro.objMinisterial.nombre}}</strong></h3>
+  <div class="card-body" ng-if="detalle">
+    <form class="form-horizontal">
+      <div class="control-group" style="width: 975px; display: inline-block;margin-bottom: 0px;">
+        <label class="control-label">Nombre:</label>
+        <div class="controls" style="margin-right: 20px;">
+          <input type="text"  ng-disabled="!activada" ng-model="objMinisterial.nombre" style="width: 100%;">
+        </div>
+      </div>
+      <div class="btn-group">
+        <button class="btn" ng-class="{'active btn-info': objMinisterial.validado}" ng-click="objMinisterial.validado = !objMinisterial.validado" ng-disabled="!activada">Validado</button>
+        <button class="btn" ng-class="{'active btn-info': objMinisterial.aprobado}" ng-click="objMinisterial.aprobado = !objMinisterial.aprobado" ng-disabled="!activada || !hasPermission('poa.administrador')">Aprobado</button>
+      </div>
+    </form>
+    <form class="form-horizontal">
+      <div class="control-group">
+        <label class="control-label" style="width: 166px; text-align: right; padding-right: 14px;margin-left: 0px;">Descripción:</label>
+        <textarea ng-disabled="!activada" ng-model="objMinisterial.descripcion" style="width: 57%; resize: vertical" rows="3"></textarea>
+        <label style="width: 140px; text-align: right; padding-right: 14px;display: inline-block;">Cód. Identificación:</label>
+        <input type="text" ng-disabled="!activada" ng-model="objMinisterial.codIdentificacion" style="width: 90px;"/>
+      </div>
+    </form>
+    <!--<form class="form-inline">
+        <label style="width: 90px; text-align: right; padding-right: 14px;">Comunas:</label>
+        <select ui-select2 multiple="multiple" ng-disabled="!activada" style="width: 591px;" type="text" ng-model="objMinisterial.comunas" ng-options="i._id as i.nombre for i in comunas"></select>
+    </form> -->
+  </div>
+</div>
+

@@ -1,0 +1,20 @@
+<div class="modal-header" style="padding-bottom: 10px;">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h3>{{organigramaPorId(areaSeleccionada.jurisdiccion).nombreCompleto}}</h3>
+</div>
+<div class="modal-body">
+    <form class="form-horizontal" style="margin-bottom: 0px !important;">
+        <div class="control-group" style="margin-left: 10px;margin-bottom: 0px;">
+            <div class="control-group" style="margin-top: 20px;">
+                <label class="control-label">Nro de Orden:</label>
+                <div class="controls">
+                    <input class="span2" type="number" placeholder="Sin Nro" ng-model="areaSeleccionada.orden" />
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <a href="#" class="btn" data-dismiss="modal">Cancelar</a>
+    <a href="#" class="btn btn-info" data-dismiss="modal" ng-click="areaSeleccionada.$save()">Guardar</a>
+</div>

@@ -1,0 +1,99 @@
+<style type="text/css">
+    .wysihtml5-sandbox {
+        border: 0 !important;
+        padding: 0 !important;
+    }
+
+    .temario {
+        font-size:23px !important;
+        font-family:Arial !important;
+        line-height: 100% !important;
+    }
+
+    .temario h6 {
+        font-size:25px !important;
+        line-height: 22px;
+        margin-top: 1em;
+        margin-bottom: 1em;
+    }
+    .no-border, .no-border > th, .no-border > td {
+        border: none;
+    }
+    .tablaPrint th, .tablaPrint td {
+        padding-top:1px;
+        padding-bottom:1px;
+        border-bottom:1px solid #AAAAAA;
+        line-height: 25px;
+    }
+    
+    
+    .temario ul {
+        line-height: 24px;
+        margin-top: 1em;
+        margin-bottom: 1em;
+        padding-left: 15px;
+    }
+    
+    .temario  li {
+        line-height: 28px;
+    }
+    
+</style>
+
+<div ng-controller="AgendaMinutaCtrl">
+<div class="card span12" ng-controller="AgendaNotaMinutaCtrl" style="margin-top: 0px; border-bottom-width: 0px; border-right-width: 0px; border-left-width: 0px; padding-top: 0px;">
+<div style="background-image: url('/views/agenda/minuta/portadaMinuta1.jpg') !important; background-repeat: no-repeat;
+    position: relative;font-family: Arial !important; color: rgb(0, 0, 0);width: 1150px;height: 284px;">
+    <a class="btn pull-right no-print" ng-click="imprimir()" ><i class="icon-print"></i> Imprimir</a>
+    <a class="btn pull-right no-print" href="/agenda" ><i class="icon-arrow-left"></i> Volver</a>
+    <div style="text-align: right; position: absolute; width: 515px; top: 45px; left: 605px">
+        <h3 style="font-size: 23px !important; margin-top: 0px; margin-bottom: 0px;">Reunión</h3>
+    </div>
+    <div style="text-align: right; position: absolute; width: 550px; top: 83px; left: 570px">
+        <h3 ng-style="set_size" style="font-weight: bold; margin-top: 0px; margin-bottom: 0px;">{{agenda.nombre}}</h3>
+    </div>
+    <div style="text-align: right; position: absolute; width: 550px; top: 110px; left: 570px">
+        <h3 style="font-size: 23px !important; margin-top: 0px; margin-bottom: 0px;">{{instancia.subtitulo}}</h3>
+    </div>
+    <div style="text-align: left; position: absolute; width: 745px; top: 215px; left: 40px">
+        <h3 style="font-size: 20px !important;font-weight: bold; margin-top: 0px; margin-bottom: 0px;">{{instancia.titulo}}</h3>
+    </div>
+    <div style="text-align: left; position: absolute; width: 140px; top: 215px; left: 807px">
+        <h3 style="font-size: 20px !important;font-weight: bold; margin-top: 0px; margin-bottom: 0px;">{{instancia.fecha}}</h3>
+    </div>
+    <div style="text-align: left; position: absolute; width: 100px; top: 215px; left: 1030px">
+        <h3 style="font-size: 20px !important;font-weight: bold; margin-top: 0px; margin-bottom: 0px;">{{instancia.desdeHora}}</h3>
+    </div>
+    <div style="text-align: left; position: absolute; width: 100px; top: 240px; left: 1030px">
+        <h3 style="font-size: 20px !important;font-weight: bold; margin-top: 0px; margin-bottom: 0px;">{{instancia.hastaHora}}</h3>
+    </div>
+</div>
+<div ng-if="minuta.compromisos" style="background-image: url('/views/agenda/minuta/portadaMinuta2.jpg') !important; background-repeat: no-repeat;
+    position: relative;font-family: Arial !important; color: rgb(0, 0, 0);width: 1150px;height: 87px;">
+</div>
+    <table border="1" class="table table-bordered" style="margin-left: 30px;margin-right: 20px;width: 1105px;margin-top: 10px;font-size: 20px !important;">
+        <tr bgcolor= "#FFFFFF">
+            <th><a style="display: inline-block; color:#404040;">Tareas Comprometidas</a></th>
+            <th><a style="display: inline-block; color:#404040;">Nombre y Apellido</a></th>
+            <th><a style="display: inline-block; color:#404040;">Área / Cargo</a></th>
+            <th><a style="display: inline-block; color:#404040;">Fecha</a></th>
+        </tr>
+        <tr ng-repeat="o in minuta.compromisos | orderBy:orden | filter:filtro" bgcolor= "#FFFFFF">
+            <td><div ng-show="o.tema"><b>{{temaSuperiorPorId(o.tema)}}{{temaPorId(o.tema).nombre}}:</b> {{o.tarea}}</div>
+                <div ng-hide="o.tema"><b>{{o.titulo}}:</b> {{o.tarea}}</div>
+            </td>
+            <td><div ng-repeat="u in o.responsables" style="margin-top: 0px; margin-bottom: 0px">{{contactoPorId(u).apellidos}} {{contactoPorId(u).nombre}}<br></div></td>
+            <td><div ng-repeat="u in o.responsables" style="margin-top: 0px; margin-bottom: 0px">{{siglaPorId(u).sigla}}<br></div></td>
+            <td><div>{{o.fecha}}</div></td>
+        </tr>
+    </table>
+    
+<div style="background-image: url('/views/agenda/minuta/portadaMinuta3.jpg') !important; background-repeat: no-repeat;
+    position: relative;font-family: Arial !important; color: rgb(0, 0, 0);width: 1150px;height: 87px;">
+</div>
+    <div style="margin-left: 20px; margin-right: 20px;">
+        <div style="min-height: 500px;margin-left: 40px;margin-top: 10px;margin-right: 75px;" class="temario" compile="minuta.html">
+        </div>
+    </div>
+    </div>
+</div>

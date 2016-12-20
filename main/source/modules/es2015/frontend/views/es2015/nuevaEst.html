@@ -1,0 +1,21 @@
+<div class="modal-header" style="padding-bottom: 10px;">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>Agregar Estructura de Trabajo de {{distrito.nombre}}</h3>
+    </div>
+    <div class="modal-body">
+        <div style="display: inline-block">
+            <span style="display: inline-block"> Nombre:<br /> 
+                <input class="span5" type="text" placeholder="Candidato a ..." ng-model="data.nombre" />
+            </span>
+        </div>
+        <div style="display: inline-block">
+            <span style="display: inline-block"> Orden:<br /> 
+                <input class="span1" type="text" ng-model="data.orden" />
+            </span>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="btn" data-dismiss="modal">Cancelar</a>
+        <a href="#" class="btn btn-info" data-dismiss="modal" ng-click="nuevaEstruc(true, data)">Agregar</a>
+    </div>
+</div>

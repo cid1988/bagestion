@@ -1,0 +1,456 @@
+<script>
+    $(document).ready(function() { $("#e1").select2(); });
+    $(document).ready(function() { $("#e2").select2(); });
+    $(document).ready(function() { $("#e3").select2(); });
+</script>
+<style>
+    .card-heading{
+        padding-left: 10px; 
+        font-size:14px !important;
+        padding-right: 0;
+        height: 45px;
+        margin-bottom: 10px;
+    }
+    .card>div:not(:first-child):not(:last-child){
+        margin:0 20px 40px 20px;
+    }
+    form{
+        margin-left: 15px;
+    }
+    .juntos{
+        display: inline-block;
+    }
+    form>div{
+        overflow: hidden; 
+        margin-top:5px;
+    }
+    th>a{
+        display: inline-block; 
+        color:#404040;
+    }
+    th:first-child{
+         background-color:#FFFFFF;
+    }
+    .paddLR
+    {
+        padding:0 20px;
+    }
+    h3>ul>li>a{
+        padding:8px !important
+    }
+    a:hover{
+        color:#404040;
+        text-decoration:none;
+    }
+    tr,.puntero{
+        cursor:pointer;
+    }
+    #sinPadding{
+        padding:0;
+    }
+    .activo>div{
+        font-weight: bold;
+        color: #262626;
+        text-decoration: none;
+        background-color: transparent;
+        border-color: #3B3B3B;
+        -webkit-box-shadow: none;
+        -moz-box-shadow: none;
+        box-shadow: none;
+        -webkit-transition: border-color 0.218s ease 0s;
+        -moz-transition: border-color 0.218s ease 0s;
+        -o-transition: border-color 0.218s ease 0s;
+        transition: border-color 0.218s ease 0s;
+        padding-bottom:5px;
+        border-bottom: 2px solid #3B3B3B !important;
+    }
+    li>div:hover{
+        padding-bottom:5px;
+        border-bottom: 2px solid #8B8B8B !important;
+    }
+    
+</style>
+<div ng-controller="DetalleTema" class="card">
+    <div class="card-actions pull-right">
+        <div class="btn-group">
+            <a ng-click="modificar()" ng-if="(!modificando && tienePermiso())" id="sinPadding" class="btn btn-link"><i class="icon-edit"></i></a>
+            <a ng-click="eliminar(false)" ng-if="modificando" class="btn btn-link"><i class="icon-trash"></i></a>
+            <a href="/temas" ng-if="modificando" class="btn btn-link"><i class="icon-remove"></i></a>
+            <a ng-click="guardar()" ng-if="modificando" class="btn btn-link"><i class="icon-ok"></i></a>
+        </div>
+    </div>
+    
+    <h3 class="card-heading simple">
+        <ul id="myTab" class="nav nav-pills">
+            <li ng-class="{'active': tab == 'identificacion'}"><a href="#" ng-click="tab='identificacion'" data-toggle="tab">Identificación</a></li>
+            <li ng-class="{'active': tab == 'bajoAutopista'}"><a href="#" ng-click="tab='bajoAutopista'; cargarQuery('bajoAutopista')" data-toggle="tab">Bajo Autopista</a></li>
+            <li ng-class="{'active': tab == 'djais'}"><a href="#" ng-click="tab='djais'; cargarQuery('djais')" data-toggle="tab">DJAI´s</a></li>
+            <li ng-class="{'active': tab == 'expedientes'}"><a href="#" ng-click="tab='expedientes'; cargarQuery('expedientes')" data-toggle="tab">Expedientes</a></li>
+            <li ng-class="{'active': tab == 'planBA2030'}"><a href="#" ng-click="tab='planBA2030'; cargarQuery('planBA2030')" data-toggle="tab">Plan BA 2030</a></li>
+            <li ng-class="{'active': tab == 'baFacts'}"><a href="#" ng-click="tab='baFacts'; cargarQuery('baFacts')" data-toggle="tab">BA Facts</a></li>
+            <li ng-class="{'active': tab == 'iniciativas'}"><a href="#" ng-click="tab='iniciativas'; cargarQuery('iniciativas')" data-toggle="tab">Iniciativas</a></li>
+            <li ng-class="{'active': tab == 'obras'}"><a href="#" ng-click="tab='obras'; cargarQuery('obras')" data-toggle="tab">Obras</a></li>
+            <li ng-class="{'active': tab == 'planificacion'}"><a href="#" ng-click="tab='planificacion'; cargarQuery('planificacion')" data-toggle="tab">Planificación</a></li>
+            <li ng-class="{'active': tab == 'regularizacion'}"><a href="#" ng-click="tab='regularizacion'; cargarQuery('regularizacion')" data-toggle="tab">Regularización</a></li>
+            <li ng-class="{'activo': (tab == 'indicadores')||(tab=='compromiso')}">
+                <div class="dropdown puntero" style="margin-top:7px;">
+                    <a class="dropdown-toggle" data-toggle="dropdown">SEMG</a>
+                    <a href="#" data-toggle="tab">
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                            <li><a tabindex="-1" class="puntero" ng-click="tab='indicadores';cargarQuery('semg')">Formulación de Matriz de Indicadores 2015</a></li>
+                            <li><a tabindex="-1" class="puntero" ng-click="tab='compromiso';cargarQuery('semg')">Formulación de Cartas Compromiso 2015</a></li>
+                        </ul>  
+                    </a>
+                </div>
+            </li>
+            <li ng-class="{'active': tab == 'temarios'}"><a href="#" ng-click="tab='temarios'"  data-toggle="tab">Temarios</a></li>
+            <li ng-class="{'active': tab == 'compromisos'}"><a href="#" ng-click="tab='compromisos'" data-toggle="tab">Compromisos</a></li>
+            <!--<li ng-class="{'active': tab == 'datosduros'}"><a href="#" ng-click="tab='datosduros'" data-toggle="tab">Datos Duros</a></li>-->
+        </ul>
+    </h3>
+    
+    <div ng-show="tab == 'identificacion'">
+        <form role="form">
+            <div class="juntos">
+                <label for="inpNombre"> Nombre:</label>
+                <input ng-disabled="!modificando" class="form-control span5" id="inpNombre" type="text" ng-model="tema.nombre">
+            </div>
+            <div class="juntos">
+                <label for="inpOrden"> Orden:</label>
+                <input ng-disabled="!modificando" class="form-control span1" id="inpOrden" type="text" ng-model="tema.orden">
+            </div>
+            <div>
+                <label> Fuente:</label>
+                <input ng-hide="modificando" ng-disabled="!modificando" class="form-control span5" type="text" ng-model="fuentePorId(tema.fuente).nombre">
+                <select ng-show="modificando" id="e1" class="span5" ng-disabled="!modificando" type="text" ng-model="tema.fuente" ng-options="i._id as i.nombre for i in fuentes | orderBy:'nombre'">
+                    <option ng-disabled="true" value="">{{fuentePorId(tema.fuente).nombre}}</option>
+                </select>
+            </div>
+            <div>
+                <label> Jurisdicción:</label>
+                <input ng-hide="modificando" ng-disabled="!modificando" class="form-control span5" type="text" ng-model="jurisdiccionPorId(tema.jurisdiccion).nombreCompleto"/>
+                <select ng-show="modificando" id="e2" class="span5" ng-disabled="!modificando" type="text" ng-model="tema.jurisdiccion" ng-options="i._id as i.nombreCompleto for i in jurisdicciones | orderBy:'nombreCompleto'">
+                    <option ng-disabled="true" value="">{{jurisdiccionPorId(tema.jurisdiccion).nombreCompleto}}</option>
+                </select>
+            </div>
+            <div>
+                <label> Tema al que pertenece: </label>
+                <input ng-hide="modificando" ng-disabled="!modificando" class="span5" ng-model="temaPorId(tema.temaSuperior).nombre" type="text"/>
+                <select ng-show="modificando" id="e3" class="span5" ng-disabled="!modificando" type="text" ng-model="tema.temaSuperior" ng-options="i._id as i.nombre for i in temas | orderBy:'nombre'">
+                    <option ng-disabled="true" value="">{{temaPorId(tema.temaSuperior).nombre}}</option>
+                </select>
+            </div>
+        </form>
+    </div>
+    
+    <div ng-if="tab == 'bajoAutopista'">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Comuna</th>
+                    <th>ID Mapa</th>
+                    <th>Ubicación</th>
+                    <th>Superficie Total</th>
+                    <th>Usuario</th>
+                    <th>Uso Especifico</th>
+                    <th>Ocupación</th>
+                    <th>Status</th>
+                    <th>Fecha Fin</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="fila-link" ng-repeat="i in bajoautopistas" ng-click="irABajoAutoposta('bajoautopista','?idObjeto='+i._id)">
+                    <td ng-if="i.comuna">C{{comunaPorId(i.comuna).numero}}</td>
+                    <td>{{i.idMapa}}</td>
+                    <td>Entre {{i.entre1}} y {{i.entre2}}</td>
+                    <td>{{i.superficieTotal}}</td>
+                    <td>{{i.usuario}}</td>
+                    <td>{{i.usoActual}}</td>
+                    <td>{{i.ocupacion}}</td>
+                    <td>{{i.status}}</td>
+                    <td>{{i.fechaFin}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div ng-if="tab == 'djais'">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Numero</th>
+                    <th>Detalle</th>
+                    <th>Monto</th>
+                    <th>Moneda</th>
+                    <th>Necesidad</th>
+                    <th>Comentarios</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="i in djais" ng-click="irA('djais',i._id)">
+                    <td>{{i.numero}}</td>
+                    <td>{{i.detalle}}</td>
+                    <td>{{i.monto}}</td>
+                    <td>{{i.moneda}}</td>
+                    <td>{{i.necesidad}}</td>
+                    <td><span ng-repeat="x in i.comentarios"><span ng-if="x.cuando">{{x.cuando}} - </span>{{x.descripcion}}</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div ng-if="tab == 'expedientes'">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Título</th>
+                    <th>Tipo</th>
+                    <th>Nº Expediente</th>
+                    <th>Jurisdicción</th>
+                    <th>SADE</th>
+                    <th>Comentario</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="e in expedientes" ng-click="irA('expedientes',e._id)">
+                    <td>{{e.titulo}}</td>
+                    <td>{{e.tema}}</td>
+                    <td>{{e.tipo}}-{{e.ano}}-{{e.numero}}-{{e.reparticion}}</td>
+                    <td>{{jurisdiccionPorId(e.jurisdiccion).nombreCompleto}}</td>
+                    <td>{{formatFecha(e.fechaActualizacionSade)}}</td>
+                    <td>{{formatFecha(e.comentarios[e.comentarios.length-1].fechaComentario)}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div ng-if="tab == 'planBA2030'">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Eje</th>
+                    <th>Estrategia</th>
+                    <th>Proyecto</th>
+                    <th>Área</th>
+                    <th>Priorización</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="i in planes" ng-click="irA('planba2030',i._id)">
+                    <td>{{ejePorId(i.eje).nombre}}</td>
+                    <td>{{estrategiaPorId(i.estrategia).nombre}}</td>
+                    <td>{{i.nombreProyecto}}</td>
+                    <td>{{organigramaPorId(i.areaSponsor).sigla}}</td>
+                    <td>{{i.prioridad}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div ng-if="tab == 'baFacts'">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Valor</th>
+                    <th>Magnitud</th>
+                    <th>Concepto</th>
+                    <th>Fuente</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="i in facts" ng-click="irA('facts',i._id)">
+                    <td>{{i.valor}}</td>
+                    <td>{{i.magnitud}}</td>
+                    <td>{{i.concepto}}</td>
+                    <td><div ng-if="((i.fuente == 'BA Data') || (i.fuente == 'Otra Publicación'))">{{i.fuente}}</div>
+                    <div ng-if="(i.fuente == 'Sin Calidad')">{{i.otraFuente}}</div></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div ng-if="tab == 'iniciativas'">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Clase</th>
+                    <th>Estado</th>
+                    <th>Comuna</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="i in iniciativa" ng-click="irA('iniciativas',i._id)">
+                    <td>{{i.nombre}}</td>
+                    <td>{{clasePorId(i.clase).nombre}}</td>
+                    <td>{{estadoPorId(i.estado).nombre}}</td>
+                    <td>{{comunaPorId(i.comuna[0]).nombre}}</div></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div ng-if="tab == 'obras'">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Prioridad</th>
+                    <th>Fecha Inicio</th>
+                    <th>Fecha Fin</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="i in listado" ng-click="irA('obras',i._id)">
+                    <td>{{i.nombre}}</td>
+                    <td>{{prioridadPorId(i.relevancia).nombre}}</td>
+                    <td>{{i.fec_inicio}}</td>
+                    <td>{{i.fec_fin}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div ng-if="tab == 'planificacion'">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Area Responsable</th>
+                    <th>Nombre del Proyecto</th>
+                    <th>Prioridad</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="i in planificacion" ng-click="irA('planificacion20162019',i._id)">
+                    <td>{{organigramaPorId(i.areaResponsable[0]).nombreCompleto}}</td>
+                    <td>{{i.nombreProyecto}}</td>
+                    <td>{{i.prioridad}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div ng-if="tab == 'regularizacion'">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Denominación</th>
+                    <th>Numero</th>
+                    <th>Tipo</th>
+                    <th>UTIU</th>
+                    <th>Barrio</th>
+                    <th>Comuna</th>
+                    <th>Regularización</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="i in regularizacion" ng-click="irA('regularizacionDominial',i._id)">
+                    <td>{{i.denominacion}}</td>
+                    <td>{{i.numero}}</td>
+                    <td>{{i.tipo}}</td>
+                    <td>{{i.utiu}}</td>
+                    <td>{{i.barrio}}</td>
+                    <td>{{i.comuna}}</td>
+                    <td><span ng-show="i.regularizacion">Si</span><span ng-hide="i.regularizacion">No</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div ng-if="tab == 'indicadores' || tab == 'compromiso'">
+    
+        <table class="table table-striped table-hover"  ng-if="tab == 'indicadores'">
+            <thead>
+                <tr>
+                    <th>Nombre del Indicador</th>
+                    <th>Métrica</th>
+                    <th>Frecuencia</th>
+                    <th>Peso</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="i in semgindicador" ng-click="irA('semg/indicadores',i._id)">
+                    <td>{{i.indicadorImpacto}}</td>
+                    <td>{{i.metrica}}</td>
+                    <td>{{i.frecuencia}}</td>
+                    <td>{{i.peso}}</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <table class="table table-striped table-hover" ng-if="tab == 'compromiso'">
+            <thead>
+                <tr>
+                    <th>Jurisdicción</th>
+                    <th>Subsecretaría</th>
+                    <th>Dirección</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="i in cartas" ng-click="irA('semg/cartascompromisos',i._id)">
+                    <td>{{organigramaPorId(i.jurisdiccion).nombreCompleto}}</td>
+                    <td>{{organigramaPorId(i.subsecretaria).nombreCompleto}}</td>
+                    <td><div ng-if="!i.dependencia">{{i.titulo}}</div><div ng-if="i.dependencia">{{organigramaPorId(i.dependencia).nombreCompleto}}</div></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div ng-if="tab == 'temarios'">
+        <table border="1" class="table table-bordered">
+            <tr>
+                <th><a href="#">Fecha</a></th>
+                <th><a href="#">Reunion</a></th>
+                <th><a href="#">Tipo</a></th>
+                <th></th>
+            </tr>
+            <tr ng-repeat="h in temariosTema | orderBy:orden" bgcolor= "#FFFFFF">
+                <td>{{instanciaPorId(h.instancia).fecha}}</td>
+                <td>{{reunionPorId(instanciaPorId(h.instancia).reunion).nombre}}</td>
+                <td>{{reunionPorId(instanciaPorId(h.instancia).reunion).tipo}}</td>
+                <th><a type="button" class="btn btn-link no-print" href="/orm/temarios/{{h.instancia}}"><i class="icon-zoom-in"></i> Ver Temario</a></th>
+            </tr>
+        </table>
+        <div ng-show="!temariosTema.length" align="center"><strong>No hay ningun temario</strong></div>
+    </div>
+    <div ng-if="tab == 'compromisos'">
+        <table border="1" class="table table-bordered">
+            <tr>                             
+                <th><a ng-click="orden = 'fecha'"  href="#">Fecha</a></th>
+                <th><a ng-click="orden = 'tarea'"  href="#">Tarea</a></th>
+                <th><a ng-click="orden = 'responsable'"  href="#">Responsables</a></th>
+            </tr>
+            <tr ng-repeat="h in compromisosTema | orderBy:orden" bgcolor= "#FFFFFF">
+                <td>{{h.fecha}}</td>
+                <td>{{h.tarea}}</td>
+                <td><div ng-repeat="u in h.responsables" class="juntos" style="margin:0;">
+                    {{contactoPorId(u).apellidos}} {{contactoPorId(u).nombre}},&nbsp
+                </div></td>
+            </tr>
+        </table>
+        <div ng-show="!compromisosTema.length"  align="center"><strong>No hay ningun compromiso</strong></div>
+    </div>
+    <div ng-if="tab == 'datosduros'">
+        <div class="btn-group" style="float: right;margin-bottom: 10px;">
+            <a ng-click="agregarColumna(false)" href="#" ng-if="modificando" class="btn paddLR"><i class="icon-plus"></i> Agregar Columna</a>
+            <a ng-click="agregarFila(false)" href="#" ng-if="modificando" class="btn paddLR"><i class="icon-plus"></i> Agregar Fila</a>
+        </div>
+        <table border="1" class="table table-bordered">
+            <tr>
+                <th></th>
+                <th ng-repeat="c in tema.columnas">{{c}}</th>
+            </tr>
+            <tr ng-repeat="m in tema.matrizDatos" bgcolor= "#FFFFFF">
+                <td><b>{{tema.filas[$index]}}</b><a ng-click="editarFila(false, tema.filas,$index, m)" ng-if="modificando" class="pull-right"><i class="icon-edit"></i></a></td>
+                <td ng-repeat="d in m">{{d}}</td>
+            </tr>
+        </table>
+    </div>
+    
+
+    <div id="confirmarEliminar" class="modal hide fade">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3>Eliminar Tema</h3>
+        </div>
+        <div class="modal-body">
+            <p><u>Está a un paso de eliminar el Tema.</u><br>
+                <small>Recuerde borrar todos los subtemas antes de borrar este.</small>
+            </p>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn btn-info paddLR" data-dismiss="modal">Conservar el registro</a>
+            <a href="#" class="btn btn-danger paddLR" data-dismiss="modal" ng-click="eliminar(true)">Eliminar</a>
+        </div>
+    </div>
+</div>

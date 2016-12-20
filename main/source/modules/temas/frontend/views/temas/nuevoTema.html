@@ -1,0 +1,93 @@
+
+<script>
+    $(document).ready(function() { $("#e1").select2(); });
+    $(document).ready(function() { $("#e2").select2(); });
+</script>
+
+<div ng-controller="NuevoTema" class="card span10 offset1">
+    <div class="card-actions pull-right">
+        <div class="btn-group">
+            <a ng-click="cancelar()" href="/temas" class="btn btn-link"><i class="icon-remove"></i></a>
+            <a ng-click="guardar()" href="#" class="btn btn-link"><i class="icon-ok"></i></a>
+        </div>
+    </div>
+    
+    <h3 class="card-heading simple" style="padding-left: 10px; font-size:14px;padding-right: 0px;height: 45px;margin-bottom: 10px;">
+        <ul id="myTab" class="nav nav-pills">
+            <li ng-class="{'active': tab == 'identificacion'}"><a href="#" ng-click="tab='identificacion'" data-toggle="tab">Identificación</a></li>
+            <li ng-class="{'active': tab == 'ubicacion'}"><a href="#" ng-click="tab='ubicacion'" data-toggle="tab">Ubicación</a></li>
+            <li ng-class="{'active': tab == 'descripcion'}"><a href="#" ng-click="tab='descripcion'" data-toggle="tab">Descripción</a></li>
+            <li ng-class="{'active': tab == 'presupuesto'}"><a href="#" ng-click="tab='presupuesto'" data-toggle="tab">Presupuesto</a></li>
+            <li ng-class="{'active': tab == 'datosduros'}"><a href="#" ng-click="tab='datosduros'" data-toggle="tab">Datos Duros</a></li>
+        </ul>
+    </h3>
+    
+    <div ng-show="tab == 'identificacion'" style="margin-left: 20px; margin-right: 20px; margin-bottom: 180px;">
+        <span style="display: inline-block"> Nombre:<br />
+            <input class="span5" type="text" ng-model="tema.nombre" />
+        </span>
+        <span style="display: inline-block"> Orden:<br />
+            <input class="span1" type="text" ng-model="tema.orden" />
+        </span>
+        <br>
+        <div class="control-group span5" style="margin-left: 0px; margin-bottom: 10px; margin-right: 4px;">
+            <label style="margin-bottom: 0px;">Fuente: </label>
+            <select class="input-block-level" ui-select2 type="text" ng-model="tema.fuente" ng-options="i._id as i.nombre for i in fuentes | orderBy:'nombre'">
+            </select>
+        </div>
+        <br>
+        <div class="control-group span5" style="margin-left: 0px; margin-bottom: 10px; margin-right: 4px;">
+            <label style="margin-bottom: 0px;">Jurisdicción: </label>
+            <select id="e1" class="input-block-level" type="text" ng-model="tema.jurisdiccion" ng-options="i._id as i.nombreCompleto for i in jurisdicciones | orderBy:'nombreCompleto'">
+                <option ng-disabled="true" value="">{{jurisdiccionPorId(tema.jurisdiccion).nombreCompleto}}</option>
+            </select>
+        </div>
+        <!--
+        <span style="display: inline-block"> Prioridad:<br />
+            <div class="control-group" style="margin-bottom: 8px">
+                <select ui-select2 ng-model="tema.prioridad">
+                    <option value=""></option>
+                    <option value="A+">A+</option>
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C">C</option>
+                    <option value="Sin">Sin Prioridad</option>
+                </select>
+            </div>
+        </span>-->
+        <br>
+        <div class="control-group span5" style="margin-left: 0px; margin-bottom: 10px; margin-right: 4px;">
+            <label style="margin-bottom: 0px;">Tema al que pertenece: </label>
+            <select id="e2" class="input-block-level" type="text" ng-model="tema.temaSuperior" ng-options="i._id as i.nombre for i in temas | orderBy:'nombre'">
+                <option ng-disabled="true" value="">{{temaPorId(tema.temaSuperior).nombre}}</option>
+            </select>
+        </div>
+        <!--
+        <br>
+        <span style="display: inline-block"> Descripción:<br />
+            <textarea class="span7" type="text" ng-model="tema.descripcion" style="height: 150px;"/>
+        </span>-->
+    </div>
+    <div ng-show="tab == 'ubicacion'" style="margin-left: 20px; margin-right: 20px; margin-bottom: 40px;">
+    </div>
+    <div ng-show="tab == 'descripcion'" style="margin-left: 20px; margin-right: 20px; margin-bottom: 40px;">
+    </div>
+    <div ng-show="tab == 'presupuesto'" style="margin-left: 20px; margin-right: 20px; margin-bottom: 40px;">
+    </div>
+    <div ng-show="tab == 'datosduros'" style="margin-left: 20px; margin-right: 20px; margin-bottom: 40px;">
+        <div class="btn-group" style="float: right;margin-bottom: 10px;">
+            <a ng-click="agregarColumna(false)" href="#" class="btn" style="padding-left: 20px; padding-right: 20px;"><i class="icon-plus"></i> Agregar Columna</a>
+            <a ng-click="agregarFila(false)" href="#" class="btn" style="padding-left: 20px; padding-right: 20px;"><i class="icon-plus"></i> Agregar Fila</a>
+        </div>
+        <table border="1" class="table table-bordered">
+            <tr bgcolor= "#FFFFFF">
+                <th></th>
+                <th ng-repeat="c in tema.columnas">{{c}}</th>
+            </tr>
+            <tr ng-repeat="m in tema.matrizDatos" bgcolor= "#FFFFFF">
+                <td><b>{{tema.filas[$index]}}</b></td>
+                <td ng-repeat="d in m">{{d}}</td>
+            </tr>
+        </table>
+    </div>
+</div>

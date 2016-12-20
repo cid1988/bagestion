@@ -1,0 +1,216 @@
+
+<style>
+    body {
+        background : none;
+    }
+    .navbar
+    {
+        display: none;
+    }
+    a:link {
+    color: #3B3537;
+    }
+    
+    /* visited link */
+    a:visited {
+        color: #3B3537;
+    }
+    
+    /* mouse over link */
+    a:hover {
+        color: #3B3537;
+    }
+    
+    /* selected link */
+    a:active {
+        color: #3B3537;
+    }
+    #Layer1 {
+    	position:absolute;
+    	width:200px;
+    	height:115px;
+    	z-index:1;
+    }
+    #Layer2 {
+    	position:absolute;
+    	width:200px;
+    	height:115px;
+    	z-index:1;
+    }
+    .borde_redondeado_simple_0100 {
+        -moz-border-radius-topleft:0px;
+        -moz-border-radius-topright:10px;
+        -moz-border-radius-bottomleft:0px;
+        -moz-border-radius-bottomright:0px;
+        
+        -webkit-border-top-left-radius:0px;
+        -webkit-border-top-right-radius:10px;
+        -webkit-border-bottom-left-radius:0px;
+        -webkit-border-bottom-right-radius:0px;
+        
+        /* Otros estilos */ 
+        border:0px;
+        /*background:#eee;*/
+        width:100%;
+        /*padding:5px;*/
+    }
+    
+    .borde_redondeado_asimetrico_1001 {
+        -moz-border-radius-topleft:10px;
+        -moz-border-radius-topright:0px;
+        -moz-border-radius-bottomleft:0px;
+        -moz-border-radius-bottomright:10px;
+        
+        -webkit-border-top-left-radius:10px;
+        -webkit-border-top-right-radius:0px;
+        -webkit-border-bottom-left-radius:0px;
+        -webkit-border-bottom-right-radius:10px;
+        
+        /* Otros estilos */ 
+        border:0px;
+        /*background:#eee;*/
+        width:100%;
+        padding:5px;
+    }
+</style>
+<link href="/views/rdp/global.css" rel="stylesheet" type="text/css">
+
+<div ng-controller="POARDPOperativoCtrl">
+    <table width="100%" height="100%" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF">
+      <tbody><tr>
+    		<td height="66" width="230"> 
+                <img src="/views/rdp/empty.gif" height="66" width="50" style="height: 50px;width: 100px;"><a href="/poa/rdp"><img src="/views/rdp/logo_BA.png" alt="" height="66" style="border:none;width: 100px;"></a>
+            </td>
+            <td style="vertical-align:middle;">
+           
+           <table width="100%" border="0" cellspacing="2" cellpadding="5" style="table-layout:fixed; ">
+    			    
+                <tbody><tr height="2">
+                    <td style="background-color: #FFFFFF">
+                    </td>
+                     <td style="background-color: #FFFFFF">
+                    </td>
+                     <td style="background-color: #FFFFFF" width="85%">
+                    </td>
+                     <td style="background-color: #FFFFFF">
+                    </td>               
+    			</tr>
+                <tr class="menuContent">
+                    <td style="background-color: #FDEBB5" colspan="3" onclick="javascript: window.location=&#39;presentacion_inicio.asp?dep=2&#39;">
+                        <span style="font-family: Tahoma; font-size: 16px; font-weight: 700;">{{impactoPorId(operativo.idObjImpacto).nombre}}</span>
+                    </td>
+    
+                    <td style="width: 50px; vertical-align:middle;" rowspan="3">
+                    <a href="/poa/rdp/impacto/{{operativo.idObjImpacto}}"><img src="/views/rdp/flecha_volver_gris.png" width="48" style="border:none;" onclick=""></a>
+                    </td>
+    			</tr>
+               
+                <tr class="menuContent" onmouseout="" onmouseover="">
+                    <td style="width: 40">
+                    <img src="/views/rdp/empty.gif" width="5">
+                    </td>
+                    <td style="background-color: #E5B8B7; width: 90%;" colspan="2" onclick="javascript: window.location=&#39;presentacion_objetivos.asp?OBJ_IMP=133&amp;dep=2&#39;">
+                        <span style="font-family: Tahoma; font-size: 14px; font-weight: 600;">{{ministerialPorId(operativo.idObjMinisterial).nombre}}</span>
+                    </td>
+    			</tr>
+                 <tr class="menuContent" onmouseout="" onmouseover="" onclick="javascript: window.location=&#39;#&#39;">
+                    <td style="width: 50px">
+                    &nbsp;
+                    </td>
+                    <td style="width: 50px">
+                    &nbsp;
+                    </td>
+                    <td style="background-color: #D4E3F4;width: 90%;" onclick="javascript: window.location=&#39;presentacion_objetivos.asp?OBJ_IMP=133&amp;dep=2&#39;">
+                        <span style="font-family: Tahoma; font-size: 14px; font-weight: 500;">{{operativo.nombre}}</span>
+                    </td>
+    			</tr>
+    		</tbody></table>
+            </td>
+      </tr>
+      <tr>
+    		<td colspan="2" bgcolor="#FFFFFF" height="1"> </td>
+      </tr>
+      <tr>
+    		<td valign="middle" colspan="2" style="background-color: #FFFFFF; padding-bottom: 25px; padding-top: 25px;padding-left: 70px;">
+    		
+    		<div id="contenedorPrincipal" class="contenedorPrimario">
+    
+    		<table width="400" border="0" cellspacing="0" cellpadding="0" style="margin-bottom: 20px;">
+    		  <tbody><tr>
+    				<!-- inicio panel  -->
+    				<td>
+                     <div id="titulo" class="borde_redondeado_asimetrico_1001" style="background-color: #B7DEE8">
+    					<table width="100%" border="0" cellspacing="2" cellpadding="10" style="table-layout:fixed;">
+    					  <tbody><tr class="menuContent">
+    				        <td>
+    							<center><span style="font-family: Tahoma; font-size: 18px; font-weight: 600;">PROYECTOS</span></center>
+                            </td>
+    					  </tr>
+    					</tbody></table>
+                    </div>
+    				</td>
+    				<!-- fin panel  -->
+    			  </tr>
+    		</tbody></table>
+    
+            <table width="80%" border="0" cellspacing="0" cellpadding="0">
+    		      <tbody><tr>
+    				<!-- inicio panel  -->
+    				<td>
+    					<table width="100%" border="0" cellspacing="4" cellpadding="10" style="table-layout:fixed; padding-top: 25px;">
+    
+                          <tbody><tr ng-repeat-start="p in proyectos" class="menuContent">
+    				        <td onmouseover="this.style.textDecoration=&#39;underline&#39;" onmouseout="this.style.textDecoration=&#39;none&#39;" style="width: 90%; vertical-align: middle; text-decoration: none; background-color: rgb(183, 222, 232);" class="borde_redondeado_asimetrico_1001" onclick="">
+    							<a href="/poa/rdp/proyecto/{{p._id}}"><span style="font-family: Tahoma; font-size: 16px; font-weight: 300; text-decoration: none;">{{p.nombre}}</span></a>
+                            </td>
+                            
+                                 <td class="borde_redondeado_asimetrico_1001" style="background-color: #FFFFFF; width: 100px;">
+                                    
+                            </td>
+                             
+                                <td class="borde_redondeado_asimetrico_1001" style="background-color: #FFFFFF; width: 50px; text-align:center;">
+                                <br>
+                                </td>
+                                <!--fin td para imagenes-->
+                            
+        					 </tr>
+        					 <tr ng-repeat-end style=" height: 5px;" class="ng-scope"><td colspan="4" style="padding-bottom: 0px; padding-top: 0px;"></td></tr>
+    					</tbody></table>
+    				</td>
+                   
+    				<!-- fin panel  -->
+    			  </tr>
+    		</tbody></table>
+    
+    		 </div>
+    		</td>
+    	</tr>
+        </tbody></table>
+            <!-- Pie de Pagina -->
+        <footer id="footer" style="position: absolute; bottom: 0px; right: 0px; left: 0px; margin-bottom: 0px;">
+            <table style=" width:100%; height: 50px; vertical-align: middle;"><tbody>
+        <tr>
+    	    <td colspan="2" bgcolor="#FFFFFF" height="20">
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #FFFFFF">
+                <tbody><tr>    
+                <td style="width:20px;"><img src="/views/rdp/borde_tab_amarillo_izq.png" height="20" border="none" style="height: 20px;"></td>
+                <td bgcolor="#Fed317" nowrap="nowrap" align="center" style="vertical-align: middle"> <span style="font-family: Tahoma; font-weight: 600; font-size: 11px;"> DG Planificación Estratégica</span></td>
+                <td style="width:20px;"><img src="/views/rdp/borde_tab_amarillo_der.png" height="20" border="none" style="height: 20px;"></td>
+                <td style="width:40%;">&nbsp;</td>
+                <td style="width:20px;"><img src="/views/rdp/borde_tab_amarillo_izq.png" height="20" border="none" style="height: 20px;"></td>
+                <td bgcolor="#Fed317" nowrap="nowrap" align="center" style="vertical-align: middle"> <span style="font-family: Tahoma; font-weight: 600; font-size: 11px;"> Jefatura de Gabinete de Ministros</span></td>
+                <td style="width:20px;"><img src="/views/rdp/borde_tab_amarillo_der.png" height="20" border="none" style="height: 20px;"></td>
+                </tr>
+            </tbody></table>
+            </td>
+      	</tr>
+        <tr>
+    	    <td colspan="2" bgcolor="#000000" height="1" style="padding-top: 0px; padding-bottom: 0px;">        </td>
+      	</tr>
+    	<tr>
+    	    <td height="33" style="padding-right:10px; vertical-align:middle; background-color: #FFD504;"> <img src="/views/rdp/LOGO-BuenosAiresCiudad.jpg" alt="" height="33" style="width: 137px;"></td>
+            <td height="33" align="right" style="padding-right:10px; vertical-align:middle; background-color: #FFD504;"> <span style="font-family: MS Sans Serif; font-weight: bolder; font-size: 16px">EN TODO ESTÁS VOS</span></td>
+        </tr>
+    </tbody></table>
+    </footer>
+</div>

@@ -1,0 +1,132 @@
+<div class="container-fluid" ng-controller="ListasCtrl" style="padding-left: 0px;">
+    <div class="row-fluid">
+    
+    <!--Listas!!-->
+        <div class="card" style="overflow-y: hidden; overflow-x: hidden; position: absolute;top: 60px;left: 20px;padding-top: 0px;margin-top: 0px;padding-left: 10px; width:24%">
+    		<div class="jumbotron">
+    			<h3 style="margin-left: 20px;margin-top: 5px;margin-bottom: 0px;">Listas <span class="label label-info">{{ cantListas(listas) }}</span>
+    			<a class="pull-right btn btn-link" style="margin-right: 10px;margin-top: 5px" href="/listas/imprimirListas"><i class="icon-print"></i></a></h3>
+    		</div>
+    		
+            <hr style="margin-top: 5px; margin-bottom: 5px;">
+    
+    		<div id="lista-form" class="row">
+    			<div style="margin-left: 30px;">
+    				<form style="margin-bottom: 5px;">
+    					<div class="form-group" style="margin-top: 0px;">
+    						<input type="text" class="form-control input-lg" placeholder="Nueva lista..." ng-model="formData.text" style="margin-top: 5px; margin-bottom: 5px; margin-left: 15px; width: 62%">
+    					    <button type="submit" class="btn btn-primary btn-lg" ng-click="createLista()"><i class="icon-plus"></i></button>
+    					</div>
+    				</form>
+    			</div>
+    		</div>
+    	</div>
+		<div class="card" style="overflow-y: scroll; overflow-x: hidden; position: absolute;top: 162px;bottom: 0px;left: 20px;padding-top: 0px;margin-top: 0px;padding-left: 20px; width:24%">
+			<div ng-repeat="lista in listas | filter: listasUsuario | orderBy: 'text'" ng-hide="lista.cumplido">
+				<label ng-click="saveLista(lista._id, lista.cumplido)" style="display: inline-block !important">
+				    <input type="checkbox" ng-model="lista.cumplido" style="margin-top: 0px;">
+				</label>
+				<a ng-click="showLista(lista._id)" href="#" style="display: inline-block; color:#404040;width: 77%;" ng-style="{'text-decoration': lista.cumplido && 'line-through' || ''}"> {{ lista.text }} </a> 
+				<a class="pull-right" style="margin-right: 10px;" ng-click="showUsers(false, lista._id)"><i class="icon-user"></i></a>
+			    <a class="pull-right" style="margin-right: 10px;" ng-click="deleteLista(lista._id)"><i class="icon-trash"></i></a>
+			</div>
+			<hr style="margin-top: 5px; margin-bottom: 5px;">
+			<div ng-repeat="lista in listas | filter: listasUsuario | orderBy: 'text'" ng-show="lista.cumplido">
+				<label ng-click="saveLista(lista._id, lista.cumplido)" style="display: inline-block !important">
+				    <input type="checkbox" ng-model="lista.cumplido" style="margin-top: 0px;">
+				</label>
+				<a ng-click="showLista(lista._id)" href="#" style="display: inline-block; color:#404040;width: 77%;" ng-style="{'text-decoration': lista.cumplido && 'line-through' || ''}"> {{ lista.text }} </a> 
+				<a class="pull-right" style="margin-right: 10px;" ng-click="showUsers(false, lista._id)"><i class="icon-user"></i></a>
+			    <a class="pull-right" style="margin-right: 10px;" ng-click="deleteLista(lista._id)"><i class="icon-trash"></i></a>
+			</div>
+		</div>
+
+    <!--Tareas!!-->
+        <div class="card" ng-style="anchoTarea" ng-if="listaSeleccionada" style="overflow-y: hidden; overflow-x: hidden; position: absolute;top: 60px;left: 26%;padding-top: 0px;margin-top: 0px;padding-left: 10px;">
+            <h3 ng-hide="editar" style="margin-left: 20px;margin-top: 5px;margin-bottom: 0px;"><div class="span" ng-click="editarTarea2()" style="overflow: hidden; width: 70%; height: 40px;">{{listaSeleccionada.text}}</div> <span class="label label-info">{{listaSeleccionada.tareas.length}}</span>
+    		<a class="pull-right btn btn-link" style="margin-right: 0px;margin-top: 5px" href="/listas/imprimirTareas/{{listaSeleccionada._id}}"><i class="icon-print"></i></a></h3>
+            <input type="text" class="span8" ng-if="editar" ng-model="listaSeleccionada.text" style="margin-left: 20px;margin-top: 6px;">
+            <input type="text" ng-disabled="!editar" class="span" ng-model="listaSeleccionada.responsable" placeholder="Responsable" style="margin-left: 20px;margin-left: 20px;width: 60%;">
+            <input type="text" ng-disabled="!editar" class="span" ng-model="listaSeleccionada.prioridad" placeholder="Prioridad" style="margin-left: 5px;width: 20%;">
+            <textarea ng-disabled="!editar"  class="span" style="margin-left: 20px;margin-top:0px; height:28px;width: 77%;" type="text" ng-model="listaSeleccionada.descripcion" placeholder="Descripción" />
+            <a class="btn btn-link" ng-if="editar" ng-click="saveTarea()" style="margin-right: 10px;margin-bottom: 10px;padding-left: 0px;padding-right: 0px;" href="#"><i class="icon-save"></i></a>
+            <a class="btn btn-link" ng-hide="editar" ng-click="editarTarea2()" style="margin-right: 10px;margin-bottom: 10px;padding-left: 0px;padding-right: 0px;" href="#"><i class="icon-edit"></i></a>
+            <hr style="margin-top: 5px; margin-bottom: 5px;">
+    
+    		<div id="lista-form" class="row">
+    			<div style="margin-left: 30px;">
+    				<form style="margin-bottom: 5px;">
+    					<div class="form-group" style="margin-top: 0px;">
+    						<input type="text" class="form-control input-lg" placeholder="Nueva tarea..." ng-model="formDataTarea.text" style="margin-top: 5px; margin-bottom: 5px; margin-left: 15px; width: 70%">
+    					    <button type="submit" class="btn btn-primary btn-lg" ng-click="createTarea(formDataTarea)"><i class="icon-plus"></i></button>
+    					</div>
+    				</form>
+    			</div>
+    		</div>
+        </div>
+		<div class="card" ng-style="anchoTarea" ng-if="listaSeleccionada" style="overflow-y: scroll; overflow-x: hidden; position: absolute;top: 242px;left: 26%;padding-top: 0px;margin-top: 0px;padding-left: 20px; margin-left: 0px;bottom: 0px">
+			<div ng-repeat="tarea in listaSeleccionada.tareas" ng-hide="tarea.cumplido">
+				<label ng-click="saveTarea()" style="display: inline-block !important">
+				    <input type="checkbox" ng-model="tarea.cumplido" style="margin-top: 0px;">
+				</label>
+				<a ng-click="showTarea(tarea)" href="#" style="display: inline-block; color:#404040;width: 80%;" ng-style="{'text-decoration': tarea.cumplido && 'line-through' || ''}"> {{ tarea.text }} </a> 
+                <a class="pull-right" ng-click="subirTarea(tarea)" style="padding-left: 0px; padding-right: 0px;margin-right: 10px;margin-left: 5px;"><i class="icon-chevron-up"></i></a>
+				<a class="pull-right" style="margin-right: 10px;" ng-click="deleteTarea(tarea)"><i class="icon-trash"></i></a>
+			</div>
+			<hr style="margin-top: 5px; margin-bottom: 5px;">
+			<div ng-repeat="tarea in listaSeleccionada.tareas" ng-show="tarea.cumplido">
+				<label ng-click="saveTarea()" style="display: inline-block !important">
+				    <input type="checkbox" ng-model="tarea.cumplido" style="margin-top: 0px;">
+				</label>
+				<a ng-click="showTarea(tarea)" href="#" style="display: inline-block; color:#404040;width: 80%;" ng-style="{'text-decoration': tarea.cumplido && 'line-through' || ''}"> {{ tarea.text }} </a> 
+                <a class="pull-right" ng-click="subirTarea(tarea)" style="padding-left: 0px; padding-right: 0px;margin-right: 10px;margin-left: 5px;"><i class="icon-chevron-up"></i></a>
+				<a class="pull-right" style="margin-right: 10px;" ng-click="deleteTarea(tarea)"><i class="icon-trash"></i></a>
+			</div>
+		</div>
+        
+    <!--SubTareas!!-->
+        <div class="card" ng-if="seleccionado" style="overflow-y: hidden; overflow-x: hidden; position: absolute;top: 60px;left: 66.6%;padding-top: 0px;margin-top: 0px;padding-left: 10px; right: 15px;margin-left: 0px;">
+            <h3 ng-hide="editarTarea" style="margin-left: 20px;margin-top: 5px;margin-bottom: 0px;"><div class="span" ng-click="editarSubTarea()" style="overflow: hidden; width: 70%; height: 40px;">{{tareaSeleccionada.text}}</div> <span class="label label-info">{{tareaSeleccionada.subtareas.length}}</span>
+    		<a class="pull-right btn btn-link" style="margin-right: 0px;margin-top: 5px;" href="/listas/imprimirSubTareas/{{listaSeleccionada._id}}?tarea={{listaSeleccionada.tareas.indexOf(tareaSeleccionada)}}"><i class="icon-print"></i></a></h3>
+            <input type="text" class="span8" ng-if="editarTarea" ng-model="tareaSeleccionada.text" style="margin-left: 20px;margin-top: 6px;">
+            <input type="text" ng-disabled="!editarTarea" class="span" ng-model="tareaSeleccionada.responsable" placeholder="Responsable" style="margin-left: 20px;width: 60%;">
+            <input type="text" ng-disabled="!editarTarea" class="span" ng-model="tareaSeleccionada.prioridad" placeholder="Prioridad" style="margin-left: 5px;width: 20%;">
+            <textarea ng-disabled="!editarTarea"  class="span" style="margin-left: 20px;margin-top:0px; height:28px;width: 75%;" type="text" ng-model="tareaSeleccionada.descripcion" placeholder="Descripción" />
+            <a class="btn btn-link" ng-if="editarTarea" ng-click="saveTarea()" style="margin-right: 10px;margin-bottom: 10px;padding-left: 0px;padding-right: 0px;" href="#"><i class="icon-save"></i></a>
+            <a class="btn btn-link" ng-hide="editarTarea" ng-click="editarSubTarea()" style="margin-right: 10px;margin-bottom: 10px;padding-left: 0px;padding-right: 0px;" href="#"><i class="icon-edit"></i></a>
+            <hr style="margin-top: 5px; margin-bottom: 5px;">
+    
+    		<div id="lista-form" class="row">
+    			<div style="margin-left: 30px;">
+    				<form style="margin-bottom: 5px;">
+    					<div class="form-group" style="margin-top: 0px;">
+    						<input type="text" class="form-control input-lg" placeholder="Nueva subtarea..." ng-model="formDataSubTarea.text" style="margin-top: 5px; margin-bottom: 5px; margin-left: 15px; width: 65%">
+    					    <button type="submit" class="btn btn-primary btn-lg" ng-click="createSubTarea(formDataSubTarea, listaSeleccionada.tareas.indexOf(tareaSeleccionada))"><i class="icon-plus"></i></button>
+    					</div>
+    				</form>
+    			</div>
+    		</div>
+    	</div>
+		<div class="card" ng-if="seleccionado" style="overflow-y: scroll; overflow-x: hidden; position: absolute;top: 242px;left: 66.6%;padding-top: 0px;margin-top: 0px;padding-left: 20px; margin-left: 0px;bottom: 0px; right: 15px;margin-left: 0px;">
+			<div ng-repeat="subtarea in tareaSeleccionada.subtareas" ng-hide="subtarea.cumplido">
+				<label ng-click="saveSubTarea(listaSeleccionada.tareas.indexOf(tareaSeleccionada))" style="display: inline-block !important">
+				    <input type="checkbox" ng-model="subtarea.cumplido" style="margin-top: 0px;">
+				</label>
+				<a href="#" style="display: inline-block; color:#404040;width: 80%;" ng-style="{'text-decoration': subtarea.cumplido && 'line-through' || ''}"> {{ subtarea.text }} </a>
+                <a class="pull-right" ng-click="subirSubTarea(subtarea, listaSeleccionada.tareas.indexOf(tareaSeleccionada))" style="padding-left: 0px; padding-right: 0px;margin-right: 10px;margin-left: 5px;"><i class="icon-chevron-up"></i></a>
+				<a class="pull-right" style="margin-right: 10px;" ng-click="deleteSubTarea(subtarea, listaSeleccionada.tareas.indexOf(tareaSeleccionada))"><i class="icon-trash"></i></a>
+			</div>
+			<hr style="margin-top: 5px; margin-bottom: 5px;">
+			<div ng-repeat="subtarea in tareaSeleccionada.subtareas" ng-show="subtarea.cumplido">
+				<label ng-click="saveSubTarea(listaSeleccionada.tareas.indexOf(tareaSeleccionada))" style="display: inline-block !important">
+				    <input type="checkbox" ng-model="subtarea.cumplido" style="margin-top: 0px;">
+				</label>
+				<a href="#" style="display: inline-block; color:#404040;width: 80%;" ng-style="{'text-decoration': subtarea.cumplido && 'line-through' || ''}"> {{ subtarea.text }} </a>
+                <a class="pull-right" ng-click="subirSubTarea(subtarea, listaSeleccionada.tareas.indexOf(tareaSeleccionada))" style="padding-left: 0px; padding-right: 0px;margin-right: 10px;margin-left: 5px;"><i class="icon-chevron-up"></i></a>
+				<a class="pull-right" style="margin-right: 10px;" ng-click="deleteSubTarea(subtarea, listaSeleccionada.tareas.indexOf(tareaSeleccionada))"><i class="icon-trash"></i></a>
+			</div>
+		</div>
+    </div>
+</div>
+
+

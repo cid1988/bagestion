@@ -1,0 +1,545 @@
+<style type="text/css">
+	.medioInput{
+		/* Para los Botones de Tipo de Mensaje */
+		width:112px;
+	}
+	.centerText{
+		/* Centrar Texto */
+		text-align: center;
+		text-align: -webkit-center;
+	}
+	.altoTexto{
+		/* Para centrar texto en div */
+		line-height: 2em;
+	}
+	.marginTopAlto{
+		/* Para separar las dos ventanas de Listas */
+		margin-top:50px;
+	}
+	.contenedorLista{
+		/* Contedor de Listas de Mails */
+		max-height:15vh;
+		overflow-y:auto;
+	}
+	.todoWidth{
+		/* Width 100% */
+		width: 100%;
+	}
+	.listasContactos > div{
+		/* Elimina el margin de los hijos */
+		margin: 5px 5px 0 0 !important;
+	}
+	.listasContactos {
+		/* Altura maxima de la lista de Contactos */
+		max-height: 75px;
+		overflow-y: auto;
+		padding-bottom: 5px;
+		padding-top: 5px;
+	}
+	.form-horizontal .control-label {
+		/* Acomodo para que se vea mas kaguai las listas*/
+		width: 100px;
+	}
+	.form-horizontal .controls {
+		/* Mas kaguai */
+		margin-left: 120px;
+	}
+	.resizeV{
+		/* Resizear textarea vertical */
+		resize: vertical;
+	}
+	.partesMsj{
+		/* 2 Partes del Mail */
+		background-color: white;
+	}
+	.contenedorCompilado{
+		max-height:40vh;
+		overflow:auto;
+	}
+	.paddingModal{
+		/* Para que el Modal no muestre overflow-y */
+		padding-bottom:5px;
+	}
+	.mayusC{
+		/* Convierte el texto a mayuscula (input de apellidos) */
+		text-transform:uppercase;
+	}
+	.card{
+		/* Queda mas lindo asi */
+		padding-bottom:20px;
+	}
+	.alert-success {
+		/* Modal Adjuntos */
+		background-color: #4CAF50;
+		border: 2px solid #388E3C;
+	}
+	.alert {
+		/* Modal Adjuntos */
+		margin-bottom: 2px !important;
+		border-radius: 5px;
+	}
+	.alert-danger {
+		/* Modal Adjuntos */
+		background-color: #E53935;
+		border: 2px solid #B71C1C;
+	}
+	.qq-upload-list{
+		/* Maxima altura del modal para adjuntos */
+		max-height: 200px;
+	}
+	.nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
+</style>
+<div class="card" ng-controller="enviarMailsCtrl">
+	<!-- Head -->
+	<h4 class="card-heading">
+		<button type="button" tabindex="-1" class="btn btn-link no-underline pull-right" ng-click="vaciarListaContactos(); vaciarCorreo()" title="Vaciar Campos del Mail">
+			<i class="icon-trash"></i> Vaciar Campos
+		</button>
+		<!-- Boton para cambiar entre pantallas -->
+		<div>
+			<ul class="nav nav-tabs">
+				<li ng-class="{ 'active': !mostrar }">
+					<a href="#" ng-click="mostrar=!mostrar">Remitentes</a>
+				</li>
+				<li ng-class="{ 'active': mostrar }">
+					<a href="#" ng-click="mostrar=!mostrar">Mensaje</a>
+				</li>
+			</ul>
+		</div>
+	</h4>
+	<!-- Body -->
+	<div class="card-body">
+		<div class="container-fluid">
+			<div class="row-fluid">
+				<!-- Pantalla Principal -->
+				<div class="span8">
+					<form class="form-horizontal" ng-init="mostrar=false" ng-submit="enviarMail()">
+						<!-- Carga de Contactos Pantalla 1 -->
+						<div ng-hide="mostrar" class="partesMsj" style="padding-top: 25px">
+							<div class="control-group">
+								<!-- Para -->
+								<label class="control-label" for="selectPara">Para</label>
+								<div class="controls">
+									<div class="row-fluid">
+										<div class="span12">
+											<!-- Select de Contactos -->
+											<select ng-show="cargandoSelecetsContactos.cargo" data-placeholder="Selecciona un contacto" tabindex=1 ui-select2 id="selectPara" ng-model="selectPara" ng-change="agregarContacto('para', selectPara, 'selectPara')">
+												<option value="" selected></option>
+												<option ng-repeat="contacto in contactos " value="{{contacto}}">{{contacto.apellidos}} {{contacto.nombre}}</option>
+											</select>
+											<span  ng-hide="cargandoSelecetsContactos.cargo" >
+												<i class="icon-spinner icon-spin icon-large"></i>
+												<span>{{cargandoSelecetsContactos.cargandoContactos}}</span>
+											</span>
+
+											<!-- Crear Contacto -->
+											<button ng-show="cargandoSelecetsContactos.cargo" type="button" ng-click="abrirModal('crearUsuario', 'para')" class="btn btn-link no-underline" title="Crear Usuario"><i class="icon-plus"></i></button>
+
+											<!-- Repeat de contactos en Para -->
+											<div class="listasContactos">
+												<div class="btn-group" ng-repeat="paraEnviar in correo.destinatarios.para track by $index" title="{{paraEnviar.correoOficial}}">
+													<button type="button" class="btn btn-mini">{{paraEnviar.apellidos}} {{paraEnviar.nombre}}</button>
+													<button type="button" class="btn btn-mini" ng-click="eliminarContacto(paraEnviar.idContacto, 'para')" title="Eliminar"><i class="icon-remove"></i></button>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<!-- CC -->
+							<div class="control-group">
+								<label class="control-label" for="selectCC">CC</label>
+								<div class="controls">
+									<div class="row-fluid">
+										<div class="span12">
+											<!-- Select de Contactos -->
+											<select ng-show="cargandoSelecetsContactos.cargo" data-placeholder="Selecciona un contacto" tabindex=2 ui-select2 id="selectCC" ng-model="selectCC" ng-change="agregarContacto('cc', selectCC, 'selectCC')">
+												<option value="" selected></option>
+												<option ng-repeat="contacto in contactos" value="{{contacto}}">{{contacto.apellidos}} {{contacto.nombre}}</option>
+											</select>
+											<span  ng-hide="cargandoSelecetsContactos.cargo" >
+												<i class="icon-spinner icon-spin icon-large"></i>
+												<span>{{cargandoSelecetsContactos.cargandoContactos}}</span>
+											</span>
+											<!-- Crear Contacto -->
+											<button ng-show="cargandoSelecetsContactos.cargo" type="button" ng-click="abrirModal('crearUsuario', 'cc')" class="btn btn-link no-underline" title="Crear Usuario"><i class="icon-plus"></i></button>
+											<!-- Repeat de contactos en CC -->
+											<div class="listasContactos">
+												<div class="btn-group" ng-repeat="ccEnviar in correo.destinatarios.cc track by $index" title="{{ccEnviar.correoOficial}}">
+													<button type="button" class="btn btn-mini">{{ccEnviar.apellidos}} {{ccEnviar.nombre}}</button>
+													<button type="button" class="btn btn-mini" ng-click="eliminarContacto(ccEnviar.idContacto, 'cc')" title="Eliminar"><i class="icon-remove"></i></button>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<!-- CCO -->
+							<div class="control-group">
+								<label class="control-label" for="selectCC0">CCO</label>
+								<div class="controls">
+									<div class="row-fluid">
+										<div class="span12">
+											<!-- Select de Contactos -->
+											<select ng-show="cargandoSelecetsContactos.cargo"  data-placeholder="Selecciona un contacto" tabindex=3 ui-select2 id="selectCC0" ng-model="selectCC0" ng-change="agregarContacto('cco', selectCC0, 'selectCC0')">
+												<option value="" selected></option>
+												<option ng-repeat="contacto in contactos" value="{{contacto}}">{{contacto.apellidos}} {{contacto.nombre}}</option>
+											</select>
+											<span  ng-hide="cargandoSelecetsContactos.cargo" >
+												<i class="icon-spinner icon-spin icon-large"></i>
+												<span>{{cargandoSelecetsContactos.cargandoContactos}}</span>
+											</span>
+											<!-- Crear Contacto -->
+											<button ng-show="cargandoSelecetsContactos.cargo"  type="button" ng-click="abrirModal('crearUsuario', 'cco')" class="btn btn-link no-underline" title="Crear Usuario"><i class="icon-plus"></i></button>
+											<!-- Repeat de contactos en CCO -->
+											<div class="listasContactos">
+												<div class="btn-group"  ng-repeat="ccoEnviar in correo.destinatarios.cco track by $index" title="{{ccoEnviar.correoOficial}}">
+													<button type="button" class="btn btn-mini">{{ccoEnviar.apellidos}} {{ccoEnviar.nombre}}</button>
+													<button type="button" class="btn btn-mini" ng-click="eliminarContacto(ccoEnviar.idContacto, 'cco')" title="Eliminar"><i class="icon-remove"></i></button>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- Edicion del Mail Pantalla 2 -->
+						<div ng-show="mostrar" class="partesMsj">
+							<!-- De y Tipo-->
+							<div class="control-group">
+								<!-- De -->
+								<div class="span6">
+									<label class="control-label" for="inputDe">De</label>
+									<div class="controls">
+										<input type="text" tabindex=5 ng-model="correo.emisor" id="inputDe" placeholder="@buenosaires.gob.ar" required>
+									</div>
+								</div>
+								<!-- Tipo -->
+								<div class="span6">
+									<label class="control-label offset2" for="buttonHTML">Tipo de Mensaje</label>
+									<div class="controls">
+										<div class="btn-group pull-right" ng-init="email.tipo = 'Texto'">
+											<button type="button" tabindex=7 ng-click="email.tipo = 'Texto'" class="btn medioInput" title="Mensaje normal" ng-class="{'btn-info':email.tipo=='Texto'}">Texto</button>
+											<button type="button" tabindex=6 ng-click="email.tipo = 'HTML'"  class="btn medioInput" id="buttonHTML" title="Mensaje tipo HTML" ng-class="{'btn-info':email.tipo=='HTML'}">HTML</button>
+										</div>
+									</div>
+								</div>
+							</div>
+							<!-- Asunto -->
+							<div class="control-group">
+								<label class="control-label" for="inputAsunto">Asunto</label>
+								<div class="controls">
+									<input type="text" tabindex=8 ng-model="correo.asunto" class="input-block-level" id="inputAsunto" placeholder="Asunto..." required>
+								</div>
+							</div>
+							<!-- Mensaje -->
+							<div class="control-group">
+								<div class="controls">
+									<textarea class="input-block-level resizeV" tabindex=9 rows="10" placeholder="Mensaje..." ng-model="correo.mensaje" required></textarea>
+								</div>
+							</div>
+							<!-- Botones de envio -->
+							<div class="control-group">
+								<div class="row-fluid">
+									<div class="span10">
+										<div class="controls listasContactos">
+											<div class="btn-group" ng-repeat="file in correo.adjuntos">
+												<button type="button" class="btn btn-mini" title="Mensaje normal" ng-click="visualizarAdjunto(file, $index+1)">Adj Nº {{$index+1}}.{{file.extencion}}</button>
+												<button type="button" ng-click="eliminarAdjunto(file.id)" class="btn btn-mini" title="Eliminar Adjunto"><i class="icon-trash"></i></button>
+											</div>
+										</div>
+									</div>
+									<div class="span1">
+										<a href="#modalAdjunto" tabindex=10 role="button" class="btn" data-toggle="modal" title="Adjuntar archivo"><i class="icon-file"></i></a>
+									</div>
+									<div class="span1">
+										<button ng-if="envarMailCargando.enviando == 'noEnviando' "  type="submit" tabindex=11 class="btn btn-info input-block-level" title="Enviar E-Mail"><i class="icon-envelope"></i></button>
+										<button ng-if="envarMailCargando.enviando == 'Enviando' "  type="button" class="btn btn-info input-block-level" title="Enviando..."><i class="icon-spinner icon-spin icon-large"></i></button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+				<!-- Utilidades -->
+				<div class="span4">
+					<!-- Listas Pantalla 1 -->
+					<div ng-hide="mostrar">
+						<!-- Listas creadas -->
+						<div class="centerText">
+							<legend>
+								<span>Mis Listas ({{listas.listasPropias.total || '0'}})</span>
+								<span class="pull-right">
+									<button type="button" ng-click="abrirModal('modalCrearLista', { titulo:'Guardar lista actual', nuevo: true})" class="btn btn-link no-underline" title="Crear lista de Contactos">
+										<i class="icon-plus"></i>
+									</button>
+								</span>
+							</legend>
+							<div class="contenedorLista">
+								<div class="row-fluid" ng-repeat="miLista in listas.listasPropias.lista">
+									<span  ng-if="!cargandoListas.cargo" >
+										<i class="icon-spinner icon-spin icon-large"></i>
+										<span>{{cargandoListas.cargandoListasTexto}}</span>
+									</span>
+									<div class="span8 altoTexto">
+										{{miLista.nombreLista}}
+									</div>
+									<div class="span4 clearfix">
+										<span class="pull-right">
+											<button type="button" ng-click="agregarALaLista(miLista.destinatarios)" class="btn btn-link no-underline" title="Añadir a la lista"><i class="icon-download"></i></button>
+											<button type="button" ng-click="apagarLista(miLista, true)" class="btn btn-link no-underline" title="Editar"><i class="icon-trash"></i></button>
+										</span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- Listas compartidas para cargar contactos -->
+						<div class="centerText marginTopAlto">
+							<legend>Listas Compartidas Conmigo ({{listas.listasCompartidas.total || '0'}})</legend>
+							<div class="contenedorLista">
+								<div class="row-fluid" ng-repeat="listaCompartida in listas.listasCompartidas.lista" title="Compartida por {{listaCompartida.duenno}}">
+									<div class="span8 altoTexto">
+										{{listaCompartida.nombreLista}}
+									</div>
+									<div class="span4">
+										<button type="button" ng-click="agregarALaLista(listaCompartida.destinatarios)" class="btn btn-link pull-right no-underline" title="Añadir a la lista"><i class="icon-download"></i></button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- Vista Previa Pantalla 2 -->
+					<div ng-show="mostrar">
+						<!-- Listas creadas -->
+						<div>
+							<legend class="centerText">
+								<span>Vista previa del correo</span>
+								<span>
+									<input type="number" class="input-mini" placeholder="Width" ng-model="vistaPreviaWidth">
+									<input type="number" class="input-mini" placeholder="Height" ng-model="vistaPreviaHeight" >
+									<a href="#modalVistaPrevia" role="button" data-toggle="modal" type="button" class="btn btn-inverse no-underline" title="Maximizar vista previa" style="margin-bottom:10px"><i class="icon-fullscreen"></i></a>
+								</span>
+							</legend>
+							<div class="contenedorCompilado centerText">
+								<div style="width:{{vistaPreviaWidth+'px'}}; height: {{vistaPreviaHeight+'px'}}; overflow-x: hidden; border: 1px solid #c3b0b0; text-align: left">
+									<div ng-if="email.tipo == 'HTML'" compile="correo.mensaje"></div>
+									<div ng-if="email.tipo == 'Texto'">{{correo.mensaje}}</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Bottom -->
+	<div class="card-bottom"></div>
+
+	<!-- MODALS -->
+	<div>
+		<!-- Modal Crear Contacto -->
+		<div id="crearUsuario" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="crearUsuarioLabel" aria-hidden="true">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				<h3 id="crearUsuarioLabel">Crear Contacto</h3>
+			</div>
+			<div class="modal-body">
+				<div class="container-fluid">
+					<div class="row-fluid">
+						<form class="form-horizontal" ng-submit="">
+							<div class="control-group">
+								<label class="control-label" for="inputModalNombre">Nombre</label>
+								<div class="controls">
+									<input type="text" class="input-block-level" id="inputModalNombre" placeholder="Nombre..." ng-model="campoModal.nombre" required/>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="inputModalApellidos">Apellidos</label>
+								<div class="controls">
+									<input type="text" class="input-block-level mayusC" id="inputModalApellidos" placeholder="Apellidos" ng-model="campoModal.apellidos" required/>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="inputModalEmail">E-Mail</label>
+								<div class="controls">
+									<input type="email" class="input-block-level" id="inputModalEmail" placeholder="E-Mail" ng-model="campoModal.correo" required/>
+								</div>
+							</div>
+							<div class="pull-left">
+								<div compile="mensajeError">
+
+								</div>
+							</div>
+							<div class="pull-right">
+								<button type="button" class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button>
+								<button type="subtmit" class="btn btn-primary" ng-click="crearContacto(parametrosModal.param, campoModal)">Guardar Contacto</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal Añadir Adjunto -->
+		<div id="modalAdjunto" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="addAdjuntoLabel" aria-hidden="true">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				<h3 id="addAdjuntoLabel">Añadir Archivo Adjunto</h3>
+			</div>
+			<div class="modal-body">
+				<div class="container-fluid">
+					<div class="row-fluid">
+						<div style="width: 100%" fine-uploader destination="'/upload/'" placeholder="'Añadir adjunto'" uploaded="adjuntosTemporal"></div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<div class="pull-right">
+					<button type="button" class="btn" ng-click="cancelarAdjuntos()" data-dismiss="modal" aria-hidden="true" title="Cerrar y Cancelar">Cancelar</button>
+					<button type="button" ng-disabled="!adjuntosTemporal.length" class="btn btn-primary" ng-click="guardarAdjuntos(adjuntosTemporal, 'modalAdjunto')" title="Añadir Archivo Adjunto al Correo">Añadir Adjunto<span ng-show="adjuntosTemporal.length>1">s</span></button>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal Crear Lista -->
+		<div id="modalCrearLista" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="crearListaModalLabel" aria-hidden="true">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				<h3 id="crearListaModalLabel">{{parametrosModal.param.titulo}}</h3>
+			</div>
+			<div class="modal-body paddingModal">
+				<div class="container-fluid">
+					<div class="row-fluid">
+						<form class="form-horizontal" ng-submit="guardarLista()">
+							<div class="control-group">
+								<label class="control-label" for="inputModalNombreLista">Nombre de Lista</label>
+								<div class="controls">
+									<input type="text" class="input-block-level" ng-model="listaEdicion.nombreLista" id="inputModalNombreLista" placeholder="Nombre..." required/>
+								</div>
+							</div>
+							<div class="control-group">
+								<label for="selectContactosModalLista" class="control-label">Compartir con</label>
+								<div class="controls">
+									<select class="todoWidth" data-placeholder="Seleccion de usuarios" ui-select2 ng-model="selectContactosModalLista" ng-change="agregarUsuario( selectContactosModalLista, 'selectContactosModalLista')" id="selectContactosModalLista">
+										<option value="" selected></option>
+										<option ng-repeat="usuario in usuarios" value="{{usuario}}">{{usuario.username}}</option>
+									</select>
+									<div class="listasContactos">
+										<div class="btn-group" ng-repeat="usuario in listaEdicion.usuariosPermitidos track by $index">
+											<button type="button" class="btn btn-mini" title="{{usuario.apellido}} {{usuario.nombre}}">{{usuario.username}}</button>
+											<button type="button" class="btn btn-mini" ng-click="eliminarUsuario(usuario._id)" title="Eliminar"><i class="icon-remove"></i></button>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="pull-right">
+								<input type="button" class="btn" data-dismiss="modal" aria-hidden="true" title="Cerrar y Cancelar" value="Cancelar"/>
+								<button type="submit" class="btn btn-info" title="Guardar Lista">Guardar</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal Visualizar Adjunto -->
+		<div id="modalVerAdjunto" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="nombreAdjuntoLabelModal" aria-hidden="true">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				<h3 id="nombreAdjuntoLabelModal">{{parametrosModal.param.titulo}}</h3>
+			</div>
+			<div class="modal-body">
+				<div class="container-fluid">
+					<div class="row-fluid">
+						<div compile="parametrosModal.param.compilar">
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal Ingrese Contraseña -->
+		<div id="modalIngreseContrasenna" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="contrasennaModalLabel" aria-hidden="true">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				<h3 id="contrasennaModalLabel">{{parametrosModal.param.titulo}}</h3>
+			</div>
+			<div class="modal-body">
+				<div class="container-fluid">
+					<div class="row-fluid">
+						<form class="form-horizontal clearfix" ng-submit="enviarMail(contrasennaCorreo, 'modalIngreseContrasenna')" autocomplete="off">
+							<div class="control-group">
+								<p ng-show="parametrosModal.param.explicacion">{{parametrosModal.param.explicacion}}</p>
+								<label class="control-label" for="inputModalContrasenna">Contraseña</label>
+								<div class="controls">
+									<input type="password" ng-model="contrasennaCorreo" class="input-block-level" id="inputModalContrasenna" placeholder="Contraseña..." required/>
+								</div>
+							</div>
+							<div class="pull-right">
+								<button type="button" class="btn" data-dismiss="modal" aria-hidden="true" title="Cerrar y Cancelar">Cancelar</button>
+								<button type="submit" class="btn btn-info" title="Enviar Correo"><i class="icon-envelope"></i></button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal informacion simple (Titulo y Texto) -->
+		<div id="modalInformacion" class="modal hide fade" tabindex="-1" role="dialog">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				<h3>{{parametrosModal.param.titulo}}</h3>
+			</div>
+			<div class="moda-body">
+				<div class="container-fluid">
+					<div class="row-fluid">
+						<p>{{parametrosModal.param.explicacion}}</p>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<div class="pull-right">
+					<button type="button" class="btn btn-info" data-dismiss="modal" aria-hidden="true" title="Aceptar y Cerrar">Aceptar</button>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal apagar listas -->
+		<div id="modalApagarLista" class="modal hide fade" tabindex="-1" role="dialog">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				<h3>{{parametrosModal.param.titulo}}</h3>
+			</div>
+			<div class="moda-body">
+				<div class="container-fluid">
+					<div class="row-fluid">
+						<p>{{parametrosModal.param.explicacion}}</p>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<div class="pull-right">
+					<button type="button" class="btn" data-dismiss="modal" aria-hidden="true" title="Cancelar">Cancelar</button>
+					<button type="button" ng-click="apagarLista(listaAApagar, false)" class="btn btn-info" title="Aceptar y Cerrar">Aceptar</button>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal vista previa -->
+		<!-- Modal informacion simple (Titulo y Texto) -->
+		<div id="modalVistaPrevia" class="modal hide fade" tabindex="-1" role="dialog" style="width:85%; margin-left:-45%; height:65vh; overflow: auto">
+			<div class="modal-header">
+				<h3>Vista previa del correo</h3>
+			</div>
+			<div class="moda-body">
+				<div style="width:{{vistaPreviaWidth+'px'}}; height: {{vistaPreviaHeight+'px'}}; overflow-x: hidden; border: 1px solid #c3b0b0; text-align: left">
+					<div ng-if="email.tipo == 'HTML'" compile="correo.mensaje"></div>
+					<div ng-if="email.tipo == 'Texto'">{{correo.mensaje}}</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

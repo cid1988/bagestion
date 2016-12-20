@@ -1,0 +1,263 @@
+<script>
+    $(document).ready(function(){$("#e1").select2();});
+    $(document).ready(function(){$("#e2").select2();});
+    $(document).ready(function(){$("#e3").select2();});
+    $(document).ready(function(){$("#e4").select2();});
+    $(document).ready(function(){$("#e5").select2();});
+    $(document).ready(function(){$("#e6").select2();});
+    $(document).ready(function(){$("#e7").select2();});
+</script>
+<div class="card">
+    <div style="margin:10px">
+        <legend>Detalle
+            <a class="btn btn-link pull-right" ng-show="editando" ng-click="eliminar()"><i class="icon-trash"></i></a>
+            <a class="btn btn-link pull-right" ng-show="editando" ng-click="cancelar()"><i class="icon-remove"></i></a>
+            <a class="btn btn-link pull-right" ng-show="editando" ng-click="guardar()"><i class="icon-ok"></i></a>
+            <a class="btn btn-link pull-right" ng-show="!editando" ng-click="editar()"><i class="icon-edit"></i></a>
+            <a class="btn btn-link pull-right" ng-show="!editando" href="/proyectosdeley"><i class="icon-undo"></i></a>
+        </legend>
+        
+        <form class="form-horizontal" style="margin-bottom: 0px !important;">
+            <div class="control-group" style="margin-left: 10px;margin-bottom: 0px;">
+                <div class="control-group" style="margin-bottom: 20px;">
+                    <label class="control-label">Prioridad:</label>
+                    <div class="controls">
+                        <select class="span2" id="e1" type="text" ng-disabled="!editando" ng-model="pdl.prioridad">
+                            <option ng-disabled="true" value="">{{pdl.prioridad}}</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Proyecto:</label>
+                    <div class="controls">
+                        <input class="span4" type="text" placeholder="Sin Proyecto" ng-disabled="!editando" ng-model="pdl.proyecto" />
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Legislativo:</label>
+                    <div class="controls">
+                        <select id="e2" class="span4" type="text" ng-model="pdl.legislativo" ng-disabled="!editando" ng-options="i._id as i.apellidos + ' ' + i.nombre for i in contactos | orderBy:'apellidos'">
+                            <option ng-disabled="true" value="">{{contactoPorId(pdl.legislativo).apellidos}} {{contactoPorId(pdl.legislativo).nombre}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Ejecutivo:</label>
+                    <div class="controls">
+                        <select id="e3" class="span4" type="text" ng-model="pdl.ejecutivo" ng-disabled="!editando" ng-options="i._id as i.apellidos + ' ' + i.nombre for i in contactos | orderBy:'apellidos'">
+                            <option ng-disabled="true" value="">{{contactoPorId(pdl.ejecutivo).apellidos}} {{contactoPorId(pdl.ejecutivo).nombre}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Observaciones:</label>
+                    <div class="controls">
+                        <textarea rows="4" class="span4" type="text" placeholder="Sin Observaciones" ng-disabled="!editando" ng-model="pdl.observaciones"></textarea>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Detalle:</label>
+                    <div class="controls">
+                        <textarea rows="4" class="span4" type="text" placeholder="Sin Detalle" ng-disabled="!editando" ng-model="pdl.detalles"></textarea>
+                    </div>
+                </div>
+                <div class="control-group" style="margin-bottom: 20px;">
+                    <label class="control-label">Votos:</label>
+                    <div class="controls">
+                        <select class="span2" id="e4" type="text" ng-disabled="!editando" ng-model="pdl.votos">
+                            <option ng-disabled="true">{{pdl.votos}}</option>
+                            <option value="MS">MS</option>
+                            <option value="31">31</option>
+                            <option value="40">40</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="control-group" style="margin-bottom: 20px;">
+                    <label class="control-label">Lectura:</label>
+                    <div class="controls">
+                        <select class="span2" id="e5" type="text" ng-disabled="!editando" ng-model="pdl.lectura">
+                            <option ng-disabled="true">{{pdl.lectura}}</option>
+                            <option value="Simple">Simple</option>
+                            <option value="Doble">Doble</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="control-group" style="margin-top:20px">
+                    <label class="control-label">Expediente:</label>
+                    <div class="controls">
+                        <select class="span6" id="e6" ng-disabled="!editando" type="text" ng-model="pdl.expediente" ng-options="i._id as i.titulo + ' - ' + i.tipo + '-' + i.ano + '-' + i.numero + '-' + i.reparticion for i in expedientes | orderBy:'titulo'">
+                            <option ng-disabled="true" value="">{{expedientePorId(pdl.expediente).titulo}} - {{expedientePorId(pdl.expediente).tipo}}-{{expedientePorId(pdl.expediente).ano}}-{{expedientePorId(pdl.expediente).numero}}-{{expedientePorId(pdl.expediente).reparticion}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="control-group" style="margin-bottom: 20px;">
+                    <label class="control-label">Status:</label>
+                    <div class="controls">
+                        <button class="btn" ng-class="{'disabled': !(pdl.status=='white')}" ng-show="(editando || (pdl.status=='white'))" ng-click="pdl.status='white'"></button>
+                        <button class="btn btn-danger" ng-class="{'disabled': !(pdl.status=='danger')}" ng-show="(editando || (pdl.status=='danger'))" ng-click="pdl.status='danger'"></button>
+                        <button class="btn btn-warning" ng-class="{'disabled': !(pdl.status=='warning')}" ng-show="(editando || (pdl.status=='warning'))" ng-click="pdl.status='warning'"></button>
+                        <button class="btn btn-success" ng-class="{'disabled': !(pdl.status=='success')}" ng-show="(editando || (pdl.status=='success'))" ng-click="pdl.status='success'"></button>
+                    </div>
+                </div>
+                <div class="control-group" style="margin-bottom: 20px;">
+                    <label class="control-label">Estado:</label>
+                    <div class="controls">
+                        <select class="span2" id="e7" type="text" ng-disabled="!editando" ng-model="pdl.estado">
+                            <option ng-disabled="true">{{pdl.estado}}</option>
+                            <option value="Ejecutivo">Ejecutivo</option>
+                            <option value="Legislativo">Legislativo</option>
+                            <option value="Segunda Lectura">Segunda Lectura</option>
+                            <option value="Aprobado">Aprobado</option>
+                            <option value="Eliminado">Eliminado</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="control-group" style="margin-bottom: 20px">
+                    <label class="control-label">Borrador:</label>
+                    <div class="btn-group" style="margin-left:20px" data-toggle="buttons-radio">
+                        <button ng-disabled="!editando" class="btn" ng-class="(pdl.borrador == 'Si') && 'active btn-info'" ng-click="pdl.borrador = 'Si'" style="padding-left: 26px; padding-right: 26px;">Si</button>
+                        <button ng-disabled="!editando" class="btn" ng-class="(pdl.borrador == 'No') && 'active btn-info'" ng-click="pdl.borrador = 'No'" style="padding-left: 26px; padding-right: 26px;">No</button>
+                    </div>
+                </div>
+                <div class="control-group" style="margin-bottom: 5px;">
+                    <label class="control-label">Giros:</label>
+                    <div class="controls">
+                        <select ui-select2 class="span2" ng-disabled="!editando" type="text" ng-model="dataGiros">
+                            <option value=""></option>
+                            <option value="{{g._id}}" ng-repeat="g in comisiones | filter:filtroGiros">{{g.nombre}}</option>
+                        </select>
+                        <button class="btn" style="margin-left:5px" ng-disabled="!editando" ng-click="agregarGiro(dataGiros)"><i class="icon-ok"></i></button>
+                        <button class="btn" ng-disabled="!editando" ng-click="agregarComisiones()"><i class="icon-plus"></i></button>
+                    </div>
+                </div>
+                <div class="control-group" ng-repeat="p in pdl.giros" style="margin-bottom: 0px;">
+                    <div class="controls">
+                        <input class="span2" type="text" ng-disabled="true" value="{{giroPorId(p).nombre}}" />
+                        <a href="#" style="margin-left: 10px" ng-show="editando" ng-click="eliminarListaElem(p, pdl.giros)"><i class="icon-trash"></i></a>
+                    </div>
+                </div>
+                
+                <div class="control-group" style="margin-top:20px" ng-if="!editando">
+                    <label class="control-label">Paquete:</label>
+                    <div class="controls">
+                        <input type="text" ng-disabled="true" ng-show="!editando" class="span2" value="{{grupoPorId(pdl.grupo).nombre}}" />
+                    </div>
+                </div>
+                <div class="control-group" style="margin-top:20px" ng-if="editando">
+                    <label class="control-label">Paquete:</label>
+                    <div class="controls">
+                        <select class="span2" ui-select2 type="text" ng-disabled="!editando" ng-model="pdl.grupo" ng-options="i._id as i.nombre for i in grupos | orderBy:'nombre'">
+                            <option value=""></option>
+                            <option ng-disabled="true" value="">{{grupoPorId(pdl.grupo).nombre}}</option>
+                        </select>
+                        <button class="btn" style="margin-left:5px" ng-disabled="!editando" ng-click="agregarGrupos(dataGrupo)"><i class="icon-plus"></i></button>
+                    </div>
+                </div>
+                
+                <!--<div class="control-group" style="margin-top: 20px;">-->
+                <!--    <label class="control-label">Grupo:</label>-->
+                <!--    <div class="controls">-->
+                <!--        <select id="e3" class="span2" ng-disabled="!editando" type="text" ng-model="pdl.grupo">-->
+                <!--            <option value=""></option>-->
+                <!--            <option ng-disabled="true">{{grupoPorId(pdl.grupo).nombre}}</option>-->
+                <!--            <option value="{{g._id}}" ng-repeat="g in grupos">{{g.nombre}}</option>-->
+                <!--        </select>-->
+                <!--        <button class="btn" ng-disabled="!editando" ng-click="agregarGrupos(dataGrupo)"><i class="icon-plus"></i></button>-->
+                <!--    </div>-->
+                <!--</div>-->
+                
+                <div class="span5" style="margin-left: 80px;margin-top: 15px;">
+                    <h4>Documentos
+                    <div class="card-actions pull-right" style="margin: 0; padding: 0">
+                        <a class="btn btn-link" ng-click="agregarDocumentos()" ng-if="editando"><i class="icon-plus"></i></a>
+                    </div></h4>
+                    <div ng-if="!pdl.documentos.length">No se ha cargado ningun documento aún</div>
+                    <div ng-repeat="d in pdl.documentos">
+                        <a data-toggle="modal" ng-click="abrirModal('#documentosE_{{$index}}')" href="">{{d.nombre}}</a> (<a href="/file/{{d.archivoId}}" target="_blank">Descargar</a>)<br>
+                    </div>
+                    <div ng-repeat="d in pdl.documentos" id="documentosE_{{$index}}" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class='modal-header'>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        </div>
+                        <div class='modal-content'>
+                            <span style="display: inline-block"> Nombre:<br /> 
+                                <input class="span4" type="text" placeholder="Nombre del documento" ng-disabled="true" ng-model="d.nombre" />
+                            </span>
+                            <span style="display: inline-block"> Fecha:<br /> 
+                                <input class="span2" type="text" date placeholder="Fecha" ng-disabled="true" ng-model="d.fecha" />
+                            </span>
+                            <span style="display: inline-block"> Version:<br /> 
+                                <input class="span2" type="text" placeholder="Version del documento" ng-disabled="true" ng-model="d.version" />
+                            </span>
+                            <span style="display: inline-block"> Fuente:<br /> 
+                                <div class="input-append">
+                                    <input class="span3" type="text" placeholder="Fuente del documento" ng-disabled="true" value="{{contactoPorId(d.fuente).apellidos}} {{contactoPorId(d.fuente).nombre}}" />
+                                </div>
+                            </span>
+                            <span style="display: inline-block"> Tipo:<br /> 
+                                <input class="span2" type="text" placeholder="DOC, XLS, PPT, etc" ng-disabled="true" ng-model="d.tipo" />
+                            </span>
+                            <span style="display: inline-block"> Autor:<br /> 
+                                <input class="span4" type="text" placeholder="Autor del documento" ng-disabled="true" ng-model="d.autor" />
+                            </span>
+                            <span style="display: inline-block"> Tags:<br /> 
+                                <input class="span5" type="text" placeholder="Separados por coma" ng-disabled="true" ng-model="d.tags" />
+                            </span>
+                            <span style="display: inline-block"> Descripción:<br /> 
+                                <textarea style="height:80px; width:530px" placeholder="Descripción del documento" type="text" ng-disabled="true" ng-model="d.descripcion" />
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="confirmarEliminar" class="modal hide fade">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>Eliminar Proyecto de Ley</h3>
+    </div>
+    <div class="modal-body">
+        <p>Está a un paso de eliminar el Proyecto de Ley</p>
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="btn btn-info" data-dismiss="modal">Conservar el registro</a>
+        <a href="#" class="btn btn-danger" data-dismiss="modal" ng-click="eliminar(true)">Eliminar</a>
+    </div>
+</div>
+
+<div id="agregarComisiones" class="modal hide fade">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>Agregar Comisiones(Giros)</h3>
+    </div>
+    <div class="modal-body">
+        <label>Nombre</label>
+        <input class="span2" type="text" placeholder="Nombre" ng-model="comision.nombre" />
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="btn btn-info" data-dismiss="modal" ng-click="agregarComisiones(true)">Agregar</a>
+        <a href="#" class="btn btn-danger" data-dismiss="modal">Cancelar</a>
+    </div>
+</div>
+
+<div id="agregarGrupos" class="modal hide fade">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>Agregar Paquete</h3>
+    </div>
+    <div class="modal-body">
+        <label>Nombre</label>
+        <input class="span2" type="text" placeholder="Nombre" ng-model="grupo.nombre" />
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="btn btn-info" data-dismiss="modal" ng-click="agregarGrupos(true)">Agregar</a>
+        <a href="#" class="btn btn-danger" data-dismiss="modal">Cancelar</a>
+    </div>
+</div>

@@ -1,0 +1,54 @@
+<style>
+.modal {
+    width: 80%;
+    left: 8%;
+    margin-left: 0px;
+    top: 30px;
+}
+</style>
+<div class="modal-header" style="padding-bottom: 10px;">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h3>Compromisos de {{organigramaPorId(areaSeleccionada.jurisdiccion).nombreCompleto}}
+    <button class="btn pull-right" ng-class="{'btn-success active': areaSeleccionada.compromisosLeidos}" ng-click="(areaSeleccionada.compromisosLeidos=!areaSeleccionada.compromisosLeidos); guardarSeleccionado2()"><i class="icon-ok"></i> Leido</button></h3>
+</div>
+<div class="modal-body" style="overflow-y: scroll; overflow-x: hidden; height: 400px;margin-top: 10px;">
+    <h4 style="font-weight: 600;">Compromisos Generales</h4>
+    <table border="1" class="table table-striped" ng-show="areaSeleccionada.compromisos.length">
+        <tr bgcolor= "#FFFFFF">
+            <th width="20%"><center>Prioritarios</center></th>
+            <th width="40%"><center>Avances</center></th>
+            <th width="40%"><center>Compromisos y Próximos Pasos</center></th>
+        </tr>
+        <tr ng-repeat="o in areaSeleccionada.compromisos" style="border-bottom: 1px solid #ddd;">
+            <td width="20%">{{iniciativaPorId(o.iniciativa).nombreProyecto}}</td>
+            <td width="40%">{{o.avances}}</td>
+            <td width="40%"><div compile="o.compromisos"></div></td>
+        </tr>
+    </table>
+    <h4 style="font-weight: 600;">Compromisos por proyecto</h4>
+    <table border="1" class="table table-striped" style="margin-bottom: 0px;">
+        <tr bgcolor= "#FFFFFF">
+            <th width="7%" style="text-align: center;">Numero</th>
+            <th width="23%" style="text-align: center;">Iniciativa</th>
+            <th width="7%" style="text-align: center;">Fecha</th>
+            <th width="50%" style="text-align: center;">Compromisos y Próximos Pasos</th>
+            <th width="8%" style="text-align: center;">Status</th>
+            <th width="5%"></th>
+        </tr>
+    </table>
+    <table border="1" class="table table-striped" ng-repeat="i in planes | filter:{areaResponsable:areaSeleccionada.jurisdiccion}" ng-show="i.compromisos.length" style="margin-bottom: 0px;">
+        <tr ng-repeat="o in i.compromisos" style="border-bottom: 1px solid #ddd;">
+            <td width="7%" style="text-align: center;">{{o.numero}}</td>
+            <td width="23%" style="text-align: justify;">{{i.nombreProyecto}}</td>
+            <td width="7%" style="text-align: center;">{{o.fecha}}</td>
+            <td width="50%" style="text-align: justify;">{{o.compromisos}}</td>
+            <td width="8%" style="text-align: center;">{{o.status}}</td>
+            <td width="5%" style="text-align: justify;">
+                <i title="Seguimiento Especial" ng-if="o.star" style="font-size: 19px;color: darkviolet" class="icon-star"></i>
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="modal-footer">
+    <a href="#" class="btn" data-dismiss="modal">Cerrar</a>
+</div>

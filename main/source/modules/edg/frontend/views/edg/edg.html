@@ -1,0 +1,109 @@
+<div class="card">
+    <div style="margin-right: 20px">
+        <select class="input-block-level span3 pull-right" placeholder="Comuna" ui-select2 type="text" ng-init="filtro.valor = 'comuna'" ng-model="filtro.valor">
+            <option value="comuna">Gasto por Comuna</option>
+            <option value="jurisdiccion">Gasto por Jurisdicción</option>
+        </select>
+    </div>
+    <div style="margin-right: 20px">
+        <select class="input-block-level span2 pull-right" placeholder="Comuna" ui-select2 type="text" ng-init="filtro.tipo = 'false'" ng-model="filtro.tipo">
+            <option value="false">-</option>
+            <option value="relativo">Relativo</option>
+            <option value="porcentaje">%</option>
+        </select>
+    </div>
+    <span style="margin-right: 20px" class="pull-right">Ultima actualización: {{edg.ultimaActualizacion}}<a class="btn" style="margin-left: 20px" ng-click="actualizarSigaf()"><i></i>Actualizar</a></span>
+    <h3 ng-init="tab='comuna'" class="card-heading simple">Evaluación del Gasto</h3>
+    
+    <div class="card-body" ng-if="tab == 'comuna'">
+        <table border="1" class="table table-striped">
+            <tr bgcolor= "#FFFFFF">
+                <th ng-if="filtro.valor == 'comuna' && (filtro.tipo == 'false' || filtro.tipo == 'porcentaje')" ng-repeat="t in ['Comuna','Sancion','Vigente','Restringido','Preventivo','Definitivo','Devengado','Disponible','Pagado']"><a ng-click="orden = ''" href="#" style="display: inline-block; color:#404040;">{{t}}</a></th>
+                <th ng-if="filtro.valor == 'comuna' && filtro.tipo == 'relativo'" ng-repeat="t in ['Comuna','Vigente/Sancion','Devengado/Vigente','Devengado/(Vigente - Restringido)','Disponible/Vigente','Devengado/Definitivo','Disponible/(Vigente - Restringido)','Definitivo/Vigente','Pagado/Devengado']"><a ng-click="orden = ''" href="#" style="display: inline-block; color:#404040;">{{t}}</a></th>
+                
+                <th ng-if="filtro.valor == 'jurisdiccion' && (filtro.tipo == 'false' || filtro.tipo == 'porcentaje')" ng-repeat="t in ['Jurisdicción','Sancion','Vigente','Restringido','Preventivo','Definitivo','Devengado','Disponible','Pagado']"><a ng-click="orden = ''" href="#" style="display: inline-block; color:#404040;">{{t}}</a></th>
+                <th ng-if="filtro.valor == 'jurisdiccion' && filtro.tipo == 'relativo'" ng-repeat="t in ['Jurisdicción','Vigente/Sanción','Devengado/Vigente','Devengado/(Vigente-Restringido)','Disponible/Vigente','Devengado/Definitivo','Disponible/(Vigente-Restringido)','Definitivo/Vigente','Pagado/Devengado']"><a ng-click="orden = ''" href="#" style="display: inline-block; color:#404040;">{{t}}</a></th>
+                <th>Presupuesto Gestión</th>
+            </tr>
+            
+            <tr bgcolor= "#FFFFFF" ng-repeat="c in listado">
+                <td ng-if="filtro.valor == 'comuna'">{{c.nombre}}</td>
+                <td ng-if="filtro.valor == 'jurisdiccion'">{{c.nombreCompleto}}</td>
+                <td>
+                    <span ng-if="filtro.tipo == 'false'">{{c.sancion | number:2}}</span>
+                    <span ng-if="filtro.valor == 'comuna' && filtro.tipo == 'relativo'">{{c.vigente / c.sancion | number:2}}</span>
+                    <span ng-if="filtro.valor == 'jurisdiccion' && filtro.tipo == 'relativo'">{{c.vigente / c.sancion | number:2}}</span>
+                    <span ng-if="filtro.valor == 'comuna' && filtro.tipo == 'porcentaje'">{{c.sancion / totalSancion | number:2}} %</span>
+                    <span ng-if="filtro.valor == 'jurisdiccion' && filtro.tipo == 'porcentaje'">{{c.sancion / totalSancion * 100 | number:2}} %</span>
+                </td>
+                <td>
+                    <span ng-if="filtro.tipo == 'false'">{{c.vigente | number:2}}</span>
+                    <span ng-if="filtro.valor == 'comuna' && filtro.tipo == 'relativo'">{{c.devengado / c.vigente | number:2}}</span>
+                    <span ng-if="filtro.valor == 'jurisdiccion' && filtro.tipo == 'relativo'">{{c.devengado / c.vigente | number:2}}</span>
+                    <span ng-if="filtro.valor == 'comuna' && filtro.tipo == 'porcentaje'">{{c.vigente / totalVigente * 100 | number:2}} %</span>
+                    <span ng-if="filtro.valor == 'jurisdiccion' && filtro.tipo == 'porcentaje'">{{c.vigente / totalVigente * 100 | number:2}} %</span>
+                </td>
+                <td>
+                    <span ng-if="filtro.tipo == 'false'">{{c.restringido | number:2}}</span>
+                    <span ng-if="filtro.valor == 'comuna' && filtro.tipo == 'relativo'">{{c.devengado / (c.vigente - c.restringido) | number:2}}</span>
+                    <span ng-if="filtro.valor == 'jurisdiccion' && filtro.tipo == 'relativo'">{{c.devengado / (c.vigente - c.restringido) | number:2}}</span>
+                    <span ng-if="filtro.valor == 'comuna' && filtro.tipo == 'porcentaje'">{{c.restringido / totalRestringido * 100 | number:2}} %</span>
+                    <span ng-if="filtro.valor == 'jurisdiccion' && filtro.tipo == 'porcentaje'">{{c.restringido / totalRestringido * 100 | number:2}} %</span>
+                </td>
+                <td>
+                    <span ng-if="filtro.tipo == 'false'">{{c.preventivo | number:2}}</span>
+                    <span ng-if="filtro.valor == 'comuna' && filtro.tipo == 'relativo'">{{c.disponible / c.vigente | number:2}}</span>
+                    <span ng-if="filtro.valor == 'jurisdiccion' && filtro.tipo == 'relativo'">{{c.disponible / c.vigente | number:2}}</span>
+                    <span ng-if="filtro.valor == 'comuna' && filtro.tipo == 'porcentaje'">{{c.preventivo / totalPreventivo * 100 | number:2}} %</span>
+                    <span ng-if="filtro.valor == 'jurisdiccion' && filtro.tipo == 'porcentaje'">{{c.preventivo / totalPreventivo * 100 | number:2}} %</span>
+                </td>
+                <td>
+                    <span ng-if="filtro.tipo == 'false'">{{c.definitivo | number:2}}</span>
+                    <span ng-if="filtro.valor == 'comuna' && filtro.tipo == 'relativo'">{{c.devengado / c.definitivo | number:2}}</span>
+                    <span ng-if="filtro.valor == 'jurisdiccion' && filtro.tipo == 'relativo'">{{c.devengado / c.definitivo | number:2}}</span>
+                    <span ng-if="filtro.valor == 'comuna' && filtro.tipo == 'porcentaje'">{{c.definitivo / totalDefinitivo * 100 | number:2}} %</span>
+                    <span ng-if="filtro.valor == 'jurisdiccion' && filtro.tipo == 'porcentaje'">{{c.definitivo / totalDefinitivo * 100 | number:2}} %</span>
+                </td>
+                <td>
+                    <span ng-if="filtro.tipo == 'false'">{{c.devengado | number:2}}</span>
+                    <span ng-if="filtro.valor == 'comuna' && filtro.tipo == 'relativo'">{{c.disponible / (c.vigente - c.restringido) | number:2}}</span>
+                    <span ng-if="filtro.valor == 'jurisdiccion' && filtro.tipo == 'relativo'">{{c.disponible / (c.vigente - c.restringido) | number:2}}</span>
+                    <span ng-if="filtro.valor == 'comuna' && filtro.tipo == 'porcentaje'">{{c.devengado / totalDevengado * 100 | number:2}} %</span>
+                    <span ng-if="filtro.valor == 'jurisdiccion' && filtro.tipo == 'porcentaje'">{{c.devengado / totalDevengado * 100 | number:2}} %</span>
+                </td>
+                <td>
+                    <span ng-if="filtro.tipo == 'false'">{{c.disponible | number:2}}</span>
+                    <span ng-if="filtro.valor == 'comuna' && filtro.tipo == 'relativo'">{{c.definitivo / c.vigente | number:2}}</span>
+                    <span ng-if="filtro.valor == 'jurisdiccion' && filtro.tipo == 'relativo'">{{c.definitivo / c.vigente | number:2}}</span>
+                    <span ng-if="filtro.valor == 'comuna' && filtro.tipo == 'porcentaje'">{{c.disponible / totalDisponible * 100 | number:2}} %</span>
+                    <span ng-if="filtro.valor == 'jurisdiccion' && filtro.tipo == 'porcentaje'">{{c.disponible / totalDisponible * 100 | number:2}} %</span>
+                </td>
+                <td>
+                    <span ng-if="filtro.tipo == 'false'">{{c.pagado | number:2}}</span>
+                    <span ng-if="filtro.valor == 'comuna' && filtro.tipo == 'relativo'">{{c.pagado / c.devengado | number:2}}</span>
+                    <span ng-if="filtro.valor == 'jurisdiccion' && filtro.tipo == 'relativo'">{{c.pagado / c.devengado | number:2}}</span>
+                    <span ng-if="filtro.valor == 'comuna' && filtro.tipo == 'porcentaje'">{{c.pagado / totalPagado * 100 | number:2}} %</span>
+                    <span ng-if="filtro.valor == 'jurisdiccion' && filtro.tipo == 'porcentaje'">{{c.pagado / totalPagado * 100 | number:2}} %</span>
+                </td>
+                <td>
+                    <span ng-if="filtro.tipo == 'false'">{{c.gestion | number:2}}</span>
+                    <span ng-if="filtro.valor == 'comuna' && filtro.tipo == 'porcentaje'">{{c.gestion / totalGestion * 100 | number:2}} %</span>
+                    <span ng-if="filtro.valor == 'jurisdiccion' && filtro.tipo == 'porcentaje'">{{c.gestion / totalGestion * 100 | number:2}} %</span>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Total</b></td>
+                <td><b>{{totalSancion | number:2}}</b></td>
+                <td><b>{{totalVigente | number:2}}</b></td>
+                <td><b>{{totalRestringido | number:2}}</b></td>
+                <td><b>{{totalPreventivo | number:2}}</b></td>
+                <td><b>{{totalDefinitivo | number:2}}</b></td>
+                <td><b>{{totalDevengado | number:2}}</b></td>
+                <td><b>{{totalDisponible | number:2}}</b></td>
+                <td><b>{{totalPagado | number:2}}</b></td>
+                <td><b>{{totalGestion | number:2}}</b></td>
+            </tr>
+        </table>
+    </div>
+    <div ng-include src="'/views/edg/edgJurisdicciones.html'" ng-if="tab == 'jurisdiccion'"></div>
+</div>

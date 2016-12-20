@@ -1,0 +1,254 @@
+<style>
+    .no-border, .no-border > th, .no-border > td {
+        border: none;
+    }
+    .tablaPrint th, .tablaPrint td {
+        padding-top:1px;
+        padding-bottom:1px;
+        border-bottom:1px solid #AAAAAA;
+        line-height: 25px;
+     }
+    .wysihtml5-sandbox {
+        border: 0 !important;
+        padding: 0 !important;
+    }
+    .card>div{
+        padding-left:15px;
+        padding-right:15px;
+    }
+    hr{
+        margin:0;
+        border-top:1px solid black;
+        border-bottom:1px solid black;
+    }
+    .textRight{text-align:right;}
+    tr>td{
+        font-size:1.3em !important;
+        vertical-align:middle !important;
+    }
+    .participantes{
+        background-color: #FFD400 !important;
+        font-size: 2em;
+        padding: 20px 0 20px 20px;
+        border-radius: 20px 20px 0 20px;
+        font-weight: bold;
+    }
+    #proximaReunion{
+        background-color:#E6E6E6 !important;
+        padding: 10px;
+        font-size: 1.2em;
+        margin-bottom: 20px;
+    }
+    #temarioNuevo{
+        background-color:#FFD400 !important; 
+        margin-bottom: 20px;
+        border-radius: 20px 20px 0 20px;
+        padding-right:15px;
+        padding-bottom:10px;
+        position: relative;
+        float: left;
+        width: 100%;
+    }
+    #ba{
+        background-color: #FAFBF2 !important;
+        position: absolute;
+        top: -16px;
+        border-radius: 100%;
+        border: 10px solid #FFD400;
+    }
+    #ba>div{
+        background: url('/views/orm/reunion/logoo.jpg') 55% 55% !important;
+        width:100px;
+        height:100px;
+        background-repeat: no-repeat !important;
+    }
+    #logoYFirma{
+        display: inline-block;
+        padding-left:15px;
+    }
+    #firma{
+        padding-left:125px;
+        padding-top:5px;
+    }
+    #importantes{
+        overflow:hidden;
+    }
+    #importantes>div{
+        width:45%;
+    }
+    #importantes>div>div>h3>div{
+        height:1em; 
+        width:1em; 
+        border:2px solid #BDBBBB; 
+        display:inline-block;
+        vertical-align: text-top;
+        margin-left:15px;
+    }
+    #importantes>div>div>h3{
+        font-weight:bold;
+    }
+    #importantes>div>div{
+        display:inline-block;
+        width:32%;
+        text-align:center;
+    }
+    .escribir{
+        height:2em; 
+        width:100%; 
+        border: 2px solid #BDBBBB;
+        text-align:center;
+    }
+    .campoEnTabla{
+        height:1.5em;
+        width:1.5em;
+        border: 2px solid #BDBBBB;
+    }
+    .td1em{height:2.5em;}
+    @media print{
+        h3{
+            font-size:1.3em !important;
+        }
+        td>*{
+            font-size:0.8em;
+        }
+        #tipoReunion>div>h3{
+            font-size:1em;
+        }
+        #tipoReunion>div>h4{
+            font-size:0.8em;
+        }
+        #firma>span{
+            font-size:0.8em;
+        }
+        #tipoReunion{
+            max-width:280px;
+        }
+    }
+</style>
+<div class="card" ng-controller="ORMReunionLlamadosCtrl as controller">
+    <div>
+        <div class="card-heading" style="overflow:hidden">
+            <div class="pull-right no-print">
+                <a class="btn btn-link no-print" ng-click="imprimir()" ><i class="icon-print"></i> Imprimir</a>
+                <a class="btn btn-link no-print" href="/orm/calendario" ><i class="icon-arrow-left"></i> Volver</a>
+            </div>
+        </div>
+        <div style="padding-right:15px; margin-top:15px">
+            <div id="temarioNuevo">
+                <div id="logoYFirma">
+                    <div id="ba">
+                        <div>
+                        </div>
+                    </div>
+                    <div id="firma">
+                        <b>Buenos Aires Ciudad</b><br/>
+                        <span>Jefatura de Gabinete de Ministros</span><br/>
+                        <span>Sec de Planeamiento y Coordinación de Gestión</span><br/>
+                        <span>DG Coordinación de Gestión</span>
+                    </div>
+                </div>
+                <div class="pull-right" id="tipoReunion">
+                    <div>
+                        <h3 style="margin:0">Reunión 
+                            <span ng-switch="reunion.tipo">
+                                <span ng-switch-when="seguimiento">de Seguimiento</span>
+                                <span ng-switch-when="transversales">Transversal</span>
+                                <span ng-switch-when="especificas">Especifica</span>
+                                <span ng-switch-when="planeamiento">de Planeamiento</span>
+                                <span ng-switch-when="presupuesto">de Presupuesto</span>
+                                <span ng-switch-when="coordinacion">de Coordinación</span>
+                                <span ng-switch-when="planLargoPlazo">de Plan Largo Plazo</span>
+                                <span ng-switch-when="proyectosEspeciales">de Proyectos Especiales</span>
+                                <span ng-switch-when="eventuales">Eventual</span>
+                            </span>
+                        </h3>
+                    </div>
+                    <hr>
+                    <div class="textRight">
+                        <h4 style="margin:0"><b>{{reunion.nombre}}</b></h4>
+                         <h4 style="margin:0">{{instancia.subtitulo}}</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <table class="table">
+                <thead style="background-color:#E6E6E6 !important">
+                    <tr>
+                        <th style="width:25%">Jurisdicción</th>
+                        <th>Lugar</th>
+                        <th style="width:15%">Fecha</th>
+                        <th style="width:20%">Hora</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{jurisdiccionPorId(reunion.jurisdiccion).nombreCompleto}}</td>
+                        <td>{{instancia.ubicacion.nombre}}</td>
+                        <td>{{instancia.fecha}}</td>
+                        <td>
+                            <span>Inicio: </span><span class="pull-right">{{instancia.desdeHora}}</span><br>
+                            <span>Fin: </span><span class="pull-right">{{instancia.hastaHora}}</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="participantes">
+            Llamados
+        </div>
+        <div style="margin-top:15px">
+            <table class="table table-condensed">
+                <thead style="background-color:#E6E6E6 !important">
+                    <tr>
+                        <th>APELLIDO / Nombre</th>
+                        <th>Cargo</th>
+                        <th>Organismos</th>
+                        <th>Teléfonos</th>
+                        <th style="width:2em"><div class="escribir" title="Confirmó"><h4 style="margin:3px 0 0 0"><b><i class="icon-ok"></i></b></h4></div></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="p in controller.vistaLlamados">
+                        <td><span><b>{{p.c.apellidos|uppercase}}</b>, {{p.c.nombre}}</span></td>
+                        <td><span>{{p.c.cargo}}</span></td>
+                        <td><span>{{jurisdiccionPorId(p.c.organigrama).sigla}}</span></td>
+                        <td>
+                            <span ng-repeat="t in p.c.telefonos">
+                                {{t.nombre}}: {{buscarTelefono(t.nombre, p.c)}}<br>
+                            </span>
+                            <span ng-repeat="r in p.c.roles">
+                                <span ng-if=r.checkedTelefono>
+                                    {{r.nombre}}: {{contactoPorId(r.valor).apellidos}} {{contactoPorId(r.valor).nombre}}<br>
+                                    <span ng-repeat="d in contactoPorId(r.valor).telefonos">
+                                        &nbsp;&nbsp;&nbsp;&nbsp;{{d.nombre}}: {{buscarTelefono(d.nombre, contactoPorId(r.valor))}}<br>
+                                    </span>
+                                </span>
+                            </span>
+                        </td>
+                        <td><div class="campoEnTabla"></div></td>
+                    </tr>
+                    <tr ng-repeat="p in controller.vistaMaestro">
+                        <td><span><b>{{p.c.apellidos|uppercase}}</b>, {{p.c.nombre}}</span></td>
+                        <td><span>{{p.c.cargo}}</span></td>
+                        <td><span>{{jurisdiccionPorId(p.c.organigrama).sigla}}</span></td>
+                        <td>
+                            <span ng-repeat="t in p.c.telefonos">
+                                {{t.nombre}}: {{buscarTelefono(t.nombre, p.c)}}<br>
+                            </span>
+                            <span ng-repeat="r in p.c.roles">
+                                <span ng-if=r.checkedTelefono>
+                                    {{r.nombre}}: {{contactoPorId(r.valor).apellidos}} {{contactoPorId(r.valor).nombre}}<br>
+                                    <span ng-repeat="d in contactoPorId(r.valor).telefonos">
+                                        &nbsp;&nbsp;&nbsp;&nbsp;{{d.nombre}}: {{buscarTelefono(d.nombre, contactoPorId(r.valor))}}<br>
+                                    </span>
+                                </span>
+                            </span>
+                        </td>
+                        <td><div class="campoEnTabla"></div></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

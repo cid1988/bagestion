@@ -1,0 +1,106 @@
+
+
+<center><span class="no-print" style="padding: 10px; margin-left: 5px;" ng-style="{'background-color': '#a6eca6'}">Piense antes de imprimir. Ahorrar papel es cuidar nuestro Medio Ambiente. Ley Nº 2736.</span></center>
+<div class="form-horizontal card" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px;">
+    <a style="margin-left: 10px" href="/preguntas/eventos/{{evento._id}}" class="btn pull-right no-print"><i class="icon-arrow-left"></i> Volver</a>
+    <a style="margin-left: 10px" ng-click="imprimir()" class="btn pull-right no-print"><i class="icon-print"></i> Imprimir</a>
+	<div class="container-fluid">
+        <table border="0" cellspacing="1">
+            <tr>
+                <td width = "25%"><b>Nombre: </b></td>
+                <td>{{evento.nombre}}</td>
+            </tr>
+            <tr>
+                <td><b>Nombre corto: </b></td>
+                <td>{{evento.nombreCorto}}</td>
+            </tr>
+            <tr>
+                <td><b>Nombre largo: </b></td>
+                <td>{{evento.nombreLargo}}</td>
+            </tr>
+            <tr>
+                <td><b>Fecha: </b></td>
+                <td>{{evento.fecha}}</td>
+            </tr>
+            <tr>
+                <td><b>Calle: </b></td>
+                <td>{{evento.calle}}</td>
+            </tr>
+            <tr>
+                <td><b>Altura: </b></td>
+                <td>{{evento.altura}}</td>
+            </tr>
+            <tr>
+                <td><b>Lugar: </b></td>
+                <td>{{evento.lugar}}</td>
+            </tr>
+            <tr>
+                <td><b>Descripción: </b></td>
+                <td>{{evento.descripcion}}</td>
+            </tr>
+        </table>
+	</div>    
+</div>
+<div class="container-fluid card" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px;clear: both; margin-top: 16px; display: block;">
+    <h3>Preguntas</h3>
+    <div class="row-fluid" style="margin-bottom: 10px;"	ng-repeat="pregunta in preguntas">
+        <table border="0" cellspacing="1">
+            <tr>
+                <td width = "25%"><b>Nro de orden: </b></td>
+                <td>{{pregunta.nro_orden}}</td>
+            </tr>
+            <tr>
+                <td><b>Cuestionario: </b></td>
+                <td>{{cuestionarioPorId(pregunta.cuestionario).nombre}}</td>
+            </tr>
+            <tr>
+                <td><b>Contexto: </b></td>
+                <td>{{pregunta.contexto}}</td>
+            </tr>
+            <tr>
+                <td><b>Pregunta: </b></td>
+                <td>{{pregunta.pregunta}}</td>
+            </tr>
+            <tr>
+                <td><b>Respuesta: </b></td>
+                <td>{{pregunta.respuesta}}</td>
+            </tr>
+            <tr>
+                <td><b>Elaborada por: </b></td>
+                <td>{{contactoPorId(pregunta.persona_respuesta).apellidos}} {{contactoPorId(pregunta.persona_respuesta).nombre}}</td>
+            </tr>
+            <tr>
+                <td><b>Adjuntos: </b></td>
+                <td>{{pregunta.adjuntos}}</td>
+            </tr>
+            <tr>
+                <td><b>Tematica: </b></td>
+                <td>{{pregunta.tematica}}</td>
+            </tr>
+            <tr>
+                <td><b>Jurisdicción: </b></td>
+                <td>{{organigramaPorId(pregunta.jurisdiccionNueva).nombreCompleto}}</td>
+            </tr>
+            <tr>
+                <td><b>Eje Temático: </b></td>
+                <td>{{pregunta.eje_tematico.nombre}}</td>
+            </tr>
+            <tr>
+                <td><b>Tema Particular: </b></td>
+                <td>{{pregunta.tema_particular}}</td>
+            </tr>
+            <tr>
+                <td><b>Proyecto: </b></td>
+                <td>{{pregunta.proyecto}}</td>
+            </tr>
+            <tr>
+                <td><b>Estado: </b></td>
+                <td>{{pregunta.estado.nombre}}</td>
+            </tr>
+        </table>
+        <hr>
+	</div>
+	<div class="row-fluid" ng-show="!preguntas.length">
+		No hay ninguna pregunta
+	</div>
+</div>

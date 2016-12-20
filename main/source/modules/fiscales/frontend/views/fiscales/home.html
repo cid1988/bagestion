@@ -1,0 +1,43 @@
+<div class="container">
+    <div class="row">
+        <div ng-controller="FiscalesEventoCtrl" class="card span12">
+          <h3 class="card-heading simple">Fiscales - Eventos</h3>
+          <div class="card-body">
+            <div style="font-size: 18px;padding-top: 4px;padding-bottom: 4px;margin-bottom: 30px;margin-left: 22px;"><span class="span4">Evento</span><span class="span5">Territorio</span></div>
+            <hr style="margin-bottom: 0px;">
+            <ul class="nav nav-list">
+              <li ng-repeat="p in eventos">
+                <a style="font-size: 18px;padding-top: 8px;padding-bottom: 8px;" href="/fiscales/{{p._id}}">
+                <span class="span4">{{p.evento}}</span><span class="span5">{{p.territorio}}</span></a>
+              </li>
+              <li ng-if="!eventos.length" class="text-center">
+                <em>No hay eventos definidos aún</em>
+              </li>
+            </ul>
+          </div>
+            
+            <div class="card-actions text-center">
+              <a href="#" ng-click="nuevoEvento(false)" class="btn btn-primary">Crear evento</a>
+            </div>
+            
+            <div id="modalEvento" class="modal hide fade">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h3>Nuevo Evento</h3>
+                </div>
+                <div class="modal-body">
+                    <span style="display: inline-block"> Evento:<br />
+                        <input class="span4" type="text" ng-model="nuevo.evento" />
+                    </span><br>
+                    <span style="display: inline-block"> Territorio:<br />
+                        <input class="span4" type="text" ng-model="nuevo.territorio" />
+                    </span>
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="btn pull-right" data-dismiss="modal">Cerrar</a>
+                    <a class="btn btn-info pull-right" data-dismiss="modal" href="#" ng-click="nuevoEvento(true)" style="margin-right: 10px;">Guardar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

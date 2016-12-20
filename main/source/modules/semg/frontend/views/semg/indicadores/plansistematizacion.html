@@ -1,0 +1,77 @@
+<style>
+    .table {
+        border: 0;
+    }
+    .table th, .table td {
+        padding: 6px;
+        line-height: 20px;
+        text-align: left;
+        border: 0;
+        vertical-align: middle;
+    }
+    .table th {
+        background-color: #dddddd !important;
+    }
+</style>
+<div class="card body" style="margin-top: 0px;padding-top: 0px;" ng-controller="IndicadorSEMGPlanSistematizacionCtrl">
+    <div style="margin-bottom: 0px">
+        <ul class="breadcrumb" style="margin-bottom: 0px;">
+          <li><a href="/semg/indicadores/{{anio}}" style="color:#404040;">Matriz de Indicadores {{anio}}</a> <span class="divider">/</span></li>
+          <li class="active">Plan de Sistematización de Datos - {{organigramaPorId(plan.dependencia).nombreCompleto}}</li>
+        </ul>
+    </div>
+    <a ng-click="modificar()" class="btn btn-link pull-right" ng-hide="editando" ng-if="(hasPermission('semg.editar') || hasPermission('semg.editarJurisdiccion'))" style="margin-right: 20px;" ><i class="icon-edit"></i> Editar</a>
+    <a ng-click="guardar()" href="/semg/indicadores/{{anio}}" class="btn btn-link pull-right" ng-show="editando" style="margin-right: 20px;"><i class="icon-ok icon-white"></i> Guardar</a>
+    
+    <h3 class="card-heading simple">
+        Plan de Sistematización de Datos - {{organigramaPorId(plan.dependencia).nombreCompleto}}
+    </h3>
+    
+    <div class="card-body">
+        <h4>En SEMG consideramos esencial que los indicadores de desempeño ministerial/calidad de los servicios  (poner esto según corresponda) estén sustentados por una recolección, un almacenamiento y un calculo sistematizado y riguroso de los datos que los constituyen.  
+        Por ello, diseñamos este espacio para que puedan identificar aquellos indicadores que son importantes para la evaluación y toma de decisión y que carecen de buenos sistemas informáticos y quisieran incluir en un plan de sistematización de datos.</h4>
+        <div style="margin-bottom: 70px;">
+            <div class="control-group" style="margin-bottom: 5px;display: inline-block;">
+                <div class="controls">
+                    <span class="span3" style="margin-left: 2px;margin-top: 10px;"><b>Indicador</b></span>
+                    <span class="span3" style="margin-left: 10px;margin-top: 10px;"><b>Sistema de registro actual</b></span>
+                    <span class="span3" style="margin-left: 17px;margin-top: 10px;"><b>Características  del sistema a desarrollar</b></span>
+                    <span class="span2" style="margin-left: 17px;margin-top: 10px;"><b>Tiempo estimado que llevaría su desarrollo</b></span>
+                </div>
+            </div>
+            <div class="control-group" style="margin-bottom: 5px;">
+                <div class="controls">
+                    <select ui-select2 class="span3" ng-disabled="!editando" type="text" ng-model="data.indicador" ng-options="i as i for i in indicadoresNombres">
+                        <option ng-disabled="true" value="">Especificar el indicador...</option>
+                    </select>
+                    <input class="span3" ng-disabled="!editando" type="text" ng-model="data.sistema" placeholder="Especificar el Sistema actual.." style="margin-left: 10px; margin-bottom: 22px;" />
+                    <input class="span3" ng-disabled="!editando" type="text" ng-model="data.caracteristicas" placeholder="Especificar las caracteristicas.." style="margin-left: 10px; margin-bottom: 22px;" />
+                    <input class="span2" ng-disabled="!editando" type="text" ng-model="data.tiempoDesarrollo" placeholder="Especificar el tiempo de desarrollo.." style="margin-left: 10px; margin-bottom: 22px;" />
+                    <button class="btn" style="margin-bottom:22px; margin-left: 5px" ng-disabled="!editando" ng-click="plan.indicadores.push(data);data={indicador:'',sistema:'',caracteristicas:'',tiempoDesarrollo:''}"><i class="icon-ok"></i></button>
+                </div>
+            </div>
+            <hr style="border-top: 2px solid #DEDEDE;margin-top: 6px;">
+            <div class="control-group" style="margin-bottom: 0px;">
+                <div class="controls">
+                    <table border="1" class="table table-striped" style="width: 90%;margin-left: 10px;margin-bottom: 0px;">
+                        <tr bgcolor= "#FFFFFF">
+                            <th style="width: 480px;">Indicador</th>
+                            <th>Sistema de registro actual</th>
+                            <th>Características  del sistema a desarrollar</th>
+                            <th>Tiempo estimado que llevaría su desarrollo</th>
+                            <th></th>
+                        </tr> 
+                        <tr ng-repeat="t in plan.indicadores">
+                            <td>{{t.indicador}}</td>
+                            <td>{{t.sistema}}</td>
+                            <td>{{t.caracteristicas}}</td>
+                            <td>{{t.tiempoDesarrollo}}</td>
+                            <td><a class="btn btn-link pull-right" href="#" style="margin-left: 10px" ng-show="editando" ng-click="eliminarListaElem(t, plan.indicadores)"><i class="icon-trash"></i></a></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <a ng-click="guardar()" href="/semg/indicadores/{{anio}}" class="btn btn-info pull-right" ng-show="editando" style="margin-right: 20px;margin-top: 0px;"><i class="icon-ok icon-white"></i> Guardar</a>
+        </div>
+    </div>
+</div>

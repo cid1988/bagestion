@@ -1,0 +1,235 @@
+<style>
+    @media print {
+        body, span, div, table, tr, tbody, tfoot, td, hr, pull-right { 
+            -webkit-print-color-adjust: exact !important;
+        }
+    }
+</style>
+
+<div class="card span12" style="border:0px;padding:20px;" ng-controller="ContratadosBAImprimirCtrl" >
+    <div class="row">
+        <div class="span12" style="margin-left: 0px;">
+            <a href="#" class="btn btn-link pull-right no-print" style="margin-right: 10px;margin-bottom: 0px; margin-top:5px; !important;" ng-click="imprimir()"><i class="icon-print"></i></a>
+            <a href="/contratadosBA/{{contratado._id}}" class="btn btn-link pull-right no-print" style="margin-right: 10px;margin-bottom: 0px; margin-top:5px; !important;"><i class="icon-arrow-left"></i> Volver</a>
+        </div>
+        
+        <div class="span12" align="center" style="margin-bottom: 40px;">
+            <h2>{{contratado.apellido}}&nbsp{{contratado.nombre}}</h2>
+        </div>
+        
+        <h4 class="span12" style="margin-left:3%;!important;">Datos personales</h4>
+        <hr style=" margin-top: 0px;margin-bottom: 10px;border-top-width: 2px;!important;" class="span12">
+        
+        <div class="span12">
+            <form class="form-horizontal" style="margin-bottom: 0px !important;" >
+                <div class="row">
+                    <table style="margin-left:10%; width:100%;" >
+                        <tr>
+                            <td>
+                                <label ng-show="contratado.fechaNacimiento" style="margin-left:15%;"><strong>Fecha de Nacimiento: </strong>{{contratado.fechaNacimiento}}</label>
+                            </td>
+                            <td>
+                                <label ng-show="contratado.estadoCivil" style="margin-left:-15%;"><strong>Estado Civil: </strong>{{contratado.estadoCivil}}</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label ng-show="contratado.tipo || cv.documento" style="margin-left:15%;"><strong>Tipo: </strong>{{contratado.tipo}}&nbsp&nbsp&nbsp&nbsp <strong>Nº Documento: </strong>{{contratado.documento}}</label>
+                            </td>
+                            <td>
+                                <label ng-show="contratado.cuil" style="margin-left:-15%;"><strong>CUIL: </strong>{{contratado.cuil}}</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label ng-show="contratado.numeroTelefono" style="margin-left:15%;"><strong>Telefono fijo: </strong>{{contratado.numeroTelefono}}</label>
+                            </td>
+                            <td>
+                                <label ng-show="contratado.domicilio" style="margin-left:-15%;"><strong>Domicilio: </strong>{{contratado.domicilio}}</label> 
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label ng-show="contratado.numeroCelular" style="margin-left:15%;"><strong>Telefono Celular: </strong>{{contratado.numeroCelular}}</label>
+                            </td>
+                            <td>
+                                <label ng-show="contratado.ciudad" style="margin-left:-15%;"><strong>Ciudad: </strong>{{contratado.ciudad}}</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label ng-show="contratado.email" style="margin-left:15%;"><strong>E-mail: </strong>{{contratado.email}}</label>
+                            </td>
+                            <td>
+                                <label ng-show="contratado.provincia" style="margin-left:-15%;"><strong>Provincia: </strong>{{contratado.provincia}}</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label ng-show="contratado.codigoPostal" style="margin-left:15%;"><strong>Código Postal: </strong>{{contratado.codigoPostal}}</label>
+                            </td>
+                            <td>
+                                <label ng-show="contratado.sexo" style="margin-left:-15%;"><strong>Sexo: </strong>{{contratado.sexo}}</label>                               
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </form>
+        </div>
+         <!-- DATOS PERSONALES FUNCIONANDO NO TOCAR -->
+        <h4 class="span12" style="margin-left:3%;">Información Laboral</h4>
+        <hr style=" margin-top: 0px;margin-bottom: 10px;border-top-width: 2px;" class="span12">
+        <div class="span12">
+            <form class="form-horizontal" style="margin-bottom: 0px !important;" >
+                <div class="row">
+                    <table style="margin-left:10%; width:100%;">
+                        <tr>
+                            <td>
+                                <label ng-show="contratado.fechaIngreso" style="margin-left:15%;"><strong>Fecha de Ingreso: </strong>{{contratado.fechaIngreso}}</label>
+                            </td>
+                            <td>
+                                <label ng-show="contratado.fechaEgreso" style="margin-left:-15%;"><strong>Fecha de Egreso: </strong>{{contratado.fechaEgreso}}</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label ng-show="contratado.fechaIngreso" style="margin-left:15%;"><strong>Antiguedad: </strong>{{calcularAntiguedad(contratado.fechaIngreso, contratado.fechaEgreso)}} años</label>
+                            </td>
+                            <td>
+                                <label ng-show="contratado.motivo" style="margin-left:-15%;"><strong>Motivo: </strong>{{contratado.motivo}}</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label ng-show="contratado.reparticion" style="margin-left:15%;"><strong>Dirección General: </strong>{{organigramaPorId(contratado.reparticion).nombreCompleto}}</label>
+                            </td>
+                            <td>
+                                <label ng-show="contratado.categoria" style="margin-left:-15%;"><strong>Categoría: </strong>{{contratado.categoria}}</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label ng-show="contratado.area" style="margin-left:15%;"><strong>Área: </strong>{{contratado.area}}</label>
+                            </td>
+                            <td>
+                                <label ng-show="contratado.tipoContrato" style="margin-left:-15%;"><strong>Tipo de Contrato: </strong>{{contratado.tipoContrato}}</label>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </form>
+        </div>
+        
+        <!-- DATOS PERSONALES FUNCIONANDO NO TOCAR -->
+        <h4 class="span12" style="margin-left:3%;">Estudios</h4>
+        <hr style=" margin-top: 0px;margin-bottom: 10px;border-top-width: 2px;" class="span12">
+        
+        <div ng-repeat="t in contratado.estudios">
+            <div align="middle" style="display: inline-block; width:30%; vertical-align: top; text-align: right">
+                <label style="margin-left:10%;"><strong>{{t.inicio.substring(3,10)}} - <span ng-show="t.fin=='Al presente'">Al presente</span><span ng-show="t.fin!='Al presente'">{{t.fin.substring(3,10)}}</span></strong></label>
+            </div>
+            <div style=" display: inline-block; margin-left:15px; width:50%;"align="left">
+                <label align="left" style="clear:left" ng-hide="t.otroNivelProfesional"><strong>Nivel Profesional: </strong>{{t.nivelProfesional}}</label>
+                <label align="left" style="clear:left" ng-show="t.otroNivelProfesional"><strong>Nivel Profesional: </strong>{{t.otroNivelProfesional}}</label>
+                <label align="left" style="clear:left" ><strong>Titulo: </strong>{{t.titulo}}</label>
+                <label align="left" style="clear:left" ><strong>Pais: </strong>{{t.pais}}</label>
+                <label align="left" style="clear:left" ><strong>Estado: </strong>{{t.estadoNivelProfesional}}</label>
+                <label align="left" style="clear:left" ><strong>Nombre Instituto: </strong>{{t.nombreInstituto}}</label>
+            </div>
+            <hr style=" margin-top: 0px;margin-bottom: 10px;border-top-width: 1px; margin-left:-3%;" class="span12">
+        </div>
+        
+        
+        <div ng-show="contratado.idiomas">
+            <div align="middle" style="display: inline-block; width:30%; vertical-align: top; text-align: right">
+                <label><strong>Idiomas: </strong></label>
+            </div>
+            <div style=" display: inline-block; margin-left:15px; width:50%;"align="left">
+                <form class="form-horizontal" style="margin-bottom: 0px !important;">
+                    <label ng-repeat="t in contratado.idiomas" align="left" style="clear:left"><strong>{{t.idioma}}: </strong>{{t.nivelAprendizaje}}</label>
+                </form>
+            </div>
+        </div>
+    
+        <hr style=" margin-top: 0px;margin-bottom: 10px;border-top-width: 2px; " class="span12" ng-show="contratado.sistemas">
+        <div ng-show="contratado.sistemas">
+            <div align="middle" style="display: inline-block; width:30%; vertical-align: top; text-align: right">
+                <label><strong>Informatica: </strong></label>
+            </div>
+            <div style=" display: inline-block; margin-left:15px; width:50%;"align="left">
+                <form class="form-horizontal" style="margin-bottom: 0px !important;">
+                    <div ng-repeat="t in contratado.sistemas" style="margin-top:0px; margin-bottom:0px;">
+                        <label ng-show="t.otroSistema"  align="left" style="clear:left"><strong>{{t.otroSistema}}: </strong>{{t.nivelAprendizaje}}</label>
+                        <label ng-hide="t.otroSistema"  align="left" style="clear:left"><strong>{{t.sistema}}: </strong>{{t.nivelAprendizaje}}</label>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- HASTA ACA TODO BIEN NO TOCAR -->
+        
+        <h4 class="span12" style="margin-left:3%;" ng-show="contratado.experiencias">Experiencias</h4>
+        <hr style=" margin-top: 0px;margin-bottom: 10px;border-top-width: 2px;" class="span12">
+        
+        <div ng-repeat="t in contratado.experiencias" ng-show="contratado.experiencias" class="span12">
+            <div align="middle" style="display: inline-block; width:30%; vertical-align: top; text-align: right">
+               <label><strong>{{t.desde.substring(3,10)}} - <span ng-show="t.hasta=='Al presente'">Al presente</span><span ng-show="t.hasta!='Al presente'">{{t.hasta.substring(3,10)}}</span></strong></label>
+            </div>
+            <div style=" display: inline-block; margin-left:15px; width:50%;"align="left">
+                <label><strong>Empresa: </strong>{{t.empresa}}</label>
+                <label><strong>Puesto: </strong>{{t.puesto}}</label>
+                <label><strong>Pais: </strong>{{t.pais}}</label>
+                <label><strong>Area / Rubro: </strong>{{t.area}}</label>
+                <label><strong>Personas a Cargo: </strong>{{t.personasACargo}}</label>
+            </div>
+            <hr style=" margin-top: 0px;margin-bottom: 10px;border-top-width: 1px; margin-left:-3%;" class="span12">
+        </div>
+        <!-- HASTA ACA TODO BIEN NO TOCAR -->
+        
+        <div class="span12" ng-show="contratado.otrasExperiencias">
+            <div class="span5" >
+                <label><strong>Conocimientos Adicionales: </strong></label>
+            </div>
+            <div style=" margin-left:15px; width:98%;"align="left" class="span6">
+                <div class="form-group">
+                    <label>{{contratado.otrasExperiencias}}</label>
+                </div>
+            </div>
+        </div>
+        
+        <h4 class="span12" style="margin-left:3%;">Información de Emergencia</h4>
+        <hr style=" margin-top: 0px;margin-bottom: 10px;border-top-width: 2px;" class="span12">
+        <div class="span12">
+            <form class="form-horizontal" style="margin-bottom: 0px !important;" >
+                <div class="row">
+                    <table style="margin-left:10%; width:100%;" >
+                        <tr>
+                            <td>
+                                <label ng-show="contratado.obraSocial" style="margin-left:15%;"><strong>Obra socia/Prepaga: </strong>{{contratado.obraSocial}}</label>
+                            </td>
+                            <td>
+                                <label ng-show="contratado.nroSocio" style="margin-left:-15%;"><strong>Nro. de Socio: </strong>{{contratado.nroSocio}}</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <h4 style="margin-left:15%;">En caso de emergencia llamar a: </h4>
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="span6 " style="margin-left:30%;">
+                        <label ng-show="contratado.emergenciaNyA"><strong>Nombre y Apellido: </strong>{{contratado.emergenciaNyA}}</label>
+                        <label ng-show="contratado.emergenciaVinculo"><strong>Vinculo: </strong>{{contratado.emergenciaVinculo}}</label>
+                        <label ng-show="contratado.emergenciaTel"><strong>Número de Teléfono: </strong>{{contratado.emergenciaTel}}</label>    
+                    </div>
+                    
+                </div>
+            </form>
+        </div>
+        
+    </div>
+</div>
+
+
+
+
+

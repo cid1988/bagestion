@@ -1,0 +1,38 @@
+<div ng-controller="CRMNuevoReporteCtrl">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>Crear Nuevo Reporte</h3>
+    </div>
+    <div class="modal-body" style="height: 400px;">
+        <span style="display: inline-block"> Nombre:
+            <input class="span3" type="text" ng-model="reporte.nombre" />
+        </span>
+        <h4>Filtros
+            <div class="pull-right">Contactos: {{contactos.length}}</div></h4>
+        <span style="display: inline-block"> Sexo:<br />
+            <div class="control-group" style="margin-bottom: 8px">
+                <select ui-select2 ng-model="reporte.sexo" style="padding-left: 26px; padding-right: 26px">
+                    <option value=""></option>
+                    <option value="M">Masculino</option>
+                    <option value="F">Femenino</option>
+                </select>
+            </div>
+        </span>
+        <span style="display: inline-block;margin-left: 50px;"> Pertenece al gobierno:<br />
+            <div class="btn-group" data-toggle="buttons-radio" style="margin-left: 0px; margin-bottom: 0px; margin-right: 0px;">
+                <button class="btn" ng-class="(reporte.enGobierno == 'si') && 'active btn-info'" ng-click="reporte.enGobierno='si'">Si</button>
+                <button class="btn" ng-class="(reporte.enGobierno == 'no') && 'active btn-info'" ng-click="reporte.enGobierno='no'">No</button>
+            </div>
+        </span><br>
+        <span style="display: inline-block;"> Afiliado a algun partido:<br />
+            <div class="btn-group" data-toggle="buttons-radio" style="margin-left: 0px; margin-bottom: 0px; margin-right: 0px;">
+                <button class="btn" ng-class="(reporte.afiliado == 'si') && 'active btn-info'" ng-click="reporte.afiliado='si'">Si</button>
+                <button class="btn" ng-class="(reporte.afiliado == 'no') && 'active btn-info'" ng-click="reporte.afiliado='no'">No</button>
+            </div>
+        </span>
+    </div>
+    <div class="modal-footer pull-right">
+        <a href="#" class="btn btn-info" data-dismiss="modal" ng-click="crearReporte()">Crear</a>
+        <a href="#" class="btn" data-dismiss="modal">Cerrar</a>
+    </div>
+</div>

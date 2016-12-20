@@ -1,0 +1,422 @@
+<style type="text/css">
+    .botonera{
+      border-radius: 1em;
+      padding: 1em;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin-right: -50%;
+      transform: translate(-50%, -50%) 
+   }
+    h2{
+        text-align: center;
+    }
+
+    .botones{
+        font-weight: normal;
+        height:auto !important;
+    }
+    .center {
+        text-align:center
+    }
+    #fondo{
+        background-color: #E0E0E0;
+        margin: 10% auto;
+        width: 80%;
+        padding: 10px;
+        box-shadow: 0 27px 55px 0 rgba(0, 0, 0, 0.3), 0 17px 17px 0 rgba(0, 0, 0, 0.15);
+    }
+    .sinMG *{
+        margin:0 !important;
+    }
+</style>
+<div ng-if="hasPermission('semg')">
+    <script type="text/javascript">
+        $(document).ready(function() { $("#e1").select2(); });
+        $(document).ready(function () {
+            $(function () {
+                $("table").stickyTableHeaders();
+            });
+          
+            (function ($, window, undefined) {
+          'use strict';
+      
+          var name = 'stickyTableHeaders',
+              id = 0,
+              defaults = {
+                  fixedOffset: 0,
+                  leftOffset: 0,
+                  marginTop: 0,
+                  scrollableArea: window
+              };
+      
+          function Plugin(el, options) {
+              // To avoid scope issues, use 'base' instead of 'this'
+              // to reference this class from internal events and functions.
+              var base = this;
+      
+              // Access to jQuery and DOM versions of element
+              base.$el = $(el);
+              base.el = el;
+              base.id = id++;
+              base.$window = $(window);
+              base.$document = $(document);
+      
+              // Listen for destroyed, call teardown
+              base.$el.bind('destroyed',
+              $.proxy(base.teardown, base));
+      
+              // Cache DOM refs for performance reasons
+              base.$clonedHeader = null;
+              base.$originalHeader = null;
+      
+              // Keep track of state
+              base.isSticky = false;
+              base.hasBeenSticky = false;
+              base.leftOffset = null;
+              base.topOffset = null;
+      
+              base.init = function () {
+                  base.$el.each(function () {
+                      var $this = $(this);
+      
+                      // remove padding on <table> to fix issue #7
+                      $this.css('padding', 0);
+      
+                      base.$originalHeader = $('thead:first', this);
+                      base.$clonedHeader = base.$originalHeader.clone();
+                      $this.trigger('clonedHeader.' + name, [base.$clonedHeader]);
+      
+                      base.$clonedHeader.addClass('tableFloatingHeader');
+                      base.$clonedHeader.css('display', 'none');
+      
+                      base.$originalHeader.addClass('tableFloatingHeaderOriginal');
+      
+                      base.$originalHeader.after(base.$clonedHeader);
+      
+                      base.$printStyle = $('<style type="text/css" media="print">' +
+                          '.tableFloatingHeader{display:none !important;}' +
+                          '.tableFloatingHeaderOriginal{position:static !important;}' +
+                          '</style>');
+                      $('head').append(base.$printStyle);
+                  });
+      
+                  base.setOptions(options);
+                  base.updateWidth();
+                  base.toggleHeaders();
+                  base.bind();
+              };
+      
+              base.destroy = function () {
+                  base.$el.unbind('destroyed', base.teardown);
+                  base.teardown();
+              };
+      
+              base.teardown = function () {
+                  if (base.isSticky) {
+                      base.$originalHeader.css('position', 'static');
+                  }
+                  $.removeData(base.el, 'plugin_' + name);
+                  base.unbind();
+      
+                  base.$clonedHeader.remove();
+                  base.$originalHeader.removeClass('tableFloatingHeaderOriginal');
+                  base.$originalHeader.css('visibility', 'visible');
+                  base.$printStyle.remove();
+      
+                  base.el = null;
+                  base.$el = null;
+              };
+      
+              base.bind = function () {
+                  base.$scrollableArea.on('scroll.' + name, base.toggleHeaders);
+                  if (!base.isWindowScrolling) {
+                      base.$window.on('scroll.' + name + base.id, base.setPositionValues);
+                      base.$window.on('resize.' + name + base.id, base.toggleHeaders);
+                  }
+                  base.$scrollableArea.on('resize.' + name, base.toggleHeaders);
+                  base.$scrollableArea.on('resize.' + name, base.updateWidth);
+              };
+      
+              base.unbind = function () {
+                  // unbind window events by specifying handle so we don't remove too much
+                  base.$scrollableArea.off('.' + name, base.toggleHeaders);
+                  if (!base.isWindowScrolling) {
+                      base.$window.off('.' + name + base.id, base.setPositionValues);
+                      base.$window.off('.' + name + base.id, base.toggleHeaders);
+                  }
+                  base.$scrollableArea.off('.' + name, base.updateWidth);
+              };
+      
+              base.toggleHeaders = function () {
+                  if (base.$el) {
+                      base.$el.each(function () {
+                          var $this = $(this),
+                              newLeft,
+                              newTopOffset = base.isWindowScrolling ? (
+                              isNaN(base.options.fixedOffset) ? base.options.fixedOffset.outerHeight() : base.options.fixedOffset) : base.$scrollableArea.offset().top + (!isNaN(base.options.fixedOffset) ? base.options.fixedOffset : 0),
+                              offset = $this.offset(),
+      
+                              scrollTop = base.$scrollableArea.scrollTop() + newTopOffset,
+                              scrollLeft = base.$scrollableArea.scrollLeft(),
+      
+                              scrolledPastTop = base.isWindowScrolling ? scrollTop > offset.top : newTopOffset > offset.top,
+                              notScrolledPastBottom = (base.isWindowScrolling ? scrollTop : 0) < (offset.top + $this.height() - base.$clonedHeader.height() - (base.isWindowScrolling ? 0 : newTopOffset));
+      
+                          if (scrolledPastTop && notScrolledPastBottom) {
+                              newLeft = offset.left - scrollLeft + base.options.leftOffset;
+                              base.$originalHeader.css({
+                                  'position': 'fixed',
+                                      'margin-top': base.options.marginTop,
+                                      'left': newLeft,
+                                      'z-index': 3 // #18: opacity bug
+                              });
+                              base.leftOffset = newLeft;
+                              base.topOffset = newTopOffset;
+                              base.$clonedHeader.css('display', '');
+                              if (!base.isSticky) {
+                                  base.isSticky = true;
+                                  // make sure the width is correct: the user might have resized the browser while in static mode
+                                  base.updateWidth();
+                              }
+                              base.setPositionValues();
+                          } else if (base.isSticky) {
+                              base.$originalHeader.css('position', 'static');
+                              base.$clonedHeader.css('display', 'none');
+                              base.isSticky = false;
+                              base.resetWidth($('td,th', base.$clonedHeader), $('td,th', base.$originalHeader));
+                          }
+                      });
+                  }
+              };
+      
+              base.setPositionValues = function () {
+                  var winScrollTop = base.$window.scrollTop(),
+                      winScrollLeft = base.$window.scrollLeft();
+                  if (!base.isSticky || winScrollTop < 0 || winScrollTop + base.$window.height() > base.$document.height() || winScrollLeft < 0 || winScrollLeft + base.$window.width() > base.$document.width()) {
+                      return;
+                  }
+                  base.$originalHeader.css({
+                      'top': base.topOffset - (base.isWindowScrolling ? 0 : winScrollTop),
+                          'left': base.leftOffset - (base.isWindowScrolling ? 0 : winScrollLeft)
+                  });
+              };
+      
+              base.updateWidth = function () {
+                  if (!base.isSticky) {
+                      return;
+                  }
+                  // Copy cell widths from clone
+                  if (!base.$originalHeaderCells) {
+                      base.$originalHeaderCells = $('th,td', base.$originalHeader);
+                  }
+                  if (!base.$clonedHeaderCells) {
+                      base.$clonedHeaderCells = $('th,td', base.$clonedHeader);
+                  }
+                  var cellWidths = base.getWidth(base.$clonedHeaderCells);
+                  base.setWidth(cellWidths, base.$clonedHeaderCells, base.$originalHeaderCells);
+      
+                  // Copy row width from whole table
+                  base.$originalHeader.css('width', base.$clonedHeader.width());
+              };
+      
+              base.getWidth = function ($clonedHeaders) {
+                  var widths = [];
+                  $clonedHeaders.each(function (index) {
+                      var width, $this = $(this);
+      
+                      if ($this.css('box-sizing') === 'border-box') {
+                          width = $this[0].getBoundingClientRect().width; // #39: border-box bug
+                      } else {
+                          var $origTh = $('th', base.$originalHeader);
+                          if ($origTh.css('border-collapse') === 'collapse') {
+                              if (window.getComputedStyle) {
+                                  width = parseFloat(window.getComputedStyle(this, null).width);
+                              } else {
+                                  // ie8 only
+                                  var leftPadding = parseFloat($this.css('padding-left'));
+                                  var rightPadding = parseFloat($this.css('padding-right'));
+                                  // Needs more investigation - this is assuming constant border around this cell and it's neighbours.
+                                  var border = parseFloat($this.css('border-width'));
+                                  width = $this.outerWidth() - leftPadding - rightPadding - border;
+                              }
+                          } else {
+                              width = $this.width();
+                          }
+                      }
+      
+                      widths[index] = width;
+                  });
+                  return widths;
+              };
+      
+              base.setWidth = function (widths, $clonedHeaders, $origHeaders) {
+                  $clonedHeaders.each(function (index) {
+                      var width = widths[index];
+                      $origHeaders.eq(index).css({
+                          'min-width': width,
+                              'max-width': width
+                      });
+                  });
+              };
+      
+              base.resetWidth = function ($clonedHeaders, $origHeaders) {
+                  $clonedHeaders.each(function (index) {
+                      var $this = $(this);
+                      $origHeaders.eq(index).css({
+                          'min-width': $this.css('min-width'),
+                              'max-width': $this.css('max-width')
+                      });
+                  });
+              };
+      
+              base.setOptions = function (options) {
+                  base.options = $.extend({}, defaults, options);
+                  base.$scrollableArea = $(base.options.scrollableArea);
+                  base.isWindowScrolling = base.$scrollableArea[0] === window;
+              };
+      
+              base.updateOptions = function (options) {
+                  base.setOptions(options);
+                  // scrollableArea might have changed
+                  base.unbind();
+                  base.bind();
+                  base.updateWidth();
+                  base.toggleHeaders();
+              };
+      
+              // Run initializer
+              base.init();
+          }
+      
+          // A plugin wrapper around the constructor,
+          // preventing against multiple instantiations
+          $.fn[name] = function (options) {
+              return this.each(function () {
+                  var instance = $.data(this, 'plugin_' + name);
+                  if (instance) {
+                      if (typeof options === 'string') {
+                          instance[options].apply(instance);
+                      } else {
+                          instance.updateOptions(options);
+                      }
+                  } else if (options !== 'destroy') {
+                      $.data(this, 'plugin_' + name, new Plugin(this, options));
+                  }
+              });
+          };
+      
+      })(jQuery, window);
+        });
+    </script>
+    
+    <!--PERMISO EDICION JURISDICCION-->
+
+    <div id="fondo">
+        <!--Titulo-->
+        <div>
+            <h3 class="center">
+                Sistema de Monitoreo y Evaluación <br>
+                de Indicadores de la Gestión Ministerial
+            </h3>
+        </div>
+        
+        <!--BOTONERA MATRICES-->
+        <div class="container">
+            <div class="row">
+                <div class="span12">
+                        <div class="sinMG" style="width: 370px;margin: auto;">
+                            <div class="span pull-left">
+                                <div class="btn-group">
+                                    <button class="btn btn-large" style="width:140px">Matrices</button>
+                                    <button class="btn btn-large dropdown-toggle" data-toggle="dropdown" style="width:25px">
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a tabindex="-1" ng-if="hasPermission('semg.verJurisdiccion')" ng-controller="NavBarSEMGCtrl" tabindex="-1" href="/semg/indicadores/2016?filtro={{user.jurisdiccion}}">Formulación de Matriz de Indicadores 2016</a></li>
+                                        <li><a tabindex="-1" ng-if="hasPermission('semg.verSecretaria')" href="/semg/matrizIndicadores/2016">Formulación de Matriz de Indicadores 2016</a></li>
+                                        <li><a tabindex="-1" ng-if="hasPermission('semg.verJurisdiccion')" ng-controller="NavBarSEMGCtrl" tabindex="-1" href="/semg/matrizMonitoreo/2016?filtro={{user.jurisdiccion}}">Matriz de Monitoreo 2016</a></li>
+                                        <li><a tabindex="-1" ng-if="hasPermission('semg.verSecretaria')" href="/semg/matrizMonitoreo/2016">Matriz de Monitoreo 2016</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                                
+                            <div class="span pull-right">
+                                <div class="btn-group">
+                                    <button class="btn btn-large" style="width:140px">Informes</button>
+                                    <button class="btn btn-large dropdown-toggle" data-toggle="dropdown" style="width:25px">
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="/semg/constru">Informe de Monitoreo 2016</a></li>
+                                        <li><a href="/semg/constru">Informe de Autoevaluación 2016</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
+                <div class="span12" style="margin-top:15px">
+                        <div style="width: 370px;margin: auto;">
+                            <a class="btn btn-large botones input-block-level" target="_blank" href="file/Guia_para_la_elaboracion_de_la_Matriz_de_Indicadores_2016.pdf">
+                                <div>Guía para la elaboración <br>de la <br>Matriz de Indicadores 2016</div>
+                            </a>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <!--
+    <div ng-if="hasPermission('semg.edicionSecretaria')"  ng-include src="'/views/semg/indicadores/index.html'"></div>
+    -->
+</div>
+<!--
+    <style>
+        .table {
+            border: 0;
+        }
+        .table th, .table td {
+            padding: 8px;
+            line-height: 20px;
+            text-align: left;
+            vertical-align: middle;
+            border: 0;
+        }
+        .table th {
+            background-color: #dddddd !important;
+        }
+    </style>
+    
+    <div class="card">
+        <div class="card-body" style="margin-top: 10px; margin-bottom: 50px;">
+            <table>
+                <tr>
+                    <td style="text-align: justify;padding-right: 40px;border-right: solid 1px #bebebe;">
+                        <h3 style="margin-top: 0px;margin-bottom: 0px;color: #777;">SEMG - Presentacion:</h3>
+                        <hr style="margin-top: 0px; margin-bottom: 10px;">
+                        Estimados funcionarios,
+                        <br><br><span style="margin-right: 50px;"> </span>El Sistema de Monitoreo y Evaluación de la Gestión Ministerial y de la Calidad de los Servicios (SEMG) constituye un componente central de la gestión por resultados, ya que incorpora los procesos de establecimiento, seguimiento y evaluación permanente de indicadores de las jurisdicciones. Su fin principal es reforzar una cultura de reflexión, evaluación y rendición de cuentas que nos permita lograr la mejora continua de la gestión.
+                        <br><br><span style="margin-right: 50px;"> </span>En esa dirección, la sensibilización de empleados y funcionarios del gobierno sobre la importancia del monitoreo y la evaluación, las diferentes herramientas que existen y cómo éstas deben ser utilizadas para mejorar la toma de decisiones es fundamental. 
+                        <br><br><span style="margin-right: 50px;"> </span>Por eso, la Subsecretaria de Planeamiento y Control de Gestión (SSPLyCG) a través de la Dirección General de Planeamiento Estratégico (DGPLE) lanzó Guías para la elaboración de Matriz de Indicadores y Cartas Compromiso, junto con Seminarios en Monitoreo y Evaluación, a fin de apoyar y acompañar a los diferentes actores encargados de llevar a cabo dicha tarea en las distintas jurisdicciones. 
+                        <br><br><span style="margin-right: 50px;"> </span>Asimismo, en pos de institucionalizar el Sistema y promover un uso dinámico de la información la DGPLE creó éste Módulo de Monitoreo y Evaluación en el Tablero de Control para que todas las herramientas del SEMG (Matriz de Indicadores, Cartas Compromiso, Formulario de Monitoreo y Formulario de Autoevaluación) estén unificadas en un mismo sistema.
+                        <br><br><span style="margin-right: 50px;"> </span>Todos somos protagonistas en este proceso de cambio que estamos impulsando para seguir mejorando el impacto y calidad de las políticas y servicios públicos.
+                        <br><br><span style="margin-right: 50px;"> </span>Muchas gracias por su compromiso y colaboración para poder lograrlo.
+                        <center><img src="/views/semg/firmas.gif" /></center>
+                    </td>
+                    <td style="vertical-align: initial;">
+                        <h3 style="margin-top: 0px;margin-bottom: 0px;margin-left: 10px;color: #777;">Herramientas:</h3>
+                        <hr style="margin-top: 0px; margin-bottom: 10px;">
+                        <center>
+                            <a class="btn btn-large" href="/file/SEMG_Guia_para_la_elaboracion_de_la_Matriz_de_Indicadores.Mayo_2015.pdf" target="_blank" style="height: 90px;width: 110px;font-size: inherit;line-height: inherit;margin-top: 10px;"><center style="margin-bottom: 7px;"><img src="/views/semg/pdf_icono.png" /></center>Guia Matriz de Indicadores</a>
+                            <a class="btn btn-large" href="/file/SEMG_Guia_para_la_elaboracion_de_Cartas_Compromiso_Mayo_2015.pdf" target="_blank" style="height: 90px;width: 110px;font-size: inherit;line-height: inherit;"><center style="margin-bottom: 7px;"><img src="/views/semg/pdf_icono.png" /></center>Guia Cartas Compromiso</a>
+                            <a class="btn btn-large" href="/file/Politica._Abril_2015._Sistema_de_Monitoreo_y_Evaluacion_de_la_Gestion_Ministerial_y_la_Calidad_de_los_Servicios.pdf" target="_blank" style="height: 110px;width: 110px;font-size: inherit;line-height: inherit;"><center style="margin-bottom: 7px;"><img src="/views/semg/pdf_icono.png" /></center>Politica - Sistema de Monitoreo y Evaluacion</a>
+                        </center>
+                        <p style="text-align: right;font-size: x-small;margin-top: 20px;margin-left: 5px;">
+                            Nuestro equipo está a disposición para sugerencias y consultas.<br>Contactarse con: Antonella Guidoccio,<br>Gerente Operativa DGPLE,<br>aguidoccio@buenosaires.gob.ar<br>5091-7200 Int.7238.
+                        </p>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+-->

@@ -1,0 +1,145 @@
+<script>
+    $(document).ready(function() { $("#e1").select2(); });
+    $(document).ready(function() { $("#e2").select2(); });
+    $(document).ready(function() { $("#e3").select2(); });
+    $(document).ready(function() { $("#e4").select2(); });
+    $(document).ready(function() { $("#e5").select2(); });
+    $(document).ready(function() { $("#e7").select2(); });
+</script>
+<div class="card body" style="margin-top: 0px;padding-top: 0px;" ng-controller="DJAIDetalleCtrl">
+    <div style="margin-bottom: 0px">
+        <ul class="breadcrumb" style="margin-bottom: 0px;">
+          <li><a href="/djais" style="color:#404040;">DJAI´s</a> <span class="divider">/</span></li>
+          <li class="active">Detalle</li>
+        </ul>
+    </div>
+    <h2 style="margin-top: 15px; margin-left: 15px; margin-bottom: 0px;">Detalle DJAI
+        <a ng-click="editando=true" class="btn btn-link pull-right" ng-hide="editando" style="margin-right: 20px;" ><i class="icon-edit"></i></a>
+        <a ng-click="guardar()" href="/djais" class="btn btn-link pull-right" ng-show="editando" style="margin-right: 20px;"><i class="icon-ok icon-white"></i></a>
+        <a ng-click="eliminar(false)" class="btn btn-link pull-right" ng-show="editando" style="margin-right: 20px;"><i class="icon-trash icon-white"></i></a>
+    </h2>
+    <hr style="margin-top: 8px;margin-bottom: 20px;border-top-width: 5px;border-bottom-width: 1px;">
+    <div class="card-body" ng-init="miTotal = 0" style="margin-top: 0px;margin-bottom: 10px;">
+        <div class="row" style="padding-bottom: 0px;">
+            <form class="form-horizontal" style="margin-bottom: 0px !important;">
+                <div class="control-group" style="margin-left: 50px;margin-bottom: 0px;">
+            		<div class="control-group">
+                        <label class="control-label">Numero:</label>
+                        <div class="controls">
+                            <input class="span3" type="text" placeholder="Sin numero" ng-disabled="!editando" ng-model="djai.numero" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Detalle:</label>
+                        <div class="controls">
+                            <input class="span6" type="text" ng-disabled="!editando" placeholder="Sin detalle" ng-model="djai.detalle" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Monto:</label>
+                        <div class="controls">
+                            <input class="span6" type="text" ng-disabled="!editando" placeholder="Sin monto" ng-model="djai.monto" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Moneda:</label>
+                        <div class="controls">
+                            <select class="span3" id="e1" ng-disabled="!editando" type="text" ng-model="djai.moneda">
+                                <option ng-disabled="true" value="">{{djai.moneda}}</option>
+                                <option value="EUR">EUR</option>
+                                <option value="USD">USD</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Proveedor:</label>
+                        <div class="controls">
+                            <input class="span6" type="text" ng-disabled="!editando" placeholder="Sin proveedor" ng-model="djai.proveedor" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Necesidad:</label>
+                        <div class="controls">
+                            <select class="span3" id="e2" ng-disabled="!editando" type="text" ng-model="djai.necesidad">
+                                <option ng-disabled="true" value="">{{djai.necesidad}}</option>
+                                <option value="Giro de Divisas">Giro de Divisas</option>
+                                <option value="Sin Giro de Divisas">Sin Giro de Divisas</option>
+                                <option value="Para Certificación de Importación de Bienes Usados">Para Certificación de Importación de Bienes Usados</option>
+                                <option value="Para Nacionalización - Pagos Realizados">Para Nacionalización - Pagos Realizados</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Titular:</label>
+                        <div class="controls">
+                            <input class="span6" type="text" ng-disabled="!editando" placeholder="Sin titular" ng-model="djai.titular" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Prioridad:</label>
+                        <div class="controls">
+                            <select class="span3" id="e3" ng-disabled="!editando" type="text" ng-model="djai.prioridad">
+                                <option ng-disabled="true" value="">{{djai.prioridad}}</option>
+                                <option value="A+">A+</option>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group" style="margin-bottom: 5px;">
+                        <label class="control-label">Temas:</label>
+                        <div class="controls">
+                            <select id="e7" class="span6" ng-disabled="!editando" type="text" ng-model="dataTema" ng-options="i._id as i.nombre for i in temas | filter: mostrarTema">
+                                <option ng-disabled="true" value=""></option>
+                            </select>
+                            <button class="btn" style="margin-bottom:10px; margin-left: 5px" ng-disabled="!editando" ng-click="agregarTema(dataTema)"><i class="icon-plus"></i></button>
+                        </div>
+                    </div>
+                    
+                    <div class="control-group" ng-repeat="t in djai.temas" style="margin-bottom: 0px;">
+                        <div class="controls">
+                            <input class="span6" type="text" ng-disabled="true" value="{{temaPorId(t).nombre}}" />
+                            <a href="#" style="margin-left: 10px" ng-show="editando" ng-click="eliminarListaElem(t, djai.temas)"><i class="icon-trash"></i></a>
+                        </div>
+                    </div>
+                    <div class="span7" style="margin-left: 80px;margin-top: 20px;">
+                        <h4>Comentarios
+                        <div class="card-actions pull-right" style="margin: 0; padding: 0">
+                            <a class="btn btn-link" ng-click="agregarComen()" ng-if="editando"><i class="icon-plus"></i></a>
+                        </div></h4>
+                        <div class="card-body">
+                            <div ng-hide="djai.comentarios.length">No se ha cargardo ningun comentario aún</div>
+                            <div ng-repeat="o in reverse(djai.comentarios)"
+                            style="clear:both; min-height: 40px; margin-top: 20px; margin-bottom: 20px" ng-show="djai.comentarios.length">
+                                <div class="pull-right" style="display: inline-block; margin-right: 10px; margin-bottom: 10px">
+                                    <button type="button" ng-click="eliminarElemento(djai.comentarios,o)" style="margin-left: 10px" class="btn btn-danger" ng-if="editando"><i class="icon-trash icon-white"></i> Eliminar</button>
+                                </div>
+                                <span style="display: inline-block"> Cuando:<br /> 
+                                    <input class="span2" type="text" date ng-model="o.cuando" ng-disabled="!editando"/>
+                                </span>
+                                <textarea style="height:100px; width:95%" type="text" ng-disabled="!editando" ng-model="o.descripcion" />
+                                <hr />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+
+    <div id="confirmarEliminar" class="modal hide fade">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3>Eliminar DJAI</h3>
+        </div>
+        <div class="modal-body">
+            <p>Está a un paso de eliminar la DJAI</p>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn btn-info" data-dismiss="modal">Conservar el registro</a>
+            <a href="#" class="btn btn-danger" data-dismiss="modal" ng-click="eliminar(true)">Eliminar</a>
+        </div>
+    </div>
+</div>

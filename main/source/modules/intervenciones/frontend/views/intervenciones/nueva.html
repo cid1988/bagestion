@@ -1,0 +1,91 @@
+<div ng-controller="NuevaIntervencionCtrl">
+    <div class="card span7" style="padding-left: 30px;padding-bottom: 20px;padding-right: 30px">
+        <a ng-click="guardar()" class="btn btn-success pull-right" type="button"><i class="icon-ok icon-white"></i> Guardar</a>
+        <h3 style="margin-top: 0px;">Nueva Intervención</h3>
+        <br />
+        <span style="display: inline-block"> Título:<br /> 
+            <input class="span6" type="text" placeholder="Sin titulo" ng-model="intervencion.titulo" />
+        </span>
+        <div class="control-group span6" style="margin-left: 0px; margin-bottom: 0px; margin-right: 7px; margin-bottom: 10px">
+            <label style="margin-bottom: 1px;">Comuna:</label>
+            <select class="input-block-level" ui-select2 type="text" ng-model="intervencion.comuna" ng-options="i as i.nombre for i in comunas">
+                <option value="">{{intervencion.comuna.nombre}}</option>
+            </select>
+        </div>
+        <div class="control-group">
+            <span style="display: inline-block"> Calle:<br />
+            <div class="controls">
+                <input type="text" style="width: 460px" ng-model="intervencion.calle" placeholder="Calle de la intervencion" data-provide="typeahead" id="calle-typeahead" data-source={{calles}} />
+                <input type="text" style="width: 70px" ng-model="intervencion.altura" placeholder="Nro"/>
+            </div>
+            </span>
+        </div>
+        <span style="display: inline-block"> Categoria:<br /> 
+            <input class="span6" type="text" placeholder="Sin categoria" ng-model="intervencion.categoria" />
+        </span>
+        <span style="display: inline-block"> Plazo:<br /> 
+            <input class="span6" type="text" placeholder="Sin plazo" ng-model="intervencion.plazo" />
+        </span>
+        <span style="display: inline-block"> Monto:<br /> 
+            <input class="span6" type="text" placeholder="Sin monto" ng-model="intervencion.monto" />
+        </span>
+        <div class="control-group  ng-pristine ng-valid ng-valid-required">
+        <span style="display: inline-block; width:695px"> Detalle:<br /> 
+            <div class="controls"><textarea style="width:80%" required="" placeholder="Sin Detalle" type="text" ng-model="intervencion.detalle" name="intervencion.detalle" rows="6" class="ng-pristine ng-valid ng-valid-required"></textarea></div></div>
+        </span>  
+        <h3>Mapa</h3>
+        <div ng-hide="intervencion.mapa">No se ha cargardo ningun mapa aún</div>
+        <img ng-if="intervencion.mapa" src="/file/{{intervencion.mapa}}">
+        <div style="width: 300px" fine-uploader destination="'/upload/'"
+            placeholder="'Subir mapa'" uploaded="uploadedMapa"></div>
+        <h3>Fotos</h3>
+        <div ng-hide="intervencion.fotos.length">No se ha cargardo ninguna foto aún</div>
+        <div ng-if="intervencion.fotos.length" id="myCarousel" class="carousel slide span6">
+            <div class="carousel-inner">
+              <div ng-class="{active : $first}" class="item" ng-repeat="f in intervencion.fotos">
+                <img src="/file/{{f}}" width="100%">
+              </div>
+            </div>
+            <a class="left carousel-control" href="#" data-target="#myCarousel" style="top:47%" data-slide="prev">‹</a>
+        	<a class="right carousel-control" href="#" data-target="#myCarousel" style="top:47%" data-slide="next">›</a>
+        </div>
+        <div style="width: 300px" fine-uploader destination="'/upload/'"
+            placeholder="'Subir foto'" uploaded="uploaded"></div>
+    </div>
+    <div class="card span5"  style="padding-left: 30px;padding-bottom: 20px;padding-right: 30px">
+        <h3>Iniciativas</h3>
+        <div class="control-group span4" style="margin-left: 0px; margin-bottom: 0px; margin-right: 0px; margin-bottom: 10px">
+            <label style="margin-bottom: 1px;">Iniciativas:</label>
+            <select class="input-block-level" ui-select2 type="text" ng-model="data.iniciativa" ng-options="i as i.nombre for i in iniciativas">
+                <option value="">{{data.iniciativa.nombre}}</option>
+            </select>
+            
+        </div>
+        <button class="btn pull-right" data-placement="bottom" style="margin-top: 21px;margin-bottom: 20px;" ng-click="agregarIniciativa()"><i class="icon-plus"></i></button>
+        <div ng-hide="intervencion.iniciativas.length">No se ha adjuntado ninguna iniciativa aún</div>
+        <div ng-repeat="o in intervencion.iniciativas" style="clear:both; min-height: 40px; margin-top: 20px; margin-bottom: 20px">
+            <div class="pull-right" style="display: inline-block; margin-right: 10px; margin-bottom: 10px">
+                <span class="pull-right" style="display: inline-block; margin-right: 40px;"> Nombre:
+                    <input class="span3" type="text" ng-model="o.iniciativa.nombre" ng-disabled="true"/>
+                </span>
+                <span class="pull-right" style="display: inline-block; margin-right: 40px;"> Comuna:
+                    <input class="span3" type="text" ng-model="o.iniciativa.comuna.nombre" ng-disabled="true"/>
+                </span>
+                <span class="pull-right" style="display: inline-block; margin-right: 40px;"> Clase:
+                    <input class="span3" type="text" ng-model="o.iniciativa.clase.nombre" ng-disabled="true"/>
+                </span>
+                <span class="pull-right" style="display: inline-block; margin-right: 40px;"> Plazo:
+                    <input class="span3" type="text" ng-model="o.iniciativa.plazo_completo" ng-disabled="true"/>
+                </span>
+                <span class="pull-right" style="display: inline-block; margin-right: 40px;"> Monto:
+                    <input class="span3" type="text" ng-model="o.iniciativa.monto_base" ng-disabled="true"/>
+                </span>
+                <span class="pull-right" style="display: inline-block; margin-right: 40px;"> Detalle:
+                    <input class="span3" type="text" ng-model="o.iniciativa.detalle" ng-disabled="true"/>
+                </span>
+            </div>
+            <hr style="margin-top:2px; margin-bottom:2px" />
+        </div>
+    </div>
+</div>
+

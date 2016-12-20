@@ -1,0 +1,16 @@
+<style type="text/css">
+    .referencia {
+        list-style-type: none;
+    }
+</style>
+<div ng-controller="AgendaCtrl">
+    <div class="span8">
+        <div class="row-fluid">
+            <div ng-include src="'/views/agenda/calendario/cards/calendario.html'"></div>
+        </div>
+    </div>
+    <div class="span4">
+        <div ng-include src="'/views/agenda/calendario/cards/agendas.html'"></div>
+        <div ng-include src="'/views/agenda/calendario/cards/instancia.html'"></div>
+    </div> 
+</div>

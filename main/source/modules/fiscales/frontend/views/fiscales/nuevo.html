@@ -1,0 +1,68 @@
+<div class="container">
+  <div class="row">
+        <div ng-controller="FiscalesNuevoCtrl" class="card span12">
+            <div class="card-actions pull-right">
+                <div class="btn-group">
+                    <a ng-click="cancelar()" href="/fiscales" class="btn btn-link"><i class="icon-remove"></i></a>
+                    <a ng-click="guardar()" href="/fiscales" title="Guardar y enviar mail" class="btn btn-link"><i class="icon-ok"></i> Guardar</a>
+                </div>
+            </div>
+            
+            <h3 class="card-heading simple">Nuevo fiscal</h3>
+            
+            <div class="card-body" style="margin-bottom: 30px; padding-left: 80px;">
+                <span style="display: inline-block"> Nombre:<br />
+                    <input class="span3" style="width:90%" type="text" ng-model="nuevo.nombre" />
+                </span>
+                <span style="display: inline-block"> Apellido:<br />
+                    <input class="span3" style="width:90%" type="text" ng-model="nuevo.apellido" />
+                </span>
+                <div class="control-group" ng-class="{'error': dniDuplicado2}" style="display: inline-block">
+                    <span style="display: inline-block"> DNI:<br />
+                        <input class="span3" style="width:90%" type="text" ng-model="nuevo.dni" />
+                    </span>
+                    <span style="display: inline-block"> Sexo:<br />
+                        <div class="btn-group" data-toggle="buttons-radio" style="margin-left: 0px; margin-bottom: 0px; margin-right: 0px;">
+                            <button class="btn" ng-class="(nuevo.sexo == 'M') && 'active btn-info'" ng-click="nuevo.sexo='M'" style="margin-bottom: 10px;">Masculino</button>
+                            <button class="btn" ng-class="(nuevo.sexo == 'F') && 'active btn-info'" ng-click="nuevo.sexo='F'" style="margin-bottom: 10px;">Femenino</button>
+                        </div>
+                    </span>
+                    <div class="alert" ng-show="dniDuplicado2 && dniDuplicadoCandidatos2.length < 10">
+                        <p>Por favor verifique que este contacto no esté duplicado.</p>
+                        <ol>
+                            <li ng-repeat="cd in dniDuplicadoCandidatos2">
+                                <a class="btn btn-link" href="/fiscales/detalle/{{cd._id}}" target="_blank">{{cd.apellido}}, {{cd.nombre}} (DNI: {{cd.dni}})</a>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+                <br>
+                <span style="display: inline-block"> Mail Personal:<br />
+                    <input class="span3" style="width:90%;margin-bottom: 0px;" type="text" ng-model="nuevo.mail" />
+                </span>
+                <span style="display: inline-block"> Celular Personal:<br />
+                    <input class="span3" style="width:90%;margin-bottom: 0px;" type="text" ng-model="nuevo.celular" />
+                </span>
+                <span style="display: inline-block"> Domicilio:<br />
+                    <input class="span3" style="width:90%;margin-bottom: 0px;" type="text" ng-model="nuevo.domicilio" />
+                </span>
+                <span style="display: inline-block"> Comuna:<br />
+                    <select ui-select2 type="text" ng-model="nuevo.comuna" style="width: 150px;" ng-options="i.nombre as i.nombre for i in comunas"></select>
+                </span>
+            </div>
+            
+            <div id="mailEnviado" class="modal hide fade">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h3>Mail Enviado</h3>
+                </div>
+                <div class="modal-body">
+                    <p>La invitacion se ha enviado con exito.</p>
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-info" data-dismiss="modal">Cerrar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

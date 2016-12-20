@@ -1,0 +1,179 @@
+<div class="card body" style="margin-top: 0px;padding-top: 0px;" ng-controller="CorteCalzadaNuevoCtrl">
+    <div style="margin-bottom: 0px">
+        <ul class="breadcrumb" style="margin-bottom: 0px;">
+          <li><a href="/cortescalzadas" style="color:#404040;">Cortes de Calzadas</a> <span class="divider">/</span></li>
+          <li class="active">Nuevo Corte</li>
+        </ul>
+    </div>
+    <h2 style="margin-top: 15px; margin-left: 15px; margin-bottom: 0px;">Nuevo Corte de Calzada
+        <a ng-click="guardar()" href="/cortescalzadas" class="btn btn-link pull-right" style="margin-right: 20px;"><i class="icon-ok icon-white"></i></a>
+    </h2>
+    <hr style="margin-top: 8px;margin-bottom: 20px;border-top-width: 5px;border-bottom-width: 1px;">
+    <div class="card-body" ng-init="miTotal = 0" style="margin-top: 0px;margin-bottom: 10px;">
+        <div class="row" style="padding-bottom: 0px;">
+            <form class="form-horizontal" style="margin-bottom: 0px !important;">
+                <div class="control-group" style="margin-left: 50px;margin-bottom: 0px;">
+                    <div class="control-group">
+                        <label class="control-label">Tarea:</label>
+                        <div class="controls">
+                            <input class="span1" type="text" placeholder="Sin tarea" ng-model="corte.tarea" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Calle:</label>
+                        <div class="controls">
+                            <input class="span6" type="text" data-provide="typeahead" placeholder="Sin calle" ng-model="corte.calle" id="calle1-typeahead" data-source={{calles}} />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Desde:</label>
+                        <div class="controls">
+                            <input class="span5" type="text" data-provide="typeahead" placeholder="Sin calle" ng-model="corte.entre1" id="calle2-typeahead" data-source={{calles}} />
+                            <label class="checkbox" style="display: inline-block; padding-left: 0px; height: 15px; margin-bottom: 0px; margin-left: 0px;">
+                                <input type="checkbox" ng-model="corte.interseccion" style="margin-left: 20px; margin-top: 8px;" class="ng-pristine ng-valid">
+                            </label>
+                            <label style="display: inline-block;">Intersección</label>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Hasta:</label>
+                        <div class="controls">
+                            <input class="span6" type="text" ng-disabled="corte.interseccion" data-provide="typeahead" placeholder="Sin calle" ng-model="corte.entre2" id="calle3-typeahead" data-source={{calles}} />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Comuna:</label>
+                        <div class="controls">
+                            <select class="span6" ui-select2 type="text" ng-model="corte.comuna" ng-options="i._id as i.nombre for i in comunas"></select>
+                        </div>
+                    </div>
+                    <forminput ng-model="corte.contrato" placeholder="Sin contrato" title="Contrato" />
+                    <div class="control-group">
+                        <label class="control-label">Estado:</label>
+                        <div class="controls">
+                            <select class="span2" ui-select2 type="text" ng-model="corte.prioridad">
+                                <option value="Realizado">Realizado</option>
+                                <option value="Pendiente">Pendiente</option>
+                                <option value="Cancelado">Cancelado</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Prioridad:</label>
+                        <div class="controls">
+                            <select class="span2" ui-select2 type="text" ng-model="corte.prioridad">
+                                <option value="Alta">Alta</option>
+                                <option value="Media">Media</option>
+                                <option value="Baja">Baja</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group" style="margin-bottom: 5px;">
+                        <label class="control-label">Temas:</label>
+                        <div class="controls">
+                            <select ui-select2 class="span6" type="text" ng-model="dataTema" ng-options="i._id as i.nombre for i in temas | filter: mostrarTema">
+                                <option ng-disabled="true" value=""></option>
+                            </select>
+                            <button class="btn" style="margin-bottom:10px; margin-left: 5px" ng-click="agregarTema(dataTema)"><i class="icon-plus"></i></button>
+                        </div>
+                    </div>
+                    
+                    <div class="control-group" ng-repeat="t in corte.temas" style="margin-bottom: 0px;">
+                        <div class="controls">
+                            <input class="span6" type="text" ng-disabled="true" value="{{temaPorId(t).nombre}}" />
+                            <a href="#" style="margin-left: 10px" ng-click="eliminarListaElem(t, corte.temas)"><i class="icon-trash"></i></a>
+                        </div>
+                    </div>
+                    <div class="control-group" style="margin-top: 20px;">
+                        <label class="control-label">Tipo de Tarea:</label>
+                        <div class="controls">
+                            <input class="span6" type="text" data-provide="typeahead" placeholder="Sin tipo de tares" ng-model="corte.tipoTarea" id="tipoTarea-typeahead" data-source={{tiposTarea}} />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Inconveniente:</label>
+                        <div class="controls">
+                            <input class="span6" type="text" data-provide="typeahead" placeholder="Sin inconveniente" ng-model="corte.inconveniente" id="inconveniente-typeahead" data-source={{inconvenientes}} />
+                        </div>
+                    </div>
+            		<forminput ng-model="corte.tipoMaterial" placeholder="Sin tipo de material" title="Tipo de Material" />
+                    <div class="control-group">
+                        <label class="control-label">Tipo de Pavimento:</label>
+                        <div class="controls">
+                            <input class="span6" type="text" data-provide="typeahead" placeholder="Sin tipo de pavimento" ng-model="corte.tipoPavimento" id="pavimento-typeahead" data-source={{pavimentos}} />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Ocupación Calzada:</label>
+                        <div class="controls">
+                            <input class="span6" type="text" data-provide="typeahead" placeholder="Sin ocupación calzada" ng-model="corte.ocupacionCalzada" id="ocupacion-typeahead" data-source={{ocupaciones}} />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Apoyo Agentes:</label>
+                        <div class="controls">
+                            <select class="span2" ui-select2 type="text" ng-model="corte.apoyo">
+                                <option value="Si">Si</option>
+                                <option value="No">No</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Barrio:</label>
+                        <div class="controls">
+                            <select class="span6" ui-select2 multiple="multiple" type="text" ng-model="corte.barrio" ng-options="i._id as i.nombre for i in barrios"></select>
+                        </div>
+                    </div>
+            		<forminput ng-model="corte.contratista" placeholder="Sin contratista" title="Contratista" />
+            		<forminput ng-model="corte.fuente" placeholder="Sin fuente" title="Fuente" />
+                    <div class="control-group">
+                        <label class="control-label">Turno de Trabajo:</label>
+                        <div class="controls">
+                            <input class="span6" type="text" data-provide="typeahead" placeholder="Sin turno" ng-model="corte.turno" id="turno-typeahead" data-source={{turnos}} />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Fecha Inicio:</label>
+                        <div class="controls">
+                            <input class="span2" type="text" date ng-model="corte.fechaInicio" />
+                            <label class="checkbox" style="display: inline-block; padding-left: 0px; height: 15px; margin-bottom: 0px; margin-left: 30px;">
+                                <input type="checkbox" ng-model="corte.enEjecucion" style="margin-left: 20px; margin-top: 8px;" class="ng-pristine ng-valid">
+                            </label>
+                            <label style="display: inline-block;">En Ejecución</label>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Fecha Fin:</label>
+                        <div class="controls">
+                            <input class="span2 ng-pristine ng-valid" type="text" date="" ng-model="corte.fechaFin" style="display: inline-block;">
+                            <label class="checkbox" style="display: inline-block; padding-left: 0px; height: 15px; margin-bottom: 0px; margin-left: 30px;">
+                                <input type="checkbox" ng-model="corte.tentativo" style="margin-left: 20px; margin-top: 8px;" class="ng-pristine ng-valid">
+                            </label>
+                            <label style="display: inline-block;">Tentativo</label>
+                        </div>
+                    </div>
+                    <div class="span7" style="margin-left: 80px;">
+                        <h4>Comentarios
+                        <div class="card-actions pull-right" style="margin: 0; padding: 0">
+                            <a class="btn btn-link" ng-click="agregarComen()"><i class="icon-plus"></i></a>
+                        </div></h4>
+                        <div class="card-body">
+                            <div ng-hide="corte.comentarios.length">No se ha cargardo ningun comentario aún</div>
+                            <div ng-repeat="o in reverse(corte.comentarios)"
+                            style="clear:both; min-height: 40px; margin-top: 20px; margin-bottom: 20px" ng-show="corte.comentarios.length">
+                                <div class="pull-right" style="display: inline-block; margin-right: 10px; margin-bottom: 10px">
+                                    <button type="button" ng-click="eliminarElemento(corte.comentarios,o)" style="margin-left: 10px" class="btn btn-danger"><i class="icon-trash icon-white"></i> Eliminar</button>
+                                </div>
+                                <span style="display: inline-block"> Cuando:<br /> 
+                                    <input class="span2" type="text" date ng-model="o.cuando"/>
+                                </span>
+                                <textarea style="height:100px; width:95%" type="text" ng-model="o.descripcion" />
+                                <hr />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

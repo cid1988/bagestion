@@ -1,0 +1,344 @@
+<script>
+    $(document).ready(function() { $("#e1").select2(); });
+    $(document).ready(function() { $("#e2").select2(); });
+    $(document).ready(function() { $("#e3").select2(); });
+    $(document).ready(function() { $("#e4").select2(); });
+    $(document).ready(function() { $("#e5").select2(); });
+    $(document).ready(function() { $("#e6").select2(); });
+    $(document).ready(function() { $("#e7").select2(); });
+    $(document).ready(function() { $("#e8").select2(); });
+    $(document).ready(function() { $("#e9").select2(); });
+</script>
+<div class="card body" style="margin-top: 0px;padding-top: 0px;" ng-controller="BajoAutopistaDetalleCtrl">
+    <div style="margin-bottom: 0px">
+        <ul class="breadcrumb" style="margin-bottom: 0px;">
+          <li><a href="/bajoautopista" style="color:#404040;">Bajo Autopista</a> <span class="divider">/</span></li>
+          <li class="active">Detalle</li>
+        </ul>
+    </div>
+    <h2 style="margin-top: 15px; margin-left: 15px; margin-bottom: 0px;">Detalle Bajo Autopista
+        <a ng-click="editando=true" class="btn btn-link pull-right" ng-hide="editando" style="margin-right: 20px;" ><i class="icon-edit"></i></a>
+        <a ng-click="guardar()" href="/bajoautopista" class="btn btn-link pull-right" ng-show="editando" style="margin-right: 20px;"><i class="icon-ok icon-white"></i></a>
+        <a ng-click="eliminar(false)" class="btn btn-link pull-right" ng-show="editando" style="margin-right: 20px;"><i class="icon-trash icon-white"></i></a>
+    </h2>
+    <hr style="margin-top: 8px;margin-bottom: 20px;border-top-width: 5px;border-bottom-width: 1px;">
+    <div class="card-body" ng-init="miTotal = 0" style="margin-top: 0px;margin-bottom: 10px;">
+        <div class="row" style="padding-bottom: 0px;">
+            <form class="form-horizontal" style="margin-bottom: 0px !important;">
+                <div class="control-group" style="margin-left: 50px;margin-bottom: 0px;">
+                    <div class="control-group">
+                        <label class="control-label">Comuna:</label>
+                        <div class="controls">
+                            <select id="e1" class="span3" ng-disabled="!editando" type="text" ng-model="bajoautopista.comuna" ng-options="i._id as i.nombre for i in comunas">
+                                <option ng-disabled="true" value="">{{comunaPorId(bajoautopista.comuna).nombre}}</option>
+                            </select>
+                        </div>
+                    </div>
+            		<div class="control-group">
+                        <label class="control-label">ID Mapa:</label>
+                        <div class="controls">
+                            <input class="span3" type="text" placeholder="Sin ID Mapa" ng-disabled="!editando" ng-model="bajoautopista.idMapa" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Predio:</label>
+                        <div class="controls">
+                            <input class="span3" type="text" placeholder="Sin Predio" ng-disabled="!editando" ng-model="bajoautopista.predio" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Autopista:</label>
+                        <div class="controls">
+                            <select class="span4" id="e9" type="text" ng-model="bajoautopista.calle" ng-disabled="!editando" ng-options="i as i for i in autopistas">
+                                <option ng-disabled="true" value="">{{bajoautopista.calle}}</option></select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Desde:</label>
+                        <div class="controls">
+                            <input class="span5" type="text" data-provide="typeahead" ng-disabled="!editando" placeholder="Sin calle" ng-model="bajoautopista.entre1" id="calle2-typeahead" data-source={{calles}} />
+                            <label class="checkbox" style="display: inline-block; padding-left: 0px; height: 15px; margin-bottom: 0px; margin-left: 0px;">
+                                <input type="checkbox" ng-model="bajoautopista.interseccion" ng-disabled="!editando" style="margin-left: 20px; margin-top: 8px;" class="ng-pristine ng-valid">
+                            </label>
+                            <label style="display: inline-block;">Intersección</label>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Hasta:</label>
+                        <div class="controls">
+                            <input class="span6" type="text" data-provide="typeahead" ng-disabled="(!editando || bajoautopista.interseccion)" placeholder="Sin calle" ng-model="bajoautopista.entre2" id="calle3-typeahead" data-source={{calles}} />
+                        </div>
+                    </div>
+            		<div class="control-group">
+                        <label class="control-label">Dirección Exacta:</label>
+                        <div class="controls">
+                            <input class="span4" type="text" data-provide="typeahead" placeholder="Calle" ng-disabled="!editando" ng-model="bajoautopista.calleExacta" id="calle4-typeahead" data-source={{calles}} />
+                            <input class="span1" type="text" placeholder="Numero" ng-disabled="!editando" ng-model="bajoautopista.numeroExacto" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Usuario:</label>
+                        <div class="controls">
+                            <input class="span6" type="text" ng-disabled="!editando" placeholder="Sin Usuario" ng-model="bajoautopista.usuario" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Uso:</label>
+                        <div class="controls">
+                            <select class="span3" id="e2" ng-disabled="!editando" type="text" ng-model="bajoautopista.uso">
+                                <option value="">{{bajoautopista.uso}}</option>
+                                <option value="Estatal">Estatal</option>
+                                <option value="Terceros">Terceros</option>
+                                <option value="Privado">Privado</option>
+                                <option value="Sin datos">Sin datos</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Destino:</label>
+                        <div class="controls">
+                            <select class="span3" id="e7" ng-disabled="!editando" type="text" ng-model="bajoautopista.destino">
+                                <option value="">{{bajoautopista.destino}}</option>
+                                <option value="GCABA">GCABA</option>
+                                <option value="Comuna">Comuna</option>
+                                <option value="PFA">PFA</option>
+                                <option value="Espacio Público">Espacio Público</option>
+                                <option value="Particular">Particular</option>
+                                <option value="ONG">ONG</option>
+                                <option value="Programas IVC">Programas IVC</option>
+                                <option value="Propiedad Privada">Propiedad Privada</option>
+                                <option value="Vacante">Vacante</option>
+                                <option value="Sin datos">Sin datos</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Instrumento:</label>
+                        <div class="controls">
+                            <select class="span3" id="e7" ng-disabled="!editando" type="text" ng-model="bajoautopista.instrumento">
+                                <option value="">{{bajoautopista.instrumento}}</option>
+                                <option value="Concesión">Concesión</option>
+                                <option value="Permiso de Uso Precario">Permiso de Uso Precario</option>
+                                <option value="Tenencia Provisoria">Tenencia Provisoria</option>
+                                <option value="Tenencia Precaria">Tenencia Precaria</option>
+                                <option value="Otros">Otros</option>
+                                <option value="Sin datos">Sin datos</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Ocupación:</label>
+                        <div class="controls">
+                            <select class="span3" id="e3" ng-disabled="!editando" type="text" ng-model="bajoautopista.ocupacion">
+                                <option value="">{{bajoautopista.ocupacion}}</option>
+                                <option value="Ocupado">Ocupado</option>
+                                <option value="Libre">Libre</option>
+                                <option value="Sin datos">Sin datos</option>
+                                <option value="No aplica">No aplica</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Status:</label>
+                        <div class="controls">
+                            <select class="span3" id="e4" ng-disabled="!editando" type="text" ng-model="bajoautopista.status">
+                                <option value="">{{bajoautopista.status}}</option>
+                                <option value="En regla">En regla</option>
+                                <option value="Vencido">Vencido</option>
+                                <option value="Irregular">Irregular</option>
+                                <option value="Intrusado">Intrusado</option>
+                                <option value="En estudio">En estudio</option>
+                                <option value="Sin datos">Sin datos</option>
+                                <option value="No aplica">No aplica</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Fecha Inicio:</label>
+                        <div class="controls">
+                            <input class="span3" type="text" ng-disabled="!editando" date ng-model="bajoautopista.fechaInicio" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Fecha Fin:</label>
+                        <div class="controls">
+                            <input class="span3 ng-pristine ng-valid" type="text" date="" ng-disabled="!editando" ng-model="bajoautopista.fechaFin" style="display: inline-block;">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Canon:</label>
+                        <div class="controls">
+                            <select class="span3" id="e5" ng-disabled="!editando" type="text" ng-model="bajoautopista.canon">
+                                <option value="">{{bajoautopista.canon}}</option>
+                                <option value="Oneroso">Oneroso</option>
+                                <option value="Oneroso c/obra">Oneroso c/obra</option>
+                                <option value="Gratuito">Gratuito</option>
+                                <option value="Gratuito c/obra">Gratuito c/obra</option>
+                                <option value="Sin datos">Sin datos</option>
+                                <option value="No aplica">No aplica</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Valor Mensual ($):</label>
+                        <div class="controls">
+                            <input class="span3" type="text" ng-disabled="!editando" placeholder="Sin Valor Mensual" ng-model="bajoautopista.valorMensual" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Uso Específico:</label>
+                        <div class="controls">
+                            <input class="span6" type="text" ng-disabled="!editando" placeholder="Sin Uso Actual" ng-model="bajoautopista.usoActual" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Plan de Acción:</label>
+                        <div class="controls">
+                            <input class="span6" type="text" ng-disabled="!editando" placeholder="Sin Plan de Accion" ng-model="bajoautopista.planAccion" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Fecha Seguimiento:</label>
+                        <div class="controls">
+                            <input class="span3" type="text" ng-disabled="!editando" date ng-model="bajoautopista.fecha" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Responsable:</label>
+                        <div class="controls">
+                            <select id="e6" class="span6" ng-disabled="!editando" type="text" ng-model="bajoautopista.responsable" ng-options="i._id as i.nombreCompleto for i in organigrama">
+                                <option ng-disabled="true" value="">{{organigramaPorId(bajoautopista.responsable).nombreCompleto}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group" style="margin-bottom: 0px;">
+                        <label class="control-label">Sección / Manzana / Parcela:</label>
+                        <div class="controls">
+                            <input class="span1" type="text" ng-disabled="!editando" placeholder="Sección" ng-model="dataParce.seccion" />
+                            <input class="span1" type="text" ng-disabled="!editando" placeholder="Manzana" ng-model="dataParce.manzana" />
+                            <input class="span1" type="text" ng-disabled="!editando" placeholder="Parcela" ng-model="dataParce.parcela" />
+                            <label class="checkbox" style="display: inline-block; padding-left: 0px; height: 15px; margin-bottom: 0px; margin-left: 0px;">
+                                <input type="checkbox" ng-model="dataParce.parcial" ng-disabled="!editando" style="margin-left: 10px; margin-top: 8px;" class="ng-pristine ng-valid">
+                            </label>
+                            <label style="display: inline-block; margin-left: 5px;">Parcial</label>
+                            <button class="btn" style="margin-left: 15px" ng-disabled="!editando" ng-click="agregarSMP(dataParce)"><i class="icon-plus"></i></button>
+                        </div>
+                    </div>
+                    <div class="control-group" ng-repeat="s in bajoautopista.smp" style="margin-bottom: 0px;">
+                        <div class="controls" ng-controller="ConsultarSMPCtrl">
+                            <input class="span1" type="text" ng-disabled="!editando" ng-model="s.seccion" />
+                            <input class="span1" type="text" ng-disabled="!editando" ng-model="s.manzana" />
+                            <input class="span1" type="text" ng-disabled="!editando" ng-model="s.parcela" />
+                            <span style="margin-left: 20px; margin-right: 5px;">Superficie Usig:</span>
+                            <input class="span2" type="text" ng-disabled="true" style="margin-right: 20px;" ng-show="dataUsig.info.info_alfanumerica.superficie_total" value="{{dataUsig.info.info_alfanumerica.superficie_total}}" />
+                            <input class="span2" type="text" ng-disabled="true" style="margin-right: 20px;" ng-hide="dataUsig.info.info_alfanumerica.superficie_total" value="No hay datos" />
+                            <label class="checkbox" style="display: inline-block; padding-left: 0px; height: 15px; margin-bottom: 0px; margin-left: 0px;">
+                                <input type="checkbox" ng-model="s.parcial" ng-disabled="!editando" style="margin-left: 10px; margin-top: 8px;" class="ng-pristine ng-valid">
+                            </label>
+                            <label style="display: inline-block; margin-left: 5px;">Parcial</label>
+                            <a href="#" style="margin-left: 10px" ng-show="editando" ng-click="eliminarListaElem(s, bajoautopista.smp)"><i class="icon-trash"></i></a>
+                        </div>
+                    </div>
+            		<div class="control-group" style="margin-top: 20px;">
+                        <label class="control-label">Superficie Total Usig:</label>
+                        <div class="controls">
+                            <input class="span3" type="text" placeholder="Sin Superficie Total Usig" ng-disabled="true" ng-model="superficieTotalUsig" />
+                        </div>
+                    </div>
+            		<div class="control-group" style="margin-top: 20px;">
+                        <label class="control-label">Superficie Total:</label>
+                        <div class="controls">
+                            <input class="span3" type="text" placeholder="Sin Superficie Total" ng-disabled="!editando" ng-model="bajoautopista.superficieTotal" />
+                        </div>
+                    </div>
+            		<div class="control-group">
+                        <label class="control-label">Superficie Cubierta:</label>
+                        <div class="controls">
+                            <input class="span3" type="text" placeholder="Sin Superficie Cubierta" ng-disabled="!editando" ng-model="bajoautopista.superficieCubierta" />
+                        </div>
+                    </div>
+            		<div class="control-group">
+                        <label class="control-label">FOT:</label>
+                        <div class="controls">
+                            <input class="span3" type="text" placeholder="Sin FOT" ng-disabled="!editando" ng-model="bajoautopista.fot" />
+                        </div>
+                    </div>
+                    <div class="control-group" style="margin-bottom: 5px;">
+                        <label class="control-label">Temas:</label>
+                        <div class="controls">
+                            <select ui-select2 class="span6" ng-disabled="!editando" type="text" ng-model="dataTema" ng-options="i._id as i.nombre for i in temas | filter: mostrarTema">
+                                <option ng-disabled="true" value=""></option>
+                            </select>
+                            <button class="btn" style="margin-bottom:10px; margin-left: 5px" ng-disabled="!editando" ng-click="agregarTema(dataTema)"><i class="icon-plus"></i></button>
+                        </div>
+                    </div>
+                    
+                    <div class="control-group" ng-repeat="t in bajoautopista.temas" style="margin-bottom: 0px;">
+                        <div class="controls">
+                            <input class="span6" type="text" ng-disabled="true" value="{{temaPorId(t).nombre}}" />
+                            <a href="#" style="margin-left: 10px" ng-show="editando" ng-click="eliminarListaElem(t, bajoautopista.temas)"><i class="icon-trash"></i></a>
+                        </div>
+                    </div>
+                    <div class="span10" style="margin-left: 80px;margin-top: 20px;">
+                        <img src="http://servicios.usig.buenosaires.gov.ar/LocDir/mapa.phtml?dir={{bajoautopista.calle}} y {{bajoautopista.entre1}}&desc=&punto=1&w=800&h=332" onError="this.style.display = 'none'" onload="this.style.display = ''"/>
+                    </div>
+                    <div class="span5" style="margin-left: 80px;margin-top: 20px;">
+                        <h4>Observaciones
+                        <div class="card-actions pull-right" style="margin: 0; padding: 0">
+                            <a class="btn btn-link" ng-click="agregarComen()" ng-if="editando"><i class="icon-plus"></i></a>
+                        </div></h4>
+                        <div class="card-body">
+                            <div ng-hide="bajoautopista.comentarios.length">No se ha cargardo ninguna observacion aún</div>
+                            <div ng-repeat="o in reverse(bajoautopista.comentarios)"
+                            style="clear:both; min-height: 40px; margin-top: 20px; margin-bottom: 20px" ng-show="bajoautopista.comentarios.length">
+                                <div class="pull-right" style="display: inline-block; margin-right: 10px; margin-bottom: 10px">
+                                    <button type="button" ng-click="eliminarElemento(bajoautopista.comentarios,o)" style="margin-left: 10px" class="btn btn-danger" ng-if="editando"><i class="icon-trash icon-white"></i> Eliminar</button>
+                                </div>
+                                <span style="display: inline-block"> Cuando:<br /> 
+                                    <input class="span2" type="text" date ng-model="o.cuando" ng-disabled="!editando"/>
+                                </span>
+                                <textarea style="height:100px; width:95%" type="text" ng-disabled="!editando" ng-model="o.descripcion" />
+                                <hr />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="span5" style="margin-left: 80px;margin-top: 20px;">
+                        <h4>Fotos Usig</h4>
+                        <div ng-repeat="s in bajoautopista.smp" style="display: inline-block;">
+                            <div ng-controller="ConsultarSMPCtrl" style="display: inline-block;">
+                                <a data-toggle="modal" ng-show="dataUsig.info.info_alfanumerica.superficie_total"
+                                 ng-click="abrirModalImagenUsig(s.seccion, s.manzana, s.parcela)" class="thumbnail" style="display:inline-block">
+                                    <img src="http://fotos.usig.buenosaires.gob.ar//getFoto?smp={{s.seccion}}-{{s.manzana}}-{{s.parcela}}" width="128" height="96">
+                                </a>
+                            </div>
+                        </div>
+                        <h4>Fotos Cargadas</h4>
+                        <div ng-hide="bajoautopista.fotos.length">No se ha cargardo ninguna foto aún</div>
+                        <a ng-repeat="f in bajoautopista.fotos" data-toggle="modal" 
+                         ng-click="abrirModalImagen(f)" class="thumbnail" style="display:inline-block">
+                            <img src="/file/{{f}}" width="128" height="96">
+                        </a>
+                        <div style="width: 300px" ng-show="editando" fine-uploader destination="'/upload/'"
+                        placeholder="'Subir foto'" uploaded="uploaded"></div>
+                        <div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+
+    <div id="confirmarEliminar" class="modal hide fade">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3>Eliminar Bajo Autopista</h3>
+        </div>
+        <div class="modal-body">
+            <p>Está a un paso de eliminar el Bajo Autopista</p>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn btn-info" data-dismiss="modal">Conservar el registro</a>
+            <a href="#" class="btn btn-danger" data-dismiss="modal" ng-click="eliminar(true)">Eliminar</a>
+        </div>
+    </div>
+</div>

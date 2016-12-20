@@ -1,0 +1,57 @@
+<div ng-controller="UsersCtrl">
+    <div class="well span9">
+        <table class="table">
+            <thead>
+                <th><h3 style="margin-top: 0px; margin-bottom: 0px;">Usuario</h3></th>
+                <th>
+                    <a class="btn btn-link pull-right" style="display: inline-block;" title="Conectar Usuario con Contacto" ng-click="unirUsers()" href="#" ><i class="icon-arrow-right"></i><i class="icon-arrow-left"></i></a>
+                    <input class="pull-right" placeholder="Buscar por Usuario..." type="text" class="span2" ng-model="filtro.username"/>
+                </th>
+            </thead>
+            <tbody>
+                <tr ng-repeat="u in users | orderBy:'username' | filter:filtro">
+                    <th>{{u.username}}</th>
+                    <td>
+                        <div class="btn-group pull-right">
+                          <a class="btn" href="/admin/users/{{u.username}}"><i class="icon-edit"></i>&nbsp;Permisos</a>
+                          <button class="btn dropdown-toggle" data-toggle="dropdown" style="height: 31px;">
+                            <span class="caret"></span>
+                          </button>
+                          <ul class="dropdown-menu">
+                            <li><a href="/admin/users/{{u.username}}/changePassword"><i class="icon-lock"></i>&nbsp;Cambiar clave</a></li>
+                            <li><a href="/admin/users/{{u.username}}/changeJurisdiccion"><i class="icon-edit"></i>&nbsp;Cambiar jurisdiccion</a></li>
+                            <li><a href="#" ng-click="u.importante = !u.importante; u.$save()"><i class="icon-star" ng-show="u.importante"></i><i class="icon-star-empty" ng-hide="u.importante"></i>&nbsp;Importante</a></li>
+                            <li ng-if="u.idContacto"><a href="/contactos/detalle/{{u.idContacto}}"><i class="icon-user"></i>&nbsp;Ver Contacto</a></li>
+                            <li><a href="#" ng-click="eliminar(false, u)"><i class="icon-trash icon-white"></i>&nbsp;Eliminar</a></li>
+                          </ul>
+                        </div>
+                        <!-- <div class="btn-group">
+                            <a class="btn" href="/admin/users/{{u.username}}/changePassword"><i class="icon-lock"></i>&nbsp;Cambiar clave</a>
+                            <a class="btn" href="/admin/users/{{u.username}}"><i class="icon-edit"></i>&nbsp;Permisos</a>
+                            <button type="button" class="btn btn-danger" ng-click="eliminar(false, u)">
+                                <i class="icon-trash icon-white"></i>&nbsp;Eliminar</button>
+                            <a class="btn" ng-if="u.idContacto" href="/contactos/detalle/{{u.idContacto}}"><i class="icon-user"></i>&nbsp;Ver Contacto</a>
+                        </div> -->
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="well span3" ng-include src="'/views/admin/users/new.html'"></div>
+    
+
+    <div id="confirmarEliminar" class="modal hide fade">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3>Eliminar Usuario</h3>
+        </div>
+        <div class="modal-body">
+            <p>Está a un paso de eliminar el usuario.<br>
+            </p>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn btn-info" data-dismiss="modal">Conservar el registro</a>
+            <a href="#" class="btn btn-danger" data-dismiss="modal" ng-click="eliminar(true)">Eliminar</a>
+        </div>
+    </div>
+</div>

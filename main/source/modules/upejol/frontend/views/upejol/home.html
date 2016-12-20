@@ -1,0 +1,32 @@
+<div class="container" ng-if="error">
+  <div class="row">
+    <div class="span12">
+      <div class="alert alert-danger">{{error}}</div> 
+    </div>
+  </div>
+</div>
+<div class="container">
+  <div class="row">
+    <div class="span12 card">
+      <h3 class="card-heading simple">Planes</h3>
+      <div class="card-body" style="margin-bottom: 20px;">
+        <div style="font-size: 18px;padding-top: 4px;padding-bottom: 4px;margin-bottom: 30px;margin-left: 22px;"><span class="span2">Año</span><span class="span3">Etapa</span><span class="span4">Responsables</span><span class="span1"></span></div>
+        <hr style="margin-bottom: 0px;">
+        <ul class="nav nav-list">
+          <li ng-repeat="p in planes | orderBy:'-anio'">
+            <a style="font-size: 18px;padding-top: 8px;padding-bottom: 8px;display: inline-block;" href="/upejol/plan/{{p.anio}}/{{p.etapa}}">
+            <span class="span2">{{p.anio}}</span><span class="span3" ng-if="p.etapa =='planificacion'">Planificacion</span><span class="span3" ng-if="p.etapa =='seguimiento'">Seguimiento</span><span class="span4"><span ng-repeat="n in p.responsables">{{contactoPorId(n).apellidos}} {{contactoPorId(n).nombre}}, </span></span></a>
+            <span class="span1 pull-right" style="display: inline-block;margin-top: 5px;"><a class="btn btn-link" href="/upejol/modifica-plan/{{p._id}}" title="Editar Plan" ng-if="hasPermission('upejol.administrador')"><i class="icon-edit"></i></a></span>
+          </li>
+          <li ng-if="!planes.length" class="text-center">
+            <em>No hay planes definidos aún</em>
+          </li>
+        </ul>
+      </div>
+        
+        <div class="card-actions text-center" ng-if="hasPermission('upejol.administrador')">
+          <a href="/upejol/nuevo-plan" class="btn btn-primary">Crear plan</a>
+        </div>
+    </div>
+  </div>
+</div>

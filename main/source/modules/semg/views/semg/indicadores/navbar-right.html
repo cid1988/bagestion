@@ -1,0 +1,7 @@
+<div ng-controller="NavBarSEMGCtrl">
+    <div class="btn-group pull-right" style="margin-right: 7px">
+        <a class="btn btn-link" target="_blank" style="margin-left: 10px" href="/api/indicadores-csv/download" ng-show="hasPermission('semg.editar')" >
+            <i class="icon-download-alt"></i> Descargar CSV</a>
+        <a class="btn btn-link" href="/semg/indicadores/{{anio}}/presentacion"><i class="icon-external-link"></i> Presentacion</a>
+    </div>
+</div>

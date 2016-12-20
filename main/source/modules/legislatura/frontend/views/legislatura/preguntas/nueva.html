@@ -1,0 +1,176 @@
+<script>
+    $(document).ready(function() { $("#e1").select2(); });
+    $(document).ready(function() { $("#e2").select2(); });
+</script>
+
+<div class="card span11 offset1">
+    <h3 class="card-heading simple">Nueva Pregunta
+        <a ng-click="guardar()" class="btn btn-link pull-right"><i class="icon-ok icon-white"></i></a>
+    </h3>
+    <div class="card-body control-group">
+        <div class="row" style="padding-bottom: 0px;">
+            <form class="form-horizontal" style="margin-bottom: 0px !important;">
+                <div class="control-group" style="margin-left: 10px;margin-bottom: 0px;">
+                    <div class="control-group">
+                        <label class="control-label">Evento:</label>
+                        <div class="controls">
+                            <select id="e1" class="span6" type="text" ng-model="pregunta.evento" ng-options="i._id as i.nombre for i in eventos">
+                                <option ng-disabled="true" value="">{{eventoPorId(pregunta.evento).nombre}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Cuestionario:</label>
+                        <div class="controls">
+                            <select id="e2" class="span6" type="text" ng-model="pregunta.cuestionario" ng-options="i._id as i.nombre for i in cuestionarios">
+                                <option ng-disabled="true" value="">{{cuestionarioPorId(pregunta.cuestionario).nombre}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Nro de orden:</label>
+                        <div class="controls">
+                            <input class="span3" type="text" placeholder="Sin nro de orden" ng-model="pregunta.nro_orden" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Contexto</label>
+                        <div class="controls">
+                            <textarea rows="4" class="span6" type="text" placeholder="Sin Contexto" ng-model="pregunta.contexto"></textarea>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Pregunta</label>
+                        <div class="controls">
+                            <textarea rows="2" class="span6" type="text" placeholder="Sin Pregunta" ng-model="pregunta.pregunta"></textarea>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Respuesta</label>
+                        <div class="controls">
+                            <textarea rows="6" class="span6" type="text" placeholder="Sin Respuesta" ng-model="pregunta.respuesta"></textarea>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Elaborada por:</label>
+                        <div class="controls">
+                            <select ui-select2 class="span3" type="text" ng-model="pregunta.persona_respuesta" ng-options="i._id as i.apellidos + ' ' + i.nombre for i in contactos | orderBy:'apellidos'">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Adjuntos</label>
+                        <div class="controls">
+                            <textarea rows="4" class="span6" type="text" placeholder="Sin Adjuntos" ng-model="pregunta.adjuntos"></textarea>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Eje Temático:</label>
+                        <div class="controls">
+                            <select ui-select2 class="span4" type="text" ng-model="pregunta.eje_tematico" ng-options="i as i.nombre for i in ejes">
+                                <option ng-disabled="true" value=""></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Temática:</label>
+                        <div class="controls">
+                            <select ui-select2 class="span4" type="text" ng-model="pregunta.tematica" ng-options="i.nombre as i.nombre for i in tematicas">
+                                <option ng-disabled="true" value=""></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Tema Particular:</label>
+                        <div class="controls">
+                            <select ui-select2 class="span4" type="text" ng-model="pregunta.tema_particular" ng-options="i.nombre as i.nombre for i in temas">
+                                <option ng-disabled="true" value=""></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Jurisdicción:</label>
+                        <div class="controls">
+                            <select ui-select2 class="span4" type="text" ng-model="pregunta.jurisdiccionNueva" ng-options="i._id as i.nombreCompleto for i in organigrama">
+                                <option ng-disabled="true" value=""></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Proyecto:</label>
+                        <div class="controls">
+                            <input class="span6" type="text" placeholder="Sin proyecto" ng-model="pregunta.proyecto" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Estado:</label>
+                        <div class="controls">
+                            <select ui-select2 class="span3" type="text" ng-model="pregunta.estado" ng-options="i as i.nombre for i in estados">
+                                <option ng-disabled="true" value=""></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group" style="margin-bottom: 5px;">
+                        <label class="control-label">Temas:</label>
+                        <div class="controls">
+                            <select ui-select2 class="span5" type="text" ng-model="dataTema" ng-options="i._id as i.nombre for i in temasORM | filter: mostrarTema">
+                                <option ng-disabled="true" value=""></option>
+                            </select>
+                            <button class="btn" style="margin-bottom:10px; margin-left: 5px" ng-click="agregarTema(dataTema)"><i class="icon-plus"></i></button>
+                        </div>
+                    </div>
+                    <div class="control-group" ng-repeat="t in pregunta.temas" style="margin-bottom: 0px;">
+                        <div class="controls">
+                            <input class="span5" type="text" ng-disabled="true" value="{{temaPorId(t).nombre}}" />
+                            <a href="#" style="margin-left: 10px" ng-click="eliminarListaElem(t, pregunta.temas)"><i class="icon-trash"></i></a>
+                        </div>
+                    </div>
+                    <div class="span6" style="margin-left: 80px;margin-top: 15px;">
+                        <h4>Documentos
+                        <div class="card-actions pull-right" style="margin: 0; padding: 0">
+                            <a class="btn btn-link" ng-click="agregarDocumentacion()"><i class="icon-plus"></i></a>
+                        </div></h4>
+                        <div ng-if="!pregunta.documentos.length">No se ha cargardo ningun documento aún</div>
+                        <div ng-repeat="d in pregunta.documentos">
+                            <a data-toggle="modal" ng-click="abrirModal('#documentosE_{{$index}}')" href="">{{d.nombre}}</a> (<a href="/file/{{d.archivoId}}" target="_blank">Descargar</a>)<br>
+                        </div>
+                        <div ng-repeat="d in pregunta.documentos" id="documentosE_{{$index}}" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class='modal-header'>
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            </div>
+                            <div class='modal-content'>
+                                <span style="display: inline-block"> Nombre:<br /> 
+                                    <input class="span4" type="text" placeholder="Nombre del documento" ng-disabled="true" ng-model="d.nombre" />
+                                </span>
+                                <span style="display: inline-block"> Fecha:<br /> 
+                                    <input class="span2" type="text" date placeholder="Fecha" ng-disabled="true" ng-model="d.fecha" />
+                                </span>
+                                <span style="display: inline-block"> Version:<br /> 
+                                    <input class="span2" type="text" placeholder="Version del documento" ng-disabled="true" ng-model="d.version" />
+                                </span>
+                                <span style="display: inline-block"> Fuente:<br /> 
+                                    <div class="input-append">
+                                        <input class="span3" type="text" placeholder="Fuente del documento" ng-disabled="true" value="{{contactoPorId(d.fuente).apellidos}} {{contactoPorId(d.fuente).nombre}}" />
+                                    </div>
+                                </span>
+                                <span style="display: inline-block"> Tipo:<br /> 
+                                    <input class="span2" type="text" placeholder="DOC, XLS, PPT, etc" ng-disabled="true" ng-model="d.tipo" />
+                                </span>
+                                <span style="display: inline-block"> Autor:<br /> 
+                                    <input class="span4" type="text" placeholder="Autor del documento" ng-disabled="true" ng-model="d.autor" />
+                                </span>
+                                <span style="display: inline-block"> Tags:<br /> 
+                                    <input class="span5" type="text" placeholder="Separados por coma" ng-disabled="true" ng-model="d.tags" />
+                                </span>
+                                <span style="display: inline-block"> Descripción:<br /> 
+                                    <textarea style="height:80px; width:530px" placeholder="Descripción del documento" type="text" ng-disabled="true"
+                                    ng-model="d.descripcion" />
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

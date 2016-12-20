@@ -1,0 +1,45 @@
+<style>
+    .table {
+        border: 0;
+    }
+    .table th, .table td {
+        padding: 8px;
+        line-height: 20px;
+        text-align: left;
+        vertical-align: middle;
+        border: 0;
+    }
+    .table th {
+        background-color: #dddddd !important;
+    }
+</style>
+<div class="card" ng-controller="DJAICtrl">
+    <div class="card-actions pull-right no-print" style="margin: 0; padding: 0">
+        <a href="/djais/nuevo" class="btn btn-link" style="margin-right: 10px;" ng-if=hasPermission('djais.editar') ><i class="icon-plus"></i></a>
+    </div>
+    <h3 class="card-heading simple">DJAI´s</h3>
+    <div class="card-body">
+        <table border="1" class="table table-striped">
+            <tr bgcolor= "#FFFFFF">
+                <th><a ng-click="orden = 'numero'" href="#" style="display: inline-block; color:#404040;">Numero</a></th>
+                <th><a ng-click="orden = 'detalle'" href="#" style="display: inline-block; color:#404040;">Detalle</a></th>
+                <th><a ng-click="orden = 'monto'" href="#" style="display: inline-block; color:#404040;">Monto</a></th>
+                <th><a ng-click="orden = 'moneda'" href="#" style="display: inline-block; color:#404040;">Moneda</a></th>
+                <th><a ng-click="orden = 'necesidad'" href="#" style="display: inline-block; color:#404040;">Necesidad</a></th>
+                <th><a ng-click="orden = 'comentarios'" href="#" style="display: inline-block; color:#404040;">Comentarios</a></th>
+                <th></th>
+            </tr>
+            <tr ng-repeat="i in djais | orderBy:orden | filter:filtro">
+                <td><div>{{i.numero}}</div></td>
+                <td><div>{{i.detalle}}</div></td>
+                <td><div>{{i.monto}}</div></td>
+                <td><div>{{i.moneda}}</div></td>
+                <td><div>{{i.necesidad}}</div></td>
+                <td><div ng-if="i.comentarios.length">{{i.comentarios[i.comentarios.length - 1].cuando}} - {{i.comentarios[i.comentarios.length - 1].descripcion}}</div></td>
+                <td><a href="/djais/{{i._id}}" class="btn btn-link no-print" style="padding-left: 0px; padding-right: 0px;" ng-if=hasPermission('djais.editar') ><i class="icon-edit"></i></a></td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+

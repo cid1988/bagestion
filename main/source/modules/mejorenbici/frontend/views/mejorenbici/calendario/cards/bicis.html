@@ -1,0 +1,23 @@
+<style>
+.resaltar {
+	background-color: #F5F7BE;
+}
+</style>
+
+<div class="card" ng-controller="TiposBiciCtrl as self">
+    <h3 class="card-heading simple">Reserva de Bicicletas</h3>
+    <div class="card-body" style="margin-bottom: 14px;padding-right: 13px;">
+    <div style="height: 200px;">
+        <div ng-repeat="r in bicis | filter:mostrar | orderBy:'orden'">
+            <a ng-class="{'disabled': programandoNuevaFecha == r}" class="btn btn-link pull-right" ng-show="editando" ng-click="self.programarNuevaFecha(r)" style="padding-left: 0px; padding-right: 0px;">
+                <i class="icon-plus"></i>
+            </a>
+            <div style="text-align: left;margin-top: 15px;margin-bottom: 15px;">
+                <span ng-class="{'resaltar': estaResaltado(r)}" style="background-color: {{colorBici(r)}}; display: inline-block; width: 13px; height: 13px; display: inline-block"></span>&nbsp;
+                <b>{{r.nombre}}</b>
+            </div>
+        </div>
+        <span ng-hide="bicis.length">No hay bicicletas definidas aún</span>
+    </div>
+    </div>
+</div>

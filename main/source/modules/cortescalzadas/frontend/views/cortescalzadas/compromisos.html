@@ -1,0 +1,38 @@
+<style>
+    .table {
+        border: 0;
+    }
+    .table th, .table td {
+        padding: 8px;
+        line-height: 20px;
+        text-align: left;
+        vertical-align: middle;
+        border: 0;
+    }
+    .table th {
+        background-color: #dddddd !important;
+    }
+</style>
+<div class="card" ng-controller="CortesCalzadasCompromisosCtrl">
+    <div class="card-actions pull-right no-print" style="margin: 0; padding: 0">
+        <a href="/cortescalzadas/compromisos/nuevo" class="btn btn-link" style="margin-right: 10px;" ng-if=hasPermission('cortescalzadas.editar') ><i class="icon-plus"></i></a>
+    </div>
+    <h3 class="card-heading simple">Cortes de Calzadas - Compromisos</h3>
+    <div class="card-body">
+        <table border="1" class="table table-striped">
+            <tr bgcolor= "#FFFFFF">
+                <th><a ng-click="orden = 'tarea'" href="#" style="display: inline-block; color:#404040;">Fecha</a></th>
+                <th><a ng-click="orden = 'calle'" href="#" style="display: inline-block; color:#404040;">Título</a></th>
+                <th></th>
+            </tr>
+            <tr ng-repeat="i in compromisos | orderBy:orden | filter:filtro">
+                <td><div>{{i.fecha}}</div></td>
+                <td><div>{{i.titulo}}</div></td>
+                <td><a href="/cortescalzadas/compromisos/{{i._id}}" class="btn no-print" ng-if=hasPermission('cortescalzadas.editar') ><i class="icon-edit"></i> Modificar</a>
+                <a href="#" class="btn no-print"><i class="icon-print"></i> Imprimir</a></td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+

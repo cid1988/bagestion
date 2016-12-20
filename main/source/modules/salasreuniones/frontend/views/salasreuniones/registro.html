@@ -1,0 +1,69 @@
+<style>
+    .navbar {
+        display: none;
+    }
+</style>
+<div ng-controller="SalasRegistroCtrl">
+    <div class="card" style="overflow-y: hidden; overflow-x: hidden;position: absolute;top: 80px;bottom: 12px;right: 20px;left: 20px;margin-top: 0px;margin-bottom: 0px;">
+        <div class="card-body" style="margin-top: 0px;">
+            <button type="button" style="margin-bottom: 0px;font-size: 50px;height: 105px;width: 25%" class="btn btn-large btn-info">Salón 1</button>
+            <table class="span pull-right" style="margin-bottom: 0px;height: 105px;width: 72%" class="btn btn-large btn-info">
+                <tr ng-repeat="i in instancias | orderBy:'desdeDate' | filter:{sala:'54ec62210317fa5f8eb6723a'}" style="font-size: x-large; margin-top: 8px; margin-bottom: 8px;" ng-show="(($index == 0) || ($index == 1))">
+                    <td style="width:220px"><b>{{i.desdeHora}}hs a {{i.hastaHora}}hs</b></td>
+                    <td>{{i.titulo}} ({{contactoPorId(i.duenio).nombre}} {{contactoPorId(i.duenio).apellidos}})</td>
+                    <td style="width:110px"><i class="icon-phone"></i> {{i.interno}}</td>
+                    <td style="width:75px"><i class="icon-user"></i> {{i.asistentes}}</td>
+                </tr>
+            </table>
+            <hr style="margin-top: 5px; margin-bottom: 5px;">
+            <button type="button" style="margin-bottom: 0px;font-size: 50px;height: 105px;width: 25%" class="btn btn-large btn-info">Salón 2</button>
+            <table class="span pull-right" style="margin-bottom: 0px;height: 105px;width: 72%" class="btn btn-large btn-info">
+                <tr ng-repeat="i in instancias | orderBy:'desdeDate' | filter:{sala:'54ec62210317fa5f8eb6723b'}" style="font-size: x-large; margin-top: 8px; margin-bottom: 8px;" ng-show="(($index == 0) || ($index == 1))">
+                    <td style="width:220px"><b>{{i.desdeHora}}hs a {{i.hastaHora}}hs</b></td>
+                    <td>{{i.titulo}} ({{contactoPorId(i.duenio).nombre}} {{contactoPorId(i.duenio).apellidos}})</td>
+                    <td style="width:110px"><i class="icon-phone"></i> {{i.interno}}</td>
+                    <td style="width:75px"><i class="icon-user"></i> {{i.asistentes}}</td>
+                </tr>
+            </table>
+            <hr style="margin-top: 5px; margin-bottom: 5px;">
+            <button type="button" style="margin-bottom: 0px;font-size: 50px;height: 105px;width: 25%" class="btn btn-large btn-info">Salón 3</button>
+            <table class="span pull-right" style="margin-bottom: 0px;height: 105px;width: 72%" class="btn btn-large btn-info">
+                <tr ng-repeat="i in instancias | orderBy:'desdeDate' | filter:{sala:'54ec62210317fa5f8eb6723c'}" style="font-size: x-large; margin-top: 8px; margin-bottom: 8px;" ng-show="(($index == 0) || ($index == 1))">
+                    <td style="width:220px"><b>{{i.desdeHora}}hs a {{i.hastaHora}}hs</b></td>
+                    <td>{{i.titulo}} ({{contactoPorId(i.duenio).nombre}} {{contactoPorId(i.duenio).apellidos}})</td>
+                    <td style="width:110px"><i class="icon-phone"></i> {{i.interno}}</td>
+                    <td style="width:75px"><i class="icon-user"></i> {{i.asistentes}}</td>
+                </tr>
+            </table>
+            <hr style="margin-top: 5px; margin-bottom: 5px;">
+            <button type="button" style="margin-bottom: 0px;font-size: 50px;height: 105px;width: 25%" class="btn btn-large btn-info">Salón 4</button>
+            <table class="span pull-right" style="margin-bottom: 0px;height: 105px;width: 72%" class="btn btn-large btn-info">
+                <tr ng-repeat="i in instancias | orderBy:'desdeDate' | filter:{sala:'54ec62210317fa5f8eb6723d'}" style="font-size: x-large; margin-top: 8px; margin-bottom: 8px;" ng-show="(($index == 0) || ($index == 1))">
+                    <td style="width:220px"><b>{{i.desdeHora}}hs a {{i.hastaHora}}hs</b></td>
+                    <td>{{i.titulo}} ({{contactoPorId(i.duenio).nombre}} {{contactoPorId(i.duenio).apellidos}})</td>
+                    <td style="width:110px"><i class="icon-phone"></i> {{i.interno}}</td>
+                    <td style="width:75px"><i class="icon-user"></i> {{i.asistentes}}</td>
+                </tr>
+            </table>
+            <hr style="margin-top: 5px; margin-bottom: 5px;">
+            <button type="button" style="margin-bottom: 0px;font-size: 50px;height: 105px;width: 25%" class="btn btn-large btn-info">Salón 5</button>
+            <table class="span pull-right" style="margin-bottom: 0px;height: 105px;width: 72%" class="btn btn-large btn-info">
+                <tr ng-repeat="i in instancias | orderBy:'desdeDate' | filter:{sala:'54ec62210317fa5f8eb6723e'}" style="font-size: x-large; margin-top: 8px; margin-bottom: 8px;" ng-show="(($index == 0) || ($index == 1))">
+                    <td style="width:220px"><b>{{i.desdeHora}}hs a {{i.hastaHora}}hs</b></td>
+                    <td>{{i.titulo}} ({{contactoPorId(i.duenio).nombre}} {{contactoPorId(i.duenio).apellidos}})</td>
+                    <td style="width:110px"><i class="icon-phone"></i> {{i.interno}}</td>
+                    <td style="width:75px"><i class="icon-user"></i> {{i.asistentes}}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="card" style="margin-top: 10px; margin-bottom: 10px; padding-top: 1px; padding-bottom: 5px;background-color: #FFD300;">
+        <div class="card-body" style="margin-top: 10px;text-align: center;">
+            <a class="brand pull-left" href="/" style="font-size: 25px;font-weight: 200;color: #696969;"><img src="/views/BA_blanco.png" width="63">Gestión</a>
+            <h1 style="margin-bottom: 5px;margin-top: 12px;"><span>{{aFecha(fecha)}} - </span><b style="font-weight: 600;">{{aHora(fecha)}}hs</b><span class="pull-right" style="font-size: 22px;font-weight: 200;color: #696969;">Jefatura de Gabinete</span></h1>
+            
+        </div>
+    </div>
+</div>
+
+

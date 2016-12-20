@@ -1,0 +1,64 @@
+<style type="text/css">
+    .card{
+        overflow: hidden;
+        position:absolute;
+        top:50px;
+        bottom:20px;
+        left: 50%;
+        margin-left: -260px;
+    }
+    #formPrincipal{
+        margin-top:30px;
+        padding-right: 35px;
+    }
+    #todosMails{
+        text-align:center;
+        overflow-y: auto;
+        bottom: 0;
+        position: absolute;
+        top: 202px;
+        width:100%;
+    }
+    #todosMails>div{
+        display: inline-block;
+        text-align: right;
+        font-size: 16px;
+        margin:10px 0;
+    }
+    #todosMails>div>div:hover{
+        opacity: 0.7;
+        cursor: default;
+        border-left: 3px solid #427fed;
+    }
+    .correo{
+        margin:5px 0;
+        width:100%;
+    }
+</style>
+<div class="card" ng-controller="GestionDeContenidosInsertarMailCtrl">
+    <h3 class="card-heading simple">Insertar E-Mail</h3>
+    
+    <div id="formPrincipal">
+        <form ng-submit="nuevoCorreo()" class="form-horizontal pull-left"> <!-- ng-submit funcion que se ejecuta al presionar boton type="submit"-->
+            <div class="control-group">
+                <label class="control-label" for="campoEmail">Nuevo E-Mail</label>
+                <div class="controls">
+                    <input type="email" class="input-xlarge" id="campoEmail" placeholder="E-Mail" required="required" ng-model="correo.correo" autofocus/><!--ng-required="true" o required="required" es lo mismo-->
+                    <button type="submit" class="btn"><i class="icon-plus"></i></button> <!-- Envia al ng-submit que comprueba que este todo -->
+                    <span class="help-block">Presione el botón <i class="icon-plus"></i> o "Enter" para guardar el E-Mail.</span>
+                </div>
+            </div>
+        </form>
+    </div>    
+    <h4 class="card-heading simple">E-Mails almacenados</h4>
+    <div id="todosMails">
+        <div>
+            <div ng-repeat="i in correos | orderBy:'correo'" class="correo">{{i.correo}} 
+                <button class="btn btn-link" title="Boorar" type="button" ng-click="borrarCorreo(i._id)"><i class="icon-trash"></i></button><br>
+            </div>
+        </div>
+    </div>
+    
+    
+</div>
+

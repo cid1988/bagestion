@@ -1,0 +1,19 @@
+<div class="modal-header" style="padding-bottom: 10px;">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h3>Agregar detalle de Comunicación</h3>
+</div>
+<div class="modal-body">
+    
+    <span style="display: inline-block"> Nombre de Fila:<br /> 
+        <input class="span2" type="text" placeholder="Nombre..." ng-model="nombre" />
+    </span>
+    <div ng-repeat="h in tema.columnas">
+        <span style="display: inline-block"> {{h}}:<br /> 
+            <input class="span2" type="text" placeholder="Dato..." ng-model="datos[$index]" />
+        </span>
+    </div>
+</div>
+<div class="modal-footer">
+    <a href="#" class="btn" data-dismiss="modal">Cancelar</a>
+    <a href="#" class="btn btn-info" data-dismiss="modal" ng-click="agregarFila(true, nombre, datos)">Agregar</a>
+</div>

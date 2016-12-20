@@ -1,0 +1,197 @@
+<style>
+    .table {
+        border: 0;
+    }
+    .table th, .table td {
+        padding: 8px;
+        line-height: 20px;
+        text-align: left;
+        vertical-align: middle;
+        border: 0;
+    }
+    .table th {
+        background-color: #dddddd !important;
+    }
+    
+    .btn-darkred {
+        background-color: hsl(0, 0%, 74%, 0) !important;
+        background-repeat: repeat-x;
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="darkred", endColorstr="darkred");
+        background-image: -khtml-gradient(linear, left top, left bottom, from(darkred), to(darkred));
+        background-image: -moz-linear-gradient(top, darkred, darkred);
+        background-image: -ms-linear-gradient(top, darkred, darkred);
+        background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, darkred), color-stop(100%, darkred));
+        background-image: -webkit-linear-gradient(top, darkred, darkred);
+        background-image: -o-linear-gradient(top, darkred, darkred);
+        background-image: linear-gradient(darkred, darkred);
+        border-color: darkred darkred hsl(0, 0%, 74%);
+        color: white !important;
+        text-shadow: 0 1px 1px rgba(255, 255, 255, 0.00);
+        -webkit-font-smoothing: antialiased;
+    }
+    
+    .btn-darkviolet {
+        background-color: hsl(0, 0%, 74%, 0) !important;
+        background-repeat: repeat-x;
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="darkviolet", endColorstr="darkviolet");
+        background-image: -khtml-gradient(linear, left top, left bottom, from(darkviolet), to(darkviolet));
+        background-image: -moz-linear-gradient(top, darkviolet, darkviolet);
+        background-image: -ms-linear-gradient(top, darkviolet, darkviolet);
+        background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, darkviolet), color-stop(100%, darkviolet));
+        background-image: -webkit-linear-gradient(top, darkviolet, darkviolet);
+        background-image: -o-linear-gradient(top, darkviolet, darkviolet);
+        background-image: linear-gradient(darkviolet, darkviolet);
+        border-color: darkviolet darkviolet hsl(0, 0%, 74%);
+        color: white !important;
+        text-shadow: 0 1px 1px rgba(255, 255, 255, 0.00);
+        -webkit-font-smoothing: antialiased;
+    }
+    
+    .btn-gold {
+        background-color: hsl(0, 0%, 74%, 0) !important;
+        background-repeat: repeat-x;
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="gold", endColorstr="gold");
+        background-image: -khtml-gradient(linear, left top, left bottom, from(gold), to(gold));
+        background-image: -moz-linear-gradient(top, gold, gold);
+        background-image: -ms-linear-gradient(top, gold, gold);
+        background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, gold), color-stop(100%, gold));
+        background-image: -webkit-linear-gradient(top, gold, gold);
+        background-image: -o-linear-gradient(top, gold, gold);
+        background-image: linear-gradient(gold, gold);
+        border-color: gold gold hsl(0, 0%, 74%);
+        color: #333 !important;
+        text-shadow: 0 1px 1px rgba(255, 255, 255, 0.00);
+        -webkit-font-smoothing: antialiased;
+    }
+    
+    .btn-gray {
+        background-color: hsl(0, 0%, 74%, 0) !important;
+        background-repeat: repeat-x;
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="gray", endColorstr="gray");
+        background-image: -khtml-gradient(linear, left top, left bottom, from(gray), to(gray));
+        background-image: -moz-linear-gradient(top, gray, gray);
+        background-image: -ms-linear-gradient(top, gray, gray);
+        background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, gray), color-stop(100%, gray));
+        background-image: -webkit-linear-gradient(top, gray, gray);
+        background-image: -o-linear-gradient(top, gray, gray);
+        background-image: linear-gradient(gray, gray);
+        border-color: gray gray hsl(0, 0%, 74%);
+        color: white !important;
+        text-shadow: 0 1px 1px rgba(255, 255, 255, 0.00);
+        -webkit-font-smoothing: antialiased;
+    }
+    .botones {
+        width: 83px;
+        padding: 0;
+        width: 7%;
+        max-width: 83px;
+    }
+</style>
+<div class="card" ng-controller="Planificacion20162019Ctrl" style="position: absolute;top: 50px;bottom: 0px;right: 20px;left: 20px;margin-bottom: 10px;">
+    <div class="card-actions pull-right no-print" style="margin: 0; padding: 0">
+        <input placeholder="Buscar por Iniciativa..." type="text" class="span2" ng-model="filtro.nombreProyecto" style="margin-right: 0px;margin-left: 5px;margin-bottom: 25px;" />
+        <div style="margin-left: 5px; display: inline-block;">
+            <select class="span3" ui-select2 type="text" ng-model="filtro2">
+                <option value="">Todas las Áreas</option>
+                <option ng-repeat="e in organigrama" value="{{e._id}}">{{e.nombreCompleto}} ({{e.sigla}})</option>
+            </select>
+        </div>
+        <a href="/planificacion20162019/nuevo" class="btn btn-link pull-right" style="margin-right: 10px;margin-bottom: 20px;margin-left: 10px;" ng-if=hasPermission('planificacion20162019.editar') ><i class="icon-plus"></i></a>
+        <div data-toggle="multiselect buttons-radio" class="control-group span4 pull-right" style="margin-right: 0px;width: 275px !important; margin-left: 20px;">
+            Prioridad:
+            <div class="btn-group">
+                <a style="padding-left: 5px;padding-right: 5px; min-width:21px; font-weight: 700;" class="btn" ng-class="{'active btn-darkred': filtrandoPrioridad('A+')}" ng-click="cambiarFiltroPrioridad('A+')">A+</a>
+                <a style="padding-left: 5px;padding-right: 5px; min-width:21px; font-weight: 700;" class="btn" ng-class="{'active btn-darkviolet': filtrandoPrioridad('A')}" ng-click="cambiarFiltroPrioridad('A')">A</a>
+                <a style="padding-left: 5px;padding-right: 5px; min-width:21px; font-weight: 700;" class="btn" ng-class="{'active btn-gold': filtrandoPrioridad('B')}" ng-click="cambiarFiltroPrioridad('B')">B</a>
+                <a style="padding-left: 5px;padding-right: 5px; min-width:21px; font-weight: 700;" class="btn" ng-class="{'active btn-gray': filtrandoPrioridad('C')}" ng-click="cambiarFiltroPrioridad('C')">C</a>
+                <a style="padding-left: 5px;padding-right: 5px; min-width:21px; font-weight: 700; background-color: white;" class="btn" ng-class="{'active btn-info': filtrandoPrioridad('')}" ng-click="cambiarFiltroPrioridad('')">Sin</a>
+                <a style="padding-left: 5px;padding-right: 5px; min-width:21px; font-weight: 700; background-color: white;" class="btn" ng-class="{'active btn-primary': filtrandoPrioridad('Todos')}" ng-click="cambiarFiltroPrioridad('Todos')">Todos</a>
+                <!--<a style="padding-left: 0px;padding-right: 0px; min-width:21px; font-weight: 700" class="btn" ng-class="{'active btn-info': filtrandoPrioridad('L')}" ng-click="cambiarFiltroPrioridad('L')"><i class="icon-search"></i></a>--> 
+            </div>
+        </div>
+    </div>
+    <h2 class="card-heading simple" style="font-size: 24px;">Planificación 2016 - 2019</h2>
+    <div class="card-body">
+        <table border="1" class="table table-striped" style="font-size: 15px;" ng-hide=hasPermission('planificacion20162019.hrl')>
+            <tr bgcolor= "#FFFFFF">
+                <th width="41%"><a ng-click="orden = 'nombreProyecto'" href="#" style="display: inline-block; color:#404040;">Iniciativa</a></th>
+                <th width="12%"><!--<a ng-click="orden = 'ordenPrioridad'" href="#" style="display: inline-block; color:#404040;margin-left: 5px;">Priorización</a>--></th>
+                <th width="14%"><!--<a ng-click="orden = 'statusOperativo'" href="#" style="display: inline-block; color:#404040;margin-left: 8px;">Status Operativo</a>--></th>
+                <th width="19%"></th>
+                <th></th>
+            </tr>
+        </table>
+        <table border="1" class="table table-striped" style="font-size: 15px;" ng-show=hasPermission('planificacion20162019.hrl')>
+            <tr bgcolor= "#FFFFFF">
+                <th width="41%"><a href="#" style="display: inline-block; color:#404040;">Iniciativa</a></th>
+                <th width="12%"><!--<a href="#" style="display: inline-block; color:#404040;margin-left: 5px;">Priorización</a>--></th>
+                <th width="14%"><!--<a href="#" style="display: inline-block; color:#404040;margin-left: 8px;">Status Operativo</a>--></th>
+                <th width="19%"></th>
+                <th></th>
+            </tr>
+        </table>
+        <div style="overflow-y: scroll; overflow-x: hidden;position: absolute;top: 120px;bottom: 12px;right: 20px;left: 20px;">
+            <div ng-repeat="a in areas | filter:filtro2 | orderBy:ordenAreaPorId">
+                <div style="width:100%;text-align: left;background-color: gainsboro;font-weight: 600;margin-top: 0px;padding-top: 5px;padding-bottom: 5px;font-size: 16px;">
+                    <div style="width: 42%; display: inline-block;"><a href="#" ng-click="modalArea(a)" style="color:#404040;margin-left: 10px;font-size: 20px;">{{organigramaPorId(a).nombreCompleto}}</a></div>
+                    <div style="width: 12%; display: inline-block;"><a href="#" ng-click="modalCompromisos(a)" title="Ver Compromisos" ng-style="{'color': colorCompro(a)}">Compromisos</a> &nbsp;&nbsp;<a href="#" ng-click="modalCargaCompromisos(a)" title="Editar Compromisos" ng-hide=hasPermission('planificacion20162019.hrl') style="color:#404040;"><i class="icon-edit"></i></a></div>
+                    <div style="width: 14%; display: inline-block;"><a href="#" ng-click="modalPresentaciones(a)" title="Ver Presentaciones" style="color:#404040;">Presentaciones</a> &nbsp;&nbsp;<a href="#" ng-click="modalCargaPresentaciones(false, a)" title="Agregar Presentacion" ng-hide=hasPermission('planificacion20162019.hrl') style="color:#404040;"><i class="icon-plus"></i></a></div>
+                    <div style="display: inline-block;"><a href="#" ng-click="modalMinutas(a)" title="Ver Minutas" style="color:#404040;">Minutas</a> &nbsp;&nbsp;<a href="#" ng-click="modalCargaMinutas(false, a)" title="Agregar Minuta" ng-hide=hasPermission('planificacion20162019.hrl') style="color:#404040;"><i class="icon-plus"></i></a></div>
+                </div>
+                <table border="1" class="table table-striped" style="font-size: 15px;">
+                    <tr ng-repeat-start="i in planes | orderBy:orden | filter:filtro | filter:filtroPrioridades | filter:filtroSoloPadres | filter:{areaResponsable:a}">
+                        <td width="42%"><div><b>{{i.nombreProyecto}}</b></div></td>
+                        <td width="12%">
+                            <div style="color: darkred;font-weight: 600;font-size: 19px;display: inline-block;" ng-if="i.prioridad=='A+'">A+</div>
+                            <div style="color: darkviolet;font-weight: 600;font-size: 19px;display: inline-block;" ng-if="i.prioridad=='A'">A</div>
+                            <div style="color: gold;font-weight: 600;font-size: 19px;display: inline-block;" ng-if="i.prioridad=='B'">B</div>
+                            <div style="color: gray;font-weight: 600;font-size: 19px;display: inline-block;" ng-if="i.prioridad=='C'">C</div>
+                            <button class="btn btn-mini pull-right" ng-if="i.statusOperativo[0]=='white'" title="Status de Avance" style="border-radius: 15px;margin-right: 20px; min-width: 20px;"></button>
+                            <button class="btn btn-mini btn-danger pull-right" ng-if="i.statusOperativo[0]=='danger'" title="Status de Avance" style="border-radius: 15px;margin-right: 20px; min-width: 20px;"></button>
+                            <button class="btn btn-mini btn-warning pull-right" ng-if="i.statusOperativo[0]=='warning'" title="Status de Avance" style="border-radius: 15px;margin-right: 20px; min-width: 20px;"></button>
+                            <button class="btn btn-mini btn-success pull-right" ng-if="i.statusOperativo[0]=='success'" title="Status de Avance" style="border-radius: 15px;margin-right: 20px; min-width: 20px;"></button>
+                        </td>
+                        <td width="14%"><div class="btn-group">
+                            <button class="btn" ng-hide="i.compromisosLeidos == false" title="Compromisos" ng-click="modalCompromisosIni(i)" style="padding-left: 15px; padding-right: 15px;">&nbsp;&nbsp;C<i title="Seguimiento Especial" ng-if="tienePrioritarios(i)" style="color: darkviolet;position: absolute;left: auto;top: 0px;right: 5px;bottom: auto;font-size: 12px;" class="icon-star"></i>&nbsp;&nbsp;</button>
+                            <button class="btn btn-info" ng-show="i.compromisosLeidos == false" title="Compromisos" ng-click="modalCompromisosIni(i)" style="padding-left: 15px; padding-right: 15px;">&nbsp;&nbsp;C<i title="Seguimiento Especial" ng-if="tienePrioritarios(i)" style="color: darkviolet;position: absolute;left: auto;top: 0px;right: 5px;bottom: auto;font-size: 12px;" class="icon-star"></i>&nbsp;&nbsp;</button>
+                            <button class="btn" title="Presentaciones" ng-click="modalPresentacionesIni(i)" style="padding-left: 15px; padding-right: 15px;">&nbsp;&nbsp;P&nbsp;&nbsp;</button>
+                            <!--<button class="btn" title="Minutas" ng-click="modalMinutasIni(i)" style="padding-left: 15px; padding-right: 15px;">&nbsp;&nbsp;M&nbsp;&nbsp;</button>-->
+                        </div></td>
+                        <td width="33%"><div>
+                                <a class="btn btn-link pull-right" type="button" href="#" ng-click="eliminar(i)" title="Eliminar" style="padding-left: 20px;padding-right: 20px;" ng-if=hasPermission('planificacion20162019.editar')><i class="icon-trash"></i></a>
+                                <a class="btn btn-link pull-right" type="button" href="/planificacion20162019/{{i._id}}" title="Ver detalle" style="padding-left: 20px;padding-right: 20px;" ng-if=hasPermission('planificacion20162019.editar')><i class="icon-zoom-in"></i></a>
+                                <a class="btn btn-link" type="button" href="#" ng-click="comentariosHRL(i._id)" title="Comentarios HRL" style="padding-left: 20px;padding-right: 20px;"><i ng-hide="comentarioNuevo(i)" class="icon-comment"></i><i ng-show="comentarioNuevo(i)" style="color:#D33434" class="icon-comment"></i> <span ng-hide="comentarioNuevo(i)">HRL</span><span ng-show="comentarioNuevo(i)" style="color:#D33434">HRL</span></a>
+                                <a class="btn btn-link" type="button" href="#" ng-click="comentariosDGPLE(i._id)" title="Comentarios DGPLE" style="padding-left: 20px;padding-right: 20px;"><i ng-hide="comentarioNuevo2(i)" class="icon-comment"></i><i ng-show="comentarioNuevo2(i)" style="color:#3441D3" class="icon-comment"></i> <span ng-hide="comentarioNuevo2(i)">DGPLE</span><span ng-show="comentarioNuevo2(i)" style="color:#3441D3">DGPLE</span></a>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr ng-repeat="h in proyectosHijos(i._id) | orderBy:orden | filter:filtro | filter:filtroPrioridades">
+                        <td width="42%"><div style="margin-left: 50px;">{{h.nombreProyecto}}</div></td>
+                        <td width="12%">
+                            <button class="btn btn-mini pull-right" ng-if="h.statusOperativo[0]=='white'" title="Status de Avance" style="border-radius: 15px;margin-right: 20px; min-width: 20px;"></button>
+                            <button class="btn btn-mini btn-danger pull-right" ng-if="h.statusOperativo[0]=='danger'" title="Status de Avance" style="border-radius: 15px;margin-right: 20px; min-width: 20px;"></button>
+                            <button class="btn btn-mini btn-warning pull-right" ng-if="h.statusOperativo[0]=='warning'" title="Status de Avance" style="border-radius: 15px;margin-right: 20px; min-width: 20px;"></button>
+                            <button class="btn btn-mini btn-success pull-right" ng-if="h.statusOperativo[0]=='success'" title="Status de Avance" style="border-radius: 15px;margin-right: 20px; min-width: 20px;"></button>
+                        </td>
+                        <td width="14%"><div class="btn-group">
+                            <button class="btn" ng-hide="h.compromisosLeidos == false" title="Compromisos" ng-click="modalCompromisosIni(h)" style="padding-left: 15px; padding-right: 15px;">&nbsp;&nbsp;C<i title="Seguimiento Especial" ng-if="tienePrioritarios(h)" style="color: darkviolet;position: absolute;left: auto;top: 0px;right: 5px;bottom: auto;font-size: 12px;" class="icon-star"></i>&nbsp;&nbsp;</button>
+                            <button class="btn btn-info" ng-show="h.compromisosLeidos == false" title="Compromisos" ng-click="modalCompromisosIni(h)" style="padding-left: 15px; padding-right: 15px;">&nbsp;&nbsp;C<i title="Seguimiento Especial" ng-if="tienePrioritarios(h)" style="color: darkviolet;position: absolute;left: auto;top: 0px;right: 5px;bottom: auto;font-size: 12px;" class="icon-star"></i>&nbsp;&nbsp;</button>
+                            <button class="btn" title="Presentaciones" ng-click="modalPresentacionesIni(h)" style="padding-left: 15px; padding-right: 15px;">&nbsp;&nbsp;P&nbsp;&nbsp;</button>
+                            <!--<button class="btn" title="Minutas" ng-click="modalMinutasIni(h)" style="padding-left: 15px; padding-right: 15px;">&nbsp;&nbsp;M&nbsp;&nbsp;</button>-->
+                        </div></td>
+                        <td width="33%"><div><a class="btn btn-link pull-right" type="button" href="#" ng-click="eliminar(h)" title="Eliminar" style="padding-left: 20px;padding-right: 20px;" ng-if=hasPermission('planificacion20162019.editar')><i class="icon-trash"></i></a>
+                                <a class="btn btn-link pull-right" type="button" href="/planificacion20162019/{{h._id}}" title="Ver detalle" style="padding-left: 20px;padding-right: 20px;" ng-if=hasPermission('planificacion20162019.editar')><i class="icon-zoom-in"></i></a>
+                                <a class="btn btn-link" type="button" href="#" ng-click="comentariosHRL(h._id)" title="Comentarios HRL" style="padding-left: 20px;padding-right: 20px;"><i ng-hide="comentarioNuevo(h)" class="icon-comment"></i><i ng-show="comentarioNuevo(h)" style="color:#D33434" class="icon-comment"></i> <span ng-hide="comentarioNuevo(h)">HRL</span><span ng-show="comentarioNuevo(h)" style="color:#D33434">HRL</span></a>
+                                <a class="btn btn-link" type="button" href="#" ng-click="comentariosDGPLE(h._id)" title="Comentarios DGPLE" style="padding-left: 20px;padding-right: 20px;"><i ng-hide="comentarioNuevo2(h)" class="icon-comment"></i><i ng-show="comentarioNuevo2(h)" style="color:#3441D3" class="icon-comment"></i> <span ng-hide="comentarioNuevo2(h)">DGPLE</span><span ng-show="comentarioNuevo2(h)" style="color:#3441D3">DGPLE</span></a>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr ng-show="false"></tr>
+                    <tr ng-repeat-end></tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+

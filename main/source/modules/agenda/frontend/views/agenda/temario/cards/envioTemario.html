@@ -1,0 +1,104 @@
+<style type="text/css">
+    .wysihtml5-sandbox {
+        border: 0 !important;
+        padding: 0 !important;
+    }
+    
+    ul.wysihtml5-toolbar li a[title="Insert image"] { display: none; }
+    ul.wysihtml5-toolbar li a[title="Insert link"] { display: none; }
+    ul.wysihtml5-toolbar li.dropdown ul.dropdown-menu li a[data-wysihtml5-command-value="h1"] { display: none; }
+    ul.wysihtml5-toolbar li.dropdown ul.dropdown-menu li a[data-wysihtml5-command-value="h2"] { display: none; }
+    ul.wysihtml5-toolbar li.dropdown ul.dropdown-menu li a[data-wysihtml5-command-value="h3"] { display: none; }
+    ul.wysihtml5-toolbar li.dropdown ul.dropdown-menu li a[data-wysihtml5-command-value="h5"] { display: none; }
+    
+    
+    .temario {
+        font-size:20px !important;
+        font-family:Arial !important;
+        line-height: 150% !important;
+    }
+
+    .temario ul {
+        line-height: 20px;
+        margin-top: 1em;
+        margin-bottom: 1em;
+        padding-left: 15px;
+    }
+
+    .temario h6 {
+        font-size:14px !important;
+        line-height: 16px;
+        margin-top: 1em;
+        margin-bottom: 1em;
+    }
+    
+    .temario  li {
+        line-height: 36px;
+    }
+    
+    
+    .wysihtml5-toolbar:nth-child(2) 
+    {
+        display: none;
+    }
+    .wysihtml5-toolbar:nth-child(3) 
+    {
+        display: none;
+    }
+    .wysihtml5-toolbar:nth-child(4) 
+    {
+        display: none;
+    }
+    .wysihtml5-toolbar:nth-child(5) 
+    {
+        display: none;
+    }
+</style>
+
+<div class="card animated fadeInDown" ng-controller="AgendaEnvioTemarioCtrl" ng-show="enviando">
+    <div class="card-actions pull-right" style="margin-top: 0; padding-top: 0">
+        <div class="btn-group">
+            <a ng-click="cancelarEnvio()" type="button" class="btn btn-link">
+                <i class="icon-remove"></i>
+            </a>
+            <a ng-click="enviarTemario()" type="button" class="btn btn-link">
+                <i class="icon-envelope"></i>
+            </a>
+        </div>
+    </div>
+    <h3 class="card-heading simple">Enviar temario</h3>
+    <div class="card-body">
+        <table class="table table-condensed table-no-border">
+            <tr>
+                <th style="border-top:0">Para:</th>
+                <td style="width: 100%; border-top:0">
+                    <span>
+                        {{para}}
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Asunto:
+                </th>
+                <td colspan="2">
+                    <span>Temario de {{agenda.nombre}}</span>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Adjunto: 
+                </th>
+                <td colspan="2">
+                    <div style="width: 300px" fine-uploader destination="'/upload/'" placeholder="'Examinar'" uploaded="uploadedFile"></div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <div style="margin-top: 10px;margin-right: 5px;margin-left: 0px;" class="temario" compile="temario.html"></div><br>
+                    <div>- {{temario.usuario}} ({{temario.fecha}})</div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

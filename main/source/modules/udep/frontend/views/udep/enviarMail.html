@@ -1,0 +1,50 @@
+<style>
+    .wysihtml5-sandbox {
+        border: 1 !important;
+        padding: 0 !important;
+    }
+    .wysihtml5-toolbar:nth-child(2) 
+    {
+        display: none;
+    }
+    .wysihtml5-toolbar:nth-child(3) 
+    {
+        display: none;
+    }
+    .wysihtml5-toolbar:nth-child(4) 
+    {
+        display: none;
+    }
+    .wysihtml5-toolbar:nth-child(5) 
+    {
+        display: none;
+    }
+    legend{
+        width:98%;
+        margin-left:2%;
+    }
+    form{
+        width:98%;
+        margin-left:2%;
+    }
+    textarea{
+        width:97%;
+        height:220px;
+    }
+</style>
+<div class="card card-body" ng-controller="UDEPEnviarMailCtrl">
+    <legend>Enviar correo a {{data.responsableDeCarga}}</legend>
+    <form>
+        <label>Enviar a:</label>
+        <input type="text" placehoder="Destinatario" title="Destinatario" style="margin:0; width:97%" align="center" ng-model="data.responsableDeCarga">
+        <label>Asunto:</label>
+        <input type="text" placehoder="Asunto del mensaje" title="asunto" style="margin:0; width:97%" align="center" ng-model="data.asuntoCorreo">
+        <hr style="margin:10px 0 10px 0">
+        <label>Contenido del mensaje:</label>
+        <textarea rich-text-editor placeholder="Contenido del mensaje" ng-model="data.mensaje"></textarea>
+        <div style="margin:0 20px 40px 0">
+            <button type="button" class="btn btn-success pull-right"  data-dismiss="modal" ng-click="enviarMail()">Enviar</button>
+            <button type="button" class="btn btn-danger pull-right" data-dismiss="modal" style="margin-right:10px" ng-click="cancelarEnvio()">Cancelar envio</button>
+        </div>
+    </form>
+</div>

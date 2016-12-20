@@ -1,0 +1,87 @@
+<style>
+    a:hover{
+        color:black;
+    }
+</style>
+<div class="card">
+    <legend><span style="margin-left:10px">Relevamientos</span>
+        <a class="btn btn-link no-print pull-right" ng-if="editando" ng-click="guardar()"><i class="icon-ok"></i></a>
+        <a class="btn btn-link no-print pull-right" ng-if="editando" ng-click="cancelar()"><i class="icon-undo"></i></a>
+        <a class="btn btn-link no-print pull-right" ng-if="!editando" ng-click="editar()"><i class="icon-edit"></i></a>
+    </legend>
+    
+    <div style="margin-left:10px;margin-right:10px">
+        <input type="text" class="ng-pristine ng-valid" style="width: 15%" placeholder="Nombre" ng-model="filtro.nombre">
+        <label class="pull-right">Prioridad:
+            <div class="btn-group">
+                <a ng-repeat="c in relevancias | orderBy:'_id'" style="padding-left: 0px;padding-right: 0px; min-width:21px; font-weight: 700" class="btn" ng-class="{'active btn-info': filtrandoPrioridad(c)}" ng-click="cambiarFiltroPrioridad(c)">{{c.nombre}}</a>
+                <a class="btn" ng-class="{'active btn-info': todasLasPrioridadesEstanFiltradas(c)}" style="font-weight: 700" ng-click="togglePrioridades()"><div ng-show="todasLasPrioridadesEstanFiltradas(c)">Ninguna</div><div ng-show="!todasLasPrioridadesEstanFiltradas(c)">Todas</div></a>
+            </div>
+        </label>
+        <label style="margin-right: 10px" class="pull-right">Comuna:
+            <div class="btn-group">
+                <a ng-repeat="c in comunas | orderBy:'numero'" style="padding-left: 0px;padding-right: 0px; min-width:21px; font-weight: 700" class="btn" ng-class="{'active btn-info': filtrandoComuna(c) }" ng-click="cambiarFiltroComuna(c)">{{c.numero}}</a>
+                <a class="btn" ng-class="{'active btn-info': todasLasComunasEstanFiltradas(c)}" style="font-weight: 700" ng-click="toggleComunas()"><div ng-show="todasLasComunasEstanFiltradas(c)">Ninguna</div><div ng-show="!todasLasComunasEstanFiltradas(c)">Todas</div></a>
+            </div>
+        </label>
+        <label style="margin-right: 10px" class="pull-right">
+            <select type="text" class="span3" placeholder="Relevador" ui-select2 ng-model="filtro.relevadorAsignado">
+                <option value=""></option>
+                <option value="">Todos los relevadores</option>
+                <option ng-repeat="e in contactos | orderBy:'apellidos'" value="{{e._id}}">{{e.apellidos}} {{e.nombre}}</option>
+            </select>
+        </label>
+    </div>
+    
+    <div class="alert alert-success" ng-show="iconGuardando">
+        <strong>Guardando!</strong> <i class="icon-spinner icon-spin"></i>
+    </div>
+        
+    <table border="1" class="table table-bordered">
+        <tr bgcolor= "#FFFFFF">
+            <th style="text-align:center !important">
+                <a ng-hide="reverse" href="#" ng-click="orden = 'nombre';reverse=true">NOMBRE</a>
+                <a ng-show="reverse" href="#" ng-click="orden = 'nombre';reverse=false">NOMBRE</a>
+            </th>
+            <th style="text-align:center !important">
+                <a ng-hide="reverse" ng-click="orden = ordenHito; reverse=true" href="#" style="display: inline-block; color:#404040;">HITO A RELEVAR</a>
+                <a ng-show="reverse" ng-click="orden = ordenHito; reverse=false" href="#" style="display: inline-block; color:#404040;">HITO A RELEVAR</a>
+            </th>
+            <th style="text-align:center !important">
+                <a ng-hide="reverse" ng-click="orden = ordenRelevador; reverse=true" href="#" style="display: inline-block; color:#404040;">RELEVADOR ASIGNADO</a>
+                <a ng-show="reverse" ng-click="orden = ordenRelevador; reverse=false" href="#" style="display: inline-block; color:#404040;">RELEVADOR ASIGNADO</a>
+            </th>
+        </tr>
+        
+        <tr ng-repeat="o in filters = (obras | filter:filtroObras | filter:filtro | filter:filtroComunas | filter:filtroPrioridades | orderBy:orden:reverse)" bgcolor= "#FFFFFF">
+            <td>
+                <a href="#">{{o.nombre}}</a>
+                <a ng-if="o.fotos" href="#" ng-click="mostrarPresentacion(o._id)" class="btn pull-right" style="padding-left: 0px;padding-right: 0px; margin-right: 4px"><i class="icon-picture"></i></a>
+                <a href="#" ng-click="abrirRelevamientos(o._id)" ng-show="existeRelevamiento(o)" class="btn pull-right" style="padding-left: 0px;padding-right: 0px; margin-right: 4px"><i class="icon-align-justify"></i></a>
+                <a ng-show="comprobarAprobado(o) && !editando" class="btn pull-right" style="padding-left: 0px;padding-right: 0px; margin-right: 4px" ng-class="{'active btn-info': true}"><i class="icon-ok"></i></a>
+                <a ng-show="comprobarAprobado(o) && editando" class="btn pull-right" style="padding-left: 0px;padding-right: 0px; margin-right: 4px" ng-class="{'active btn-info': true}" ng-click="aprobar(o._id,false,false)"><i class="icon-ok"></i></a>
+            </td>
+            <td style="text-align:center !important">
+                <span>{{fechaUltimoHito(o)}}</span>
+                <!--<a ng-show="estadoRelevamiento(o) == 'Esperando Aprobacion' && !editando" class="btn btn-link"><i class="icon-ok"></i></a>-->
+                <!--<a ng-show="estadoRelevamiento(o) == 'Esperando Aprobacion' && editando" class="btn btn-link" ng-click="aprobar(o._id,false,false)"><i class="icon-ok"></i></a>-->
+            </td>
+            <td ng-if="!editando" style="text-align:center !important;width: 230px">{{contactoPorId(o.relevadorAsignado).apellidos}} {{contactoPorId(o.relevadorAsignado).nombre}}</td>
+            <td ng-if="editando" style="text-align:center !important;width: 250px">
+                <a ng-click="confirmarRelevador(o);listadoActualizar(o)" class="btn pull-right" style="padding-left: 0px;padding-right: 0px; margin-right: 4px"><i ng-class="iconoRel(o)"></i></a>
+                <!--<select style="width:200px" type="text" ng-model="o.relevadorAsignado" ng-options="i._id as i.apellidos + ' ' + i.nombre for i in contactos track by i._id | orderBy:'apellidos'">-->
+                <!--    <option ng-disabled="true" value="">{{contactoPorId(o.relevadorAsignado).apellidos}} {{contactoPorId(o.relevadorAsignado).nombre}}</option>-->
+                <!--</select>-->
+                <div class="span2" style="margin-left:5px">
+                    <select style="width:100%" type="text" ng-change="listadoActualizar(o)" ng-model="o.relevadorAsignado" ng-options="i._id as i.apellidos + ' ' + i.nombre for i in contactos | orderBy:'apellidos'">
+                        <option ng-disabled="true" value="">{{contactoPorId(o.relevadorAsignado).apellidos}} {{contactoPorId(o.relevadorAsignado).nombre}}</option>
+                    </select>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div id="modalGuardando" class="modal hide fade">
+    <i class="icon-spinner icon-spin"></i>&nbsp;Guardando...
+</div>

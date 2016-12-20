@@ -1,0 +1,102 @@
+<style>
+    .table-hover tbody tr:hover > td,
+    .table-hover tbody tr:hover > th {
+      background-color: #eeeeee !important;
+    }
+    
+    table tr td a {
+        display:block;
+        height:100%;
+        width:100%;
+    }
+</style>
+<div class="card body" style="margin-top: 0px;padding-top: 0px;" ng-controller="ES2015Ctrl">
+    <table class="pull-right" border="1" cellspacing="0" cellpadding="5" style=" margin: auto 2 auto auto; text-align: center; vertical-align: middle; margin-left: 0px; margin-bottom: 8px; margin-top: 5px; margin-right: 20px;">
+        <tbody><tr height="21" style=" background-color: #404040; color: #FFFFFF;">
+            <td height="43" rowspan="2" style="vertical-align: middle; padding: 4px; border-right: 1 solid #FFFFFF;">
+                ELECTORES</td>
+            <td rowspan="2" style="vertical-align: middle;padding: 4px; border-right: 1 solid #FFFFFF;">
+                MESAS</td>
+            <td rowspan="2" style="vertical-align: middle; border-right: 1 solid #FFFFFF;">
+                %</td>
+            <td colspan="2" style="vertical-align: middle; padding: 2px;border-bottom: 1 solid #FFFFFF;">
+                LEG. NAC.</td>
+            <td rowspan="2" style="vertical-align: middle; padding: 4px; border-right: 1 solid #FFFFFF;border-left: 1 solid #FFFFFF;">
+                GDOR.</td>
+            <td colspan="2" style="vertical-align: middle; padding: 2px;border-bottom: 1 solid #FFFFFF;">
+                LEG. PROV.</td>
+            <td rowspan="2" style="vertical-align: middle; padding: 4px;border-left: 1 solid #FFFFFF;">
+                INT.</td>
+        </tr>
+        <tr height="22" style=" background-color: #404040; color: #FFFFFF;">
+            <td height="22" style="vertical-align: middle; padding: 2px;border-right: 1 solid #FFFFFF;">
+                SEN.</td>
+            <td style="vertical-align: middle; padding: 2px;">
+                DIP.</td>
+            <td style="vertical-align: middle; padding: 2px;border-right: 1 solid #FFFFFF;">
+                SEN</td>
+            <td style="vertical-align: middle; padding: 2px;">
+                DIP</td>
+        </tr>
+        
+        <tr height="21" style=" background-color: #FFFFFF; font-weight:600 !important; font-size: 14px;">
+            <td height="21" style=" background-color: #FFFFFF; font-weight:600 !important;border-right: 1 solid #CCCCCC;">
+                30.635.464</td>
+            <td style=" background-color: #FFFFFF; font-weight:600 !important;border-right: 1 solid #CCCCCC;">
+                90.672</td>
+            <td style=" background-color: #FFFFFF; font-weight:600 !important;border-right: 1 solid #CCCCCC; padding-left: 5px; padding-right: 5px;">
+               100%</td>
+            <td style=" background-color: #FFFFFF; font-weight:600 !important;border-right: 1 solid #CCCCCC;">
+                24</td>
+            <td style=" background-color: #FFFFFF; font-weight:600 !important;border-right: 1 solid #CCCCCC;">
+                130</td>
+            <td style=" background-color: #FFFFFF; font-weight:600 !important;border-right: 1 solid #CCCCCC;">
+               22</td>
+            <td style=" background-color: #FFFFFF; font-weight:600 !important;border-right: 1 solid #CCCCCC;">
+                101</td>
+            <td style=" background-color: #FFFFFF; font-weight:600 !important;border-right: 1 solid #CCCCCC;">
+               512</td>
+            <td style=" background-color: #FFFFFF; font-weight:600 !important;">
+                1.961</td>
+        </tr>
+        </tbody>
+    </table>
+    <div style="margin-bottom: 0px">
+        <ul class="breadcrumb" style="margin-bottom: 0px;">
+          <li class="active">Distritos</li>
+        </ul>
+    </div>
+    <h2 style="margin-top: 15px; margin-left: 15px; margin-bottom: 0px;">Seguimiento Elecciones 2015
+    </h2>
+    <hr style="margin-top: 8px;margin-bottom: 5px;border-top-width: 5px;border-bottom-width: 1px;">
+    <div class="card-body" ng-init="miTotal = 0" style="margin-top: 0px;margin-bottom: 10px;">
+        <div class="row" style="padding-bottom: 0px; font-size:16px">
+            <div class="span8" style="display: table-cell;">
+                <a ng-show="!reverse" href="#" ng-click="orden = 'nombre';reverse=true" style="color:#404040;"><b>Distrito:</b></a>
+                <a ng-show="reverse" href="#" ng-click="orden = '_id';reverse=false" style="color:#404040;"><b>Distrito:</b></a>
+            </div>
+            <div class="span3 pull-right">
+                <b>Estados:</b>
+            </div>
+        </div>
+        <div style="overflow-y: scroll; overflow-x: hidden; position: absolute;top: 200px;background: white;bottom: 12px;right: 20px;left: 20px;border: 1px solid #FFD300;border-top: transparent;padding-left: 21px">
+            <table class="table table-hover">
+                <tbody>
+                    <tr height="25" ng-repeat="d in distritos | orderBy : orden">
+                        <td width="80%">
+                        <a href="/es2015/{{d._id}}" style="color:#404040;"><span style="font-family: Tahoma; font-size: 18px; font-weight: 500; text-decoration: none;"> {{d.nombre}} </span></a>
+                        </td>
+                         
+                        <td width="20%">
+                            &nbsp;&nbsp;<img alt="Candidatos" title="Candidatos" src="views/es2015/images/candidatos_{{colorItem(d._id, 'Candidato')}}.png" style="width: 24px;" ng-if=hasPermission('es2015.candidatos')>
+                           &nbsp;&nbsp;<img alt="Territorial" title="Armado Territorial" src="views/es2015/images/territorio_{{colorItem(d._id, 'Armado Territorial')}}.png" style="width: 24px;" ng-if=hasPermission('es2015.armadoTerritorial')>
+                           &nbsp;&nbsp; <img alt="Agenda" title="Agenda" src="views/es2015/images/agenda_{{colorItem(d._id, 'Agenda')}}.png" style="width: 28px;" ng-if=hasPermission('es2015.agenda')>
+                           &nbsp;&nbsp;<img alt="Comunicacion" title="Comunicacion" src="views/es2015/images/comunicacion_{{colorItem(d._id, 'Comunicación')}}.png" style="width: 24px;" ng-if=hasPermission('es2015.comunicacion')>
+                           &nbsp;&nbsp;<img alt="Alianzas" title="Alianzas" src="views/es2015/images/alianzas_{{colorItem(d._id, 'Alianza')}}.png" style="width: 24px;" ng-if=hasPermission('es2015.alianzas')>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,106 @@
+<style>
+    .table {
+        border: 0;
+    }
+    .table tr {
+        border-bottom: 5px solid white;
+    }
+    .table th, .table td {
+        padding: 8px;
+        line-height: 20px;
+        text-align: left;
+        vertical-align: middle;
+        border: 0;
+    }
+    .table th {
+        background-color: #dddddd !important;
+    }
+    @media print {
+        body, span, div, table, tr, tbody, tfoot, td, hr { 
+            -webkit-print-color-adjust: exact !important;
+        }
+    }
+</style>
+<div class="card" ng-controller="DashboardObrasCtrl" style="position: absolute;top: 50px;bottom: 0px;right: 20px;left: 20px;margin-bottom: 10px;">
+    <h2 class="card-heading simple">Obras - Regeneración Urbana</h2>
+    <div class="card-body" style="margin-top: 5px;text-align: center;background-color: gainsboro;padding-right: 17px;margin-right: 3px;padding-left: 0px;margin-left: 20px;">
+        <table class="table table-striped">
+            <tr>
+                <th style="width: 25%;">Obras</th>
+                <th style="text-align: center;width: 6%;">$MM</th>
+                <th style="padding-left: 0px; padding-right: 0px;padding-top: 2px;padding-bottom: 2px;text-align: center;width: 5%;">Antes</th>
+                <!--<th>{{nombresMeses[meses[0].mes-1]}}/{{meses[0].anio}}</th>--> 
+                <th style="padding-left: 0px; padding-right: 0px;padding-top: 2px;padding-bottom: 2px;text-align: center;line-height: 13px;width: 4%;">{{nombresMeses[meses[1].mes-1]}}<br>{{meses[1].anio}}</th>
+                <th style="padding-left: 0px; padding-right: 0px;padding-top: 2px;padding-bottom: 2px;text-align: center;line-height: 13px;width: 4%;">{{nombresMeses[meses[2].mes-1]}}<br>{{meses[2].anio}}</th>
+                <th style="padding-left: 0px; padding-right: 0px;padding-top: 2px;padding-bottom: 2px;text-align: center;line-height: 13px;width: 4%;">{{nombresMeses[meses[3].mes-1]}}<br>{{meses[3].anio}}</th>
+                <th style="padding-left: 0px; padding-right: 0px;padding-top: 2px;padding-bottom: 2px;text-align: center;line-height: 13px;width: 4%;">{{nombresMeses[meses[4].mes-1]}}<br>{{meses[4].anio}}</th>
+                <th style="padding-left: 0px; padding-right: 0px;padding-top: 2px;padding-bottom: 2px;text-align: center;line-height: 13px;width: 4%;">{{nombresMeses[meses[5].mes-1]}}<br>{{meses[5].anio}}</th>
+                <th style="padding-left: 0px; padding-right: 0px;padding-top: 2px;padding-bottom: 2px;text-align: center;line-height: 13px;width: 4%;">{{nombresMeses[meses[6].mes-1]}}<br>{{meses[6].anio}}</th>
+                <th style="padding-left: 0px; padding-right: 0px;padding-top: 2px;padding-bottom: 2px;text-align: center;line-height: 13px;width: 4%;">{{nombresMeses[meses[7].mes-1]}}<br>{{meses[7].anio}}</th>
+                <th style="padding-left: 0px; padding-right: 0px;padding-top: 2px;padding-bottom: 2px;text-align: center;line-height: 13px;width: 4%;">{{nombresMeses[meses[8].mes-1]}}<br>{{meses[8].anio}}</th>
+                <th style="padding-left: 0px; padding-right: 0px;padding-top: 2px;padding-bottom: 2px;text-align: center;line-height: 13px;width: 4%;">{{nombresMeses[meses[9].mes-1]}}<br>{{meses[9].anio}}</th>
+                <th style="padding-left: 0px; padding-right: 0px;padding-top: 2px;padding-bottom: 2px;text-align: center;line-height: 13px;width: 4%;">{{nombresMeses[meses[10].mes-1]}}<br>{{meses[10].anio}}</th>
+                <th style="padding-left: 0px; padding-right: 0px;padding-top: 2px;padding-bottom: 2px;text-align: center;line-height: 13px;width: 4%;">{{nombresMeses[meses[11].mes-1]}}<br>{{meses[11].anio}}</th>
+                <th style="padding-left: 0px; padding-right: 0px;padding-top: 2px;padding-bottom: 2px;text-align: center;line-height: 13px;width: 4%;">{{nombresMeses[meses[12].mes-1]}}<br>{{meses[12].anio}}</th>
+                <th ng-if="(meses[12].mes < 12)" style="padding-left: 0px; padding-right: 0px;padding-top: 2px;padding-bottom: 2px;text-align: center;line-height: 13px;width: 4%;">+<br>{{meses[12].anio}}</th>
+                <th style="padding-left: 0px; padding-right: 0px;padding-top: 2px;padding-bottom: 2px;text-align: center;width: 4%;">{{meses[12].anio+1}}</th>
+                <th style="padding-left: 0px; padding-right: 0px;padding-top: 2px;padding-bottom: 2px;text-align: center;width: 4%;">{{meses[12].anio+2}}</th>
+                <th style="padding-left: 0px; padding-right: 0px;padding-top: 2px;padding-bottom: 2px;text-align: center;width: 4%;">{{meses[12].anio+3}}</th>
+            </tr>
+        </table>
+        <div style="overflow-y: scroll; overflow-x: hidden;position: absolute;top: 102px;bottom: 46px;right: 3px;left: 20px;">
+        <table border="1" class="table table-striped">
+            <tr ng-repeat="o in listado">
+                <td style="width: 25%;">{{o.nombre}}</td>
+                <td style="text-align: right;width: 6%;">{{o.nombrar && o.nombrar[o.nombrar.length-1].monto && soloMillones(o.nombrar[o.nombrar.length-1].monto) || "-"}}</td>
+                <td ng-style="pintadoAntes(o)" style="position: relative;width: 5%;">&nbsp;<img style="position: absolute; bottom: 0px; right: 0px;height: 36px;width: 20px;" src="{{imagenFinAntes(o)}}" ng-if="imagenFinAntes(o)" /><img style="position: absolute; bottom: 0px; left: 0px;" src="/views/dashboard/images/esquinaInicio.png" ng-if="esquinaInicioAntes(o)" /><img style="position: absolute; bottom: 0px; right: 0px;" src="/views/dashboard/images/esquinaFin.png" ng-if="esquinaFinAntes(o)" /></td>
+                <!--<td ng-style="pintado(0,o)">&nbsp;</td>--> 
+                <td ng-style="pintado(1,o)" style="position: relative;width: 4%;">&nbsp;<img style="position: absolute; bottom: 0px; left: 0px;" src="/views/dashboard/images/esquinaInicio.png" ng-if="esquinaInicio(1,o)" /><img style="position: absolute; bottom: 0px; right: 0px;" src="/views/dashboard/images/esquinaFin.png" ng-if="esquinaFin(1,o)" /><img style="position: absolute; bottom: 0px; right: 0px;height: 36px;width: 15px;" title="Fin" src="{{imagenFin(o, 1)}}" ng-if="imagenFin(o, 1)" /></td>
+                <td ng-style="pintado(2,o)" style="position: relative;width: 4%;">&nbsp;<img style="position: absolute; bottom: 0px; left: 0px;" src="/views/dashboard/images/esquinaInicio.png" ng-if="esquinaInicio(2,o)" /><img style="position: absolute; bottom: 0px; right: 0px;" src="/views/dashboard/images/esquinaFin.png" ng-if="esquinaFin(2,o)" /><img style="position: absolute; bottom: 0px; right: 0px;height: 36px;width: 15px;" title="Fin" src="{{imagenFin(o, 2)}}" ng-if="imagenFin(o, 2)" /></td>
+                <td ng-style="pintado(3,o)" style="position: relative;width: 4%;">&nbsp;<img style="position: absolute; bottom: 0px; left: 0px;" src="/views/dashboard/images/esquinaInicio.png" ng-if="esquinaInicio(3,o)" /><img style="position: absolute; bottom: 0px; right: 0px;" src="/views/dashboard/images/esquinaFin.png" ng-if="esquinaFin(3,o)" /><img style="position: absolute; bottom: 0px; right: 0px;height: 36px;width: 15px;" title="Fin" src="{{imagenFin(o, 3)}}" ng-if="imagenFin(o, 3)" /></td>
+                <td ng-style="pintado(4,o)" style="position: relative;width: 4%;">&nbsp;<img style="position: absolute; bottom: 0px; left: 0px;" src="/views/dashboard/images/esquinaInicio.png" ng-if="esquinaInicio(4,o)" /><img style="position: absolute; bottom: 0px; right: 0px;" src="/views/dashboard/images/esquinaFin.png" ng-if="esquinaFin(4,o)" /><img style="position: absolute; bottom: 0px; right: 0px;height: 36px;width: 15px;" title="Fin" src="{{imagenFin(o, 4)}}" ng-if="imagenFin(o, 4)" /></td>
+                <td ng-style="pintado(5,o)" style="position: relative;width: 4%;">&nbsp;<img style="position: absolute; bottom: 0px; left: 0px;" src="/views/dashboard/images/esquinaInicio.png" ng-if="esquinaInicio(5,o)" /><img style="position: absolute; bottom: 0px; right: 0px;" src="/views/dashboard/images/esquinaFin.png" ng-if="esquinaFin(5,o)" /><img style="position: absolute; bottom: 0px; right: 0px;height: 36px;width: 15px;" title="Fin" src="{{imagenFin(o, 5)}}" ng-if="imagenFin(o, 5)" /></td>
+                <td ng-style="pintado(6,o)" style="position: relative;width: 4%;">&nbsp;<img style="position: absolute; bottom: 0px; left: 0px;" src="/views/dashboard/images/esquinaInicio.png" ng-if="esquinaInicio(6,o)" /><img style="position: absolute; bottom: 0px; right: 0px;" src="/views/dashboard/images/esquinaFin.png" ng-if="esquinaFin(6,o)" /><img style="position: absolute; bottom: 0px; right: 0px;height: 36px;width: 15px;" title="Fin" src="{{imagenFin(o, 6)}}" ng-if="imagenFin(o, 6)" /></td>
+                <td ng-style="pintado(7,o)" style="position: relative;width: 4%;">&nbsp;<img style="position: absolute; bottom: 0px; left: 0px;" src="/views/dashboard/images/esquinaInicio.png" ng-if="esquinaInicio(7,o)" /><img style="position: absolute; bottom: 0px; right: 0px;" src="/views/dashboard/images/esquinaFin.png" ng-if="esquinaFin(7,o)" /><img style="position: absolute; bottom: 0px; right: 0px;height: 36px;width: 15px;" title="Fin" src="{{imagenFin(o, 7)}}" ng-if="imagenFin(o, 7)" /></td>
+                <td ng-style="pintado(8,o)" style="position: relative;width: 4%;">&nbsp;<img style="position: absolute; bottom: 0px; left: 0px;" src="/views/dashboard/images/esquinaInicio.png" ng-if="esquinaInicio(8,o)" /><img style="position: absolute; bottom: 0px; right: 0px;" src="/views/dashboard/images/esquinaFin.png" ng-if="esquinaFin(8,o)" /><img style="position: absolute; bottom: 0px; right: 0px;height: 36px;width: 15px;" title="Fin" src="{{imagenFin(o, 8)}}" ng-if="imagenFin(o, 8)" /></td>
+                <td ng-style="pintado(9,o)" style="position: relative;width: 4%;">&nbsp;<img style="position: absolute; bottom: 0px; left: 0px;" src="/views/dashboard/images/esquinaInicio.png" ng-if="esquinaInicio(9,o)" /><img style="position: absolute; bottom: 0px; right: 0px;" src="/views/dashboard/images/esquinaFin.png" ng-if="esquinaFin(9,o)" /><img style="position: absolute; bottom: 0px; right: 0px;height: 36px;width: 15px;" title="Fin" src="{{imagenFin(o, 9)}}" ng-if="imagenFin(o, 9)" /></td>
+                <td ng-style="pintado(10,o)" style="position: relative;width: 4%;">&nbsp;<img style="position: absolute; bottom: 0px; left: 0px;" src="/views/dashboard/images/esquinaInicio.png" ng-if="esquinaInicio(10,o)" /><img style="position: absolute; bottom: 0px; right: 0px;" src="/views/dashboard/images/esquinaFin.png" ng-if="esquinaFin(10,o)" /><img style="position: absolute; bottom: 0px; right: 0px;height: 36px;width: 15px;" title="Fin" src="{{imagenFin(o, 10)}}" ng-if="imagenFin(o, 10)" /></td>
+                <td ng-style="pintado(11,o)" style="position: relative;width: 4%;">&nbsp;<img style="position: absolute; bottom: 0px; left: 0px;" src="/views/dashboard/images/esquinaInicio.png" ng-if="esquinaInicio(11,o)" /><img style="position: absolute; bottom: 0px; right: 0px;" src="/views/dashboard/images/esquinaFin.png" ng-if="esquinaFin(11,o)" /><img style="position: absolute; bottom: 0px; right: 0px;height: 36px;width: 15px;" title="Fin" src="{{imagenFin(o, 11)}}" ng-if="imagenFin(o, 11)" /></td>
+                <td ng-style="pintado(12,o)" style="position: relative;width: 4%;">&nbsp;<img style="position: absolute; bottom: 0px; left: 0px;" src="/views/dashboard/images/esquinaInicio.png" ng-if="esquinaInicio(12,o)" /><img style="position: absolute; bottom: 0px; right: 0px;" src="/views/dashboard/images/esquinaFin.png" ng-if="esquinaFin(12,o)" /><img style="position: absolute; bottom: 0px; right: 0px;height: 36px;width: 15px;" title="Fin" src="{{imagenFin(o, 12)}}" ng-if="imagenFin(o, 12)" /></td>
+                <td ng-if="(meses[12].mes < 12)" ng-style="pintadoDespues(o, meses[12].anio)" style="position: relative;width: 4%;">&nbsp;<img style="position: absolute; bottom: 0px; right: 0px;height: 36px;width: 15px;" src="{{imagenFinDespues(o, meses[12].anio)}}" ng-if="imagenFinDespues(o, meses[12].anio)" /><img style="position: absolute; bottom: 0px; left: 0px;" src="/views/dashboard/images/esquinaInicio.png" ng-if="esquinaInicioDespues(o, meses[12].anio)" /><img style="position: absolute; bottom: 0px; right: 0px;" src="/views/dashboard/images/esquinaFin.png" ng-if="esquinaFinDespues(o, meses[12].anio)" /></td>
+                <td ng-style="pintadoDespues(o, meses[12].anio+1)" style="position: relative;width: 4%;">&nbsp;<img style="position: absolute; bottom: 0px; right: 0px;height: 36px;width: 15px;" title="Fin" src="{{imagenFinDespues(o, meses[12].anio+1)}}" ng-if="imagenFinDespues(o, meses[12].anio+1)" /><img style="position: absolute; bottom: 0px; left: 0px;" src="/views/dashboard/images/esquinaInicio.png" ng-if="esquinaInicioDespues(o, meses[12].anio+1)" /><img style="position: absolute; bottom: 0px; right: 0px;" src="/views/dashboard/images/esquinaFin.png" ng-if="esquinaFinDespues(o, meses[12].anio+1)" /></td>
+                <td ng-style="pintadoDespues(o, meses[12].anio+2)" style="position: relative;width: 4%;">&nbsp;<img style="position: absolute; bottom: 0px; right: 0px;height: 36px;width: 15px;" title="Fin" src="{{imagenFinDespues(o, meses[12].anio+2)}}" ng-if="imagenFinDespues(o, meses[12].anio+2)" /><img style="position: absolute; bottom: 0px; left: 0px;" src="/views/dashboard/images/esquinaInicio.png" ng-if="esquinaInicioDespues(o, meses[12].anio+2)" /><img style="position: absolute; bottom: 0px; right: 0px;" src="/views/dashboard/images/esquinaFin.png" ng-if="esquinaFinDespues(o, meses[12].anio+2)" /></td>
+                <td ng-style="pintadoDespues(o, meses[12].anio+3)" style="position: relative;width: 4%;">&nbsp;<img style="position: absolute; bottom: 0px; right: 0px;height: 36px;width: 15px;" title="Fin" src="{{imagenFinDespues(o, meses[12].anio+3)}}" ng-if="imagenFinDespues(o, meses[12].anio+3)" /><img style="position: absolute; bottom: 0px; left: 0px;" src="/views/dashboard/images/esquinaInicio.png" ng-if="esquinaInicioDespues(o, meses[12].anio+3)" /><img style="position: absolute; bottom: 0px; right: 0px;" src="/views/dashboard/images/esquinaFin.png" ng-if="esquinaFinDespues(o, meses[12].anio+3)" /></td>
+            </tr>
+        </table>
+        </div>
+        <div style="overflow-y: hidden; overflow-x: hidden;position: absolute;height: 33px;bottom: 12px;right: 0px;left: 20px;padding-right: 17px;background-color: gainsboro;margin-right: 3px;">
+        <table class="table table-striped">
+            <tr>
+                <th style="width: 25%;">Total de obras: {{listado.length}}</th>
+                <th style="text-align: right;width: 6%;">{{soloMillonesTotal(total)}}</th>
+                <th style="text-align: center;width: 5%;">&nbsp;{{totalAntes}}</th>
+                <!--<th>&nbsp;</th>--> 
+                <th style="text-align: center;width: 4%;">&nbsp;{{meses[1].cantidad}}</th>
+                <th style="text-align: center;width: 4%;">&nbsp;{{meses[2].cantidad}}</th>
+                <th style="text-align: center;width: 4%;">&nbsp;{{meses[3].cantidad}}</th>
+                <th style="text-align: center;width: 4%;">&nbsp;{{meses[4].cantidad}}</th>
+                <th style="text-align: center;width: 4%;">&nbsp;{{meses[5].cantidad}}</th>
+                <th style="text-align: center;width: 4%;">&nbsp;{{meses[6].cantidad}}</th>
+                <th style="text-align: center;width: 4%;">&nbsp;{{meses[7].cantidad}}</th>
+                <th style="text-align: center;width: 4%;">&nbsp;{{meses[8].cantidad}}</th>
+                <th style="text-align: center;width: 4%;">&nbsp;{{meses[9].cantidad}}</th>
+                <th style="text-align: center;width: 4%;">&nbsp;{{meses[10].cantidad}}</th>
+                <th style="text-align: center;width: 4%;">&nbsp;{{meses[11].cantidad}}</th>
+                <th style="text-align: center;width: 4%;">&nbsp;{{meses[12].cantidad}}</th>
+                <th ng-if="(meses[12].mes < 12)" style="text-align: center;width: 4%;">&nbsp;6</th>
+                <th style="text-align: center;width: 4%;">&nbsp;1</th>
+                <th style="text-align: center;width: 4%;">&nbsp;0</th>
+                <th style="text-align: center;width: 4%;">&nbsp;0</th>
+            </tr>
+        </table>
+        </div>
+    </div>
+</div>
+
+

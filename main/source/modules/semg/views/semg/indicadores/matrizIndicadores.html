@@ -1,0 +1,27 @@
+<div class="card body" style="padding-top:0px" ng-controller="IndicadorSEMGCtrl">
+    <div ng-if=hasPermission('semg.verSecretaria') style="padding-top:0">
+        <button type="button" class="btn btn-danger"  title="CORRE!!!" ng-if="false">Si ves este boton y no sos Alexander corre...</button>
+        <!-- ng-click="ng-click="unirBases()"-->
+        <table class="table table-striped">
+            <thead style="z-index:-100">
+                <tr style="background-color:#D8D8D8; height:57px;z-index:-20">
+                    <th>Jurisdicción</th>
+                    <th>% de carga</th>
+                    <th>% de validación (mostrando validado por SPLyCG)</th>
+                    <th>Cant. Indicadores</th>
+                    <th>Aprobado por Ministerio</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="i in organigrama | orderBy:'nombre'">
+                    <td><a href="/semg/indicadores/{{anio}}?filtro={{i.idOrmOrganigrama}}">{{i.nombre}}</a></td>
+                    <td>{{(i.infoIndicadores.sumatoriaPorcentajeCompletado).toFixed(0)}}%</td>
+                    <td>{{i.infoIndicadores.porcentajeCantidadValidados.toFixed(0)}}%</td>
+                    <td>{{i.infoIndicadores.cantidadIndicadores}}</td>
+                    <td ng-show="((i.infoIndicadores.cantidadAprobados)==(i.infoIndicadores.cantidadIndicadores))">Si</td>
+                    <td ng-hide="((i.infoIndicadores.cantidadAprobados)==(i.infoIndicadores.cantidadIndicadores))">No</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

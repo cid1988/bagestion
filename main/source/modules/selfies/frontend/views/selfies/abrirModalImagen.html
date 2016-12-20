@@ -1,0 +1,45 @@
+    
+<div class='modal' style="width:82%; left:360px;top:5px; padding-right:20px;padding-left:20px;padding-bottom:25px;">
+        
+    <div class='modal-content'>
+        
+        <div class="span8" style="margin-left: 0px; ">
+            <img style="float:left;" ng-src="/file/{{foto}}"/>
+            <button class="btn pull-left" style="margin-bottom:10px;" data-dismiss="modal" ng-click="anteriorImagen(selfie);"><span class="icon-chevron-left" aria-hidden="true"></span></button>
+            <button class="btn pull-right" style="margin-bottom:10px;" data-dismiss="modal" ng-click="siguienteImagen(selfie);"><span class="icon-chevron-right" aria-hidden="true"></span></button>
+        </div>
+            
+       
+        <div class="pull-left span3" style="margin-top:0px;">
+            <h3 class="card-heading simple" style="margin-left: 10px; margin-top:0px;">Comentarios
+            <button type="button" class="close pull-right " data-dismiss="modal" aria-hidden="true">&times;</button>
+            <a href="/file/{{foto}}" style="margin-left: 0px; padding-left:0px; padding-right:20px;" target="_blank" class="btn btn-link pull-right"><i class="icon-download-alt"></i></a> 
+            <a href="javascript:location.reload()" style="margin-left: 0px; padding-left:0px; padding-right:0px;" data-dismiss="modal" ng-click="eliminarImagen(selfie)" ng-show="hasPermission('selfies.editar')" class="btn btn-link pull-right"><i class="icon-trash"></i></a>
+        </h3>
+            <div class="card-body" style=" width:310px">
+                <div>
+                    <textarea type="text" class="span3" placeholder="Comentario..." ng-model="data.comentario" rows="3" style=" margin-top: 2%;margin-bottom: 0px; margin-left:2%;"></textarea>
+                    <div class="card-actions pull-right" style="margin-bottom:5px;">
+                        <a href="#" ng-click="agregarComentario()" class="btn btn-primary" style="margin-right:30px;">Enviar</a>
+                    </div>
+                    
+                    <div class="control-group" style="margin-top:45px;margin-left: 10px;margin-bottom: 0px;overflow-y: scroll; overflow-x: hidden; height: 450px; width:88%;">
+                        <span ng-hide="selfie.comentarios.length">No hay comentarios aún</span>
+                        <hr style=" margin-top: 0px; margin-bottom: 5px;">
+                        
+                        <div ng-repeat="r in reverse(selfie.comentarios)" style="margin-left:5px;">
+                            <div style="text-align: left;margin-top: 0px;margin-bottom: 0px;padding-top: 5px;">
+                                <span class="pull-right" style="font-size: 10px; margin-right:10px;">{{dameFecha(r.fecha)}}hs</span>
+                                <b>{{r.usuario}}</b> dijo:<br>
+                                    {{r.comentario}}
+                                    <a ng-click="eliminarComentario(selfie.comentarios,r)" class="btn btn-link pull-right" style="padding-right: 0px; padding-left: 0px" ng-show="hasPermission('selfies.editar')"><i class="icon-trash icon-white"></i></a>
+                                <hr style="margin-top: 5px; margin-bottom: 5px;">
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

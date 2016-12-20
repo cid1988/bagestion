@@ -1,0 +1,51 @@
+<style>
+    .no-border, .no-border > th, .no-border > td {
+        border: none;
+    }
+    .tablaPrint th, .tablaPrint td {
+        padding-top:1px;
+        padding-bottom:1px;
+        border-bottom:1px solid #AAAAAA;
+        line-height: 25px;
+    }
+</style>
+
+<div class="card span12" style="border:0px;padding-top: 9px;" ng-controller="AgendaAsistenciaCtrl as controller">
+    <div style="background-image: url('/views/agenda/participantes/portadaParticipantes.jpg') !important; background-repeat: no-repeat;
+    position: relative;font-family: Arial !important; color: rgb(0, 0, 0);width: 1100px;height: 352px;">
+        <a class="btn pull-right no-print" ng-click="imprimir()" ><i class="icon-print"></i> Imprimir</a>
+        <a class="btn pull-right no-print" href="/agenda/?instancia={{instancia._id}}" ><i class="icon-arrow-left"></i> Volver</a>
+        <div style="text-align: right; position: absolute; width: 515px; top: 45px; left: 560px">
+            <h3 style="font-size: 23px !important; margin-top: 0px; margin-bottom: 0px;">Reunión</h3>
+        </div>
+        <div style="text-align: right; position: absolute; width: 550px; top: 80px; left: 528px">
+            <h3 ng-style="set_size" style="font-weight: bold; margin-top: 0px; margin-bottom: 0px;">{{agenda.nombre}}</h3>
+        </div>
+        <div style="text-align: left; position: absolute; width: 460px; top: 210px; left: 35px">
+            <h3 style="font-size: 20px !important;font-weight: bold; margin-top: 0px; margin-bottom: 0px;">{{agenda.titulo}}</h3>
+        </div>
+        <div style="text-align: left; position: absolute; width: 140px; top: 210px; left: 570px">
+            <h3 style="font-size: 20px !important;font-weight: bold; margin-top: 0px; margin-bottom: 0px;">{{instancia.fecha}}</h3>
+        </div>
+        <div style="text-align: left; position: absolute; width: 100px; top: 210px; left: 785px">
+            <h3 style="font-size: 20px !important;font-weight: bold; margin-top: 0px; margin-bottom: 0px;">{{instancia.desdeHora}}</h3>
+        </div>
+        <div style="text-align: left; position: absolute; width: 100px; top: 235px; left: 785px">
+            <h3 style="font-size: 20px !important;font-weight: bold; margin-top: 0px; margin-bottom: 0px;">{{instancia.hastaHora}}</h3>
+        </div>
+    </div>
+    <div style="background-image: url('/views/agenda/participantes/portadaParticipantes2.jpg') !important; background-repeat: no-repeat;
+    position: relative;font-family: Arial !important; color: rgb(0, 0, 0);width: 1100px;height: 51px;">
+    </div>
+    <table class="table tablaPrint" style="background-color: white;margin-bottom: 0px;margin-left: 35px;font-size: 19px !important;width: 1047px;">
+        <tbody>
+            <tr ng-repeat="p in controller.vistaParticipantes">
+                <td style="min-width: 30px !important;;padding-left: 5px;padding-right: 0px;"><div style="width:22px;height:22px;border:1px solid #AAAAAA;margin-top: 3px;margin-bottom: 2px;;"></div></td>
+                <td style="min-width: 380px !important;padding-left: 0px;"><b>{{p.c.apellidos|uppercase}}</b>, {{p.c.nombre}}</td>
+                <td style="min-width: 170px !important;padding-left: 0px;">{{p.c.cargo}}</td>
+                <td style="min-width: 125px !important;padding-left: 0px;">{{jurisdiccionPorId(p.c.organigrama).sigla}}</td>
+                <td style="min-width: 335px !important;padding-left: 0px;">{{buscarCorreo('Email oficial', p.c)}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

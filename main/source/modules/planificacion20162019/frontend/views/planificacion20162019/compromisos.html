@@ -1,0 +1,79 @@
+<style>
+    .table {
+        border: 0;
+    }
+    .table th, .table td {
+        padding: 8px;
+        line-height: 20px;
+        text-align: left;
+        vertical-align: middle;
+        border: 0;
+    }
+    .table th {
+        background-color: #dddddd !important;
+    }
+</style>
+<div class="card" ng-controller="ConsolidadosPlanificacion20162019Ctrl">
+    <div class="card-actions pull-right no-print" style="margin-right: 30px;">
+        <div style="margin-left: 5px; display: inline-block;">
+            <select class="span3" ui-select2 type="text" ng-model="filtro2">
+                <option value="">Todas las Áreas</option>
+                <option ng-repeat="e in organigrama" value="{{e._id}}">{{e.nombreCompleto}} ({{e.sigla}})</option>
+            </select>
+        </div>
+        <a class="btn btn-link pull-right no-print" ng-click="imprimir()" style="padding-left: 0px; padding-right: 0px;"><i class="icon-print"></i> Imprimir</a>
+        <a class="btn btn-link pull-right no-print"target="_blank" href="/api/compromisos1619-csv/download" style="padding-left: 0px; padding-right: 20px;"><i class="icon-download-alt"></i> CSV</a>
+        <a class="btn btn-link pull-right" href="/planificacion20162019" style="margin-left: 20px;margin-right: 20px;" ><i class="icon-arrow-left"></i> Volver</a>
+    </div>
+    <h2 class="card-heading simple" style="font-size: 24px;">Compromisos Consolidados - Planificación 2016 - 2019</h2>
+    <div class="card-body">
+        <div>
+            <div ng-repeat="a in areas | filter:filtro2 | orderBy:ordenAreaPorId" style="margin-bottom: 20px;">
+                <div style="width:100%;text-align: left;background-color: gainsboro;font-weight: 600;margin-top: 0px;padding-top: 5px;padding-bottom: 5px;font-size: 16px;margin-bottom: 3px;">
+                    <div style="width: 100%; display: inline-block;"><a href="#" style="color:#404040;margin-left: 10px;font-size: 20px;">{{organigramaPorId(a).nombreCompleto}}</a></div>
+                </div>
+                <span ng-hide="tieneCompromisosGeneral(a)" style="margin-left: 12px; font-size: 14px;">No tiene compromisos cargados aún</span>
+                <div ng-if="tieneCompromisosGeneral(a)">
+                    <h4 style="font-weight: 600;" ng-show="areaPorJurisdiccion(a).compromisos.length">Compromisos Generales</h4>
+                    <table border="1" class="table table-striped" ng-show="areaPorJurisdiccion(a).compromisos.length">
+                        <tr bgcolor= "#FFFFFF">
+                            <th width="20%"><center>Prioritarios</center></th>
+                            <th width="40%"><center>Avances</center></th>
+                            <th width="40%"><center>Compromisos y Próximos Pasos</center></th>
+                        </tr>
+                        <tr ng-repeat="o in areaPorJurisdiccion(a).compromisos" style="border-bottom: 1px solid #ddd;">
+                            <td width="20%">{{iniciativaPorId(o.iniciativa).nombreProyecto}}</td>
+                            <td width="40%">{{o.avances}}</td>
+                            <td width="40%"><div compile="o.compromisos"></div></td>
+                        </tr>
+                    </table>
+                    <h4 style="font-weight: 600;" ng-if="tieneCompromisos(a)">Compromisos por proyecto</h4>
+                    <table border="1" class="table table-striped" style="margin-bottom: 0px;" ng-if="tieneCompromisos(a)">
+                        <tr bgcolor= "#FFFFFF">
+                            <th width="7%" style="text-align: center;">Numero</th>
+                            <th width="23%" style="text-align: center;">Iniciativa</th>
+                            <th width="7%" style="text-align: center;">Fecha</th>
+                            <th width="50%" style="text-align: center;">Compromisos y Próximos Pasos</th>
+                            <th width="8%" style="text-align: center;">Status</th>
+                            <th width="5%"></th>
+                        </tr>
+                    </table>
+                    <table border="1" class="table table-striped" ng-repeat="i in planes | filter:{areaResponsable:a}" ng-show="i.compromisos.length" style="margin-bottom: 0px;">
+                        <tr ng-repeat="o in i.compromisos" style="border-bottom: 1px solid #ddd;">
+                            <td width="7%" style="text-align: center;">{{o.numero}}</td>
+                            <td width="23%" style="text-align: justify;">{{i.nombreProyecto}}</td>
+                            <td width="7%" style="text-align: center;">{{o.fecha}}</td>
+                            <td width="50%" style="text-align: justify;">{{o.compromisos}}</td>
+                            <td width="8%" style="text-align: center;">{{o.status}}</td>
+                            <td width="5%" style="text-align: justify;">
+                                <i title="Seguimiento Especial" ng-if="o.star" style="font-size: 19px;color: darkviolet" class="icon-star"></i>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

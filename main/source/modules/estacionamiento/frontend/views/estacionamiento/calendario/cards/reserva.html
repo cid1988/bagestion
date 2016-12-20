@@ -1,0 +1,106 @@
+<style>
+    .table {
+        border: 0;
+    }
+    .table th, .table td {
+        padding: 8px;
+        line-height: 20px;
+        text-align: left;
+        vertical-align: middle;
+        border: 0;
+    }
+    .table th {
+        background-color: #dddddd !important;
+    }
+    .table td {
+        padding-top: 0px;
+        padding-bottom: 0px;
+    }
+</style>
+
+<div ng-controller="EstacionamientoTabReservaCtrl"
+class="card animated fadeInDown no-print">
+    <!-- <div class="card-actions pull-right" style="margin: 0">
+        <a type="button" ng-click="volver()" class="btn btn-link">
+            <i class="icon-remove"></i></a>
+    </div> --> 
+    <div class="card-actions pull-right" ng-show="editando" style="margin: 0">
+        <!-- <a class="btn btn-danger" ng-show="hasPermission('mejorenbici.borrar')" ng-click="eliminar()"><i class="icon-trash"></i></a> --> 
+        <a ng-click="applyChanges();guardar()" type="button" class="btn btn-link">
+            <i class="icon-ok icon-white"></i>
+        </a>
+    </div>
+    <div class="card-actions pull-right" ng-hide="editando" ng-if="instancia" style="margin: 0">
+        <a ng-click="imprimir()" type="button" class="btn btn-link">
+            <i class="icon-print icon-white"></i>
+        </a>
+    </div>
+    <h3 class="card-heading simple">
+        <span style="white-space: nowrap">
+            Reservas<span ng-show="instancia"> del {{instancia.fecha}}</span>
+        </span>
+    </h3>
+    <div class="card-body" style="overflow-y: scroll; overflow-x: hidden; height: 400px;margin-top: 0px;">
+        <h4 ng-hide="instancia" style="text-align: center; font-weight: 600; margin-top: 20px; margin-bottom: 20px;">Seleccione una fecha</h4>
+        <table ng-show="instancia" border="1" class="table table-striped" >
+            <tr bgcolor= "#FFFFFF">
+                <th>Piso</th>
+                <th>Cochera</th>
+                <th>Apellido</th>
+                <th>Nombre</th>
+                <th>Patente</th>
+                <th>DNI</th>
+                <th>Observaciones</th>
+            </tr>
+            <tr bgcolor="#FFFFFF" ng-repeat="c in instancia.cocheras | orderBy:'-numero'">
+                <td><h4>{{c.piso}}</h4></td>
+                <td><h4>{{c.numero}}</h4></td>
+                <td><input type="text" style="margin-bottom: 0px;" ng-model="c.apellido" placeholder="Apellido" ng-disabled="!editando" /></td>
+                <td><input type="text" style="margin-bottom: 0px;" ng-model="c.nombre" placeholder="Nombres" ng-disabled="!editando" /></td>
+                <td><input type="text" style="margin-bottom: 0px;width: 100px;" ng-model="c.patente" placeholder="Patente" ng-disabled="!editando" /></td>
+                <td><input type="text" style="margin-bottom: 0px;width: 120px;" ng-model="c.dni" placeholder="DNI" ng-disabled="!editando" /></td>
+                <td><input type="text" style="margin-bottom: 0px;" ng-model="c.sector" placeholder="Observaciones" ng-disabled="!editando" /></td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+
+<div id="printableArea" style="display: none" class="only-print">
+    <h4 style="font-weight: 600;">Reservas de Estacionamiento del {{instancia.fecha}}</h4>
+    <table ng-show="instancia" border="1" class="table">
+        <tr bgcolor= "#FFFFFF">
+            <th style="border: 1px solid;">Piso</th>
+            <th style="border: 1px solid;">Cochera</th>
+            <th style="border: 1px solid;">Apellido</th>
+            <th style="border: 1px solid;">Nombre</th>
+            <th style="border: 1px solid;">Patente</th>
+            <th style="border: 1px solid;">DNI</th>
+            <th style="border: 1px solid;">Observaciones</th>
+        </tr>
+        <tr bgcolor="#FFFFFF" ng-repeat="c in instancia.cocheras | orderBy:'-numero'">
+            <td style="border: 1px solid;"><b>{{c.piso}}</b></td>
+            <td style="border: 1px solid;"><b>{{c.numero}}</b></td>
+            <td style="border: 1px solid;">{{c.apellido}}</td>
+            <td style="border: 1px solid;">{{c.nombre}}</td>
+            <td style="border: 1px solid;">{{c.patente}}</td>
+            <td style="border: 1px solid;">{{c.dni}}</td>
+            <td style="border: 1px solid;">{{c.sector}}</td>
+        </tr>
+    </table>
+</div>
+
+
+<div id="confirmarEliminar" class="modal hide fade" ng-controller="MEBTabReservaCtrl">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>Eliminar reserva</h3>
+    </div>
+    <div class="modal-body">
+        <p>Está a un paso de eliminar la reserva de {{bici.nombre}}</p>
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="btn btn-info" data-dismiss="modal">Conservar el registro</a>
+        <a href="#" class="btn btn-danger" data-dismiss="modal" ng-click="eliminar(true)">Eliminar reserva</a>
+    </div>
+</div>

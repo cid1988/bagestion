@@ -1,0 +1,81 @@
+<!--<style>
+    .modal{
+        position: absolute;
+        top: 25%;
+        left: 40%;
+        width: 50%;
+        height: 80%;
+        padding: 16px;
+        background: #fff;
+        overflow: auto;
+    }
+</style>-->
+
+<div>
+    <div style="margin-bottom:5px !important">
+        <h4>Relevamientos
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        </h4>
+        <ul id="myTab" style="margin-bottom: 0px" class="nav nav-pills">
+            <li ng-class="{'active': tabFoto == 'relevamiento'}"><a href="#" ng-click="tabFoto='relevamiento'" data-toggle="tabFoto">Información</a></li>
+            <li ng-class="{'active': tabFoto == 'fotos'}"><a href="#" ng-click="tabFoto='fotos'" data-toggle="tab">Imagenes</a></li>
+        </ul>
+        <div ng-init="tabFoto='relevamiento'" ng-show="tabFoto == 'relevamiento'">
+            <accordion ng-repeat="o in seleccion = (relevamientosModal)" close-others="true">
+                <accordion-group heading="Fecha de visita: {{o.fechaVisita}}" is-open="status.isFirstOpen" is-disabled="status.isFirstDisabled">
+                    <div><b>Ubicación:</b> {{o.ubicacion}}</div>
+                    <div><b>Fecha inicio:</b> {{o.fechaInicio}}</div>
+                    <div><b>Fecha de fin:</b> {{o.fechaFin}}</div>
+                    
+                    <div><b>Nº Visita:</b> {{o.visitaN}}</div>
+                    <div><b>Relevador:</b> {{o.relevador}}</div>
+                    <div><b>Fecha de visita:</b> {{o.fechaVisita}}</div>
+                    
+                    <div><b>¿Obrador?:</b> {{o.obrador}}</div>
+                    <div><b>¿Cartel de gestión?:</b> {{o.cartelGestion}}</div>
+                    <div><b>¿En actividad?:</b> {{o.enActividad}}</div>
+                    <div><b>Cantidad de personal:</b> {{o.cantidadPersonal}}</div>
+                    <div><b>¿Jefe de obra?:</b> {{o.jefeObra}}</div>
+                    <div><b>Apellido y Nombre:</b> {{o.apellidoNombre}}</div>
+                    <div><b>N° de contacto:</b> {{o.numeroContacto}}</div>
+                    <div><b>Estado:</b> {{o.estadoRel}}</div>
+                    
+                    <div><b>¿Obra limpia?:</b> {{o.obraLimpia}}</div>
+                    <div><b>Fecha de finalizacion(estimada):</b> {{o.fechaFinalizacion}}</div>
+                    <div><b>Avance fisico(% estimado):</b> {{o.avanceFisico}}</div>
+                    <div><b>¿En condiciones de ser recorrida?:</b> {{o.condRecorrida}}</div>
+                    <!--<hr>-->
+                    <!--<label>Imágenes</label>-->
+                    
+                    <!--CODIGO ANTERIOR-->
+                    <!--<div ng-if="!o.fotos.length">No se ha cargado ninguna imagen</div>-->
+                    <!--<a ng-if="o.fotos.length" ng-repeat="f in o.fotos" data-toggle="modal" ng-click="abrirModal('#fotosA_{{$index}}')" href="" class="thumbnail" style="display:inline-block">-->
+                    <!--    <span><img src="/file/{{f.fotoId}}" width="128" height="96"></span>-->
+                    <!--</a>-->
+                </accordion-group>
+                <!--<accordion-group heading="{{group.title}}" ng-repeat="group in groups">-->
+                <!--  {{group.content}}-->
+                <!--</accordion-group>-->
+                <!--<accordion-group heading="Dynamic Body Content">-->
+                <!--  <p>The body of the accordion group grows to fit the contents</p>-->
+                <!--    <button class="btn btn-default btn-sm" ng-click="addItem()">Add Item</button>-->
+                <!--    <div ng-repeat="item in items">{{item}}</div>-->
+                <!--</accordion-group>-->
+                <!--<accordion-group is-open="status.open">-->
+                <!--    <accordion-heading>-->
+                <!--        I can have markup, too! <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>-->
+                <!--    </accordion-heading>-->
+                <!--    This is just some content to illustrate fancy headings.-->
+                <!--</accordion-group>-->
+            </accordion>
+        </div>
+        <div ng-show="tabFoto == 'fotos'">
+            <div ng-repeat="o in seleccion">
+                <div ng-if="!o.fotos.length">No se ha cargado ninguna imagen</div>
+                <a ng-if="o.fotos.length" ng-repeat="f in o.fotos" data-toggle="modal" ng-click="abrirModal('#fotosA_{{$index}}')" href="" class="thumbnail" style="display:inline-block">
+                    <span><img src="/file/{{f.fotoId}}" width="128" height="96"><br>{{f.nombre}}</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

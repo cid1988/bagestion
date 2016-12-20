@@ -1,0 +1,83 @@
+<style>
+    p{
+        display:block;
+        margin-bottom:0;
+    }
+    span{
+        font:bold 13px "Trebuchet MS"; 
+        text-decoration: underline;
+    }
+</style>
+
+<div ng-controller="UDEPDetalleCtrl" class="card" style="padding-top: 0px; padding-left: 15px;">
+    <legend style="border:0">Matriz de Marco Lógico [MML]<br>{{fud.nombreDelPrograma}} <a ng-show="!editando" ng-click="imprimir()" class="btn btn-link pull-right no-underline no-print" style="margin-right: 20px; margin-top:5px;margin-bottom:0%;" href="/udep/imprimir/{{fud._id}}"><i class="icon-print icon-white"></i></a></legend>
+    
+    <table class="table table-striped table-bordered table-hover">
+        <tr>
+            <th></th>
+            <th>Indicadores</th>
+            <th>Medios de verificación</th>
+            <th>Supuestos</th>
+        </tr>
+        <tr>
+            <td>
+                <span>Fin (Objetivo Ministerial):</span><br>
+                <p>{{fud.finObjetivoMinisterial}}</p>
+            </td>
+            <td>
+                <p ng-repeat="t in fud.indicadoresFin">{{t.valor}}</p>
+            </td>
+            <td>
+                <p ng-repeat="t in fud.mediosFin">{{t.valor}}</p>
+            </td>
+            <td>
+                <p ng-repeat="t in fud.supuestosFin">{{t.valor}}</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span>Fin (Propósito objetivo Ministerial):</span><br>
+                <p>{{fud.propositoObjetivoMinisterial}}</p>
+            </td>
+            <td>
+                <p ng-repeat="t in fud.indicadoresProposito">{{t.valor}}</p>
+            </td>
+            <td>
+                <p ng-repeat="t in fud.mediosProposito">{{t.valor}}</p>
+            </td>
+            <td>
+                <p ng-repeat="t in fud.supuestosProposito">{{t.valor}}</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span>Componentes:</span><br>
+                <p ng-repeat="t in fud.componentesSolo">{{t.valor}}</p>
+            </td>
+            <td>
+                <p ng-repeat="t in fud.indicadoresComponentes">{{t.valor}}</p>
+            </td>
+            <td>
+                <p ng-repeat="t in fud.mediosComponentes">{{t.valor}}</p>
+            </td>
+            <td>
+                <p ng-repeat="t in fud.supuestosComponentes">{{t.valor}}</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span>Actividades:</span><br>
+                <p ng-repeat="t in fud.actividades">{{t.valor}}</p>
+            </td>
+            <td>
+                <p ng-repeat="t in fud.indicadoresActividades">{{t.valor}}</p>
+            </td>
+            <td>
+                <p ng-repeat="t in fud.mediosActividades">{{t.valor}}</p>
+            </td>
+            <td>
+                <p ng-repeat="t in fud.supuestosActividades">{{t.valor}}</p>
+            </td>
+        </tr>
+    </table>
+</div>

@@ -1,0 +1,75 @@
+<style>
+    .table {
+        border: 0;
+    }
+    .table th, .table td {
+        padding: 8px;
+        line-height: 20px;
+        text-align: left;
+        vertical-align: middle;
+        border: 0;
+    }
+    .table th {
+        background-color: #dddddd !important;
+    }
+</style>
+
+<div ng-controller="CurriculumBACtrl" class="card">
+    <div class="card-actions pull-right no-print" style="margin: 0; padding: 0">
+        <input placeholder="Apellido..." type="text" ng-model="filtro.apellido" title="Apellido" style="width:90px;margin-bottom: 22px;"/>
+        <input placeholder="Titulo..." type="text" class="span2" ng-model="filtro.estudios" title="Titulo" style="margin-bottom: 22px;"/>
+        <input placeholder="Experiencias..." type="text" class="span2" ng-model="filtro.experiencias" title="Experiencias" style="margin-bottom: 22px;"/>
+        <input placeholder="Edad Minima" type="text" class="span1" min="0" title="Edad Minima" ng-model="edadMinima" style="width: 80px;margin-bottom: 22px;"/>
+        <input placeholder="Edad Maxima" type="text" class="span1" min="1" title="Edad Maxima" ng-model="edadMaxima" style="width: 80px;margin-bottom: 22px;"/>
+        <div style="margin-left: 0px; display: inline-block; ">
+            <select ui-select2 type="text" ng-model="filtro.sexo" class="span2" title="Sexo" style="width:90px;">
+                <option value="">Sexo...</option>
+                <option value="Femenino">Femenino</option>
+                <option value="Masculino">Masculino</option>
+            </select>
+        </div>
+        <div style="margin-left: 0px; display: inline-block;width: 120px;">
+            <select ui-select2 type="text" ng-model="filtro.idiomas" class="span2" title="Idiomas" style="width: 120px;">
+                <option value="">Idiomas...</option>
+                <option value="Ingles">Ingles</option>
+                <option value="Portugues">Portugues</option>
+                <option value="Frances">Frances</option>
+                <option value="Italiano">Italiano</option>
+                <option value="Aleman">Aleman</option>
+                <option value="Otros">Otros</option>
+            </select>
+        </div>
+        <input placeholder="Ciudad..." type="text" ng-model="filtro.ciudad" title="Ciudad" style="width:80px;margin-bottom: 22px;"/>
+        <a href="/curriculumBA/nuevo" class="btn btn-link pull-right" style="margin-right: 20px;margin-bottom: 20px;margin-left: 25px;" ng-if=hasPermission('rhResumeTool.editar') ><i class="icon-plus"></i> Nuevo</a>
+    </div>
+    
+    <h2 class="card-heading simple">Curriculum BA</h2>
+    <div class="card-body" style="padding-left: 0px; padding-right: 0px; padding-bottom: 0px;">
+        <div class="form-horizontal" name="form" style="margin-left:10px; padding-top: 16px; clear: both">
+            <div class="row" style="padding-bottom: 10px;">
+                <div class="span3" style="display: table-cell;margin-left: 50px;"><a href="#" style="display: inline-block; color:#404040;">Nombre y Apellido:</a></div>
+                <div class="span2" style="display: table-cell"><a href="#" style="display: inline-block; color:#404040;">Fecha de Nacimiento:</a></div>
+                <div class="span1" style="display: table-cell"><a href="#" style="display: inline-block; color:#404040;">Telefono:</a></div>
+                <div class="span1" style="display: table-cell"><a href="#" style="display: inline-block; color:#404040;">Nacionalidad:</a></div>
+                <div class="span2" style="display: table-cell"><a href="#" style="display: inline-block; color:#404040;">Idiomas:</a></div>
+                <div class="span3" style="display: table-cell"><a href="#" style="display: inline-block; color:#404040;">Nivel Profesional:</a></div>
+            </div>
+        </div>
+        
+        <ul class="nav nav-list">
+            <li ng-repeat="i in cvs | orderBy:'ordenG' | filter:filtro | filter:filtroFin">
+                <a style="font-size: 12px;padding-top: 8px;padding-bottom: 8px;padding-left: 0px;padding-right: 0px;" href="/curriculumBA/{{i._id}}">
+                <span class="span3">{{i.apellido}}, {{i.nombre}}</span>
+                <span class="span2">{{i.fechaNacimiento}}</span>
+                <span class="span1">{{i.numeroTelefono}}</span>
+                <span class="span1">{{i.nacionalidad}}</span>
+                <span class="span2"><span ng-repeat="t in i.idiomas">{{t.idioma}}&nbsp</span></span>
+                <span class="span3"><span ng-repeat="t in i.estudios">{{t.titulo}}&nbsp({{t.estadoNivelProfesional}})<hr style="margin-top: 0px;margin-bottom: 0px;"/></span></span> 
+                </a>
+            </li>
+            <li ng-if="!cvs.length" class="text-center">
+                <em>No hay cargas aún</em>
+            </li>
+        </ul>
+    </div>
+</div>

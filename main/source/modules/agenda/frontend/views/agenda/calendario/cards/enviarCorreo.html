@@ -1,0 +1,113 @@
+<style>
+    #principal{
+        width:67%;
+    }
+    #secundario{
+        width:30%;
+    }
+    .card-actions{
+        margin-top:0;
+        padding-top:0;
+    }
+    tr:first-child>th{
+        border:0 !important;
+    }
+    tr:first-child>td{
+        width:100%;
+        border:0;
+    }
+    #contenedorTexto{
+        padding-top: 15px;
+    }
+    textarea{
+        width: 98%; 
+        height: 300px;
+        margin-bottom: 30px;
+        border:none;
+    }
+    ul.wysihtml5-toolbar li a[title="Insert image"] { display: none; }
+    ul.wysihtml5-toolbar li a[title="Insert link"] { display: none; }
+    ul.wysihtml5-toolbar li.dropdown ul.dropdown-menu li a[data-wysihtml5-command-value="h1"] { display: none; }
+    ul.wysihtml5-toolbar li.dropdown ul.dropdown-menu li a[data-wysihtml5-command-value="h2"] { display: none; }
+    ul.wysihtml5-toolbar li.dropdown ul.dropdown-menu li a[data-wysihtml5-command-value="h3"] { display: none; }
+    ul.wysihtml5-toolbar li.dropdown ul.dropdown-menu li a[data-wysihtml5-command-value="h5"] { display: none; }
+    .wysihtml5-toolbar:nth-child(n+2) 
+    {
+        display: none;
+    }
+
+    #color{
+        width:17px;
+        height:17px;
+        border:none;
+        margin:0 15px 0 0;
+        display:inline-block;
+    }
+    div>button{
+        width:100%;
+        margin-top:10px !important;
+    }
+    button:first-child{
+        margin-top:0 !important;
+    }
+    h4{
+        margin:20px 0 0 0;
+    }
+</style>
+<div ng-controller="envioParticipantes">
+    <div class="card pull-right" id="principal" >
+        <div class="card-actions pull-right">
+            <div class="btn-group">
+                <a ng-click="enviarMail()" type="button" class="btn btn-link">
+                    <i class="icon-envelope"></i>
+                </a>
+                <a href="/agenda" type="button" class="btn btn-link">
+                    <i class="icon-remove"></i>
+                </a>
+            </div>
+        </div>
+        <h3 class="card-heading simple">Enviar Cita</h3>
+        <div class="card-body">
+            <table class="table table-condensed table-responsive table-no-border">
+                <tr>
+                    <th>Para:</th>
+                    <td colspan="2">
+                        <span>
+                            {{para}}
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        Asunto:
+                    </th>
+                    <td colspan="2">
+                        <span ng-show="asunto">{{asunto}} - </span>Cita para Reunion de Seguimiento - {{agenda.nombre}}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3" id="contenedorTexto">
+                        <textarea rich-text-editor rows="4" ng-model="temario"></textarea>
+                        
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="card pull-left" id="secundario">
+        <h3 class="card-heading simple"><span id="color" style="background-color:{{agenda.color}}"></span>{{agenda.nombre}}</h3>
+        <div class="card-body">
+            <div class="control-group">
+                <h4 class="pull-right">{{instancia.desdeHora}} a {{instancia.hastaHora}}</h4>
+                <h3 class="pull-left" id="fecha">{{instancia.fecha}}</h3>
+            </div>
+            <div class="control-group">
+                <button type="button" class="btn" ng-class="(instancia.tipoEnvio<4) ? 'btn-success' : 'btn-danger'" ng-click="cambiarANunca()" disabled="disabled"><span ng-show="!instancia.tipoEnvio">Nunca Enviado</span><span ng-show="instancia.tipoEnvio==1">Modificación enviada</span><span ng-show="instancia.tipoEnvio==2">Recordatorio enviado</span><span ng-show="instancia.tipoEnvio==4">Cancelación enviada</span><span ng-show="instancia.tipoEnvio==3">Cita enviada</span></button>
+                <button type="button" class="btn" ng-click="cambiarACita()">Cita</button>
+                <button type="button" class="btn" ng-click="cambiarAModificacion()">Modificación</button>
+                <button type="button" class="btn" ng-click="cambiarARecordatorio()">Recordatorio</button>
+                <button type="button" class="btn btn-danger" ng-click="cambiarACancelar()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>

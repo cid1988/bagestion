@@ -1,0 +1,4 @@
+<ul class="nav" ng-controller="ExpedientesCtrl">
+    <li ng-class="{'active': state.current.section == 'contactos'}"><a ng-href="/expedientes">Expedientes</a></li>
+    <li ng-class="{'active': state.current.section == 'contactos'}"><a ng-hide="editando" ng-href="/expedientes/nuevo" ng-show="hasPermission('expedientes.editarDgcontg')">Nuevo expediente</a></li>
+</ul>

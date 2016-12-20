@@ -1,0 +1,19 @@
+<div class="modal-header" style="padding-bottom: 10px;">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>Agregar actividad al Bloque: {{bloqueSeleccionado.bloque}}</h3>
+    </div>
+    <div class="modal-body">
+        <span style="display: inline-block"> Macro Actividad:<br /> 
+            <input class="span5" type="text" placeholder="Macro Actividad" ng-model="data.macroActividad" />
+        </span>
+        <span style="display: inline-block"> Fecha Inicio:<br /> 
+            <input class="span2" type="text" date placeholder="Fecha Inicio" ng-model="data.fechaInicio" />
+        </span>
+        <span style="display: inline-block"> Fecha Fin:<br /> 
+            <input class="span2" type="text" date placeholder="Fecha Fin" ng-model="data.fechaFin" />
+        </span>
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="btn" data-dismiss="modal">Cancelar</a>
+        <a href="#" class="btn btn-info" data-dismiss="modal" ng-click="agregarActividad(true, bloqueSeleccionado, data)">Agregar actividad</a>
+    </div>

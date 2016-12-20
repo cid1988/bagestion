@@ -1,0 +1,156 @@
+<style>
+    .table {
+        border: 0;
+    }
+    .table th, .table td {
+        padding: 8px;
+        line-height: 20px;
+        text-align: left;
+        vertical-align: middle;
+        border: 0;
+    }
+    .table th {
+        background-color: #dddddd !important;
+    }
+    tbody>tr>td:first-child {
+       word-break:break-word; 
+    }
+    input{
+        border-radius: 4px !important;
+    }
+    input:focus{
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6) !important;
+        border-color: rgba(82, 168, 236, 0.8) !important;
+    }
+    .btn-link:hover,a:hover,.btn-link:focus,a:focus{
+        text-decoration:none;
+        color:black;
+    }
+    .control-group{
+       display:inline-block;
+    }
+    .padding0{
+       padding:0 !important;
+    }
+    .controls>*{
+       margin-bottom:0 !important;
+    }
+    .controls{
+       padding-right:20px;
+    }
+    .span{
+       margin-left:10px;
+    }
+    .indicadorVencido{
+       display:inline-block; 
+       height:1.5em;
+       width:1.5em;
+       border-radius:100px;
+       margin-right:20px;
+    }
+    .modal.fade.in{
+       top:5%;
+       bottom:5%;
+    }
+    .modal>div, .modal-body div{
+       height:100%;
+    }
+    .modal-body{
+       height:90%;
+    }
+    .ceroMargin{
+       margin-bottom:5px !important;
+       margin-top:0 !important;
+    }
+    
+</style>
+<div ng-controller="BAWikiCtrl">
+    <div class="card">
+        <div class="card-heading simple">
+            <div class="row-fluid">
+               <div class="span2">
+                  <h3 class="ceroMargin">BA Wiki</h3>
+               </div>
+               <div class="span10">
+                  <div class="row-fluid">
+                     <div class="control-group ceroMargin span12">
+                        <div class="controls">
+                           <div class="span3">
+                              <input type="text" title="Nombre" class="ceroMargin input-block-level" ng-model="filtro.nombre" placeholder="Nombre Wiki" autofocus />
+                           </div>
+                           <div class="span3" style="font-size:0.6em" title="Comunas">
+                              <select placeholder="Comunas" class="ceroMargin" style="width:100%" ui-select2 id="selectorComuna" multiple="multiple" ng-model="filtroComunas" ng-init="comunas=['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15']">
+                                 <option value="{{i}}" ng-repeat="i in comunas">Comuna {{i}}</option>
+                              </select>
+                           </div>
+                           <div class="span3" style="font-size:0.6em" title="Barrios">
+                              <select placeholder="Barrios" class="ceroMargin" style="width:100%" ui-select2 id="selectorBarrio" ng-model="filtroBarrios" multiple="multiple" ng-options="i.nombre as i.nombre for i in barrios | orderBy: 'nombre' | filter:filtroFin">
+                              </select>
+                           </div>
+                           <div class="span3">
+                              <div class="row-fluid">
+                                 <div class="span9">
+                                    <input type="text" title="Tag" class="ceroMargin input-block-level" ng-model="filtro.tags" placeholder="Tag"/>
+                                 </div>
+                                 <div class="span3">
+                                    <a title="Nueva wiki" class="btn btn-link input-block-level" href="/bawiki/nuevo" ng-if="hasPermission('bawiki.editar')"><i class="icon-plus"></i></a>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+        </div>
+        
+        <div class="card-body">
+            <div class="row-fluid">
+              <table border="1" class="table table-striped">
+                  <thead>
+                      <tr bgcolor= "#FFFFFF">
+                          <th><a ng-click="orden = '-nombre'" href="#">Nombre</a></th>
+                          <th><a ng-click="orden = 'fecha'" href="#">Fecha</a></th>
+                          <th><a ng-click="orden = 'comentarios'" href="#">Comentarios</a></th>
+                          <th></th>
+                      </tr>
+                  </thead>
+                  <tbody ng-init="orden='fecha'">
+                      <tr ng-repeat="i in wikis | orderBy:orden:true | filter:filtro | filter:filtroBarrioYComuna">
+                          <td><div>{{ i.nombre }}</div></td>
+                           <td>
+                              <div style="width:45%; display:inline-block">{{ dameFecha(i.fecha) }}</div>
+                              <div class="indicadorVencido pull-right" ng-class="dameClase(i.fechaVencimiento)"></div>
+                           </td>
+                          <td class="span2">{{i.comentarios.length}} Comentarios</td> 
+                          <td>
+                              <a class="btn btn-link pull-right" type="button" href="/bawiki/detalle/{{i._id}}" title="Editar / Ver detalle"><i ng-class="hasPermission('bawiki.editar') ? 'icon-edit' : 'icon-zoom-in'"></i></a>
+                              <a class="btn btn-link pull-right" type="button" ng-click="abrirModalPrevia(i)" title="Vista previa" ng-show="i.vistaPrevia.formato"><i class="icon-eye-open"></i></a>
+                           </td>
+                      </tr>
+                  </tbody>
+              </table>
+           </div>
+        </div>
+    </div>
+    <div class="modal hide fade" id="modalVistaPrevia">
+      <div class="modal-content">
+         <div class="modal-header" style="padding-bottom:0">
+            <button type="button" class="close pull-right " data-dismiss="modal" aria-hidden="true">&times;</button>
+            <legend>Vista previa</legend>
+         </div>
+         <div class="modal-body"style="overflow-y:auto">
+            <div ng-if="modalPrevio.vistaPrevia.formato==1">
+               {{modalPrevio.vistaPrevia.texto}}
+            </div>
+            <div ng-if="modalPrevio.vistaPrevia.formato==2" style="overflow-y:hidden">
+               <div id="verPDF"></div>
+            </div>
+            <div ng-if="modalPrevio.vistaPrevia.formato==3">
+               <img src="/file/{{modalPrevio.vistaPrevia.imagen}}" style="width:100%" alt="Imagen de vista previa"/>
+            </div>
+         </div>
+      </div>
+   </div>
+
+</div>

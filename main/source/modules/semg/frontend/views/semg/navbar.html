@@ -1,0 +1,110 @@
+<style>
+.navbar .nav > li > div > a {
+  max-width: 180px;
+  min-width: 20px;
+  padding: 13px 0 10px 0;
+  margin: 0 18px;
+  overflow: hidden;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #737373;
+  text-overflow: ellipsis;
+  text-shadow: none;
+  white-space: nowrap;
+  vertical-align: top;
+  border-bottom: 2px solid transparent;
+}
+
+.navbar .nav > li > div > a:hover,
+.navbar .nav > li > div > a:focus {
+  color: #262626;
+  border-color: #8B8B8B;
+}
+
+.navbar .nav > .active > div > a,
+.navbar .nav > .active > div > a:hover,
+.navbar .nav > .active > div > a:focus {
+  font-weight: bold;
+  color: #262626;
+  text-decoration: none;
+  border-color: #3B3B3B;
+  -webkit-box-shadow: none;
+     -moz-box-shadow: none;
+          box-shadow: none;
+  -webkit-transition: border-color 0.218s ease 0s;
+     -moz-transition: border-color 0.218s ease 0s;
+       -o-transition: border-color 0.218s ease 0s;
+          transition: border-color 0.218s ease 0s;
+}
+</style>
+
+<ul class="nav">
+    <li ng-class="{'active': state.current.section == 'semg'}"><a  ng-href="/semg">SEMG</a></li>
+    <li ng-class="{'active': state.current.section == 'semg.indicadores'}" ng-if="hasPermission('semg.verSecretaria') || hasPermission('semg.verJurisdiccion')">
+        <div class="dropdown" style="margin-top: 13px;">
+          <!--<a class="dropdown-toggle" data-toggle="dropdown" ng-href="/semg/indicadores" style="padding-bottom: 13px;text-decoration:none;">Matriz</a>-->
+          <a class="dropdown-toggle" data-toggle="dropdown" ng-href="/semg/indicadores" style="padding-bottom: 13px;text-decoration:none;">Matrices</a>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+            <!--<li ng-if="hasPermission('semg.editar')"><a tabindex="-1" href="/semg/indicadores/2015">Formulación de Matriz de Indicadores 2015</a></li>-->
+            <li ng-if="hasPermission('semg.verJurisdiccion')"><a ng-controller="NavBarSEMGCtrl" tabindex="-1" href="/semg/indicadores/2016?filtro={{user.jurisdiccion}}">Formulación de Matriz de Indicadores 2016</a></li>
+            <li ng-if="hasPermission('semg.verSecretaria')"><a tabindex="-1" href="/semg/matrizIndicadores/2016">Formulación de Matriz de Indicadores 2016</a></li>
+            <!--<li ng-if="hasPermission('semg.editar')"><a tabindex="-1" href="/semg/indicadores/2015/monitoreo/0">Monitoreo 2015</a></li>-->
+            <!--<li><a tabindex="-1" href="/semg/cartascompromisos/2015/monitoreo/0">Matriz de Monitoreo 2016</a></li>-->
+<!--<li><a tabindex="-1" href="/semg/constru">Matriz de Monitoreo 2016</a></li>-->
+            <li ng-if="hasPermission('semg.verJurisdiccion')"><a ng-controller="NavBarSEMGCtrl" tabindex="-1" href="/semg/matrizMonitoreo/2016?filtro={{user.jurisdiccion}}">Matriz de Monitoreo 2016</a></li>
+            <li ng-if="hasPermission('semg.verSecretaria')"><a ng-controller="NavBarSEMGCtrl" tabindex="-1" href="/semg/matrizMonitoreo/2016">Matriz de Monitoreo 2016</a></li>
+            <!--<li><a tabindex="-1" href="/semg/indicadores/2016/monitoreo/0">Monitoreo 2016</a></li>-->
+            <!--<li ng-if="hasPermission('semg.editar')"><a tabindex="-1" href="/semg/indicadores/2015/evaluacion/0">Autoevaluación 2015</a></li>-->
+            <!--<li><a tabindex="-1" href="/semg/indicadores/2016/evaluacion/0">Autoevaluación 2016</a></li>-->
+          </ul>
+        </div>
+    </li>
+    <li ng-class="{'active': state.current.section == 'semg.informes'}" ng-if="(hasPermission('semg.editar') || hasPermission('semg.cartasCompromiso') || hasPermission('semg.edicionJurisdiccion'))">
+        <div class="dropdown" style="margin-top: 13px;">
+          <!--<a class="dropdown-toggle" data-toggle="dropdown" ng-href="/semg/cartascompromisos" style="padding-bottom: 13px;text-decoration:none;">Reportes</a>-->
+          <a class="dropdown-toggle" data-toggle="dropdown" ng-href="/semg/cartascompromisos" style="padding-bottom: 13px;text-decoration:none;">Informes</a>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+            <!--<li><a tabindex="-1" href="/semg/cartascompromisos/2015">Formulación de Cartas Compromiso 2015</a></li>-->
+            <!--<li><a tabindex="-1" href="/semg/cartascompromisos/2016">Formulación de Cartas Compromiso 2016</a></li>-->
+            <!--<li><a tabindex="-1" href="/semg/cartascompromisos/2015/monitoreo/0">Matriz de Monitoreo 2016</a></li>-->
+            <!--<li><a tabindex="-1" href="/semg/cartascompromisos/2016/monitoreo/0">Monitoreo 2016</a></li>-->
+            <li><a tabindex="-1" href="/semg/constru">Informe de Monitoreo 2016</a></li>
+            <!--<li><a tabindex="-1" href="/semg/cartascompromisos/2015/evaluacion/0">Autoevaluación 2015</a></li>-->
+            <li><a tabindex="-1" href="/semg/constru"> Informe de Autoevaluación 2016</a></li>
+          </ul>
+        </div>
+    </li>
+    <!--
+    <li ng-class"{'active': state.current.section == 'semg.historico'}">
+      <div class="dropdown" style="margin-top: 13px;">
+          <a class="dropdown-toggle" data-toggle="dropdown" ng-href="/semg/cartascompromisos" style="padding-bottom: 13px;text-decoration:none;">Reportes</a>
+          <a class="dropdown-toggle" data-toggle="dropdown" ng-href="/semg/historico" style="padding-bottom: 13px;text-decoration:none;">Histórico</a> VA
+          <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+            <li><a tabindex="-1" href="/semg/cartascompromisos/2015">Formulación de Cartas Compromiso 2015</a></li>
+            <li><a tabindex="-1" href="/semg/cartascompromisos/2016">Formulación de Cartas Compromiso 2016</a></li>
+            <li><a ng-controller="NavBarSEMGCtrl"  tabindex="-1" href="/semg/indicadores/2015?filtro={{user.jurisdiccion}}">Matriz de Indicadores 2015</a></li>VA
+            <li><a tabindex="-1" href="/semg/cartascompromisos/2016/monitoreo/0">Monitoreo 2016</a></li>
+            <li><a tabindex="-1" href="/semg/indicadores/2015/monitoreo/0">Formulario de Monitoreo 2015</a></li>VA
+            <li><a tabindex="-1" href="/semg/indicadores/2015/evaluacion/0">Formulario de Autoevaluación 2015</a></li>VA
+            <li><a tabindex="-1" href="/semg/perro"> Informe de Autoevaluación 2016</a></li>
+          </ul>
+        </div>
+    </li>
+    -->
+    <li ng-class="{'active': state.current.section == 'semg.cartascompromisos'}" ng-if="(hasPermission('semg.editar') || hasPermission('semg.cartasCompromiso'))">
+        <div class="dropdown" style="margin-top: 13px;">
+          <!--<a class="dropdown-toggle" data-toggle="dropdown" ng-href="/semg/cartascompromisos" style="padding-bottom: 13px;text-decoration:none;">Reportes</a>-->
+          <a class="dropdown-toggle" data-toggle="dropdown" ng-href="/semg/cartascompromisos" style="padding-bottom: 13px;text-decoration:none;">Calidad de los Servicios</a>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+            <li><a tabindex="-1" href="/semg/cartascompromisos/2015">Formulación de Cartas Compromiso 2015</a></li>
+            <!--<li><a tabindex="-1" href="/semg/cartascompromisos/2016">Formulación de Cartas Compromiso 2016</a></li>-->
+            <!--<li><a tabindex="-1" href="/semg/cartascompromisos/2015/monitoreo/0">Matriz de Monitoreo 2016</a></li>-->
+            <!--<li><a tabindex="-1" href="/semg/cartascompromisos/2016/monitoreo/0">Monitoreo 2016</a></li>-->
+            <li><a tabindex="-1" href="/semg/constru">Monitoreo Cartas Compromiso 2015</a></li>
+            <li><a tabindex="-1" href="/semg/cartascompromisos/2015/evaluacion/0">Autoevaluación 2015</a></li>
+            <!--<li><a tabindex="-1" href="/semg/cartascompromisos/2016/evaluacion/0">Autoevaluación 2016</a></li>-->
+          </ul>
+        </div>
+    </li>
+    <li ng-class="{'active': state.current.section == 'semg.actualizaciones'}" ng-if="hasPermission('semg.editar')"><a ng-href="/semg/actualizaciones">Actualizaciones</a></li>
+</ul>

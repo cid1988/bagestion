@@ -1,0 +1,47 @@
+<div class="card span12" ng-controller="UPEJOLEditarObjAreaCtrl" style="padding-top: 10px; margin-top: 0px;margin-bottom: 10px;">
+  <h3 class="card-heading simple">
+  <span class="btn-group pull-right">
+    <a ng-click="volver()" class="btn btn-default"><i class="icon icon-arrow-up"></i> Volver</a>
+    <a ng-if="activada" ng-click="cancelar()" class="btn btn-default"><i class="icon icon-undo"></i> Cancelar</a>
+    <a ng-if="activada" ng-click="eliminar()" class="btn btn-default"><i class="icon icon-trash"></i> Eliminar</a>
+    <a ng-if="activada" ng-click="guardar()" class="btn btn-default"><i class="icon icon-save"></i> Guardar</a>
+    <a ng-if="!activada && detalle" ng-click="activar()" class="btn" ng-show="permisoObArea()"><i class="icon icon-edit"></i> Modificar</a>
+    <a ng-if="!activada && !detalle" ng-click="verDetalle()" class="btn"><i class="icon icon-zoom-in"></i> Ver detalle</a>
+    <a ng-if="!activada && detalle" ng-click="cancelarDetalle()" class="btn"><i class="icon icon-zoom-out"></i> Ocultar</a>
+  </span>
+  <span class="pull-right" style="margin-right: 10px;margin-left: 20px;">Objetivo de área</span>
+  <strong style="margin-right: 1em">{{tabCtrl.filtro.objArea.nombre}}</strong></h3>
+  <div class="card-body" ng-if="detalle">
+    <form class="form-horizontal">
+      <div class="control-group" style="width: 975px; display: inline-block;margin-bottom: 0px;">
+        <label class="control-label">Nombre:</label>
+        <div class="controls" style="margin-right: 20px;">
+          <input type="text"  ng-disabled="!activada" ng-model="objArea.nombre" style="width: 100%;">
+        </div>
+      </div>
+      <div class="btn-group">
+        <button class="btn" ng-class="{'active btn-info': objArea.validado}" ng-click="objArea.validado = !objArea.validado" ng-disabled="!activada">Validado</button>
+        <button class="btn" ng-class="{'active btn-info': objArea.aprobado}" ng-click="objArea.aprobado = !objArea.aprobado" ng-disabled="!activada || !hasPermission('upejol.administrador')">Aprobado</button>
+      </div>
+    </form>
+    <form class="form-horizontal">
+      <div class="control-group">
+        <label class="control-label">Descripción:</label>
+        <div class="controls" style="margin-right: 20px;">
+          <textarea ng-disabled="!activada" ng-model="objArea.descripcion" style="width: 100%; resize: vertical" rows="3"></textarea>
+        </div>
+      </div>
+    </form>
+    <form class="form-inline">
+        <label style="width: 162px; text-align: right; padding-right: 14px;">Cód. Identificación:</label>
+        <input type="text" ng-disabled="!activada" ng-model="objArea.codIdentificacion" style="width: 100px;" />
+        <label style="width: 95px; text-align: right; padding-right: 14px;">Responsable:</label>
+        <input type="text" ng-disabled="!activada" ng-model="objArea.responsableDeCarga" />
+        <label style="width: 240px; text-align: right; padding-right: 14px;">Correspondencia con ejes de gestión:</label>
+        <select type="text" ng-model="objArea.correspondenciaEjes" ng-disabled="!activada" style="width: 224px" ng-options="i.nombre as i.nombre for i in ejes">
+            <option ng-disabled="true" value="">{{objArea.correspondenciaEjes}}</option>
+        </select>
+    </form>
+  </div>
+</div>
+

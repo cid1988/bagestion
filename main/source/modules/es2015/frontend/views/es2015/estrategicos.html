@@ -1,0 +1,84 @@
+<style>
+    .table-hover tbody tr:hover > td,
+    .table-hover tbody tr:hover > th {
+      background-color: #eeeeee !important;
+    }
+    
+    table tr td a {
+        display:block;
+        height:100%;
+        width:100%;
+    }
+    
+    .btn-circle {
+      width: 35px;
+      height: 35px;
+      line-height: 40px;
+      padding:0;
+      border-radius: 50%;
+    }
+</style>
+<div class="card body" style="margin-top: 0px;padding-top: 0px;" ng-controller="ES2015EstrategicosCtrl">
+    <div style="margin-bottom: 0px">
+        <ul class="breadcrumb" style="margin-bottom: 0px;">
+          <li><a href="/es2015" style="color:#404040;">Distritos</a> <span class="divider">/</span></li>
+          <li class="active">Estratégicos</li>
+        </ul>
+    </div>
+    <h2 style="margin-top: 15px; margin-left: 15px; margin-bottom: 0px;">Estratégicos</h2>
+    <hr style="margin-top: 8px;margin-bottom: 5px;border-top-width: 5px;border-bottom-width: 1px;">
+    <div class="card-body" ng-init="miTotal = 0" style="margin-top: 0px;margin-bottom: 10px;">
+        <div class="row" style="padding-bottom: 0px; font-size:16px">
+            <div class="span" style="width:20%">
+                <a ng-show="!reverse" href="#" ng-click="orden = 'distrito';reverse=true" style="color:#404040;"><b>Distrito:</b></a>
+                <a ng-show="reverse" href="#" ng-click="orden = 'orden';reverse=false" style="color:#404040;"><b>Distrito:</b></a>
+            </div>
+            <div class="pull-right" style="width:15%">
+                <b>Estado:</b>
+                <a ng-click="editando=true" ng-hide="editando || !hasPermission('es2015.editar')" href="#" class="pull-right" style="color:#404040;"><i class="icon-edit"></i></a>
+            </div>
+            <div class="pull-right" style="width:59%">
+                <a ng-show="!reverse" href="#" ng-click="orden = 'nombre';reverse=true" style="color:#404040;"><b>Estructura de trabajos:</b></a>
+                <a ng-show="reverse" href="#" ng-click="orden = 'orden';reverse=false" style="color:#404040;"><b>Estructura de trabajos:</b></a>
+            </div>
+        </div>
+        <div style="overflow-y: scroll; overflow-x: hidden; position: absolute;top: 200px;background: white;bottom: 12px;right: 20px;left: 20px;border: 1px solid #FFD300;border-top: transparent;padding-left: 21px">
+            <table class="table table-hover">
+                <tbody>
+                    <tr height="25" ng-repeat="e in estructuras | orderBy : orden" ng-if=hasPermission(quePermiso(e))>
+                        <td width="25%">
+                        <a href="/es2015/{{distritoPorId(e.distrito)._id}}/hitos?estructura={{e._id}}" style="color:#404040;"><span style="font-family: Tahoma; font-size: 18px; font-weight: 500; text-decoration: none;">{{distritoPorId(e.distrito).nombre}} </span></a>
+                        </td>
+                        <td width="60%">
+                        <a href="/es2015/{{distritoPorId(e.distrito)._id}}/hitos?estructura={{e._id}}" style="color:#404040;"><span style="font-family: Tahoma; font-size: 18px; font-weight: 500; text-decoration: none;">{{e.nombre}} </span></a>
+                        </td>
+                         
+                        <td width="15%" style="padding-bottom: 0px;padding-top: 1px;">
+                            <a class="btn btn-circle" ng-class="colorEstruc(e._id)" href="/es2015/{{distrito._id}}/hitos?estructura={{e._id}}">&nbsp;</a>
+                            <a ng-click="eliminar(false, e)" type="button" ng-show="editando && hasPermission('es2015.admin')" class="btn-link" style="display: inline-block; float: right; padding-left: 0px; padding-right: 0px;;width: 22px;" title="Eliminar Estructura">
+                                <i class="icon-trash"></i></a>
+                            <a ng-click="detalleEstruc(false, e)" type="button" ng-show="editando" class="btn-link" style="display: inline-block; float: right; padding-left: 0px; padding-right: 0px;;width: 29px;" title="Editar Estructura">
+                                <i class="icon-edit"></i></a>
+                            <a ng-click="switchStar(e)" type="button" ng-show="editando" class="btn-link" style="display: inline-block; float: right; padding-left: 0px; padding-right: 0px;;width: 29px;" title="Marcar como estratégico">
+                                <i ng-class="{'icon-star': e.star, 'icon-star-empty': !e.star}"></i></a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="confirmarEliminar" class="modal hide fade">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3>Eliminar Estructura</h3>
+        </div>
+        <div class="modal-body">
+            <p>Está a un paso de eliminar la estructura: {{estructuraSeleccionada.nombre}}</p>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn btn-info" data-dismiss="modal">Conservar el registro</a>
+            <a href="#" class="btn btn-danger" data-dismiss="modal" ng-click="eliminar(true)">Eliminar</a>
+        </div>
+    </div>
+</div>

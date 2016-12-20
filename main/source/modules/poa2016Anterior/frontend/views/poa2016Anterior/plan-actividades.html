@@ -1,0 +1,28 @@
+<style>
+    .modal {
+        width: 900px;
+        left: 35%;
+    }
+</style>
+
+<div class="span12 card" style="padding-top: 10px; margin-top: 0px;">
+  <h3 class="card-heading simple">Hitos / Actividades</h3>
+  <div class="card-body" style="padding: 0; margin-top: 0; border-bottom: 0">
+    <div style="font-size: 14px;padding-top: 4px;padding-bottom: 4px;margin-bottom: 10px;margin-left: 33px;margin-top: 5px;"><span class="span6" style="margin-left: 26px; width: 627px;">Nombre</span><span class="span1" style="text-align: center;width: 113px;">Fecha Inicio</span><span class="span1" style="text-align: center;width: 113px;">Fecha Fin</span><span class="span1" style="margin-left: 40px;width: 113px;">Retargets</span></div>
+    <hr style="margin-bottom: 0px;">
+    <ul class="nav nav-list">
+      <li ng-repeat="a in tabCtrl.actividades|filter:{idProyecto:tabCtrl.filtro.proyecto._id} | orderBy:ordenFecha">
+        <a style="font-size: 18px" href="javascript:" ng-click="tabCtrl.filtro.actividad = a">
+            <strong class="pull-right" ng-if="a.codIdentificacion">{{a.codIdentificacion}}</strong>
+            <span class="span6" style="width: 625px;">{{a.nombre}}</span>
+            <span class="span1" style="text-align: center;width: 113px;"><span ng-show="a.fechas">{{a.fechas[a.fechas.length-1].fechaInicio}}</span></span>
+            <span class="span1" style="text-align: center;width: 113px;"><span ng-show="a.fechas">{{a.fechas[a.fechas.length-1].fechaFin}}</span></span>
+            <span class="span1" style="text-align: center;width: 113px;"><span ng-show="a.fechas.length>1">{{a.fechas.length-1}}</span><span style="display: inline-block; border-radius: 20px; padding: 13px; margin-left: 0px; float: right; border: 0px solid rgb(0, 0, 0); margin-right: 0px; background-color:{{colorEstado(a)}};"></span></span>
+        </a>
+      </li>
+      <li ng-if="!(tabCtrl.actividades|filter:{idProyecto:tabCtrl.filtro.proyecto._id}).length" class="text-center" style="padding-top: 10px; padding-bottom: 10px;">
+        <em>No hay actividades ni hitos asociados</em>
+      </li>
+    </ul>
+  </div>
+</div>

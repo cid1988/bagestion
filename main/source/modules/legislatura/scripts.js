@@ -1,0 +1,1 @@
+exports = module.exports = ['/scripts/controllers/legislatura.js', '/scripts/controllers/legislatura-eventos.js', '/scripts/controllers/legislatura-preguntas.js', '/scripts/controllers/legislatura-cuestionarios.js'];

@@ -1,0 +1,1 @@
+exports = module.exports = ["bag2.semg.indicadores", "bag2.semg.cartascompromisos", "nvd3"];

@@ -1,0 +1,192 @@
+<style>
+    @media print {
+        body, span, div, table, tr, tbody, tfoot, td, hr { 
+            -webkit-print-color-adjust: exact !important;
+        }
+    }
+</style>
+
+<div class="card span12" style="border:0px;padding:20px" ng-controller="IDGImprimirCtrl" >
+    <div class="row">
+        <div class="span12" style="margin-left: 0px;">
+            <a href="#" class="btn btn-link pull-right no-print" style="margin-right: 10px;margin-bottom: 0px; margin-top:5px; !important;" ng-click="imprimir()"><i class="icon-print"></i></a>
+            <a href="/idg/{{archivo._id}}" class="btn btn-link pull-right no-print" style="margin-right: 10px;margin-bottom: 0px; margin-top:5px; !important;"><i class="icon-arrow-left"></i> Volver</a>
+        </div>
+        
+        <div class="span12" align="center" style="margin-bottom: 40px;">
+            <h2>{{archivo.apellido}}&nbsp{{archivo.nombre}}</h2>
+        </div>
+        
+        <h4 class="span12" style="margin-left:3%;!important;">Datos personales</h4>
+        <hr style=" margin-top: 0px;margin-bottom: 10px;border-top-width: 2px;!important;" class="span12">
+        
+        <div class="span12">
+            <form class="form-horizontal" style="margin-bottom: 0px !important;" >
+                <div class="row">
+                    <table style="margin-left:10%; width:100%;" >
+                        <tr>
+                            <td >
+                                <label ng-show="archivo.fechaNacimiento" style="margin-left:15%;"><strong>Fecha de Nacimiento: </strong>{{archivo.fechaNacimiento}}</label>
+                            </td>
+                            <td>
+                                <label ng-show="archivo.estadoCivil" style="margin-left:-15%;"><strong>Estado Civil: </strong>{{archivo.estadoCivil}}</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td >
+                                <label ng-show="archivo.tipo || cv.documento" style="margin-left:15%;"><strong>Tipo: </strong>{{archivo.tipo}}&nbsp&nbsp&nbsp&nbsp <strong>Nº Documento: </strong>{{archivo.documento}}</label>
+                            </td>
+                            <td>
+                                <label ng-show="archivo.domicilio" style="margin-left:-15%;"><strong>Domicilio: </strong>{{archivo.domicilio}}</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td >
+                                <label ng-show="archivo.numeroTelefono" style="margin-left:15%;"><strong>Telefono fijo: </strong>{{archivo.numeroTelefono}}</label>
+                            </td>
+                            <td>
+                                <label ng-show="archivo.ciudad" style="margin-left:-15%;"><strong>Ciudad: </strong>{{archivo.ciudad}}</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td >
+                                <label ng-show="archivo.numeroCelular" style="margin-left:15%;"><strong>Telefono Celular: </strong>{{archivo.numeroCelular}}</label>
+                            </td>
+                            <td>
+                                <label ng-show="archivo.provincia" style="margin-left:-15%;"><strong>Provincia: </strong>{{archivo.provincia}}</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td >
+                                <label ng-show="archivo.email" style="margin-left:15%;"><strong>E-mail: </strong>{{archivo.email}}</label>
+                            </td>
+                            <td>
+                                <label ng-show="archivo.sexo" style="margin-left:-15%;"><strong>Sexo: </strong>{{archivo.sexo}}</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label ng-show="archivo.codigoPostal" style="margin-left:15%;"><strong>Código Postal: </strong>{{archivo.codigoPostal}}</label>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </form>
+        </div>
+        <!-- DATOS PERSONALES FUNCIONANDO NO TOCAR -->
+        <h4 class="span12" style="margin-left:3%;">Estudios</h4>
+        <hr style=" margin-top: 0px;margin-bottom: 10px;border-top-width: 2px;" class="span12">
+        
+        <div ng-repeat="t in archivo.estudios">
+            <div align="middle" style="display: inline-block; width:30%; vertical-align: top; text-align: right">
+                <label style="margin-left:10%;"><strong>{{t.inicio.substring(3,10)}} - <span ng-show="t.fin=='Al presente'">Al presente</span><span ng-show="t.fin!='Al presente'">{{t.fin.substring(3,10)}}</span></strong></label>
+            </div>
+            <div style=" display: inline-block; margin-left:15px; width:50%;"align="left">
+                <label align="left" style="clear:left" ng-hide="t.otroNivelProfesional"><strong>Nivel Profesional: </strong>{{t.nivelProfesional}}</label>
+                <label align="left" style="clear:left" ng-show="t.otroNivelProfesional"><strong>Nivel Profesional: </strong>{{t.otroNivelProfesional}}</label>
+                <label align="left" style="clear:left" ><strong>Titulo: </strong>{{t.titulo}}</label>
+                <label align="left" style="clear:left" ><strong>Pais: </strong>{{t.pais}}</label>
+                <label align="left" style="clear:left" ><strong>Estado: </strong>{{t.estadoNivelProfesional}}</label>
+                <label align="left" style="clear:left" ><strong>Nombre Instituto: </strong>{{t.nombreInstituto}}</label>
+            </div>
+            <hr style=" margin-top: 0px;margin-bottom: 10px;border-top-width: 1px; margin-left:-3%;" class="span12">
+        </div>
+        
+        
+        <div ng-show="archivo.idiomas">
+            <div align="middle" style="display: inline-block; width:30%; vertical-align: top; text-align: right">
+                <label><strong>Idiomas: </strong></label>
+            </div>
+            <div style=" display: inline-block; margin-left:15px; width:50%;"align="left">
+                <form class="form-horizontal" style="margin-bottom: 0px !important;">
+                    <label ng-repeat="t in archivo.idiomas" align="left" style="clear:left"><strong>{{t.idioma}}: </strong>{{t.nivelAprendizaje}}</label>
+                </form>
+            </div>
+        </div>
+    
+        <hr style=" margin-top: 0px;margin-bottom: 10px;border-top-width: 2px; " class="span12" ng-show="archivo.sistemas">
+        <div ng-show="archivo.sistemas">
+            <div align="middle" style="display: inline-block; width:30%; vertical-align: top; text-align: right">
+                <label><strong>Informatica: </strong></label>
+            </div>
+            <div style=" display: inline-block; margin-left:15px; width:50%;"align="left">
+                <form class="form-horizontal" style="margin-bottom: 0px !important;">
+                    <div ng-repeat="t in archivo.sistemas" style="margin-top:0px; margin-bottom:0px;">
+                        <label ng-show="t.otroSistema"  align="left" style="clear:left"><strong>{{t.otroSistema}}: </strong>{{t.nivelAprendizaje}}</label>
+                        <label ng-hide="t.otroSistema"  align="left" style="clear:left"><strong>{{t.sistema}}: </strong>{{t.nivelAprendizaje}}</label>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- HASTA ACA TODO BIEN NO TOCAR -->
+        
+        <h4 class="span12" style="margin-left:3%;" ng-show="archivo.experiencias">Experiencias</h4>
+        <hr style=" margin-top: 0px;margin-bottom: 10px;border-top-width: 2px;" class="span12">
+        
+        <div ng-repeat="t in archivo.experiencias" ng-show="archivo.experiencias" class="span12">
+            <div align="middle" style="display: inline-block; width:30%; vertical-align: top; text-align: right">
+               <label><strong>{{t.desde.substring(3,10)}} - <span ng-show="t.hasta=='Al presente'">Al presente</span><span ng-show="t.hasta!='Al presente'">{{t.hasta.substring(3,10)}}</span></strong></label>
+            </div>
+            <div style=" display: inline-block; margin-left:15px; width:50%;"align="left">
+                <label><strong>Empresa: </strong>{{t.empresa}}</label>
+                <label><strong>Puesto: </strong>{{t.puesto}}</label>
+                <label><strong>Pais: </strong>{{t.pais}}</label>
+                <label><strong>Area / Rubro: </strong>{{t.area}}</label>
+                <label><strong>Personas a Cargo: </strong>{{t.personasACargo}}</label>
+            </div>
+            <hr style=" margin-top: 0px;margin-bottom: 10px;border-top-width: 1px; margin-left:-3%;" class="span12">
+        </div>
+        <!-- HASTA ACA TODO BIEN NO TOCAR -->
+        
+        
+        <div class="span12" ng-show="archivo.otrasExperiencias">
+            <div class="span5" >
+                <label><strong>Conocimientos Adicionales: </strong></label>
+            </div>
+            <div style=" margin-left:15px; width:98%;"align="left" class="span6">
+                <div class="form-group">
+                    <label>{{archivo.otrasExperiencias}}</label>
+                </div>
+            </div>
+        </div>
+        
+        <h4 class="span12" style="margin-left:3%; margin-top:25px;" ng-show="archivo.infoEntrevistas">Informe/s sobre entrevista/s: </h4>
+        <hr style=" margin-top: 0px;margin-bottom: 10px;border-top-width: 2px;" class="span12">
+        
+        <div class="span12" ng-show="archivo.infoEntrevistas">
+            <div class="span5" >
+                <label><strong></strong></label>
+            </div>
+            <div style=" margin-left:15px; width:98%;"align="left" class="span6">
+                <div class="form-group">
+                    <label>{{archivo.infoEntrevistas}}</label>
+                </div>
+            </div>
+        </div>
+        
+        <h4 class="span12" style="margin-left:3%; margin-top:25px;" ng-show="archivo.referencias">Referencias</h4>
+        <hr style=" margin-top: 0px;margin-bottom: 10px;border-top-width: 2px;" class="span12">
+        
+        
+        <div style="margin-left:0px; width:100%;" ng-show="archivo.referencias">
+            <div style=" display: inline-block; margin-left:5%; width:50%;"align="left">
+                <form class="form-horizontal" style="margin-bottom: 0px !important;">
+                    <div ng-repeat="t in archivo.referencias" style="margin-top:0px; margin-bottom:0px;">
+                        <label><strong>Nombre: </strong>{{t.nombre}}</label>
+                        <label><strong>Apellido: </strong>{{t.apellido}}</label>
+                        <label><strong>Telefono: </strong>{{t.telefono}}</label>
+                        <label><strong>E-mail: </strong>{{t.email}}</label>
+                        <hr style="margin-top: 0px;margin-bottom: 10px;border-top-width: 2px; width:100%;">
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        
+    </div>
+</div>
+
+
+
+
+

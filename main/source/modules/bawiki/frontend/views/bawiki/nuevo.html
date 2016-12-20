@@ -1,0 +1,240 @@
+<style type="text/css">
+    .wysihtml5-sandbox{
+        border: 0 !important;
+        padding: 0 !important;
+    }
+    .wysihtml5-toolbar:nth-child(2), .wysihtml5-toolbar>li:nth-child(4),#cargaDoc .alert-success{
+        display: none;
+    }
+    .cargados:hover{
+        background-color: #E9E7E7;
+        border-left:2px solid #60BBBC;
+    }
+    .cargados>div{
+         width: 48%;
+         display: inline-block;
+         font-size: 1.1em;
+         vertical-align: middle;
+    }
+    .cargados{
+        padding:5px;
+        text-align: center;
+        word-break: break-word;
+    }
+    .card-body{
+        padding-bottom: 10px !important;
+    }
+    input{
+        border-radius: 4px !important;
+    }
+    input:focus,textarea:focus{
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6) !important;
+        border-color: rgba(82, 168, 236, 0.8) !important;
+    }
+    .boxsizingBorder {
+       -webkit-box-sizing: border-box;
+          -moz-box-sizing: border-box;
+               box-sizing: border-box;
+   }
+   textarea { 
+      resize:vertical;
+      width:100%
+   }
+   #repetidoFuentes>span:nth-child(2n+1)>div{
+      background-color:#F7F7F7;
+   }
+   #repetidoFuentes>span:nth-child(2n)>div{
+      background-color:#ffffff;
+   }
+   #repetidoFuentes>span>div{
+      padding:4px 8px;
+      font-size:1.06em;
+      word-break:break-word;
+   }
+   #repetidoFuentes>span>div:hover{
+      border-left:4px solid #7C7CDE;
+   }
+   #repetidoFuentes{
+      padding-bottom:15px;
+   }
+   .controls{
+      margin-bottom:10px;
+   }
+   
+   a:not([target=_blank]):hover,a:not([target=_blank]):focus { 
+       color:inherit;
+       text-decoration:inherit;
+       cursor:default;
+   }
+</style>
+<div ng-controller="BAWikiNuevoCtrl">
+    <div class="card span8">
+        <div class="card-heading simple" style="overflow:hidden">
+            <span class="pull-left" style="padding-top: 9px">
+                Nueva Wiki
+            </span>
+            <span class="pull-right">
+                <span>
+                    <button class="btn" type="button" ng-click="eliminar()" style="margin-bottom:10px"><i class="icon-remove"></i> Cancelar</button>
+                    <button type="button" ng-click="guardar()" class="btn" style="margin-bottom:10px"><i class="icon-ok"></i> Guardar</button>
+                </span>
+            </span>
+        </div>
+        <div class="card-body" style="overflow:hidden">
+            <div>
+                <div class="control-group">
+                  <div class="controls">
+                     <label for="nombreWiki">Nombre</label>
+                     <input type="text" id="nombreWiki" class="input-block-level" placeholder="Ingrese el nombre" ng-model="wiki.nombre" required="required" autofocus/>
+                  </div>
+                  
+                  <div class="controls">
+                     <label for="tags">Tags</label>
+                     <input type="text" id="tags" class="input-block-level" placeholder="Ingrese al menos un tag" required="required" ng-model="wiki.tags"/>
+                     <span class="help-block">Separe cada tag con una coma "," o espacio " ".</span>
+                  </div>
+                  
+                  <div class="controls row-fluid">
+                     <div class="span6">
+                        <label for="selectorComuna">Comuna</label>
+                        <select ui-select2 id="selectorComuna" multiple="multiple" style="width:100%" ng-model="wiki.comunas" ng-init="comunas=['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15']">
+                           <option value="{{i}}" ng-repeat="i in comunas">Comuna {{i}}</option>
+                        </select>
+                     </div>
+                     <div class="span6">
+                        <label for="selectorBarrio">Barrio</label>                                                   
+                        <select ui-select2 id="selectorBarrio" style="width:100%" type="text" ng-model="wiki.barrios" multiple="multiple" ng-options="i.nombre as i.nombre for i in barrios | orderBy: 'nombre' | filter:filtroFin">
+                        </select>
+                     </div>
+                  </div>
+                  
+                  <div class="controls row-fluid" style="overflow:hidden">
+                     <div class="span8" style="margin-left:0">
+                        <label for="fuenteInformacion">Fuente de la Información</label>
+                        <div class="row-fluid">
+                           <div class="span10">
+                              <input type="text" class="input-block-level" id="fuenteInformacion" ng-model="nuevaFuenteInformacion" ng-keypress="agregarRegistro(nuevaFuenteInformacion,wiki.fuentes,$event);vaciarId($event)"/>
+                           </div>
+                           <div class="span2">
+                              <button type="button" class="btn" style="margin-bottom:10px" ng-click="agregarRegistro(nuevaFuenteInformacion,wiki.fuentes); nuevaFuenteInformacion=''"><i class="icon-plus"></i></button>
+                           </div>
+                        </div>
+                        <div class="span12" style="margin:0" id="repetidoFuentes">
+                           <span ng-repeat="i in wiki.fuentes track by $index">
+                              <div class="span12">
+                                 <div class="row-fluid">
+                                    <div class="span11">
+                                       <div style="margin-top:5px">
+                                          <a href="{{retornarLink(i,1)}}" target="{{retornarLink(i,2)}}">{{i}}</a>
+                                       </div>
+                                    </div>
+                                    <div class="span1">
+                                       <button type="button" class="btn btn-link" title="Eliminar Fuente" ng-click="eliminarRegistro(i,wiki.fuentes)"><i class="icon-trash"></i></button>
+                                    </div>
+                                 </div>
+                              </div>
+                           </span>
+                        </div>
+                     </div>
+                     <div class="span4">
+                        <div class="row-fluid">
+                           <label for="fechaVencimiento">Fecha de Vencimiento</label>
+                           <div clas="span12">
+                              <input type="text" class="input-block-level" id="fechaVencimiento" date required ng-model="wiki.fechaVencimiento"/>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  
+                   <div class="controls">
+                        <textarea placeholder="" rich-text-editor rows="4" style=" width: 100%; height:500px" ng-model="wiki.html"></textarea>
+                   </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="span4" style="overflow-y:hidden;">
+         <div class="card" id="cargaDoc">
+            <div class="card-heading simple">
+               Carga documentos
+           </div>
+           <div class="card-body">
+               <div>
+                    <input type="text" placeholder="Nombre de archivo" ng-model="documento.nombre" style="width:80%"/>
+                    <button ng-show="uploadedFile.length" class="btn btn-link pull-right" style="width:5%" ng-click="agregarDocumentacion()" title="Subir Documento"><i class="icon-upload"></i></button>
+               </div>
+               <div style="width: 100%" fine-uploader destination="'/upload/'" placeholder="'Examinar'" uploaded="uploadedFile" ng-show="documento.nombre.length">
+               </div>
+               <div style="margin-top:25px">
+                   <div class="cargados" ng-repeat="d in wiki.documentos">
+                       <div>
+                           {{d.nombre}}
+                       </div>
+                       <div>
+                           (<a href="/file/{{d.documentoId}}" download="{{d.nombre}}" target="_blank">Descargar</a>)
+                           <a ng-click="eliminarEnArray(wiki.documentos,d, 'documento')" class="pull-right" title="Eliminar Documento"><i class="icon-trash icon-white"></i></a></h3></th>
+                       </div>
+                   </div>
+                   <span ng-hide="wiki.documentos.length">No hay documentos aún</span>
+               </div>
+           </div>
+         </div>
+         
+         
+            <div class="card" ng-init="mostrar=0;wiki.vistaPrevia.formato=0">
+               <div class="card-heading simple" style="padding-bottom:5px">
+                  <span>Vista Previa</span> 
+                  <span>
+                     <i class="icon-arrow-left pull-right" title="Volver a seleccion de formato" ng-show="mostrar" ng-click="mostrar=0;wiki.vistaPrevia.formato=0"></i>
+                  </span>
+               </div>
+               <div class="card-body" style="margin-top:5px">
+                  <div class="row-fluid" style="padding-bottom:10px" ng-hide="mostrar">
+                     <div class="span12">
+                        <select ng-model="wiki.vistaPrevia.formato"class="input-block-level">
+                           <option value=0>Sin Vista Previa</option> 
+                           <option value=1 ng-show="wiki.vistaPrevia.texto">Mostar Texto</option>
+                           <option value=2 ng-show="wiki.vistaPrevia.pdf">Mostar PDF</option>
+                           <option value=3 ng-show="wiki.vistaPrevia.imagen">Mostar Imagen</option>
+                        </select>
+                     </div>
+                  </div>
+                  <div class="row-fluid" ng-hide="mostrar">
+                     <div class="span4">
+                        <button type="button" class="btn input-block-level" ng-click="mostrar=1;wiki.vistaPrevia.formato=1">Texto</button>
+                     </div>
+                     <div class="span4">
+                        <button type="button" class="btn input-block-level" ng-click="mostrar=2;wiki.vistaPrevia.formato=2">PDF</button>
+                     </div>
+                     <div class="span4">
+                        <button type="button" class="btn input-block-level" ng-click="mostrar=3;wiki.vistaPrevia.formato=3">Imagen</button>
+                     </div>
+                  </div>
+                  <div class="row-fluid" ng-show="mostrar==1">
+                     <span class="help-block">Se mostrará el siguiente texto</span>
+                     <textarea rows="5" class="input-block-level" placeholder="Texto vista previa" ng-model="wiki.vistaPrevia.texto"></textarea>
+                  </div>
+                  <div class="row-fluid" ng-show="mostrar>1">
+                     <span class="help-block">Se mostrará 
+                        <span ng-show="wiki.vistaPrevia.formato==2"> el siguiente .pdf 
+                           <a href="/file/{{wiki.vistaPrevia.pdf}}" target="_blank" ng-show="wiki.vistaPrevia.pdf">(Previsualizar)</a> 
+                        </span>
+                        <span ng-show="wiki.vistaPrevia.formato==3"> la siguiente imagen 
+                           <a href="/file/{{wiki.vistaPrevia.imagen}}" target="_blank" ng-show="wiki.vistaPrevia.imagen">(Previsualizar)</a>
+                        </span>
+                     </span>
+                     <div>
+                        <div class="span10">
+                           <div style="width: 100%" fine-uploader destination="'/upload/'" placeholder="'Examinar'" uploaded="uploadedFilePrevio">
+                           </div>
+                        </div>
+                        <div class="span2">
+                           <div>
+                              <button ng-show="uploadedFilePrevio.length" class="btn btn-link pull-right" style="width:100%; height:45px" ng-click="agregarDocPrevio(wiki.vistaPrevia.formato)" title="Subir Documento (Vista previa)"><i class="icon-upload"></i></button>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+</div>

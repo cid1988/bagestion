@@ -1,0 +1,78 @@
+<style>
+    .table {
+        border: 0;
+    }
+    .table th, .table td {
+        padding: 8px;
+        line-height: 20px;
+        text-align: left;
+        vertical-align: middle;
+        border: 0;
+    }
+    .table th {
+        background-color: #dddddd !important;
+    }
+</style>
+<div class="card body" ng-controller="ActualizacionesSEMGCtrl" style="margin-top: 0px;padding-top: 15px;">
+    <div class="card-actions pull-right no-print" style="margin-right: 10px;">
+        <div style="margin-right: 10px; display: inline-block;">
+            <select class="span4" ui-select2 type="text" ng-model="filtro.jurisdiccion">
+                <option value=""></option>
+                <option value="">Todas las jurisdicciones</option>
+                <option ng-repeat="e in organigrama | filter:{ministerio:true} | orderBy:'nombreCompleto'" value="{{e._id}}">{{e.nombreCompleto}} ({{e.sigla}})</option>
+            </select>
+        </div>
+    </div>
+    <h3 class="card-heading simple" style="padding-left: 10px; font-size:14px;padding-right: 0px;height: 45px;margin-bottom: 10px;" ng-init="tab='indicadores'">
+        <ul id="myTab" class="nav nav-pills">
+            <li ng-class="{'active': tab == 'indicadores'}"><a href="#" ng-click="tab='indicadores'" data-toggle="tab">Matriz de Indicadores</a></li>
+            <li ng-class="{'active': tab == 'cartas'}"><a href="#" ng-click="tab='cartas'" data-toggle="tab">Cartas Compromiso</a></li>
+        </ul>
+    </h3>
+    <div ng-show="tab=='indicadores'" style="margin-left: 20px; margin-right: 20px; margin-bottom: 20px;" ng-init="orden = '-fechaUltMod'">
+        <table border="1" class="table table-striped">
+            <tr bgcolor= "#FFFFFF">
+                <th style="width: 130px;"><a ng-click="orden = 'fechaUltMod'" href="#" style="display: inline-block; color:#404040;">Fecha</a></th>
+                <th><a ng-click="orden = 'usuarioUltMod'" href="#" style="display: inline-block; color:#404040;">Usuario</a></th>
+                <th><a ng-click="orden = 'dependencia'" href="#" style="display: inline-block; color:#404040;">Dependencia</a></th>
+                <th><a style="display: inline-block; color:#404040;">Indicador</a></th>
+                <th></th>
+            </tr>
+            <tr ng-repeat="i in indicadores | orderBy:orden | filter:filtro">
+                <td><div>{{fechaYhora(i.fechaUltMod)}}</div></td>
+                <td><div>{{i.usuarioUltMod}}</div></td>
+                <td><div>{{organigramaPorId(i.dependencia).nombreCompleto}}</div></td>
+                <td><div>{{i.indicadorImpacto}}</div></td>
+                <td>
+                    <div class="btn-group">
+                        <a class="btn btn-link" href="/semg/indicadores/{{i.anio}}/{{i._id}}"><i class="icon-zoom-in"></i></a>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div ng-show="tab=='cartas'" style="margin-left: 20px; margin-right: 20px; margin-bottom: 20px;" ng-init="orden = '-fechaUltMod'">
+        <table border="1" class="table table-striped">
+            <tr bgcolor= "#FFFFFF">
+                <th style="width: 130px;"><a ng-click="orden = 'fechaUltMod'" href="#" style="display: inline-block; color:#404040;">Fecha</a></th>
+                <th><a ng-click="orden = 'usuarioUltMod'" href="#" style="display: inline-block; color:#404040;">Usuario</a></th>
+                <th><a ng-click="orden = 'jurisdiccion'" href="#" style="display: inline-block; color:#404040;">Jurisdicción</a></th>
+                <th><a style="display: inline-block; color:#404040;">Dirección</a></th>
+                <th></th>
+            </tr>
+            <tr ng-repeat="c in cartas | orderBy:orden | filter:filtro">
+                <td><div>{{fechaYhora(c.fechaUltMod)}}</div></td>
+                <td><div>{{c.usuarioUltMod}}</div></td>
+                <td><div>{{organigramaPorId(c.jurisdiccion).nombreCompleto}}</div></td>
+                <td><div ng-if="!c.dependencia">{{c.titulo}}</div><div ng-if="c.dependencia">{{organigramaPorId(c.dependencia).nombreCompleto}}</div></td>
+                <td>
+                    <div class="btn-group">
+                        <a class="btn btn-link" href="/semg/cartascompromisos/{{c.anio}}/{{c._id}}"><i class="icon-zoom-in"></i></a>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+

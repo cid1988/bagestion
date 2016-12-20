@@ -1,0 +1,74 @@
+<style>
+    .table {
+        border: 0;
+    }
+    .table th, .table td {
+        padding: 8px;
+        line-height: 20px;
+        text-align: left;
+        vertical-align: middle;
+        border: 0;
+    }
+    .table th {
+        background-color: #dddddd !important;
+    }
+</style>
+<div class="card" ng-controller="CartaSEMGCtrl">
+    <div class="card-actions pull-right no-print" style="margin: 0; padding: 0">
+        <div style="margin-right: 10px; display: inline-block;">
+            <select class="span4" ui-select2 type="text" ng-model="filtro.jurisdiccion" ng-if=hasPermission('semg.editar')>
+                <option value=""></option>
+                <option value="">Todas las jurisdicciones</option>
+                <option ng-repeat="e in organigrama | filter:{ministerio:true} | orderBy:'nombreCompleto'" value="{{e._id}}">{{e.nombreCompleto}} ({{e.sigla}})</option>
+            </select>
+        </div>
+        <div style="margin-right: 10px; display: inline-block;" ng-if="(!hasPermission('semg.editar'))">
+            <input type="text" ng-disabled="true" class="span4" value="{{organigramaPorId(filtro.jurisdiccion).nombreCompleto}}" style="margin-right: 10px;margin-bottom: 20px;" />
+        </div>
+        <div class="btn-group" style="margin-bottom: 22px;margin-right: 30px;">
+            <button style="min-width:21px; font-weight: 700" class="btn" ng-class="{'active btn-info': (filtroAprobado == 'Aprobados')}" ng-click="filtro.aprobado = true; filtroAprobado = 'Aprobados'">Aprobados</button>
+            <button style="min-width:21px; font-weight: 700" class="btn" ng-class="{'active btn-info': (filtroAprobado == 'NoAprobados')}" ng-click="filtro.aprobado = false; filtroAprobado = 'NoAprobados'">No aprobados</button>
+            <button style="min-width:21px; font-weight: 700" class="btn" ng-class="{'active btn-info': (filtroAprobado == 'Todos')}" ng-click="filtro.aprobado = ''; filtroAprobado = 'Todos'">Todos</button>
+        </div>
+        <a href="/semg/cartascompromisos/{{anio}}/nuevo" class="btn btn-link" style="margin-right: 10px;margin-bottom: 20px;" ng-if="hasPermission('semg.editar') || hasPermission('semg.editarJurisdiccion')" ><i class="icon-plus"></i></a>
+    </div>
+    <h2 class="card-heading simple">Formulación de Cartas Compromiso {{anio}} <sub>(Compromisos: {{total}})</sub><!--<a ng-click="duplicar(2016)">.</a>--></h2>
+    <div class="card-body">
+        <table border="1" class="table table-striped">
+            <tr bgcolor= "#FFFFFF">
+                <th><a ng-click="orden = 'jurisdiccion'" href="#" style="display: inline-block; color:#404040;">Jurisdicción</a></th>
+                <th><a ng-click="orden = 'subsecretaria'" href="#" style="display: inline-block; color:#404040;">Subsecretaría</a></th>
+                <th><a ng-click="orden = 'dependencia'" href="#" style="display: inline-block; color:#404040;">Dirección</a></th>
+                <th><a style="display: inline-block; color:#404040;">Estados</a></th>
+                <th><a style="display: inline-block; color:#404040;">Planes</a></th>
+                <th></th>
+            </tr>
+            <tr ng-repeat="i in filtrados = (cartas | orderBy:orden | filter:filtro)">
+                <td><div>{{organigramaPorId(i.jurisdiccion).nombreCompleto}}</div></td>
+                <td><div>{{organigramaPorId(i.subsecretaria).nombreCompleto}}</div></td>
+                <td><div ng-if="!i.dependencia">{{i.titulo}}</div><div ng-if="i.dependencia">{{organigramaPorId(i.dependencia).nombreCompleto}}</div></td>
+                <td style="padding-top: 5px;padding-bottom: 5px;"><div class="btn-group">
+                    <a class="btn" ng-if="nivelDeCarga(i)==0" title="En Proceso de Carga" style="width: 30px;height: 31px;padding-top: 0px;"><i class="icon-thumbs-down" style="color:#585858"></i></a>
+                    <a class="btn" ng-if="nivelDeCarga(i)==50" title="Carga Media" style="width: 30px;height: 31px;padding-top: 0px;"><i class="icon-thumbs-up" style="color:#585858"></i></a>
+                    <a class="btn" ng-if="nivelDeCarga(i)==100" title="Carga Completa" style="width: 30px;height: 31px;padding-top: 0px;"><i class="icon-thumbs-up" style="color:#585858"></i></a>
+                    <a class="btn btn-mini" ng-if="!i.aprobado" title="Pendiente de Aprobación por el Ministro" style="width: 110px;line-height: normal;height: 26px;padding-top: 5px;">Pendiente de Aprobación<br>por el Ministro</a>
+                    <a class="btn btn-mini" ng-if="i.aprobado" title="Aprobado por el Ministro" style="width: 110px;line-height: normal;height: 26px;padding-top: 5px;">Aprobado por<br>el Ministro</a>
+                    <a class="btn btn-mini" ng-if="!i.validado" title="No Validado por DGPLE" style="width: 110px;line-height: normal;height: 26px;padding-top: 5px;">Pendiente de Validación<br>por DGPLE</a>
+                    <a class="btn btn-mini" ng-if="i.validado" title="Validado por DGPLE" style="width: 110px;line-height: normal;height: 26px;padding-top: 5px;">Validado<br>por DGPLE</a></div>
+                </td>
+                <td><div class="btn-group">
+                    <a class="btn btn-mini" href="/semg/cartascompromisos/{{anio}}/plandesarrollo/{{i._id}}" title="Plan de Desarrollo de Indicadores" style="width: 80px;line-height: normal;height: 26px;padding-top: 5px;">Desarrollo de<br>Indicadores</a>
+                    <a class="btn btn-mini" href="/semg/cartascompromisos/{{anio}}/plansistematizacion/{{i._id}}" title="Plan de Sistematización de Datos" style="width: 80px;line-height: normal;height: 26px;padding-top: 5px;">Sistematización<br>de Datos</a></div>
+                </td>
+                <td>
+                    <div class="btn-group">
+                        <a class="btn btn-link" href="/semg/cartascompromisos/{{anio}}/{{i._id}}"><i class="icon-zoom-in"></i></a>
+                        <a class="btn btn-link" href="/semg/cartascompromisos/{{anio}}/imprimir/{{i._id}}"><i class="icon-print"></i> </a>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+

@@ -1,0 +1,20 @@
+<div class="card span12" style="padding-top: 10px; margin-top: 0px;">
+  <h3 class="card-heading simple">
+    <span class="pull-right input-append" ng-controller="UPEJOLNuevaActividadCtrl" style="margin-bottom: 0" ng-show="permisoActividad()" >
+      <input type="text" ng-model="nuevo.nombre" placeholder="Agregar..." />
+      <a ng-click="crear()" ng-disabled="!nuevo.nombre" class="btn btn-default"><i class="icon icon-plus"></i></a>
+    </span>
+    Actividades</h3>
+  <div class="card-body" style="padding: 0; margin-top: 0; border-bottom: 0">
+    <ul class="nav nav-list">
+      <li ng-repeat="p in tabCtrl.actividades|filter:{idObjArea:tabCtrl.filtro.objArea._id} | orderBy:'codIdentificacion'">
+        <a style="font-size: 18px" href="javascript:" ng-click="tabCtrl.filtro.actividad = p">
+        <strong class="pull-right" ng-if="p.codIdentificacion">{{p.codIdentificacion}}</strong>
+        {{p.nombre}}</a>
+      </li>
+      <li ng-if="!(tabCtrl.actividades|filter:{idObjArea:tabCtrl.filtro.objArea._id}).length" class="text-center" style="padding-top: 10px; padding-bottom: 10px;">
+        <em>No hay ninguna actividad</em>
+      </li>
+    </ul>
+  </div>
+</div>

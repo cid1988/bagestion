@@ -1,0 +1,169 @@
+<style type="text/css">
+    .referencia {
+        list-style-type: none;
+    }
+    table>thead>tr{
+        text-align:center !important;
+    }
+    #contenedor>div,#contenedorTitulo>div{
+        width:13%;
+        display:inline-block;
+        text-align:center;
+        margin-right:0.5em;
+        padding:0 0;
+        vertical-align:top;
+    }
+    #contenedor>div>div{
+        border:1px solid black;
+        width:100%;
+        margin-bottom:5px;
+        color:#564747;
+        padding:2px 0;
+        word-break: break-word;
+        font-weight: bold;
+        line-height: 1.3em;
+    }
+    #contenedor>div>div:hover{
+        opacity:0.8;
+    }
+    #contenedor>div:nth-child(even)>div{
+        background-color:#E4E7E9;
+    }
+    #contenedor>div:nth-child(odd)>div{
+        background-color:#F0CF8D;
+    }
+    @media print {
+        #contenedor>div:nth-child(even)>div {
+            background-color:#E4E7E9 !important;
+            -webkit-print-color-adjust: exact; 
+        }
+        #contenedor>div:nth-child(odd)>div{
+            background-color:#F0CF8D !important;
+            -webkit-print-color-adjust: exact; 
+        }
+    }
+
+    #contenedorTitulo{
+        margin:10px 0;
+        font-weight: bold;
+        font-size:larger;
+        word-break: break-word;
+    }
+    .container-fluid{
+        margin-top:15px;
+    }
+    .nav, .control-group{
+        margin-bottom:0 !important;   
+    }
+    #controladores>div{
+        margin-right: 10px;
+        display: inline-block;
+    }
+    #controladores{
+        margin-right:10px;
+    }
+</style>
+<div ng-controller="SalasReunionesReporteCtrl">
+    <div class="card">
+        <a class="btn btn-link pull-right no-print" style="margin-right:10px" ng-show="tab=='hoy'" onClick="window.print()"><i class="icon-print"></i> Imprimir</a>
+        <div class="card-actions pull-right no-print" ng-show="tab=='reporte'" id="controladores">
+            <div class="control-group pull-right">
+                <div class="controls">
+                    <input placeholder="Hasta..." type="text" date class="span2 input-block-level" ng-model="fecha.hasta"/>
+                </div>
+            </div>
+            <div class="control-group pull-right">
+                <div class="controls">
+                    <input placeholder="Desde..." type="text" date class="span2 input-block-level" ng-model="fecha.desde"/>
+                </div>
+            </div>
+            <div class="controls pull-right" style="min-width: 150px;">
+                <select ui-select2 style="width:100%" type="text" ng-model="filtro.piso" placeholder="">
+                    <option value="">Todos los pisos</option>
+                    <option value="SS">Subsuelo</option>
+                    <option value="PB">Planta Baja</option>
+                    <option value="1">Piso 1</option>
+                    <option value="2">Piso 2</option>
+                </select>
+            </div>
+            <div class="controls pull-right" style="min-width: 210px;">
+                <select ui-select2="tipoSalaSelect2" style="width:100%" type="text" ng-model="filtro.tipo" placeholder="">
+                    <option value="">Todas las salas</option>
+                    <option ng-repeat="i in salas | orderBy:'tipo'" value="{{i.tipo}}" ng-hide="i.apagado">{{i.nombre}}</option>
+                </select>
+            </div>
+        </div>
+        <h3 class="card-heading simple no-print">
+            <ul id="myTab" class="nav nav-pills no-print" ng-init="tab='reporte'">
+                <li ng-class="{'active': tab == 'reporte'}"><a href="#" ng-click="tab='reporte'" data-toggle="tab">Reporte</a></li>
+                <li ng-class="{'active': tab == 'hoy'}"><a href="#" ng-click="tab='hoy';" data-toggle="tab">Hoy</a></li>
+            </ul>
+        </h3>
+        
+        <div class="container-fluid" ng-show="tab=='reporte'">
+            <table border="1" class="table table-bordered">
+                <tr bgcolor= "#FFFFFF">
+                    <th><a ng-click="orden = 'nombre'" href="#" style="display: inline-block; color:#404040;">NOMBRE</a></th>
+                    <th><a ng-click="orden = 'capacidad'" href="#" style="display: inline-block; color:#404040;">CAPACIDAD</a></th>
+                    <th style="text-align:center !important"><a ng-click="orden = '-cantReuniones'" href="#" style="display: inline-block; color:#404040;">TOTAL REUNIONES</a></th>
+                    <th style="text-align:center !important"><a ng-click="orden = '-cantAsistentes'" href="#" style="display: inline-block; color:#404040;">TOTAL ASISTENTES</a></th>
+                    <th style="text-align:center !important"><a ng-click="orden = '-cantidad'" href="#" style="display: inline-block; color:#404040;">PARTIC. PROMEDIO</a></th>
+                </tr>
+                <tr ng-repeat="r in estadisticas | orderBy:orden | filter:filtro" bgcolor= "#FFFFFF" ng-hide="r.apagado">
+            		<td>
+            			{{r.nombre}}
+            		</td>
+                    <td style="text-align:center !important">
+                		{{r.capacidad}}
+            		</td>
+                    <td style="text-align:center !important">
+                		{{r.cantReuniones}}
+            		</td>
+                    <td style="text-align:center !important">
+                		{{r.cantAsistentes}}
+            		</td>
+                    <td style="text-align:center !important">
+                		{{promedio(r.cantAsistentes,r.cantReuniones)}}
+            		</td>
+            	</tr>
+            </table>
+        </div>
+        
+        <div class="container-fluid" ng-show="tab=='hoy'" style="margin-top:0;">
+            <div class="container-fluid" style="display:table; margin-top:0; width:100%">
+                <div id="contenedorTitulo">
+                    <div>Gabinete</div>
+                    <div>Sala 1</div>
+                    <div>Sala 2</div>
+                    <div>Sala 3</div>
+                    <div>Sala 4</div>
+                    <div>Sala 5</div>
+                    <div>Auditorio</div>
+                </div>
+                <div style="width:100%; height:100%" id="contenedor">
+                    <div>
+                        <div ng-repeat="i in gabinete | orderBy: 'desdeDate'">{{i.desdeHora}} a {{i.hastaHora}} hs<br>{{i.titulo}}<br>{{contactoPorId(i.duenio)}}<br>{{i.interno}}<br>{{i.asistentes}} personas</div>
+                    </div>
+                    <div>
+                        <div ng-repeat="i in sala1 | orderBy: 'desdeDate'">{{i.desdeHora}} a {{i.hastaHora}} hs<br>{{i.titulo}}<br>{{contactoPorId(i.duenio)}}<br>{{i.interno}}<br>{{i.asistentes}} personas</div>
+                    </div>
+                    <div>
+                        <div ng-repeat="i in sala2 | orderBy: 'desdeDate'">{{i.desdeHora}} a {{i.hastaHora}} hs<br>{{i.titulo}}<br>{{contactoPorId(i.duenio)}}<br>{{i.interno}}<br>{{i.asistentes}} personas</div>
+                    </div>
+                    <div>
+                        <div ng-repeat="i in sala3 | orderBy: 'desdeDate'">{{i.desdeHora}} a {{i.hastaHora}} hs<br>{{i.titulo}}<br>{{contactoPorId(i.duenio)}}<br>{{i.interno}}<br>{{i.asistentes}} personas</div>
+                    </div>
+                    <div>
+                        <div ng-repeat="i in sala4 | orderBy: 'desdeDate'">{{i.desdeHora}} a {{i.hastaHora}} hs<br>{{i.titulo}}<br>{{contactoPorId(i.duenio)}}<br>{{i.interno}}<br>{{i.asistentes}} personas</div>
+                    </div>
+                    <div>
+                        <div ng-repeat="i in sala5 | orderBy: 'desdeDate'">{{i.desdeHora}} a {{i.hastaHora}} hs<br>{{i.titulo}}<br>{{contactoPorId(i.duenio)}}<br>{{i.interno}}<br>{{i.asistentes}} personas</div>
+                    </div>
+                    <div>
+                        <div ng-repeat="i in auditorio | orderBy: 'desdeDate'">{{i.desdeHora}} a {{i.hastaHora}} hs<br>{{i.titulo}}<br>{{contactoPorId(i.duenio)}}<br>{{i.interno}}<br>{{i.asistentes}} personas</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+</div>

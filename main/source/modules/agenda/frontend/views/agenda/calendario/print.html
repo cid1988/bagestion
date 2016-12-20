@@ -1,0 +1,57 @@
+<style>
+    .no-border, .no-border > th, .no-border > td {
+        border: none;
+    }
+    .tablaPrint th, .tablaPrint td {
+        padding-top:1px;
+        padding-bottom:1px;
+        border:1px solid #CACACA;
+    }
+</style>
+
+<div class="card span12" style="border:0px" ng-controller="SalasReunionesPrint as controller">
+    
+    <a class="btn pull-right no-print" ng-click="imprimir()" ><i class="icon-print"></i> Imprimir</a>
+    <a class="btn pull-right no-print" href="/salasreuniones" ><i class="icon-arrow-left"></i> Volver</a>
+    
+    <table class="table tablaPrint table-bordered" style="margin-bottom: 0px;">
+        <tr>
+            <td>
+                <img src="/views/orm/reunion/escudo.png" width="60px" style="float: left; margin-right: 10px"
+                />
+                <b>Buenos Aires Ciudad</b>
+                <br>Jefatura de Gabinete de ministros
+                <br>SS de Planeamiento y Control de Gestión
+                <br>DG Control de Gestión</td>
+            <td style="text-align: right; vertical-align: top; white-space: nowrap">
+                <h3 style="margin-top: 0px; margin-bottom: 0px;">
+                Salas de Reuniones<br>
+                Reserva de {{sala.nombre}}</h3>
+            </td>
+        </tr>
+        <tr ng-if="instancia.titulo">
+            <td colspan="2">
+                <h3 style="margin-top: 0px; margin-bottom: 0px;text-align:center">
+                {{instancia.titulo}}</h3></td>
+        </tr>
+    </table>
+    <table class="table tablaPrint table-bordered" style="background-color: white;margin-bottom: 0px;">
+        <thead>
+            <tr>
+                <th>Usuario</th>
+                <th>Fecha</th>
+                <th>Hora Inicio</th>
+                <th>Hora Fin</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{instancia.usuario}}</td>
+                <td>{{instancia.fecha}}</td>
+                <td style="text-align:center">{{instancia.desdeHora}}</td>
+                <td style="text-align:center">{{instancia.hastaHora}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <span class="pull-right">Impreso el {{hora}} hs</span>
+</div>

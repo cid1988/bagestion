@@ -1,0 +1,199 @@
+<script>
+    $(document).ready(function() { $("#e1").select2(); });
+</script>
+
+<div ng-model="instancia" changes-watch="temas,suspendida,comentarios"
+ng-show="instancia" edit-model="live" ng-controller="SRTabReservaCtrl"
+class="card animated fadeInDown">
+    <div class="card-actions pull-right" ng-hide="editando" style="margin: 0">
+        <a type="button" ng-click="volver()" title="Cerrar" class="btn btn-link" style="padding-left: 0px;">
+            <i class="icon-remove"></i></a>
+    </div>
+    <div class="card-actions pull-right" ng-hide="editando" style="margin: 0">
+        <a type="button" href="/salasreuniones/{{instancia._id}}/print" class="btn btn-link" title="Imprimir reserva" style="padding-left: 0px;padding-right: 0px;">
+            <i class="icon-print"></i></a>
+    </div>
+    <div class="card-actions pull-right" ng-show="editando" style="margin: 0">
+        <a type="button" ng-click="guardar()" class="btn btn-link" title="Guardar" style="padding-left: 0px;">
+            <i class="icon-ok"></i></a>
+    </div>
+    <div class="btn-group pull-right" ng-show="editando">
+        <button class="btn btn-link dropdown-toggle" data-toggle="dropdown" title="Opciones"><img src="/views/salasreuniones/calendario/iconoOpcion.gif" /></button>
+        <ul class="dropdown-menu">
+          <li><a href="#" ng-click="abrirModalSala()"><i class="icon-edit"></i> Cambiar Sala</a></li>
+<!--sad--><li><a  href="#"ng-click="enviarMail()"><i class="icon-envelope"></i> Enviar Recordatorio</a></li><!-- adasdadasdaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa5555555555555555555adadadasdasda-->
+          <li ng-show="hasPermission('salasreuniones.borrar') || instancia.usuario==username"><a href="#" ng-click="eliminar()"><i class="icon-trash"></i> Eliminar</a></li>
+        </ul>
+    </div>
+    <h3 class="card-heading simple">
+            <span style="white-space: nowrap"><span style="display: inline-block; border-radius: 20px; padding: 13px; float: left; border: 0px solid rgb(0, 0, 0); margin-top: 6px; margin-right: 0px; margin-left: 0px; background-color:  {{salasPorId[live.sala].tipo && colorSala(salasPorId[live.sala])}}"></span>&nbsp;
+            <span style="font-size: 19px;">{{sala.nombre}}</span>
+        </span>
+    </h3>
+    
+    <div class="card-body" style="height: 571px;margin-top: 15px;">
+        <h4 style="margin-bottom: 10px;"><b>
+        <span class="pull-right">{{instancia.desdeHora}} a {{instancia.hastaHora}}</span>
+        <span ng-hide="editando">{{instancia.fecha}}</span> </b>
+        <input type="text" date class="span2" ng-if="editando" ng-model="instancia.fecha" style="margin-bottom: 0px;"></h4>
+        <span>Titulo de la reunion:</span>
+        <input type="text" placeholder="Título..." ng-disabled="!editando" ng-model="instancia.titulo" style="margin-top: 0px; width: 95%" required>
+        <span>Dueño de la reserva:</span>
+        <input type="text" placeholder="Sin dueño..." ng-hide="editando" ng-disabled="true" value="{{contactoPorId(instancia.duenio).apellidos}} {{contactoPorId(instancia.duenio).nombre}}" style="width: 250px; margin-bottom: 0px;" required>
+        <select id="e1" type="text" ng-model="instancia.duenio" ng-show="editando" style="width: 83%;" ng-options="i._id as i.apellidos + ' ' + i.nombre for i in contactos | orderBy:'apellidos'">
+            <option ng-disabled="true" value="">{{contactoPorId(instancia.duenio).apellidos}} {{contactoPorId(instancia.duenio).nombre}}</option>
+        </select>
+        <a type="button" ng-click="abrirModalContacto()" class="btn" ng-if="instancia.duenio" style="margin-bottom: 0px; width: 10%"><i class="icon-user"></i></a>
+        <div style="margin-top: 10px; width: 45%;display: inline-block;">
+            <span>Usuario solicitante:</span>
+            <input type="text" ng-disabled="true" ng-model="instancia.usuario" style="margin-top: 0px; width: 95%">
+        </div>
+        <div style="margin-top: 0px; width: 45%;display: inline-block;margin-left: 20px;">
+            <span>Interno:</span>
+            <input type="text" placeholder="Interno..." ng-disabled="!editando" ng-model="instancia.interno" style="margin-top: 0px; width: 95%" required>
+        </div>
+        <div style="margin-top: 0px; width: 45%;display: inline-block;">
+            <span>Cantidad de asistentes:</span>
+            <input type="text" placeholder="Cantidad de asistentes..." ng-disabled="!editando" ng-model="instancia.asistentes" style="margin-top: 0px; width: 95%" required>
+        </div>
+        <div style="margin-top: 0px; width: 45%;display: inline-block;margin-left: 20px;">
+            <a type="button" ng-click="abrirModal()" class="btn" style="margin-bottom: 10px; width: 95%">Participantes</a>
+        </div>
+        <div style="margin-top: 0px; width: 45%;display: inline-block;">
+            <span><b>Tecnología:</b></span>
+            <label class="checkbox">
+                <input type="checkbox" ng-disabled="!editando" ng-model="instancia.notebook"> Notebook
+            </label>
+            <label class="checkbox">
+                <input type="checkbox" ng-disabled="!editando" ng-model="instancia.telefonoConferencia"> Telefono Conferencia
+            </label>
+            <label class="checkbox" style="margin-bottom: 7px;">
+                <input type="checkbox" ng-disabled="!editando" ng-model="instancia.pantalla"> Pantalla
+            </label>
+        </div>
+        <div style="margin-top: 0px; width: 45%;display: inline-block;margin-left: 20px;">
+            <label class="checkbox" ng-if="sala.tv">
+                <input type="checkbox" ng-disabled="!editando" ng-model="instancia.lcd"> LCD
+            </label>
+            <label class="checkbox">
+                <input type="checkbox" ng-disabled="!editando" ng-model="instancia.proyector"> Proyector
+            </label>
+            <label class="checkbox">
+                <input type="checkbox" ng-disabled="!editando" ng-model="instancia.videoconferencia"> Videoconferencia
+            </label>
+        </div>
+        <div style="margin-top: 0px; width: 45%;display: inline-block;">
+            <span><b>Equipamiento:</b></span>
+            <label class="checkbox">
+                <input type="checkbox" ng-disabled="!editando" ng-model="instancia.sillasAdicionales"> Sillas adicionales
+            </label>
+            <label class="checkbox" style="margin-bottom: 7px;">
+                <input type="checkbox" ng-disabled="!editando" ng-model="instancia.rotafolio"> Rotafolio
+            </label>
+        </div>
+        <div style="margin-top: 0px; width: 45%;display: inline-block;margin-left: 20px;">
+            <input type="text" ng-disabled="!editando" placeholder="Cantidad..." ng-show="instancia.sillasAdicionales" ng-model="instancia.cantSillasAdicionales" style="width: 70px; margin-bottom: 0px;">
+            <label class="checkbox">
+                <input type="checkbox" ng-disabled="!editando" ng-model="instancia.mesaAuxiliar"> Mesa Auxiliar
+            </label>
+        </div>
+        <div style="margin-top: 0px; width: 95%;display: inline-block;">
+            <span><b>Servicios:</b></span>
+            <label class="checkbox" style="margin-bottom: 8px;">
+                <input type="checkbox" ng-disabled="!editando" ng-model="instancia.catering"> Catering
+            </label>
+        </div>
+        <span>Observaciones:</span>
+        <textarea type="text" placeholder="Observaciones..." ng-disabled="!editando" ng-model="instancia.observaciones" rows="2" style="margin-top: 0px; width: 95%"> </textarea>
+    </div>
+</div>
+
+
+<div id="modalContacto" class="modal hide fade" ng-controller="SRTabReservaCtrl">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>Datos del dueño de la reserva</h3>
+    </div>
+    <div class="modal-body">
+        <b>Nombre: </b>{{contactoPorId(instancia.duenio).apellidos}}, {{contactoPorId(instancia.duenio).nombre}} <br>
+        <b>Correo Oficial: </b>{{valorCorreo(contactoPorId(instancia.duenio))}} <br>
+        <b>Telefono Directo: </b>{{valorTelefono(contactoPorId(instancia.duenio))}} <br>
+        <b>Conmutador: </b>{{valorConmutador(contactoPorId(instancia.duenio))}} <br>
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="btn pull-right" data-dismiss="modal">Cerrar</a>
+    </div>
+</div>
+
+<div id="modalSala" class="modal hide fade" ng-controller="SRTabReservaCtrl">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>Elegir Sala</h3>
+    </div>
+    <div class="modal-body" style="overflow-y: hidden; overflow-x: hidden;">
+        <div class="control-group span5" style="margin-left: 0px; margin-right: 8px; margin-bottom: 10px;">
+            <select ui-select2 class="span4" type="text" ng-model="instancia.sala" ng-show="editando" ng-options="i._id as i.nombre for i in salas | filter:filtroEstado | orderBy:'nombre'">
+            </select>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="btn pull-right" data-dismiss="modal">Cerrar</a>
+        <a href="#" class="btn pull-right" ng-show="editando" ng-click="guardarSala()" data-dismiss="modal" style="margin-right: 10px;">Guardar</a>
+    </div>
+</div>  
+
+<!-- MODAL PARA AGREGAR PARTICIPANTES -->
+<div id="modalVisitas" class="modal hide fade" ng-controller="SRTabReservaCtrl">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>Participantes</h3>
+    </div>
+    <div class="modal-body" style="overflow-y: scroll; overflow-x: hidden; height: 350px;">
+        <div class="control-group span5" style="margin-left: 0px; margin-right: 8px; margin-bottom: 10px;">
+            <select ui-select2 class="span4" type="text" ng-model="data" ng-show="editando" ng-options="i._id as i.apellidos + ' ' + i.nombre for i in contactos | orderBy:'apellidos'">
+            </select>
+            <button class="btn" style="margin-bottom:0px; margin-left: 5px" ng-show="editando" ng-click="agregarParticipante(data)"><i class="icon-plus"></i></button>
+        </div>
+        <div class="control-group span5" ng-repeat="t in instancia.participantes" style="margin-left: 0px; margin-right: 5px;margin-bottom: 0px;">
+            <input class="span4" type="text" ng-disabled="true" value="{{contactoPorId(t.contactoId).apellidos}}, {{contactoPorId(t.contactoId).nombre}}" style="margin-bottom: 0px;" />
+            <a class="btn" href="#" style="margin-left: 0px" ng-model="t.externo" ng-disabled="!editando" ng-class="{'btn-info': t.externo}" ng-click="t.externo=!t.externo">Externo</a>
+            <a href="#" style="margin-left: 10px" ng-show="editando" ng-click="eliminarListaElem(t, instancia.participantes)"><i class="icon-trash"></i></a>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="btn pull-right" data-dismiss="modal">Cerrar</a>
+        <a href="#" class="btn pull-right" ng-show="editando" ng-click="guardarVisitas()" data-dismiss="modal" style="margin-right: 10px;">Guardar</a>
+    </div>
+</div>  
+
+
+    <div id="confirmarEliminar" class="modal hide fade" ng-controller="SRTabReservaCtrl">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3>Eliminar reserva</h3>
+        </div>
+        <div class="modal-body">
+            <p>Está a un paso de eliminar la reserva de {{sala.nombre}}</p>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn btn-info" data-dismiss="modal">Conservar el registro</a>
+            <a href="#" class="btn btn-danger" data-dismiss="modal" ng-click="eliminar(true)">Eliminar reserva</a>
+        </div>
+    </div>
+    
+        <!--MODAL De confirmacion de envio -->
+    <div id="mailEnviado" class="modal hide fade">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h3>Mail Enviado</h3>
+                </div>
+                <div class="modal-body">
+                    <p>Mail enviado con exito</p>
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-info" data-dismiss="modal">Cerrar</a>
+                </div>
+    </div>
+
+</div>
+

@@ -1,0 +1,31 @@
+<style>
+    p{
+        margin-bottom:0px;
+    }
+    a:hover{
+        color:black;
+    }
+</style>
+<div class="card">
+    <legend style="margin-left:10px">Presentaciones PDF
+        <a class="btn btn-link pull-right" style="margin-right:10px" ng-click="agregarPdf()"><i class="icon-plus"></i></a>
+    </legend>
+    
+    <div ng-repeat="p in presentaciones | orderBy:'fecha'" style="display: inline-block;width:24%;margin:5px">
+        <div class="thumbnail">
+            <div class="caption">
+                <p><b>{{p.nombre}}</b></p> 
+                <p><b>Fecha:</b> {{p.fecha}}</p>
+                <p><b>Versión:</b> {{p.version}}</p>
+                <p><b>Fuente:</b> {{p.fuente.apellidos}} {{p.fuente.nombre}}</p>
+                <p><b>Tipo:</b> {{p.tipo}}</p>
+                <p><b>Autor:</b> {{p.autor}}</p>
+                <!--<p><b>Tags:</b> {{p.tags}}</p>-->
+                <p><a href="/file/{{p.archivoId}}" target="_blank"><i href="#" class="icon-download-alt"></i></a></p>
+                <a style="text-align:center;display:block" href="#" ng-show="!desplegar" ng-click="desplegar = true"><b>...</b></a>
+                <a style="text-align:center;display:block" href="#" ng-show="desplegar" ng-click="desplegar = false"><b>...</b></a>
+                <p ng-show="desplegar"><b>Descripción:</b> {{p.descripcion}}</p>
+            </div>
+        </div>
+    </div>
+</div>

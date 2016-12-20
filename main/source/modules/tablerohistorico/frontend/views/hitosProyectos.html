@@ -1,0 +1,48 @@
+<div class="container" ng-controller="HitosController" style="background-color:#ffffff; padding: 8px">
+    <div class="row">
+        <div class="span12">
+            <h3 ng-bind-html="proyecto.Proyecto"></h3>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="span12">
+            <table class="table table-bordered" style="background: white">
+                <thead>
+                    <tr>
+                        <td></td>
+                        <th>Fecha estimada</th>
+                        <th>Fecha cumplimiento</th>
+                        <th>Fecha vencimiento</th>
+                        <th>Hito</th>
+                        <th>Documentos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="h in hitos">
+                        <td>
+                            <span class="badge" ng-class="{'badge-success': h.codigocolor == 1, 'badge-warning': h.codigocolor == 2, 'badge-important': h.codigocolor == 3, 'badge-inverse': h.codigocolor == 4, 'badge-info': h.codigocolor == 5}">&nbsp;</span>
+                        </td>
+                        <td style="white-space: nowrap">{{h.FechaEstimada |date:'dd-MM-yyyy'}}</td>
+                        <td style="white-space: nowrap">{{h.FechCumplimiento |date:'dd-MM-yyyy'}}</td>
+                        <td style="white-space: nowrap">{{h.FechaVencimiento |date:'dd-MM-yyyy'}}</td>
+                        <td style="width: 100%">{{h.Hito}}</td>
+                        <td ng-controller="DocumentosHitoController"><a class="btn btn-default" ng-show="documentos.length" ng-click="mostrarDocumentos()"><span class="icon icon-file"></span></a></td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Documentos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th ng-repeat="d in documentos">{{d.nombre}}</th>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

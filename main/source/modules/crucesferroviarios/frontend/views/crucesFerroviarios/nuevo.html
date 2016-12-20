@@ -1,0 +1,94 @@
+
+<div class="card span10 offset2">
+    <div class="card-actions pull-right" style="margin: 0; padding: 0">
+        <a class="btn btn-link no-print" ng-click="guardar()"><i class="icon-ok"></i></a>
+        <a class="btn btn-link no-print" href="/crucesFerroviarios"><i class="icon-remove"></i></a>
+    </div>
+    <h3 class="card-heading simple">Nuevo</h3>
+    <div class="card-body" style="padding-bottom: 20px;">
+        <forminput required ng-model="cruce.proyecto" placeholder="Sin proyecto"
+        title="Nombre" />
+        <div class="control-group">
+            <label class="control-label">Dirección:</label>
+            <div class="controls">
+                <input type="text" class="span5" data-provide="typeahead" data-items="4" ng-model="cruce.calle" id="calle-typeahead" placeholder="Sin calle especificada" data-source={{calles}} >
+                <input type="text" style="width: 80px" ng-model="cruce.altura"
+                />
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">Estado:</label>
+            <div class="controls">
+                <input type="text" class="span6" data-provide="typeahead" data-items="4" ng-model="cruce.estado" id="estado-typeahead" placeholder="Sin estado especificado" data-source={{estadosNombres}} >
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">Comuna:</label>
+            <div class="controls">
+                <input type="text" class="span6" data-provide="typeahead" data-items="4" ng-model="cruce.comuna" id="comuna-typeahead" placeholder="Sin comuna especificada" data-source={{comunasNombres}} >
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">Dependencia:</label>
+            <div class="controls">
+                <input class="span6" type="text" data-provide="typeahead" data-items="4" ng-model="cruce.dependencia" id="dependencia-typeahead" placeholder="Sin dependencia especificada" data-source={{dependenciasNombres}} >
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">FFCC:</label>
+            <div class="controls">
+                <input type="text" class="span6" data-provide="typeahead" data-items="4" ng-model="cruce.ffcc" id="ffcc-typeahead" placeholder="Sin ffcc especificado" data-source={{ffccsNombres}} >
+            </div>
+        </div>
+        <forminput required date ng-model="cruce.fecha_finaliza" placeholder="Sin fecha"
+        title="Fecha finalización" />
+        <div class="control-group  ng-pristine ng-invalid ng-invalid-required"><label class="control-label">Fecha finalización:</label><div class="controls"><input class="span6 ng-pristine ng-invalid ng-invalid-required" required="" placeholder="Sin fecha" datepicker="{"format": "dd/mm/yyyy"}" type="text" ng-model="cruce.fecha_finaliza" name="cruce.fecha_finaliza"></div></div>
+        <forminput ng-model="cruce.monto" placeholder="Sin monto definido"
+        title="Monto" />
+        <div class="control-group">
+            <label class="control-label">Inaugurada:</label>
+            <div class="controls">
+                <input type="checkbox" name="optionsCheckboxList2" ng-model="cruce.inaugurada">
+            </div>
+        </div>
+        <div class="control-group  ng-pristine ng-valid"><label class="control-label">Conclusion:</label><div class="controls"><textarea style="width:90%" placeholder="Sin conclusion" type="text" ng-model="cruce.conclusion" name="cruce.conclusion" rows="4" class="ng-pristine ng-valid"></textarea></div></div>
+        <div class="control-group  ng-pristine ng-valid"><label class="control-label">Avance:</label><div class="controls"><textarea style="width:90%" placeholder="Sin avance" type="text" ng-model="cruce.avance" name="cruce.avance" rows="4" class="ng-pristine ng-valid"></textarea></div></div>
+        
+        <h4>Fotos</h4>
+        <div ng-hide="cruce.fotos.length">No se ha cargardo ninguna foto aún</div>
+        <a ng-repeat="f in cruce.fotos"
+        data-toggle="lightbox" href="javascript:$('#fotos_{{$index}}').lightbox()"
+        class="thumbnail" style="display:inline-block">
+
+            <img src="/file/{{f}}" width="128" height="96">
+
+        </a>
+        <div ng-repeat="f in cruce.fotos" id="fotos_{{$index}}"
+        class="lightbox hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class='lightbox-header'>
+                <button type="button" class="close" data-dismiss="lightbox" aria-hidden="true">&times;</button>
+            </div>
+            <div class='lightbox-content'>
+                <img src="/file/{{f}}">
+            </div>
+        </div>
+        <div style="width: 300px" fine-uploader destination="'/upload/'"
+        placeholder="'Subir foto'" uploaded="uploaded"></div>
+        <div>
+        <h4>Mapa</h4>
+        <button class="btn" data-placement="bottom"
+        ng-click="punto()" ng-class="{'btn-inverse active disabled':crucesVista.currentTool == 'point'}">
+            <i class="icon-map-marker" ng-class="{'icon-white': crucesVista.currentTool == 'point'}"></i>
+        </button>
+        <button class="btn" data-placement="bottom"
+        ng-click="mover()" ng-class="{'btn-inverse active disabled':crucesVista.currentTool == 'pan'}">
+            <i class="icon-move" ng-class="{'icon-white': crucesVista.currentTool == 'pan'}"></i>
+        </button>
+        <div style="width: 100%; height: 500px; background-color:
+        #fff" id="map" ng-model="crucesVista" openlayers ng-model="crucesVista" markers="crucesVista.markers"
+        features="crucesVista.features" ol-extent="crucesVista.extent" ol-selected-indexes="crucesVista.selectedIndexes"
+        ol-style="crucesVista.style" current-tool="crucesVista.currentTool"></div>
+    </div>
+</div>
+
+

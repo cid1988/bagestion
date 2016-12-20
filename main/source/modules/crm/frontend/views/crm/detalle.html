@@ -1,0 +1,590 @@
+<script>
+    $(document).ready(function() { $("#e1").select2(); });
+    $(document).ready(function() { $("#e2").select2(); });
+    $(document).ready(function() { $("#e3").select2(); });
+</script>
+
+<div ng-controller="CRMDetalleCtrl" class="well card-body control-group">
+    <div class="card-actions pull-right" style="margin: 0; padding-right: 0">
+        <a ng-show="editando" ng-click="vincular(false)" class="btn btn-link no-underline"><i class="icon-share"></i> Vincular</a>
+        <a href="/api/orm-vcf/{{contacto._id}}" target="_blank" class="btn btn-link no-underline"><i class="icon-file"></i></a>
+        <a ng-show="editando" ng-click="eliminar(false, e._id)" class="btn btn-link no-underline" ng-if=hasPermission('crm.editar')><i class="icon-trash"></i></a>
+        <a ng-show="verDetalle" ng-click="salir()" class="btn btn-link"><i class="icon-thin-arrow-left"></i></a>
+        <a ng-show="editando" ng-click="cancelar(); editando=false" class="btn btn-link no-underline"><i class="icon-undo"></i></a>
+        <a ng-show="!editando" href="/crm" class="btn btn-link no-underline"><i class="icon-arrow-left"></i></a>
+        <a ng-show="!editando" ng-click="editar()" class="btn btn-link no-underline" ng-if=hasPermission('crm.editar')><i class="icon-edit"></i></a>
+        <a ng-show="editando" ng-click="guardar()" class="btn btn-link no-underline"><i class="icon-ok"></i></a>
+    </div>
+    <h3 style="margin-bottom:-15px">Detalle - {{contacto.apellidos}}, {{contacto.nombre}} {{contacto.segundoNombre || ""}}</h3>
+    <hr>
+    <ul class="nav nav-pills">
+        <li ng-class="{'active': tab == 'identificacion'}"><a ng-click="tab='identificacion'" href="#" data-toggle="tab">Identificación</a></li>
+        <li ng-class="{'active': tab == 'contacto'}"><a ng-click="tab='contacto'" href="#" data-toggle="tab">Contacto</a></li>
+        <li ng-class="{'active': tab == 'organizacion'}"><a ng-click="tab='organizacion'" href="#" data-toggle="tab">Organización</a></li>
+        <li ng-class="{'active': tab == 'relacion'}"><a ng-click="tab='relacion'" href="#" data-toggle="tab">Relación</a></li>
+        <li ng-class="{'active': tab == 'actividad'}"><a ng-click="tab='actividad'" href="#" data-toggle="tab">Actividad</a></li>
+    </ul>
+    <!--Datos identificacion-->
+    <div ng-show="tab == 'identificacion'">
+        <span style="display: inline-block;">Tratamiento:
+            <br/>
+            <div class="control-group" style="margin-bottom: 8px">
+                <select id="e1" ng-model="contacto.tratamiento" ng-disabled="!editando"
+                style="padding-left: 26px; padding-right: 26px">
+                    <option ng-disabled="true" value="">{{contacto.tratamiento}}</option>
+                    <option value="Sr.">Sr.</option>
+                    <option value="Sra.">Sra.</option>
+                    <option value="Srta.">Srta.</option>
+                </select>
+            </div>
+        </span>
+        <span style="display: inline-block">Sexo:
+            <br />
+            <div class="control-group" style="margin-bottom: 8px">
+                <select id="e2" ng-model="contacto.sexo" ng-disabled="!editando" style="padding-left: 26px; padding-right: 26px">
+                    <option ng-disabled="true" value="">{{contacto.sexo}}</option>
+                    <option value="M">Masculino</option>
+                    <option value="F">Femenino</option>
+                </select>
+            </div>
+        </span>
+        <br>
+        <div class="control-group" ng-class="{'error': nombreDuplicado}">
+            <span style="display: inline-block">Nombre:
+                <input style="width:90%" type="text" ng-model="contacto.nombre"
+                ng-disabled="!editando" />
+            </span>
+            <span style="display: inline-block">Segundo nombre:
+                <input class="span2" style="width:90%" type="text" ng-model="contacto.segundoNombre"
+                ng-disabled="!editando" />
+            </span>
+            <span style="display: inline-block">Apellidos:
+                <input class="span2" style="width:90%" type="text" ng-model="contacto.apellidos"
+                ng-disabled="!editando" />
+            </span>
+            <div class="alert" ng-show="nombreDuplicado">
+                <p>Por favor verifique que este contacto no esté duplicado.</p>
+                <ol>
+                    <li ng-repeat="cd in nombreDuplicadoCandidatos">
+                        <a class="btn btn-link" href="/crm/detalle/{{cd._id}}" target="_blank">{{cd.apellidos}}, {{cd.nombre}}</a>
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <hr>
+        <h4>Imagen de perfil</h4>
+        <div ng-hide="contacto.foto.length">No se ha cargado ninguna foto aún</div>
+        <div ng-if="contacto.foto.length">
+            <div class="carousel-inner">
+                <img ng-src="/file/{{contacto.foto}}" width="128" height="96">
+            </div>
+        </div>
+        <br>
+        <div ng-if="editando" style="width: 300px" fine-uploader destination="'/upload/'" placeholder="'Subir foto'" uploaded="uploaded"></div>
+    </div>
+    <!--Datos contacto-->
+    <div ng-show="tab == 'contacto'">
+        <h4>Telefonos</h4>
+        <span style="display: inline-block">
+            <div class="control-group" data-toggle="buttons-radio">
+                <select ui-select2 data-source="listaTelefonos" ng-model="dataTelefonos.nombre"
+                ng-disabled="!editando">
+                    <option></option>
+                    <option style="padding-left: 26px; padding-right: 26px" ng-repeat="s in listaTelefonos"
+                    value="{{s.nombre}}">{{s.nombre}}</option>
+                </select>
+            </div>
+        </span>
+        <div class="control-group" style="display: inline-block">
+            <input type="text" style="margin-bottom: -1px" ng-disabled="!editando"
+            data-provide="typeahead" ng-model="dataTelefonos.valor" />
+        </div>
+        <div class="control-group" ng-if="dataTelefonos.nombre==='Conmutador'"
+        style="width: 70px; display: inline-block">
+            <input style="width:50px; margin-bottom: -1px" placeholder="Interno" type="text"
+            ng-model="dataTelefonos.interno" />
+        </div>
+        <button class="btn" ng-disabled="!editando" ng-click="agregarTelefonos(dataTelefonos)">
+            <i class="icon-plus"></i>
+        </button>
+        <!--Muestra de los telefonos cargados no guardados todavia-->
+        <div ng-hide="contacto.telefonos.length">No se ha cargado ningun telefono aún</div>
+        <div ng-repeat="o in contacto.telefonos" style="margin-bottom: 0px">
+            <div style="margin-bottom: 8px">
+                <a class="btn btn-link" ng-hide="!editando" ng-click="eliminarListaElem(o, contacto.telefonos)"><i class="icon-trash"></i></a>&nbsp;
+                <i class="icon-phone"></i>&nbsp;
+                <b>{{o.nombre}}:</b> {{o.valor}}
+                <div ng-if="o.nombre==='Conmutador'" style="display: inline-block">&nbsp;- Interno: {{o.interno}}</div>
+                <button ng-disabled="!editando" ng-class="{'btn-info active': o.checked}"
+                ng-click="o.checked = !o.checked" type="button" class="btn">Principal</button>
+                <br>
+            </div>
+        </div>
+        <hr>
+        <!--Email-->
+        <h4>Correo</h4>
+        <div>
+            <div class="control-group" style="display: inline-block" data-toggle="buttons-radio">
+                <select ui-select2 data-source="listaCorreos" ng-disabled="!editando"
+                ng-model="dataCorreos.nombre">
+                    <option></option>
+                    <option style="padding-left: 26px; padding-right: 26px" ng-repeat="s in listaCorreos"
+                    value="{{s.nombre}}">{{s.nombre}}</option>
+                </select>
+            </div>
+            <div class="control-group" style="display: inline-block">
+                <input type="text" style="margin-bottom: -1px" ng-disabled="!editando" data-provide="typeahead" ng-model="dataCorreos.valor" 
+                id="pin-typeahead" style="text-transform:lowercase;" onchange="javascript:this.value=this.value.toLowerCase();"/>
+            </div>
+            <button class="btn" ng-disabled="!editando" ng-click="agregarCorreos(dataCorreos)">
+                <i class="icon-plus"></i>
+            </button>
+        </div>
+        <!--Muestra de los correos cargados no guardados todavia-->
+        <div ng-hide="contacto.correos.length">No se ha cargado ningun correo aún</div>
+        <div ng-repeat="o in contacto.correos" style="margin-bottom: 0px">
+            <div style="margin-bottom: 8px">
+                <a class="btn btn-link" ng-click="eliminarListaElem(o, contacto.correos)"><i class="icon-trash"></i></a>&nbsp;
+                <i class="icon-envelope"></i>&nbsp;
+                <div class="control-group" style="display: inline-block;margin-bottom: 0px;" data-toggle="buttons-radio">
+                    <select ui-select2 data-source="listaCorreos" ng-disabled="!editando"
+                    ng-model="o.nombre">
+                        <option></option>
+                        <option style="padding-left: 26px; padding-right: 26px" ng-repeat="s in listaCorreos"
+                        value="{{s.nombre}}">{{s.nombre}}</option>
+                    </select>
+                </div>
+                <div class="control-group" style="display: inline-block; margin-bottom: 0px;">
+                    <input type="text" style="margin-bottom: -1px" ng-disabled="!editando" data-provide="typeahead" ng-model="o.valor" 
+                    id="pin-typeahead" style="text-transform:lowercase;" onchange="javascript:this.value=this.value.toLowerCase();"/>
+                </div>
+                <button ng-disabled="!editando" ng-class="{'btn-info active': o.checked}"
+                ng-click="o.checked = !o.checked" type="button" class="btn">Principal</button>
+                <div ng-if="o.nombre==='Email personal'" style="width: 70px; display: inline-block">
+                    <button ng-disabled="!editando" ng-class="{'btn-info active': o.checkedCCO}"
+                    ng-click="o.checkedCCO = !o.checkedCCO" type="button" class="btn">CCO</button>
+                </div>
+            </div>
+        </div>
+        <div class="alert" ng-show="emailDuplicado">
+            <p>La dirección de email oficial ya fue ingresada para los siguientes contactos:</p>
+            <ol>
+                <li ng-repeat="cd in emailDuplicadoCandidatos">
+                    <a class="btn btn-link" target="_blank" href="/crm/detalle/{{cd._id}}">{{cd.apellidos}}, {{cd.nombre}}</a>
+                </li>
+            </ol>
+        </div>
+        <hr>
+        <!--Direcciones-->
+        <h4>Dirección</h4>
+        <span style="display: inline-block">
+            <div class="control-group" data-toggle="buttons-radio">
+                <select ui-select2 ng-disabled="!editando" value="Seleccionar" ng-model="dataDireccion.nombre">
+                    <option value=""></option>
+                    <option value="Personal">Personal</option>
+                    <option value="Laboral">Laboral</option>
+                </select>
+            </div>
+        </span>
+        <div class="control-group" style="display: inline-block">
+            <input type="text" style="margin-bottom: -1px; width:140px" ng-disabled="!editando" data-provide="typeahead" data-source={{calles}} placeholder="Calle" id="calle-typeahead" ng-model="dataDireccion.valorCalle" />
+            <input type="text" style="margin-bottom: -1px; width:40px" ng-disabled="!editando" placeholder="Altura" data-provide="typeahead" ng-model="dataDireccion.valorAltura"/>
+            <input type="text" style="margin-bottom: -1px; width:100px" ng-disabled="!editando" data-provide="typeahead" data-items="4" placeholder="Barrio" ng-model="dataDireccion.valorBarrio" data-source={{barriosNombres}} />
+            <input type="text" style="margin-bottom: -1px; width:100px" ng-disabled="!editando" data-provide="typeahead" data-items="4" placeholder="Comuna" ng-model="dataDireccion.valorComuna" data-source={{comunasNombres}} />
+            <input type="text" style="margin-bottom: -1px; width:100px" ng-disabled="!editando" placeholder="Prov." data-provide="typeahead" ng-model="dataDireccion.valorProvincia"/>
+            <input type="text" style="margin-bottom: -1px; width:40px" ng-disabled="!editando"  placeholder="C.P" data-provide="typeahead" ng-model="dataDireccion.valorCpostal"/>
+            <input type="text" style="margin-bottom: -1px; width:100px" ng-disabled="!editando" placeholder="Pais o region" data-provide="typeahead" ng-model="dataDireccion.valorPais" />
+            <button class="btn" ng-disabled="!editando" ng-click="agregarDireccion(dataDireccion)">
+                <i class="icon-plus"></i>
+            </button>
+        </div>
+        <!--Muestra de las direcciones cargados no guardados todavia-->
+        <div ng-hide="contacto.direcciones.length">No se ha cargado ninguna direccion aún</div>
+        <div ng-repeat="o in contacto.direcciones"
+        style="margin-bottom: 0px">
+            <div style="margin-bottom: 8px">
+                <a class="btn btn-link" ng-click="eliminarListaElem(o, contacto.direcciones)"><i class="icon-trash"></i></a>&nbsp;
+                <i class="icon-envelope"></i>&nbsp;
+                <b>Dirección {{o.nombre}}:</b>Calle: {{o.valorCalle}}&nbsp;- Altura: {{o.valorAltura}}&nbsp;-
+                Barrio: {{o.valorBarrio}}&nbsp;- Comuna: {{o.valorComuna}}&nbsp;- Provincia: {{o.valorProvincia}}&nbsp;-
+                C. postal: {{o.valorCpostal}}&nbsp;- País: {{o.valorPais}}
+                <button ng-disabled="!editando" ng-class="{'btn-info active': o.checked}" ng-click="o.checked = !o.checked" type="button" class="btn">Principal</button>
+                <br>
+            </div>
+        </div>
+        <hr>
+        <!--Mensajeria-->
+        <h4>Mensajeria</h4>Servicios:
+        <span style="display: inline-block">
+            <div class="control-group" data-toggle="buttons-radio">
+                <select ui-select2 data-source="listaServicios" ng-disabled="!editando"
+                ng-model="dataServicio.nombre">
+                    <option style="padding-left: 26px; padding-right: 26px"></option>
+                    <option style="padding-left: 26px; padding-right: 26px">Agregar nuevo servicio</option>
+                    <option style="padding-left: 26px; padding-right: 26px"
+                    ng-repeat="s in listaServicios" value="{{s.nombre}}">{{s.nombre}}</option>
+                </select>
+            </div>
+        </span>
+        <!--Campos para agregar un nuevo servicio a la lista de servicios-->
+        <div class="control-group" style="display: inline-block">
+            <input type="text" style="margin-bottom: -1px" ng-if="dataServicio.nombre==='Agregar nuevo servicio'"
+            placeholder="Nuevo servicio" data-provide="typeahead" ng-model="listaServ.nombre"
+            />
+            <button ng-disabled="!editando" class="btn" ng-if="dataServicio.nombre==='Agregar nuevo servicio'"
+            ng-click="agregarDataServicio()">
+                <i class="icon-plus"></i>
+            </button>
+        </div>
+        <!--Campos para agregar el servicio alcontacto-->
+        <div class="control-group" style="display: inline-block">
+            <input ng-disabled="!editando" type="text" ng-hide="dataServicio.nombre==='Agregar nuevo servicio'"
+            style="margin-bottom: -1px" placeholder="Pin, usuario, ID" data-provide="typeahead"
+            ng-model="dataServicio.pin" id="pin-typeahead" />
+            <button ng-disabled="!editando" class="btn" ng-hide="dataServicio.nombre==='Agregar nuevo servicio'"
+            ng-click="agregarServicios(dataServicio)">
+                <i class="icon-plus"></i>
+            </button>
+        </div>
+        <!--Muestra de los servicios cargados no guardados todavia-->
+        <div ng-hide="contacto.servicios.length">No se ha cargado ningun servicio aún</div>
+        <div ng-repeat="o in contacto.servicios"
+        style="margin-bottom: 0px">
+            <div style="margin-bottom: 8px">
+                <a class="btn btn-link" ng-click="eliminarListaElem(o, contacto.servicios)"><i class="icon-trash"></i></a>&nbsp;
+                <i class="icon-envelope"></i>&nbsp;
+                <b>{{o.nombre}}:</b> {{o.pin}}
+                <button ng-disabled="!editando" ng-class="{'btn-info active': o.checked}"
+                ng-click="o.checked = !o.checked" type="button" class="btn">Principal</button>
+                <br>
+            </div>
+        </div>
+    </div>
+    <!--Datos organizacion-->
+    <div ng-show="tab == 'organizacion'">
+        <div class="btn-group" data-toggle="buttons-radio" style="margin-left: 0px; margin-bottom: 10px; margin-right: 0px;">
+            <label style="margin-bottom: 0px;">Pertenece al gobierno:</label>
+            <button ng-disabled="!editando" class="btn" ng-class="(contacto.enGobierno == 'si') && 'active btn-info'" ng-click="contacto.enGobierno='si'">Si</button>
+            <button ng-disabled="!editando" class="btn" ng-class="(contacto.enGobierno == 'no') && 'active btn-info'" ng-click="contacto.enGobierno='no'">No</button>
+        </div>
+        <div>
+            <span>Cargo:<br/>
+                <input ng-disabled="!editando" class="span3" type="text" ng-model="contacto.cargo"/>
+            </span>
+        </div>
+        <!--Si no existe en el organigrama-->
+        <div ng-show="contacto.enGobierno == 'no'">
+            <h4>Si el contacto no se encuentra en el gobierno</h4>
+            <span style="display: inline-block">Área:<br/>
+                <input ng-disabled="!editando" class="span3" style="width:300px" type="text" ng-model="contacto.area" />
+            </span>
+            <span style="display: inline-block">
+                <label style="span4; margin-bottom: -1px">Empresa:</label>
+                <input class="span4" ng-disabled="!editando" style="width:300px" type="text" ng-model="contacto.empresa" />
+            </span>
+            <hr>
+        </div>
+        <!--Si existe en el organigrama-->
+        <div ng-show="contacto.enGobierno == 'si'">
+            <span style="display: inline-block" ng-if="!editando">
+                <label style="margin-bottom: 1px">Seleccionar su dependencia:</label>
+                <input class="span4" type="text" ng-disabled="!editando" ng-model="organigrama.nombreCompleto"/>
+                <a class="btn" type="button" ng-disabled="!editando" style="margin-bottom:10px" href="/orm/organigrama"><i class="icon-book"></i></a>
+            </span>
+            <div class="input-prepend inline-block" ng-if="editando" style="margin-left: 0px; margin-right: 7px; margin-bottom: 30px; display: inline-block">
+                <label style="margin-bottom: -1px;">Seleccionar su dependencia:</label>
+                <select class="span4" ui-select2 type="text" style="width:400px" ng-model="contacto.organigrama" ng-options="i._id as i.nombreCompleto for i in organigramaSuperior | orderBy:'nombreCompleto'">
+                    <option>{{i.nombreCompleto}}</option>
+                </select>
+            </div>
+            <span style="display: inline-block">Siguiente dependencia superior:<br/>
+                <input ng-disabled="true" class="span3" style="width:300px" type="text" value="{{dependenciaSuperior(organigrama.superiorInmediato)}}" />
+            </span>
+            <hr>
+        </div>
+        <div>
+            <h4>Personal auxiliar</h4>
+            <span style="display: inline-block">
+                <div class="control-group" data-toggle="buttons-radio">
+                    <select ui-select2 ng-disabled="!editando" ng-model="dataRol.nombre" ng-options="s.nombre as s.nombre for s in listaRoles">
+                        <option></option>
+                    </select>
+                </div>
+            </span>
+            <div style="margin-bottom: -1px;" class="input-prepend input-block">
+                <select ui-select2 ng-disabled="!editando" ng-model="dataRol.valor"
+                ng-options="i._id as i.apellidos + ' ' + i.nombre for i in contactos">
+                    <option></option>
+                </select>
+                <a class="btn" type="button" ng-disabled="!editando" ng-click="crearContacto()"><i class="icon-book"></i></a>
+                <button class="btn" ng-disabled="!editando" style="margin-left:20px" ng-click="agregarRol(dataRol)">
+                    <i class="icon-plus"></i>
+                </button>
+            </div>
+            <!--Muestra el personal cargado no guardado todavia-->
+            <div ng-hide="contacto.roles.length">No se ha cargado ningun rol aún</div>
+            <div ng-repeat="r in contacto.roles" style="margin-bottom: 0px">
+                <div style="margin-bottom: 8px">
+                    <a class="btn btn-link" ng-click="eliminarListaElem(r, contacto.roles)"><i class="icon-trash"></i></a>&nbsp;
+                    <i class="icon-phone"></i>&nbsp;
+                    <span style="display: inline-block">
+                        <div class="control-group" data-toggle="buttons-radio" style="margin-bottom: 0px;">
+                            <select ui-select2 ng-disabled="!editando" ng-model="r.nombre" ng-options="s.nombre as s.nombre for s in listaRoles">
+                                <option></option>
+                            </select>
+                        </div>
+                    </span>
+                    <div style="margin-bottom: -1px;" class="input-prepend input-block">
+                        <select ui-select2 ng-show="editando" ng-model="r.valor"
+                        ng-options="i._id as i.apellidos + ' ' + i.nombre for i in contactos">
+                            <option></option>
+                        </select>
+                        <input type="text" ng-disabled="true" ng-hide="editando" value="{{contactoPorId(r.valor).apellidos}} {{contactoPorId(r.valor).nombre}}"/>
+                    </div>
+                    <a href="#" class="btn" ng-click="abrirContacto(r.valor)" style="color:#404040;"><i class="icon-user"></i>&nbsp;Ver contacto</a>
+                    <button ng-disabled="!editando" ng-class="{'btn-info active': r.checkedAgenda}" ng-click="r.checkedAgenda = !r.checkedAgenda" type="button" class="btn">Agenda</button>
+                    <button ng-disabled="!editando" ng-class="{'btn-info active': r.checkedTelefono}" ng-click="r.checkedTelefono = !r.checkedTelefono" type="button" class="btn">Llamado</button>
+                    <br>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Datos relacion-->
+    <div ng-show="tab == 'relacion'">
+        <div class="control-group" style="margin-bottom: 8px">
+            <label style="margin-bottom:0px">Título académico:</label>
+            <select id="e3" type="text" ng-model="contacto.tituloAcademico"
+            ng-disabled="!editando" style="width: 120px">
+                <option ng-disabled="true">{{contacto.tituloAcademico}}</option>
+                <option ng-repeat="l in listaTitulo" value="{{l.nombre}}">{{l.nombre}}</option>
+            </select>
+        </div>
+        <div class="control-group" style="margin-bottom: 0px">
+            <label style="margin-bottom:0px">Fecha de nacimiento:</label>
+            <div class="input-prepend">
+            <!--FECHA-->
+                <input style="margin-bottom: 1px;width: 40px" type="text" ng-disabled="!editando" placeholder="dd" ng-model="contacto.nacDia"/>
+                <input style="margin-bottom: 1px;width: 40px" type="text" ng-disabled="!editando" placeholder="mm" ng-model="contacto.nacMes"/>
+                <input style="margin-bottom: 1px;width: 40px" type="text" ng-disabled="!editando" placeholder="aaaa" ng-model="contacto.nacAnio"/>
+            </div>
+        </div>
+        <div class="control-group" style="margin-bottom: 0px">
+            <label style="margin-bottom:0px">Fecha de ingreso GCBA:</label>
+            <div class="input-prepend">
+            <!--FECHA-->
+                <input date type="text" ng-disabled="!editando" ng-model="contacto.fechaIngresoGcba" />
+            </div>
+        </div>
+        <br>
+        <div class="btn-group" data-toggle="buttons-radio" style="margin-left: 0px; margin-bottom: 0px; margin-right: 0px;">
+            <label style="margin-bottom: 0px;">Afiliado a algun partido?</label>
+            <button class="btn" ng-class="(contacto.afiliado == 'si') && 'active btn-info'" ng-click="contacto.afiliado='si'">Si</button>
+            <button class="btn" ng-class="(contacto.afiliado == 'no') && 'active btn-info'" ng-click="contacto.afiliado='no'">No</button>
+            <input type="text" ng-if="contacto.afiliado" style="margin-bottom: -1px; width:250px;margin-left: 20px;" data-provide="typeahead" data-items="6" placeholder="Partido..." ng-model="contacto.partidoAfiliado" data-source={{partidosNombres}} />
+        </div>
+        <br><br>
+        <div class="btn-group" data-toggle="buttons-radio" style="margin-left: 0px; margin-bottom: 0px; margin-right: 0px;">
+            <label style="margin-bottom: 0px;">Confidencialidad:</label>
+            <button ng-disabled="!editando" class="btn" ng-class="(contacto.confidencialidad == 'publico') && 'active btn-info'"
+            ng-click="contacto.confidencialidad='publico'">Publico</button>
+            <button ng-disabled="!editando" class="btn" ng-class="(contacto.confidencialidad == 'privado') && 'active btn-info'"
+            ng-click="contacto.confidencialidad='privado'">Privado</button>
+            <button ng-disabled="!editando" class="btn" ng-class="(contacto.confidencialidad == 'reservado') && 'active btn-info'"
+            ng-click="contacto.confidencialidad='reservado'">Reservado</button>
+        </div>
+        <hr>
+        <h4>Horario de Contacto</h4>
+        <table border="1" class="table table-bordered">
+            <tr bgcolor= "#FFFFFF">
+                <th></th>
+                <th>Domingo</th>
+                <th>Lunes</th>
+                <th>Martes</th>
+                <th>Miercoles</th>
+                <th>Jueves</th>
+                <th>Viernes</th>
+                <th>Sabado</th>
+            </tr>
+            <tr>
+                <td>Todo el dia</td>
+                <td><input type="checkbox" ng-disabled="!editando" ng-model="contacto.contactoDomingoTD"/></td>
+                <td><input type="checkbox" ng-disabled="!editando" ng-model="contacto.contactoLunesTD"/></td>
+                <td><input type="checkbox" ng-disabled="!editando" ng-model="contacto.contactoMartesTD"/></td>
+                <td><input type="checkbox" ng-disabled="!editando" ng-model="contacto.contactoMiercolesTD"/></td>
+                <td><input type="checkbox" ng-disabled="!editando" ng-model="contacto.contactoJuevesTD"/></td>
+                <td><input type="checkbox" ng-disabled="!editando" ng-model="contacto.contactoViernesTD"/></td>
+                <td><input type="checkbox" ng-disabled="!editando" ng-model="contacto.contactoSabadoTD"/></td>
+        	</tr>
+            <tr>
+                <td>Manana</td>
+                <td><input type="checkbox" ng-disabled="!editando" ng-model="contacto.contactoDomingoM"/></td>
+                <td><input type="checkbox" ng-disabled="!editando" ng-model="contacto.contactoLunesM"/></td>
+                <td><input type="checkbox" ng-disabled="!editando" ng-model="contacto.contactoMartesM"/></td>
+                <td><input type="checkbox" ng-disabled="!editando" ng-model="contacto.contactoMiercolesM"/></td>
+                <td><input type="checkbox" ng-disabled="!editando" ng-model="contacto.contactoJuevesM"/></td>
+                <td><input type="checkbox" ng-disabled="!editando" ng-model="contacto.contactoViernesM"/></td>
+                <td><input type="checkbox" ng-disabled="!editando" ng-model="contacto.contactoSabadoM"/></td>
+        	</tr>
+            <tr>
+                <td>Tarde</td>
+                <td><input type="checkbox" ng-disabled="!editando" ng-model="contacto.contactoDomingoT"/></td>
+                <td><input type="checkbox" ng-disabled="!editando" ng-model="contacto.contactoLunesT"/></td>
+                <td><input type="checkbox" ng-disabled="!editando" ng-model="contacto.contactoMartesT"/></td>
+                <td><input type="checkbox" ng-disabled="!editando" ng-model="contacto.contactoMiercolesT"/></td>
+                <td><input type="checkbox" ng-disabled="!editando" ng-model="contacto.contactoJuevesT"/></td>
+                <td><input type="checkbox" ng-disabled="!editando" ng-model="contacto.contactoViernesT"/></td>
+                <td><input type="checkbox" ng-disabled="!editando" ng-model="contacto.contactoSabadoT"/></td>
+        	</tr>
+            <tr>
+                <td>Noche</td>
+                <td><input type="checkbox" ng-disabled="!editando" ng-model="contacto.contactoDomingoN"/></td>
+                <td><input type="checkbox" ng-disabled="!editando" ng-model="contacto.contactoLunesN"/></td>
+                <td><input type="checkbox" ng-disabled="!editando" ng-model="contacto.contactoMartesN"/></td>
+                <td><input type="checkbox" ng-disabled="!editando" ng-model="contacto.contactoMiercolesN"/></td>
+                <td><input type="checkbox" ng-disabled="!editando" ng-model="contacto.contactoJuevesN"/></td>
+                <td><input type="checkbox" ng-disabled="!editando" ng-model="contacto.contactoViernesN"/></td>
+                <td><input type="checkbox" ng-disabled="!editando" ng-model="contacto.contactoSabadoN"/></td>
+        	</tr>
+        </table>
+    </div>
+    <div ng-show="tab == 'actividad'">
+        <div class="form-horizontal" name="form" style="margin-left:10px; padding-top: 0px; clear: both">
+            <div class="row" style="padding-bottom: 10px;">
+                <div class="span5" style="display: table-cell;margin-left: 70px;">Reporte:</div>
+                <div class="span3" style="display: table-cell">Contactado:</div>
+                <div class="span3" style="display: table-cell">Asistio:</div>
+            </div>
+        </div>
+        <hr style="margin-bottom: 0px;margin-top: 0px;">
+        <ul class="nav nav-list">
+          <li ng-repeat="c in actividad">
+            <a style="font-size: 12px;padding-top: 8px;padding-bottom: 8px;display: inline-block;" href="/crm/reportes/{{c.reporteId}}">
+            <span class="span5">{{c.reporteNombre}}</span>
+            <span class="span3">{{c.contactado}}</span>
+            <span class="span3">{{c.asistio}}</span>
+            </a>
+          </li>
+          <li ng-if="!actividad.length" class="text-center">
+            <em>No hay ninguna actividad</em>
+          </li>
+        </ul>
+    </div>
+    <!--Modal eliminar contacto-->
+    <div id="modalEliminar" class="modal hide fade">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3>Eliminar contacto</h3>
+        </div>
+        <div class="modal-body">
+            <p>Está a un paso de eliminar el contacto, al eliminar el contacto no se
+                lo podrá utilizar para nuevas reuniones ni se lo mostrará en la lista de
+                contactos, pero se mantendrá la información histórica.</p>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn btn-info" data-dismiss="modal">Conservar el contacto</a>
+            <a href="#" class="btn btn-danger" data-dismiss="modal" ng-click="eliminar(true)">Eliminar el contacto</a>
+        </div>
+    </div>
+    
+    <!--Modal vincular contacto-->
+    <div id="modalVincular" class="modal hide fade">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3>Vincular contacto</h3>
+        </div>
+        <div class="modal-body" style="height: 200px;">
+            <h4>Personal Auxiliar de:</h4>
+            <span style="display: inline-block">
+                <div class="control-group" data-toggle="buttons-radio">
+                    <select ui-select2 ng-model="contactoVinculo" ng-options="i.apellidos + ' ' + i.nombre for i in contactos">
+                        <option></option>
+                    </select>
+                </div>
+            </span>
+            <h4 ng-if="contactoVinculo">Rol:</h4>
+            <span style="display: inline-block" ng-if="contactoVinculo">
+                <div class="control-group" data-toggle="buttons-radio">
+                    <select ui-select2 ng-model="dataRol.nombre" ng-options="s.nombre as s.nombre for s in listaRoles">
+                        <option></option>
+                    </select>
+                </div>
+            </span>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal">Cancelar</a>
+            <a href="#" class="btn btn-info" data-dismiss="modal" ng-click="vincular(true, rol)">Vincular el contacto</a>
+        </div>
+    </div>
+    
+    <div id="modalContacto" class="modal hide fade">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3>{{contactoModal.apellidos}}, {{contactoModal.nombre}}</h3>
+        </div>
+        <div class="modal-body">
+            <h4>Telefonos</h4>
+            <!--Muestra de los telefonos cargados no guardados todavia-->
+            <div ng-hide="contactoModal.telefonos.length">No se ha cargado ningun telefono aún</div>
+            <div ng-repeat="o in contactoModal.telefonos"
+            style="margin-bottom: 0px">
+                <div style="margin-bottom: 8px">
+                    <i class="icon-phone"></i>&nbsp;
+                    <b>{{o.nombre}}:</b> {{o.valor}}
+                    <div ng-if="o.nombre==='Conmutador'" style="display: inline-block">&nbsp;- Interno: {{o.interno}}</div>
+                    <button ng-disabled="true" ng-class="{'btn-info active': o.checked}"
+                    ng-click="o.checked = !o.checked" type="button" class="btn">Principal</button>
+                    <br>
+                </div>
+            </div>
+            <hr>
+            <!--Email-->
+            <h4>Correo</h4>
+            <!--Muestra de los correos cargados no guardados todavia-->
+            <div ng-hide="contactoModal.correos.length">No se ha cargado ningun correo aún</div>
+            <div ng-repeat="o in contactoModal.correos"
+            style="margin-bottom: 0px">
+                <div style="margin-bottom: 8px">
+                    <i class="icon-envelope"></i>&nbsp;
+                    <b>{{o.nombre}}:</b> {{o.valor}}
+                    <button ng-disabled="true" ng-class="{'btn-info active': o.checked}"
+                    ng-click="o.checked = !o.checked" type="button" class="btn">Principal</button>
+                    <div ng-if="o.nombre==='Email personal'" style="width: 70px; display: inline-block">
+                        <button ng-disabled="true" ng-class="{'btn-info active': o.checkedCCO}"
+                        ng-click="o.checkedCCO = !o.checkedCCO" type="button" class="btn">CCO</button>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <!--Si no existe en el organigrama-->
+            <div ng-show="contactoModal.enGobierno == 'no'">
+                <!--<h4>Si el contacto no se encuentra en el organigrama</h4>-->
+                <span style="display: inline-block">Cargo:<br/>
+                    <input ng-disabled="true" class="span2" type="text" ng-model="contactoModal.cargo"/>
+                </span>
+                <span style="display: inline-block">Área:<br/>
+                    <input ng-disabled="true" class="span2" style="width:300px" type="text" ng-model="contactoModal.area" />
+                </span>
+                <span style="display: inline-block">
+                    <label style="margin-bottom: 1px">Dependencia superior inmediata:</label>
+                    <input class="span4" type="text" ng-disabled="true" ng-model="organigramaModal.nombreCompleto"/>
+                </span>
+                <hr>
+            </div>
+            <!--Si existe en el organigrama-->
+            <div ng-show="contactoModal.enGobierno == 'si'">
+                <span style="display: inline-block">Cargo:<br/>
+                    <input ng-disabled="true" class="span2" type="text" ng-model="contactoModal.cargo"/>
+                </span>
+                <span style="display: inline-block">
+                    <label style="margin-bottom: 1px">Dependencia:</label>
+                    <input class="span4" type="text" ng-disabled="true" ng-model="organigramaModal.nombreCompleto"/>
+                </span>
+                <hr>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal">Cerrar</a>
+            <a class="btn btn-info" href="/crm/detalle/{{contactoModal._id}}" target="_blank">Ver Contacto Completo</a>
+        </div>
+    </div>
+</div>

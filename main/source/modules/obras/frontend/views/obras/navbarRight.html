@@ -1,0 +1,18 @@
+<ul ng-controller="ObrasCtrl" class="nav">
+    <li><a href="/obras/print" style="padding-top:8px;padding-bottom:5px" ng-show="hasPermission('obras.escritura')"><i class="icon-print"></i></a></li>
+    <li><a href="/obras/reportes" ng-show="hasPermission('obras.escritura')">Obras POA</a></li>
+    <li><a href="/obras/fixture" ng-show="hasPermission('obras.lectura')">Fixture</a></li>
+    <li><a href="javascript:" ng-click="descargarMapa()">Mapa</a></li>
+    <li><a href="/obras/pdf" ng-show="hasPermission('obras.lectura')">Pres. PDF</a></li>
+    <li><a href="/obras/presentacion" ng-show="hasPermission('obras.lectura')">Presentación</a></li>
+    <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" style="padding-top: 9px; padding-bottom: 5px;padding-left: 5px;"><i class="icon-download-alt"></i></a>
+        <ul class="dropdown-menu">
+            <li><a href="/api/obras-csv/download" class="btn btn-link" target="_blank"><i class="icon-download-alt"></i> Descargar CSV</a></li>
+            <li><a href="#" ng-click="actualizarMapaASI()" ng-show="hasPermission('obras.ASI')" class="btn btn-link"><i class="icon-download-alt"></i> Actualizar Mapa ASI</a></li>
+            <!--<li><a href="/api/reportes-csv/download" class="btn btn-link" target="_blank"><i class="icon-download-alt"></i> Reporte Accesos</a></li>-->
+            <li><a href="/api/ticks-csv/download" ng-show="hasPermission('obras.desarrollador')" class="btn btn-link" target="_blank"><i class="icon-download-alt"></i> Reporte Ticks</a></li>
+            <li><a href="/obras/reportes/reporteRelevamientos" class="btn btn-link"><i class="icon-download-alt"></i> Reporte Relevamientos</a></li>
+        </ul>
+    </li>
+</ul>

@@ -1,0 +1,36 @@
+<div class="card span12" style="padding-top: 10px; margin-top: 0px;margin-bottom: 10px;">
+  <h3 class="card-heading simple">
+  <span class="btn-group pull-right">
+    <a ng-if="!activada && !detalle" ng-click="verDetalle()" class="btn"><i class="icon icon-zoom-in"></i> Ver detalle</a>
+    <a ng-if="!activada && detalle" ng-click="cancelarDetalle()" class="btn"><i class="icon icon-zoom-out"></i> Ocultar</a>
+  </span>
+  <span class="pull-right" style="margin-right: 10px;margin-left: 20px;">Jurisdicción</span>
+  <strong style="margin-right: 1em">{{tabCtrl.filtro.jurisdiccion.nombre}}</strong></h3>
+  <div class="card-body" ng-if="detalle" style="padding-bottom: 20px;">
+    <form class="form-horizontal">
+      <div class="control-group" style="width: 975px; display: inline-block;margin-bottom: 0px;">
+        <label class="control-label">Descripción:</label>
+        <div class="controls" style="margin-right: 20px;">
+          <textarea ng-disabled="!activada" ng-model="jurisdiccion.descripcion" style="width: 100%; resize: vertical" rows="3"></textarea>
+        </div>
+      </div>
+      <div class="btn-group">
+        <button class="btn" ng-class="{'active btn-info': jurisdiccion.validado}" ng-click="jurisdiccion.validado = !jurisdiccion.validado" ng-disabled="!activada">Validado</button>
+        <button class="btn" ng-class="{'active btn-info': jurisdiccion.aprobado}" ng-click="jurisdiccion.aprobado = !jurisdiccion.aprobado" ng-disabled="!activada || !hasPermission('poa.administrador')">Aprobado</button>
+      </div>
+    </form>
+    <form class="form-inline" style="margin-bottom: 0px;">
+        <label style="width: 162px; text-align: right; padding-right: 14px;" ng-hide="jurisdiccion.idOrmOrganigrama !== '0'">Jurisdicciones:</label>
+        <input type="text" ng-disabled="true" value="{{organigramaPorId(jurisdiccion.idsOrmOrganigrama[0]).nombreCompleto}}" ng-hide="jurisdiccion.idOrmOrganigrama !== '0'" style="width: 265px;" />
+        <label style="width: 162px; text-align: right; padding-right: 14px;">Cód. Identificación:</label>
+        <input type="text" ng-disabled="!activada" ng-model="jurisdiccion.codIdentificacion" />
+        <label style="width: 92px; text-align: right; padding-right: 14px;">Responsable:</label>
+        <input type="text" ng-disabled="true" ng-model="jurisdiccion.responsableDeCarga" style="width: 100px;" />
+    </form>
+    <form class="form-inline" ng-hide="jurisdiccion.idOrmOrganigrama !== '0'" ng-repeat="i in jurisdiccion.idsOrmOrganigrama" style="margin-bottom: 0px;">
+        <label style="width: 162px; text-align: right; padding-right: 14px;" ng-hide="$index==0"></label>
+        <input type="text" ng-disabled="true" value="{{organigramaPorId(i).nombreCompleto}}" ng-hide="$index==0"  ng-hide="jurisdiccion.idOrmOrganigrama !== '0'" style="width: 265px;"/>
+    </form>
+  </div>
+</div>
+

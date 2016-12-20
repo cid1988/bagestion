@@ -1,0 +1,430 @@
+<style>
+    td, th{
+        border:1px solid #E9E9E9
+    }
+    .tituloGrupo{
+        background-color: #D6D6D6 !important;-webkit-print-color-adjust: exact !important;border: 1px solid;border-color:#D6D6D6;padding-top:0px !important;padding-bottom:0 !important
+    }
+    .tituloPrincipal{
+        background-color: #E9E9E9 !important;-webkit-print-color-adjust: exact !important;border: 1px solid;border-color:#E9E9E9;text-align: center !important
+    }
+    .tituloTabla{
+        background-color: #FFD300 !important;-webkit-print-color-adjust: exact !important;border: 1px solid;text-align: center
+    }
+    .card{
+        margin-top: 0;
+        padding-top: 0;
+    }
+    #imprimirBtn{
+        position: absolute;
+        z-index: 100;
+        float: right;
+        right: 21px;
+    }
+    .btn{
+        -webkit-print-color-adjust: exact !important;
+    }
+    .btn-success{
+        background-color: #5aac41 !important;
+    }
+    .btn-warning{
+        background-color: #E8B211 !important;
+    }
+    .btn-danger{
+        background-color: #EA0E0E !important;
+    }
+    tfoot>tr>td{
+        padding:0 !important;
+        border:none;
+    }
+    thead>tr:first-child>th{
+        padding:0;
+        border:none;
+        background-color:#EBEBEB;
+    }
+    @media print{
+
+         thead{
+           display:table-header-group;/*Repetir header en todas las hojas*/
+         }
+         tbody{
+           display:table-row-group;
+         }
+         tfoot{
+           display:table-footer-group;/*Repetir footer en todas las hojas*/
+         }
+         
+    }
+    .imagen{
+        background-repeat: no-repeat;
+        color: rgb(0, 0, 0);
+        width:100%;
+    }
+</style>
+<!--REPORTE STATUS-->
+<div class="card"><button class="btn no-print pull-right" onclick="window.print()">imprimir</button>
+    <div style="{{'page-break-after: always' || ''}}">
+        <table class="table">
+            <thead class="header">
+                <tr>
+                    <th colspan="9">
+                        <img class="imagen" src="/views/proyectosdeley/imagenes/EncabezadoEjecutivoStatus.jpg"></img>
+                    </th>
+                </tr>
+                <tr>
+                    <th class="tituloPrincipal" colspan="9">Agenda Legislativa {{diaHoy}}</th>
+                </tr>
+                <tr class="tituloTabla">
+                    <th>P</th>
+                    <th>Proyecto</th>
+                    <th>Ejecutivo</th>
+                    <th>Legislativo</th>
+                    <th>Observaciones</th>
+                    <th>Borrador</th>
+                    <th>V</th>
+                    <th>L</th>
+                    <th style="width:10px">Status</th>
+                </tr>
+            </thead>
+            <tbody ng-repeat="p in pdl | orderBy:[funcOrden,'proyecto']">
+                <tr ng-if="p.esGrupo && !p.vacio && p.ejecutivo">
+                    <td class="tituloGrupo" colspan="9">{{p.nombre}}</td>
+                </tr>
+                <tr style="background-color: #EBEBEB !important" ng-repeat="g in pdl | orderBy:[funcOrden,'proyecto'] | filter:{grupo:p._id,estado:'Ejecutivo'}">
+                    <td>{{g.prioridad}}</td>
+                    <td>{{g.proyecto}}</td>
+                    <td>{{contactoPorId(g.ejecutivo).apellidos}} {{contactoPorId(g.ejecutivo).nombre}}</td>
+                    <td>{{contactoPorId(g.legislativo).apellidos}} {{contactoPorId(g.legislativo).nombre}}</td>
+                    <td>{{g.observaciones}}</td>
+                    <td>{{g.borrador}}</td>
+                    <td>{{g.votos}}</td>
+                    <td>{{g.lectura}}</td>
+                    <td>
+                        <img ng-show="g.status == 'success'" style="width:25px" class="imagen" src="/views/proyectosdeley/imagenes/Verde.png"/>
+                        <img ng-show="g.status == 'warning'" style="width:25px" class="imagen" src="/views/proyectosdeley/imagenes/Amarillo.png"/>
+                        <img ng-show="g.status == 'danger'" style="width:25px" class="imagen" src="/views/proyectosdeley/imagenes/Rojo.png"/>
+                    </td>
+              <!--      <td>-->
+              <!--  		<button ng-show="g.status == 'success'" class="btn btn-success"><i class="icon-arrow-up"></i></button>-->
+              <!--  		<button ng-show="g.status == 'warning'" class="btn btn-warning"><i class="icon-arrow-right"></i></button>-->
+              <!--  		<button ng-show="g.status == 'danger'" class="btn btn-danger"><i class="icon-arrow-down"></i></button>-->
+            		<!--</td>-->
+                </tr>
+                <tr ng-if="!p.esGrupo && !p.grupo.length && p.estado == 'Ejecutivo'">
+                    <td>{{p.prioridad}}</td>
+                    <td>{{p.proyecto}}</td>
+                    <td>{{contactoPorId(p.ejecutivo).apellidos}} {{contactoPorId(p.ejecutivo).nombre}}</td>
+                    <td>{{contactoPorId(p.legislativo).apellidos}} {{contactoPorId(p.legislativo).nombre}}</td>
+                    <td>{{p.observaciones}}</td>
+                    <td>{{p.borrador}}</td>
+                    <td>{{p.votos}}</td>
+                    <td>{{p.lectura}}</td>
+                    <td>
+                        <img ng-show="p.status == 'success'" style="width:25px" class="imagen" src="/views/proyectosdeley/imagenes/Verde.png"/>
+                        <img ng-show="p.status == 'warning'" style="width:25px" class="imagen" src="/views/proyectosdeley/imagenes/Amarillo.png"/>
+                        <img ng-show="p.status == 'danger'" style="width:25px" class="imagen" src="/views/proyectosdeley/imagenes/Rojo.png"/>
+                    </td>
+              <!--      <td>-->
+              <!--  		<button ng-show="p.status == 'success'" class="btn btn-success"><i class="icon-arrow-up"></i></button>-->
+              <!--  		<button ng-show="p.status == 'warning'" class="btn btn-warning"><i class="icon-arrow-right"></i></button>-->
+              <!--  		<button ng-show="p.status == 'danger'" class="btn btn-danger"><i class="icon-arrow-down"></i></button>-->
+            		<!--</td>-->
+                </tr>
+            </tbody>
+            <tfoot class="footer">
+                <tr>
+                    <td colspan="9">
+                        <img class="imagen" src="/views/proyectosdeley/imagenes/PieEjecutivo.jpg"></img>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+        <!--CODIGO SIN GRUPOS-->
+        <!--<table class="table">-->
+        <!--    <tr>-->
+        <!--        <th style="background-color: #E9E9E9 !important;-webkit-print-color-adjust: exact !important;border: 1px solid;border-color:#E9E9E9;text-align: center" colspan="9">Agenda Legislativa {{diaHoy}}</th>-->
+        <!--    </tr>-->
+        <!--    <tr style="background-color: #FFD300 !important;-webkit-print-color-adjust: exact !important;border: 1px solid;text-align: center">-->
+        <!--        <th>P</th>-->
+        <!--        <th>PROYECTO</th>-->
+        <!--        <th>EJECUTIVO</th>-->
+        <!--        <th>LEGISLATIVO</th>-->
+        <!--        <th>OBSERVACIONES</th>-->
+        <!--        <th>BORRADOR</th>-->
+        <!--        <th>V</th>-->
+        <!--        <th>L</th>-->
+        <!--        <th>STATUS</th>-->
+        <!--    </tr>-->
+        <!--    <tr ng-repeat="p in pdl | orderBy:'prioridad' | filter:{estado:'Ejecutivo'}">-->
+        <!--        <td>{{p.prioridad}}</td>-->
+        <!--        <td>{{p.proyecto}}</td>-->
+        <!--        <td>{{p.ejecutivo}}</td>-->
+        <!--        <td>{{p.legislador}}</td>-->
+        <!--        <td>{{p.observaciones}}</td>-->
+        <!--        <th>{{p.borrador}}</th>-->
+        <!--        <td>{{p.votos}}</td>-->
+        <!--        <td>{{p.lectura}}</td>-->
+        <!--        <td>-->
+        <!--    		<button style="background-color: #5aac41 !important;-webkit-print-color-adjust: exact !important" ng-show="p.status == 'success'" class="btn btn-success"><i class="icon-arrow-up"></i></button>-->
+        <!--    		<button style="background-color: #f9b049 !important;-webkit-print-color-adjust: exact !important" ng-show="p.status == 'warning'" class="btn btn-warning"><i class="icon-arrow-right"></i></button>-->
+        <!--    		<button style="background-color: #d84a38 !important;-webkit-print-color-adjust: exact !important" ng-show="p.status == 'danger'" class="btn btn-danger"><i class="icon-arrow-down"></i></button>-->
+        <!--		</td>-->
+        <!--    </tr>-->
+        <!--    </tbody>-->
+        <!--</table>-->
+    </div>
+    
+    
+    <div style="{{'page-break-after: always' || ''}}">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th colspan="9">
+                        <img class="imagen" src="/views/proyectosdeley/imagenes/EncabezadoLegislativo.jpg"></img>
+                    </th>
+                </tr>
+                <tr>
+                    <th class="tituloPrincipal" colspan="9">Agenda Legislativa {{diaHoy}}</th>
+                </tr>
+                <tr class="tituloTabla">
+                    <th style="width:1%">P</th>
+                    <th>Proyecto</th>
+                    <th>Ejecutivo</th>
+                    <th>Legislativo</th>
+                    <th>Observaciones</th>
+                    <th style="width:5%">Borrador</th>
+                    <th style="width:1%">V</th>
+                    <th style="width:5%">L</th>
+                    <th style="width:10px">Status</th>
+                </tr>
+            </thead>
+            <tbody ng-repeat="p in pdl | orderBy:[funcOrden,'proyecto']">
+                <tr ng-show="p.esGrupo && !p.vacio && p.legis">
+                    <td class="tituloGrupo" colspan="9">{{p.nombre}}</td>
+                </tr>
+                <tr style="background-color: #EBEBEB !important" ng-repeat="g in pdl | orderBy:[funcOrden,'proyecto'] | filter:{grupo:p._id,estado:'Legislativo'}">
+                    <td>{{g.prioridad}}</td>
+                    <td>{{g.proyecto}}</td>
+                    <td>{{contactoPorId(g.ejecutivo).apellidos}} {{contactoPorId(g.ejecutivo).nombre}}</td>
+                    <td>{{contactoPorId(g.legislativo).apellidos}} {{contactoPorId(g.legislativo).nombre}}</td>
+                    <td>{{g.observaciones}}</td>
+                    <td>{{g.borrador}}</td>
+                    <td>{{g.votos}}</td>
+                    <td>{{g.lectura}}</td>
+                    <td>
+                        <img ng-show="g.status == 'success'" style="width:25px" class="imagen" src="/views/proyectosdeley/imagenes/Verde.png"/>
+                        <img ng-show="g.status == 'warning'" style="width:25px" class="imagen" src="/views/proyectosdeley/imagenes/Amarillo.png"/>
+                        <img ng-show="g.status == 'danger'" style="width:25px" class="imagen" src="/views/proyectosdeley/imagenes/Rojo.png"/>
+                    </td>
+                </tr>
+                <tr ng-show="!p.esGrupo && !p.grupo.length && p.estado == 'Legislativo'">
+                    <td>{{p.prioridad}}</td>
+                    <td>{{p.proyecto}}</td>
+                    <td>{{contactoPorId(p.ejecutivo).apellidos}} {{contactoPorId(p.ejecutivo).nombre}}</td>
+                    <td>{{contactoPorId(p.legislativo).apellidos}} {{contactoPorId(p.legislativo).nombre}}</td>
+                    <td>{{p.observaciones}}</td>
+                    <td>{{p.borrador}}</td>
+                    <td>{{p.votos}}</td>
+                    <td>{{p.lectura}}</td>
+                    <td>
+                        <img ng-show="p.status == 'success'" style="width:25px" class="imagen" src="/views/proyectosdeley/imagenes/Verde.png"/>
+                        <img ng-show="p.status == 'warning'" style="width:25px" class="imagen" src="/views/proyectosdeley/imagenes/Amarillo.png"/>
+                        <img ng-show="p.status == 'danger'" style="width:25px" class="imagen" src="/views/proyectosdeley/imagenes/Rojo.png"/>
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="9">
+                        <img class="imagen" src="/views/proyectosdeley/imagenes/PieLegislativo2LecturaAprobados.jpg"></img>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    
+    
+    <div style="{{'page-break-after: always' || ''}}">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th colspan="9">
+                        <img class="imagen" src="/views/proyectosdeley/imagenes/Encabezado2Lectura.jpg"></img>
+                    </th>
+                </tr>
+                <tr>
+                    <th class="tituloPrincipal" colspan="7">Agenda Legislativa {{diaHoy}}</th>
+                </tr>
+                <tr class="tituloTabla">
+                    <th>Fecha AP</th>
+                    <th>Proyecto</th>
+                    <th>Ejecutivo</th>
+                    <th>Legislativo</th>
+                    <th>Observaciones</th>
+                    <th style="width:1%">V</th>
+                    <th style="width:10px">Status</th>
+                </tr>
+            </thead>
+            <tbody ng-repeat="p in pdl | orderBy:[funcOrden,'proyecto']">
+                <tr ng-show="p.esGrupo && !p.vacio && p.segundaLectura">
+                    <td class="tituloGrupo" colspan="7">{{p.nombre}}</td>
+                </tr>
+                <tr style="background-color: #EBEBEB !important" ng-repeat="g in pdl | orderBy:[funcOrden,'proyecto'] | filter:{grupo:p._id,estado:'Segunda Lectura'}">
+                    <td></td>
+                    <td>{{g.proyecto}}</td>
+                    <td>{{contactoPorId(g.ejecutivo).apellidos}} {{contactoPorId(g.ejecutivo).nombre}}</td>
+                    <td>{{contactoPorId(g.legislativo).apellidos}} {{contactoPorId(g.legislativo).nombre}}</td>
+                    <td>{{g.observaciones}}</td>
+                    <td>{{g.votos}}</td>
+                    <td>
+                        <img ng-show="g.status == 'success'" style="width:25px" class="imagen" src="/views/proyectosdeley/imagenes/Verde.png"/>
+                        <img ng-show="g.status == 'warning'" style="width:25px" class="imagen" src="/views/proyectosdeley/imagenes/Amarillo.png"/>
+                        <img ng-show="g.status == 'danger'" style="width:25px" class="imagen" src="/views/proyectosdeley/imagenes/Rojo.png"/>
+                    </td>
+                </tr>
+                <tr ng-show="!p.esGrupo && !p.grupo.length && p.estado == 'Segunda Lectura'">
+                    <td></td>
+                    <td>{{p.proyecto}}</td>
+                    <td>{{contactoPorId(p.ejecutivo).apellidos}} {{contactoPorId(p.ejecutivo).nombre}}</td>
+                    <td>{{contactoPorId(p.legislativo).apellidos}} {{contactoPorId(p.legislativo).nombre}}</td>
+                    <td>{{p.observaciones}}</td>
+                    <td>{{p.votos}}</td>
+                    <td>
+                        <img ng-show="p.status == 'success'" style="width:25px" class="imagen" src="/views/proyectosdeley/imagenes/Verde.png"/>
+                        <img ng-show="p.status == 'warning'" style="width:25px" class="imagen" src="/views/proyectosdeley/imagenes/Amarillo.png"/>
+                        <img ng-show="p.status == 'danger'" style="width:25px" class="imagen" src="/views/proyectosdeley/imagenes/Rojo.png"/>
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="9">
+                        <img class="imagen" src="/views/proyectosdeley/imagenes/PieLegislativo2LecturaAprobados.jpg"></img>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    
+    
+    <div style="{{'page-break-after: always' || ''}}">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th colspan="9">
+                        <img class="imagen" src="/views/proyectosdeley/imagenes/EncabezadoAprobados.jpg"></img>
+                    </th>
+                </tr>
+                <tr>
+                    <th class="tituloPrincipal" colspan="3">Agenda Legislativa {{diaHoy}}</th>
+                </tr>
+                <tr class="tituloTabla">
+                    <th>PROYECTO</th>
+                    <th>EJECUTIVO</th>
+                    <th>LEGISLATIVO</th>
+                </tr>
+            </thead>
+            <tbody ng-repeat="p in pdl | orderBy:[funcOrden,'proyecto']">
+                <tr ng-show="p.esGrupo && !p.vacio && p.aprobados">
+                    <td class="tituloGrupo" colspan="3">{{p.nombre}}</td>
+                </tr>
+                <tr style="background-color: #EBEBEB !important" ng-repeat="g in pdl | orderBy:[funcOrden,'proyecto'] | filter:{grupo:p._id,estado:'Aprobado'}">
+                    <td>{{g.proyecto}}</td>
+                    <td>{{contactoPorId(g.ejecutivo).apellidos}} {{contactoPorId(g.ejecutivo).nombre}}</td>
+                    <td>{{contactoPorId(g.legislativo).apellidos}} {{contactoPorId(g.legislativo).nombre}}</td>
+                </tr>
+                <tr ng-show="!p.esGrupo && !p.grupo.length && p.estado == 'Aprobado'">
+                    <td>{{p.proyecto}}</td>
+                    <td>{{contactoPorId(p.ejecutivo).apellidos}} {{contactoPorId(p.ejecutivo).nombre}}</td>
+                    <td>{{contactoPorId(p.legislativo).apellidos}} {{contactoPorId(p.legislativo).nombre}}</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="9">
+                        <img class="imagen" src="/views/proyectosdeley/imagenes/PieLegislativo2LecturaAprobados.jpg"></img>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    
+    <!--<div style="{{'page-break-after: always' || ''}}">-->
+    <!--    <div style="background-image: url('/views/planba2030/portadaBA2030.jpg') !important; background-repeat: no-repeat;position: relative;font-family: Arial !important; color: rgb(0, 0, 0);width: 1100px;height: 138px;margin-top: 20px;margin-bottom: 20px;">-->
+    <!--        <div style="text-align: left; position: absolute; width: 700px; top: 45px; left: 160px;height:30px">-->
+    <!--            <h3 style="font-size: 30px !important; margin-top: 0px; margin-bottom: 0px;">Eliminados</h3>-->
+    <!--        </div>-->
+    <!--    </div>-->
+    <!--    <table class="table">-->
+    <!--        <tr>-->
+    <!--            <th style="background-color: #E9E9E9 !important;-webkit-print-color-adjust: exact !important;border: 1px solid;border-color:#E9E9E9;text-align: center" colspan="8">Agenda Legislativa {{diaHoy}}</th>-->
+    <!--        </tr>-->
+    <!--        <tr style="background-color: #FFD300 !important;-webkit-print-color-adjust: exact !important;border: 1px solid;text-align: center">-->
+    <!--            <th>P</th>-->
+    <!--            <th>PROYECTO</th>-->
+    <!--            <th>LEGISLADOR</th>-->
+    <!--            <th>EJECUTIVO</th>-->
+    <!--            <th>OBSERVACIONES</th>-->
+    <!--            <th>V</th>-->
+    <!--            <th>L</th>-->
+    <!--            <th>STATUS</th>-->
+    <!--        </tr>-->
+    <!--        <tr ng-repeat="p in pdl | orderBy:'prioridad' | filter:{estado:'Eliminado'}">-->
+    <!--            <td>{{p.prioridad}}</td>-->
+    <!--            <td>{{p.proyecto}}</td>-->
+    <!--            <td>{{p.legislador}}</td>-->
+    <!--            <td>{{p.ejecutivo}}</td>-->
+    <!--            <td>{{p.observaciones}}</td>-->
+    <!--            <td>{{p.votos}}</td>-->
+    <!--            <td>{{p.lectura}}</td>-->
+    <!--            <td>-->
+    <!--        		<button ng-show="p.status == 'success'" class="btn btn-success"><i class="icon-arrow-up"></i></button>-->
+    <!--        		<button ng-show="p.status == 'warning'" class="btn btn-warning"><i class="icon-arrow-right"></i></button>-->
+    <!--        		<button ng-show="p.status == 'danger'" class="btn btn-danger"><i class="icon-arrow-down"></i></button>-->
+    <!--    		</td>-->
+    <!--        </tr>-->
+    <!--    </table>-->
+    <!--</div>-->
+</div>
+<!--REPORTE DETALLE-->
+<div class="card" style="margin-top: 0px;padding-top: 0px">
+    <div style="{{'page-break-after: always' || ''}}">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th colspan="9">
+                        <img class="imagen" src="/views/proyectosdeley/imagenes/EncabezadoEjecutivoDetalles.jpg"></img>
+                    </th>
+                </tr>
+                <tr>
+                    <th class="tituloPrincipal" colspan="6">Agenda Legislativa {{diaHoy}}</th>
+                </tr>
+                <tr class="tituloTabla">
+                    <th style="width:1%">P</th>
+                    <th>Proyecto</th>
+                    <th>Ejecutivo</th>
+                    <th>Legislativo</th>
+                    <th style="width:1%">V</th>
+                    <th style="width:5%">L</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="p in pdl | orderBy:'prioridad' | filter:filtroNoGrupo">
+                    <td>{{p.prioridad}}</td>
+                    <td>{{p.proyecto}}</td>
+                    <td>{{contactoPorId(p.ejecutivo).apellidos}} {{contactoPorId(p.ejecutivo).nombre}}</td>
+                    <td>{{contactoPorId(p.legislativo).apellidos}} {{contactoPorId(p.legislativo).nombre}}</td>
+                    <td>{{p.votos}}</td>
+                    <td>{{p.lectura}}</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="9">
+                        <img class="imagen" src="/views/proyectosdeley/imagenes/PieEjecutivo.jpg"></img>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>

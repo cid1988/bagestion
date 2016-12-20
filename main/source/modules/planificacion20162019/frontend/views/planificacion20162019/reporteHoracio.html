@@ -1,0 +1,80 @@
+<style>
+    .no-border, .no-border > th, .no-border > td {
+        border: none;
+    }
+    .tablaPrint th, .tablaPrint td {
+        padding-top:1px;
+        padding-bottom:1px;
+        border-bottom:1px solid #AAAAAA;
+        line-height: 25px;
+    }
+    @media print {
+        body, span, div, table, tr, tbody, tfoot, td, hr { 
+            -webkit-print-color-adjust: exact !important;
+        }
+    }
+</style>
+
+<div class="card span12" style="border:0px;padding-top: 0px;" ng-controller="ReportePlanificacion20162019Ctrl">
+    <a class="btn pull-right no-print" ng-click="imprimir()" style="padding-left: 0px; padding-right: 0px;"><i class="icon-print"></i></a>
+    <a class="btn pull-right no-print" href="/planificacion20162019" style="padding-left: 0px; padding-right: 0px;"><i class="icon-arrow-left"></i></a>
+    <a class="btn pull-right no-print" style="margin-right: 10px;" ng-class="{'active btn-info': (todos)}" ng-click="todos = !todos;">Todos</a>
+    <div ng-repeat="ej in ejes" style="{{!$first && 'page-break-before: always' || ''}}; margin-top: 32px;" ng-if="ejeTieneProyectos(ej._id)">
+        <div style="background-image: url('/views/planificacion20162019/portadaBA2030.jpg') !important; background-repeat: no-repeat;
+        position: relative;font-family: Arial !important; color: rgb(0, 0, 0);width: 1100px;height: 138px;margin-top: 20px;margin-bottom: 20px;">
+            <div style="text-align: left; position: absolute; width: 700px; top: 45px; left: 160px">
+                <h3 style="font-size: 30px !important; margin-top: 0px; margin-bottom: 0px;">Planificación 2016 - 2019</h3>
+            </div>
+        </div>
+        <table class="table tablaPrint" style="background-color: white;margin-bottom: 0px;margin-left: 20px;font-size: 19px !important;width: 1070px;">
+            <tbody>
+                <tr style="min-width: 130px !important;vertical-align: middle;border: none;">
+                    <!--<td style="border: none;font-size: 15px !important;">Estrategia</td>--> 
+                    <td style="border: none;">
+                        <table style="background-color: white;margin-bottom: 0px;margin-left: 0px;font-size: 15px !important;width: 920px;border: none;">
+                            <tbody>
+                                <tr style="border: none;">
+                                    <td style="min-width: 470px;padding-left: 0px;border: none;">Iniciativa</td>
+                                    <td style="border: none;min-width: 85px;">Avance</td>
+                                    <td style="border: none;min-width: 105px;">Área</td>
+                                    <td style="border: none;min-width: 203px;">Responsable</td>
+                                    <td style="border: none;min-width: 108px;">Status</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                <tr ng-repeat="est in estrategias | filter: {eje : ej._id}" ng-if="estrategiaTieneProyectos(est._id)">
+                    <!--<td style="min-width: 130px !important;vertical-align: middle;background-color: #fcd305 !important;-webkit-print-color-adjust: exact !important;border-color: gray;border: 1px solid;text-align: center;padding: 10px;">
+                        {{est.numero}} {{est.nombre}}
+                    </td> --> 
+                    <td>
+                        <table style="background-color: white;margin-bottom: 0px;margin-left: 0px;font-size: 14px !important;width: 920px;border: none;">
+                            <tbody>
+                                <tr ng-repeat="p in planes | filter: {estrategia : est._id} | filter:filtroSoloPadres" style="border: none;">
+                                    <td style="min-width: 470px;padding-left: 0px;border: none;">{{p.nombreProyecto}}</td>
+                                    <td style="border: none;min-width: 85px;"><div class="btn-group">
+                                        <button class="btn" title="Prioridad">{{p.prioridad}}</button>
+                                        <button class="btn btn-success" ng-if="p.statusAvance=='Avance Alto'" title="Avance Alto" style="background-color: #65b045 !important;"></button>
+                                        <button class="btn btn-warning" ng-if="p.statusAvance=='Avance Medio'" title="Avance Medio" style="background-color: #f9b049 !important;"></button>
+                                        <button class="btn btn-danger" ng-if="p.statusAvance=='Avance Bajo'" title="Avance Bajo" style="background-color: #d14836 !important;"></button>
+                                        <button class="btn" ng-if="p.statusAvance=='Activación en Espera'" title="Activación en Espera"></button></div></td>
+                                    <td style="border: none;min-width: 105px;">{{organigramaPorId(p.areaResponsable).sigla}}</td>
+                                    <td style="border: none;min-width: 203px;">{{contactoPorId(p.funcionarioResponsable).apellidos}} {{contactoPorId(p.funcionarioResponsable).nombre}}</td>
+                                    <td style="border: none;min-width: 108px;"><div class="btn-group pull-right">
+                                        <button class="btn" ng-if="p.statusOperativo[0]=='white'" title="Status de Avance">&nbsp;&nbsp;S&nbsp;&nbsp;</button>
+                                        <button class="btn btn-danger" ng-if="p.statusOperativo[0]=='danger'" title="Status de Avance">&nbsp;&nbsp;S&nbsp;&nbsp;</button>
+                                        <button class="btn btn-warning" ng-if="p.statusOperativo[0]=='warning'" title="Status de Avance">&nbsp;&nbsp;S&nbsp;&nbsp;</button>
+                                        <button class="btn btn-success" ng-if="p.statusOperativo[0]=='success'" title="Status de Avance">&nbsp;&nbsp;S&nbsp;&nbsp;</button>
+                                        <button class="btn" title="Presupuesto">&nbsp;&nbsp;P&nbsp;&nbsp;</button> 
+                                        <button class="btn" title="Gantt">&nbsp;&nbsp;G&nbsp;&nbsp;</button></div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table> 
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

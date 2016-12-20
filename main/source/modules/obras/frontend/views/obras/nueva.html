@@ -1,0 +1,870 @@
+<style>
+    input:focus,textarea:focus{
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6) !important;
+        border-color: rgba(82, 168, 236, 0.8) !important;
+    }
+    input,textarea{
+        border-radius:4px !important;
+    }
+    label{
+        margin-bottom:0px !important;
+    }
+</style>
+<div class="card" style="padding-top:10px">
+    <div style="margin:10px">
+        <div class="card-actions pull-right" style="margin:0;padding:0">
+            <a class="btn btn-link no-print" ng-click="guardar()"><i class="icon-ok"></i></a>
+            <a class="btn btn-link no-print" href="/obras"><i class="icon-remove"></i></a>
+        </div>
+        <h3 class="card-heading simple" style="padding:0px;margin-bottom:10px;font-size:14px;height:45px">
+            <ul id="myTab" class="nav nav-pills">
+                <li ng-class="{'active': tab == 'identificacion'}"><a href="#" ng-click="tab='identificacion'" data-toggle="tab">Identificación</a></li>
+                <li ng-class="{'active': tab == 'ubicacion'}"><a href="#" ng-click="tab='ubicacion';mostra='punto'" data-toggle="tab">Ubicación</a></li>
+                <li ng-class="{'active': tab == 'clasificacion'}"><a href="#" ng-click="tab='clasificacion'" data-toggle="tab">Clasificación</a></li>
+                <li ng-class="{'active': tab == 'alcance'}"><a href="#" ng-click="tab='alcance'" data-toggle="tab">Alcance</a></li>
+                <li ng-class="{'active': tab == 'comunicacion'}"><a href="#" ng-click="tab='comunicacion'" data-toggle="tab">Comunicación</a></li>
+                <li ng-class="{'active': tab == 'estado'}"><a href="#" ng-click="tab='estado'" data-toggle="tab">Estado</a></li>
+            </ul>
+        </h3>
+        
+        <div ng-show="tab == 'identificacion'">
+            <span class="btn-group" style="margin-bottom:10px" data-toggle="buttons-radio">
+                <label>¿La obra viene de una iniciativa?</label>
+                <button class="btn" ng-class="{'btn-info active': obra.vieneDeIniciativa}" ng-click="obra.vieneDeIniciativa='si'">Si</button>
+                <button class="btn" ng-class="{'btn-info active': !obra.vieneDeIniciativa}" ng-click="obra.vieneDeIniciativa='no'">No</button>
+                <span ng-show="obra.vieneDeIniciativa == 'si'" class="input-append control-group" style="margin-bottom: 0px; margin-left: 5px">
+                    <select class="span4" ui-select2 type="text" style="display: inline-block; width:460px" ng-model="obra.iniciativaRelacionada" ng-options="i._id as i.nombre_largo for i in iniciativas | orderBy:'nombre_largo'">
+                        <option>{{iniciativaPorId(obra.iniciativaRelacionada).nombre_largo}}</option>
+                    </select>
+                </span>
+            </span>
+            <div class="row-fluid">
+                <div class="span4">
+                    <label>Nombre Corto:</label>
+                    <input type="text" class="input-block-level" placeholder="Nombre corto de obra" ng-model="obra.nombre"/>
+                </div>
+                <div class="span8" style="margin-left:5px">
+                    <label>Nombre Largo:</label> 
+                    <input type="text" class="input-block-level" placeholder="Nombre Largo para la obra" ng-model="obra.nombre_largo"/>
+                </div>
+            </div>
+            <hr style="margin-top:5px;margin-bottom:5px">
+            <div class="row-fluid">
+                <div class="span2">
+                    <label>Etapa:</label>
+                    <input type="text" class="input-block-level" placeholder="Etapa" ng-model="obra.etapa"/>
+                </div>
+                <div class="span2" style="margin-left:5px">
+                    <label>Siglas:</label>
+                    <input type="text" class="input-block-level" placeholder="Siglas" ng-model="obra.siglas"/>
+                </div>
+                <div class="span3" style="margin-left:5px">
+                    <label>Referencia de Mapa:</label>
+                    <input type="text" class="input-block-level" placeholder="Referencia de mapa" ng-model="obra.ref_mapa"/>
+                </div>
+                <div class="span2" style="margin-left:5px">
+                    <label>Plan:</label>
+                    <input type="text" class="input-block-level" placeholder="Año" ng-model="obra.plan"/>
+                </div>
+            </div>
+            <div class="row-fluid">
+                <h4>Vinculos</h4>
+                <div class="span4" style="margin-left:0px">
+                    <label>Legislativo:</label>
+                    <input type="text" class="input-block-level" ng-model="obra.legislativo"/>
+                </div>
+                <div class="span4" style="margin-left:5px">
+                    <label>Expedientes:</label>
+                    <input type="text" class="input-block-level" ng-model="obra.expediente"/>
+                </div>
+                <div class="span4" style="margin-left:5px">
+                    <label>Codigo Anterior:</label>
+                    <input type="text" class="input-block-level" ng-model="obra.codigo_anterior"/>
+                </div>
+            </div>
+            <div class="row-fluid" style="margin-bottom:10px">
+                <div class="span4">
+                    <label class="control-group" style="margin-right:5px">Temas:</label>
+                    <select ui-select2 type="text" class="input-block-level" style="width:100%" ng-model="dataTema" ng-options="i._id as i.nombre for i in temas | filter: mostrarTema">
+                        <option ng-disabled="true" value=""></option>
+                    </select>
+                </div>
+                <button class="btn" style="margin-top:20px;margin-left:5px" ng-click="agregarTema(dataTema)"><i class="icon-plus"></i></button>
+            </div>
+            <div class="row-fluid">
+                <div class="span4">
+                    <div class="control-group" ng-repeat="t in obra.temas" style="margin-bottom:5px">
+                        <input type="text" value="{{temaPorId(t).nombre}}" style="margin-bottom:0px"/>
+                        <button class="btn btn-danger" href="#" style="margin-left: 10px" ng-click="eliminarElemento(obra.temas,t)"><i class="icon-trash"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row-fluid" ng-hide="tab == 'identificacion'">
+            <div class="span4">
+                <label>Nombre Corto:</label>
+                <input type="text" class="input-block-level" ng-disabled="true" placeholder="Denominación Corta" ng-model="obra.nombre"/>
+            </div>
+            <div class="span8" style="margin-left:5px">
+                <label>Nombre Largo:</label>
+                <input type="text" class="input-block-level" ng-disabled="true" placeholder="Denominación Larga de la obra" ng-model="obra.nombre_largo"/>
+            </div>
+            <hr style="margin-top:5px;margin-bottom:5px"/>
+        </div>
+        
+        <div ng-show="tab == 'ubicacion'">
+            <ul id="myTab" class="nav nav-pills" style="margin-bottom:5px">
+                <li ng-class="{'active': mostra == 'punto'}"><a href="#" ng-click="mostra='punto'" data-toggle="tab">Punto</a></li>
+                <li ng-class="{'active': mostra == 'mapa'}"><a href="#" ng-click="mostra='mapa'" data-toggle="tab">Mapa</a></li>
+            </ul>
+            
+            <div ng-show="mostra == 'punto'">
+                <div class="row-fluid">
+                    <div class="span2">
+                        <label>Calle:</label>
+                        <input type="text" class="input-block-level" ng-disabled="!editando" placeholder="Nombre de Calle" ng-model="obra.calle" id="callejero1" />
+                    </div>
+                    <div class="span2" style="margin-left:5px">
+                        <label>Altura:</label>
+                        <input type="text" class="input-block-level" ng-disabled="!editando" placeholder="Nro" ng-model="obra.altura"/>
+                    </div>
+                    <div class="span2" style="margin-left:5px">
+                        <label>Cruce:</label>
+                        <input type="text" class="input-block-level" ng-disabled="!editando" placeholder="Nombre de calle" ng-model="obra.cruce" id="callejero2" />
+                    </div>
+                    <!--<div class="span3">-->
+                    <!--    <label>Calle:</label>-->
+                    <!--    <input type="text" class="input-block-level" data-provide="typeahead" placeholder="Nombre de Calle" ng-model="obra.calle" id="calle3-typeahead" data-source={{calles}} />-->
+                    <!--</div>-->
+                    <!--<div class="span1" style="margin-left:5px">-->
+                    <!--    <label>Altura:</label>-->
+                    <!--    <input type="text" class="input-block-level" placeholder="Nro" ng-model="obra.altura"/>-->
+                    <!--</div>-->
+                    <!--<div class="span3" style="margin-left:5px">-->
+                    <!--    <label>Cruce:</label>-->
+                    <!--    <input type="text" class="input-block-level" data-provide="typeahead" placeholder="Cruce" ng-model="obra.cruce" id="cruce3-typeahead" data-source={{calles}} />-->
+                    <!--</div>-->
+                </div>
+                <div class="row-fluid">
+                    <div class="span1" style="margin-left:5px">
+                        <label>Seccion:</label>
+                        <input type="text" class="input-block-level" placeholder="Nro" ng-model="obra.seccion"/>
+                    </div>
+                    <div class="span1" style="margin-left:5px">
+                        <label>Manzana:</label>
+                        <input type="text" class="input-block-level" placeholder="Nro" ng-model="obra.manzana"/>
+                    </div>
+                    <div class="span1" style="margin-left:5px">
+                        <label>Parcela:</label>
+                        <input type="text" class="input-block-level" placeholder="Nro" ng-model="obra.parcela"/>
+                    </div>
+                    <div class="span1" style="margin-left:5px">
+                        <label>U.F.:</label>
+                        <input type="text" class="input-block-level" placeholder="Nro" ng-model="obra.unidad_funcional"/>
+                    </div>
+                    <div class="span2" style="margin-left:5px">
+                        <label>Barrio:</label>
+                        <input type="text" class="input-block-level" placeholder="Barrio" ng-model="obra.barrio"/>
+                    </div>
+                </div>
+                <div class="row-fluid">
+                    <div class="span3">
+                        <select class="input-block-level" style="width:100%" placeholder="Comuna" ui-select2 type="text" ng-model="dataComuna.comuna">
+                            <option style="display:none" value=""></option>
+                            <option ng-repeat="e in comunas | orderBy: 'numero' | filter:filtroComuna track by e._id" value="{{e._id}}">{{e.nombre}}</option>
+                        </select>
+                    </div>
+                    <button class="btn" style="margin-bottom:10px;margin-left:5px" ng-click="agregarComuna(dataComuna)"><i class="icon-plus"></i></button>
+                </div>
+                <div class="row-fluid">
+                    <div ng-repeat="c in obra.comuna" style="margin-bottom:5px">
+                        <input class="span2" type="text" style="margin-bottom:0px" ng-model="comunaPorId(c).nombre" ng-disabled="true"/>
+                        <button class="btn btn-danger" style="margin-right:10px" ng-click="eliminarListaElem(c,obra.comuna)"><i class="icon-trash"></i></button>
+                    </div>
+                </div>
+                <div class="row-fluid">
+                    <div class="span3">
+                        <label>Provincia:</label>
+                        <input type="text" class="input-block-level" placeholder="Nombre de Provincia" ng-model="obra.provincia"/>
+                    </div>
+                    <div class="span2" style="margin-left:5px">
+                        <label>Pais:</label>
+                        <input type="text" class="input-block-level" placeholder="Pais" ng-model="obra.pais"/>
+                    </div>
+                    <div class="span2" style="margin-left:5px">
+                        <label>Codigo Postal:</label>
+                        <input type="text" class="input-block-level" placeholder="Numero de CP" ng-model="obra.codigo_postal"/>
+                    </div>
+                    <div class="span2" style="margin-left:5px">
+                        <label>Grilla de Coordenadas:</label>
+                        <input type="text" disabled class="input-block-level" placeholder="Coordenadas" ng-model="obra.coordenadas"/>
+                    </div>
+                    <div class="span3" style="margin-left:5px">
+                        <label>Partida Matriz:</label>
+                        <input type="text" class="input-block-level" placeholder="Partida Matriz de la obra" ng-model="obra.partida_matriz"/>
+                    </div>
+                    <div class="span3" style="margin-left:0px">
+                        <label>UTIU:</label>
+                        <input type="text" class="input-block-level" placeholder="UTIU" ng-model="obra.utiu"/>
+                    </div>
+                    <div class="span2" style="margin-left:5px">
+                        <label>Region Sanitaria:</label>
+                        <input type="text" class="input-block-level" placeholder="Region Sanitaria" ng-model="obra.region_sanitaria"/>
+                    </div>
+                    <div class="span2" style="margin-left:5px">
+                        <label>Distrito Escolar:</label>
+                        <input type="text" class="input-block-level" placeholder="Distrito Escolar" ng-model="obra.distrito_escolar"/>
+                    </div>
+                    <div class="span2" style="margin-left:5px">
+                        <label style="display: inline-block">Comisaria Policia Metropolitana:</label>
+                        <input type="text" class="input-block-level" placeholder="Comisaria Policia Metropolitana" ng-model="obra.comisaria_pm"/>
+                    </div>
+                </div>
+            </div>
+            
+            <div ng-show="mostra == 'mapa'">
+                <div class="row-fluid">
+                    <div class="span2">
+                        <label>Calle:</label>
+                        <input type="text" class="input-block-level" placeholder="Desde que calle" data-provide="typeahead" ng-model="dataDire.calle" id="calle-typeahead" data-source={{calles}} />
+                    </div>
+                    <div class="span2" style="margin-left:5px">
+                        <label>Cruce:</label>
+                        <input type="text" class="input-block-level" placeholder="Calle Delimitadora" data-provide="typeahead" ng-model="dataDire.cruce" id="cruce-typeahead" data-source={{calles}} />
+                    </div>
+                    <div class="span1" style="margin-left:5px">
+                        <label>Altura:</label>
+                        <input type="text" class="input-block-level" placeholder="Nro" ng-model="dataDire.altura"/>
+                    </div>
+                    <div class="span2" style="margin-left:5px">
+                        <label>Calle:</label>
+                        <input type="text" class="input-block-level" placeholder="Hasta que calle" data-provide="typeahead" ng-model="dataDire.calle2" id="calle2-typeahead" data-source={{calles}} />
+                    </div>
+                    <div class="span2" style="margin-left:5px">
+                        <label>Cruce:</label>
+                        <input type="text" class="input-block-level" placeholder="Calle Delimitadora" data-provide="typeahead" ng-model="dataDire.cruce2" id="cruce2-typeahead" data-source={{calles}} />
+                    </div>
+                    <div class="span1" style="margin-left:5px">
+                        <label>Altura:</label>
+                        <input type="text" class="input-block-level" placeholder="Nro" ng-model="dataDire.altura2"/>
+                    </div>
+                    <button class="btn" data-placement="bottom" style="margin-top:20px;margin-left:5px" ng-click="agregarDireMapa()"><i class="icon-plus"></i></button>
+                </div>
+                <hr style="margin-top:5px;margin-bottom:5px"/>
+                <div ng-hide="obra.direccionesMapa.length">No se ha cargado ninguna dirección aún</div>
+                <div ng-repeat="o in obra.direccionesMapa" style="clear:both;min-height:40px;margin-top:10px;margin-bottom:10px">
+                    <form class="form-inline">
+                        <label>Desde:
+                            <input type="text" ng-model="o.calle" ng-disabled="true"/>
+                        </label>
+                        <label>Y:
+                            <input type="text" ng-model="o.cruce" ng-disabled="true"/>
+                        </label>
+                        <label>Nro:
+                            <input type="text" class="span1" ng-model="o.altura" ng-disabled="true"/>
+                        </label>
+                        <label>Hasta:
+                            <input type="text" ng-model="o.calle2" style="margin-left: 3px;" ng-disabled="true"/>
+                        </label>
+                        <label>Y:
+                            <input type="text" ng-model="o.cruce2" ng-disabled="true"/>
+                        </label>
+                        <label>Nro:
+                            <input type="text" class="span1" ng-model="o.altura2" ng-disabled="true"/>
+                        </label>
+                        <button class="btn btn-danger" data-placement="bottom" ng-click="eliminarElemento(obra.direccionesMapa,o)" style="margin-left:0px;padding-left:0px;padding-right:0px"><i class="icon-trash icon-white"></i></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div ng-show="tab == 'clasificacion'">
+            <div class="row-fluid" style="margin-bottom:10px">
+                <!--<div class="span2">-->
+                <!--    <label>Tipo de Obra:</label>-->
+                <!--    <select class="input-block-level" ui-select2 type="text" ng-model="obra.tipoObra" ng-options="i._id as i.nombre for i in tiposObra">-->
+                <!--        <option ng-disabled="true" value="">{{tipoPorId(obra.tipoObra).nombre}}</option>-->
+                <!--    </select>-->
+                <!--</div>-->
+                <!--<div class="span3">-->
+                <!--    <label>Grupo:</label>-->
+                <!--    <select class="input-block-level" ui-select2 type="text" ng-model="obra.grupo" ng-options="i._id as i.nombre for i in grupos | orderBy:'orden'">-->
+                <!--        <option ng-disabled="true" value="">{{tipoPorId(obra.tipo).nombre}}</option>-->
+                <!--    </select>-->
+                <!--</div>-->
+                <div class="span2" style="margin-left:5px">
+                    <label>Tipo:</label>
+                    <select class="input-block-level" ui-select2 type="text" ng-model="obra.tipo" ng-options="i._id as i.nombre for i in tipos | orderBy:'orden'">
+                        <option ng-disabled="true" value="">{{claseObra.nombre}}</option>
+                    </select>
+                </div>
+                <!--<div class="span2" style="margin-left:5px">-->
+                <!--    <label>Subtipo:</label>-->
+                <!--    <select class="input-block-level" ui-select2 type="text" ng-model="obra.subtipo" ng-options="i._id as i.nombre for i in subtipos track by i._id | orderBy:'orden'">-->
+                <!--        <option ng-disabled="true" value="">{{subtipoObra.nombre}}</option>-->
+                <!--        <option value="{{subtiposOtro._id}}">{{subtiposOtro.nombre}}</option>-->
+                <!--    </select>-->
+                <!--</div>-->
+                <div class="control-group span2" style="margin-left: 5px; margin-right: 5px">
+                    <label style="margin-bottom: 0px">Subtipo:</label>
+                    <select class="input-block-level" ng-disabled="!editando" placeholder="Subtipo" ui-select2 type="text" ng-model="obra.subtipo">
+                        <option value=""></option>
+                        <option value=""></option>
+                        <option ng-repeat="e in subtipos | orderBy: 'nombre'" value="{{e._id}}">{{e.nombre}}</option>
+                        <option value="{{subtiposOtro._id}}">{{subtiposOtro.nombre}}</option>
+                    </select>
+                </div>
+                <div class="span2" style="margin-left:5px">
+                    <label>Impacto:</label>
+                    <select class="input-block-level" ui-select2 type="text" ng-model="obra.impacto" ng-options="i._id as i.nombre for i in impactos | orderBy:'nombre'">
+                        <option ng-disabled="true" value="">{{obra.impacto.nombre}}</option>
+                    </select>
+                </div>
+                <div class="span2" style="margin-left:5px">
+                    <label>Segmento:</label>
+                    <select class="input-block-level" placeholder="Segmento" ui-select2 type="text" ng-model="obra.orden1">
+                        <option value=""></option>
+                        <option value="">Todos</option>
+                        <option ng-repeat="e in ordenes | orderBy: 'orden'" value="{{e._id}}">{{e.nombre}}</option>
+                    </select>
+                </div>
+                <div class="span2" style="margin-left:5px">
+                    <label>Presentación:</label>
+                    <input class="input-block-level" type="text" placeholder="Segundo orden" ng-model="obra.orden2"/>
+                </div>
+            </div>
+        </div>
+        
+        <div ng-show="tab == 'alcance'">
+            <div class="row-fluid">
+                <div class="span4">
+                    <label>Jurisdiccion:</label>
+                    <select class="input-block-level" ui-select2 type="text" ng-model="obra.jurisdiccion" ng-options="i._id as i.nombreCompleto for i in organigrama | orderBy:'nombre'">
+                        <option ng-disabled="true" value="">{{jurisdiccionPorId(obra.jurisdiccion).nombre}}</option>
+                    </select>
+                </div>
+                <div class="span2" style="margin-left:5px">
+                    <label>Siglas Jurisdiccion:</label>
+                    <input type="text" class="input-block-level" ng-disabled="true" placeholder="Se autocompleta" ng-model="jurisdiccionPorId(obra.jurisdiccion).sigla"/>
+                </div>
+                <div class="span2" style="margin-left:5px">
+                    <label>Nombre Corto de Jurisdicción:</label>
+                    <input type="text" class="input-block-level" placeholder="Nombre corto de Jurisdicción" ng-model="jurisdiccionPorId(obra.jurisdiccion).nombreCortoOrganigrama"/>
+                </div>
+            </div>
+            <div class="row-fluid">
+                <div class="span4">
+                    <label>Dependencia:</label>
+                    <select class="input-block-level" ui-select2 type="text" ng-model="obra.dependencia" ng-options="i._id as i.nombreCompleto for i in organigrama | orderBy:'nombre'">
+                        <option ng-disabled="true" value="">{{jurisdiccionPorId(obra.dependencia).nombre}}</option>
+                    </select>
+                </div>
+                <div class="span2" style="margin-left:5px">
+                    <label>Referente Ejecución:</label>
+                    <select ui-select2 type="text" class="input-block-level" ng-model="obra.referente" ng-options="i._id as i.apellidos + ' ' + i.nombre for i in contactos track by i._id | orderBy:'apellidos'">
+                        
+                    </select>
+                </div>
+                <button class="btn" style="margin-top:20px;margin-left:5px" data-placement="bottom" ng-click="crearContacto()"><i class="icon-book"></i></button>
+                <hr style="margin-top:10px;margin-bottom:10px"/>
+                <div class="row-fluid">
+                    <div class="span2">
+                        <label>Plazo Completo:</label>
+                        <input type="text" class="input-block-level" placeholder="Ej: Meses" ng-model="obra.plazo_completo"/>
+                    </div>
+                </div>
+            </div>
+            
+            <h4>Objetivo</h4>
+            <div class="row-fluid">
+                <div class="span2">
+                    <input date class="input-block-level" placeholder="Seleccionar fecha" style="margin-right:5px" type="text" ng-model="dataObjetivo.fecha"/>
+                </div>
+                <div class="span4" style="margin-left:5px">
+                    <textarea style="height:28px;width:100%" class="input-block-level" type="text" ng-model="dataObjetivo.comentario" placeholder="Sin comentarios"/>
+                </div>
+                <div class="span2" style="margin-left:5px">
+                    <button ng-class="{'btn-info active': dataObjetivo.cuenta}" style="margin-right:5px" ng-click="dataObjetivo.cuenta = !dataObjetivo.cuenta" type="button" class="btn">Cuenta</button>
+                    <button ng-disabled="!dataObjetivo.comentario.length" class="btn" ng-click="agregarObjetivo(dataObjetivo)"><i class="icon-plus"></i></button>
+                </div>
+            </div>
+            <div ng-hide="obra.objetivo.length">No se ha cargado ningun objetivo aún</div>
+            <div ng-repeat="o in obra.objetivo" style="margin-bottom: 0px">
+                <div style="margin-bottom: 8px">
+                    <b>Fecha del objetivo:</b> {{o.fecha | date}}
+                    <button ng-disabled="!editando" ng-class="{'btn-info active': o.cuenta}" ng-click="o.cuenta = !o.cuenta" type="button" class="btn">Cuenta</button>
+                    <button ng-if="obra.objetivo[obra.objetivo.length-1].fecha === o.fecha" ng-disabled="!editando" ng-class="{'btn-info active': o.cumplido}" ng-click="o.cumplido = !o.cumplido" type="button" class="btn">Cumplido</button>
+                    <br>
+                    <b>Comentarios:</b> {{o.comentario}}
+                </div>
+            </div>
+            <hr style="margin-top:5px; margin-bottom:5px"/>
+            
+            <h4>Presupuesto Gestión</h4>
+            <div class="row-fluid">
+                <div class="span2">
+                    <label>Monto:</label>
+                    <input type="text" class="input-block-level" ng-model="dataNombrar.monto"/>
+                </div>
+                <div class="span2" style="margin-left:5px">
+                    <label>Fecha Valor:</label>
+                    <input type="text" class="input-block-level" date ng-model="dataNombrar.fecha_valor"/>
+                </div>
+                <div class="span1" style="margin-left:5px">
+                    <label>Año:</label>
+                    <input type="text" class="input-block-level" ng-model="dataNombrar.partida_anio"/>
+                </div>
+                <button class="btn" style="margin-left:5px;margin-top:20px" ng-click="agregarNombrar(dataNombrar)"><i class="icon-plus"></i></button>
+            </div>
+            
+            <div ng-repeat="o in obra.nombrar">
+                <div class="row-fluid">
+                    <div class="span2">
+                        <label>Monto:</label>
+                        <input type="text" class="input-block-level" ng-disabled="!editando" ng-model="o.monto"/>
+                    </div>
+                    <div class="span2" style="margin-left:5px">
+                        <label>Fecha Valor:</label>
+                        <input type="text" class="input-block-level" ng-disabled="!editando" date ng-model="o.fecha_valor"/>
+                    </div>
+                    <div class="span1" style="margin-left:5px">
+                        <label>Año:</label>
+                        <input type="text" class="input-block-level" ng-disabled="!editando" ng-model="o.partida_anio"/>
+                    </div>
+                </div>
+            </div>
+            <hr style="margin-top:10px;margin-bottom:10px">
+            <div class="row-fluid">
+                <h4>Presupuesto SIGAF</h4>
+                <div class="span1" style="margin-left:0px">
+                    <label>Ejercicio:</label>
+                    <input type="text" class="input-block-level" ng-model="presupuestoSigaf.ejercicio"/>
+                </div>
+                <div class="span1" style="margin-left:5px">
+                    <label>Jurisdic:</label>
+                    <input type="text" class="input-block-level" ng-model="presupuestoSigaf.partida_jur"/>
+                </div>
+                <div class="span1" style="margin-left:5px">
+                    <label>Entidad:</label>
+                    <input type="text" class="input-block-level" ng-model="presupuestoSigaf.partida_ent"/>
+                </div>
+                <div class="span1" style="margin-left:5px">
+                    <label>Programa:</label>
+                    <input type="text" class="input-block-level" ng-model="presupuestoSigaf.partida_pr"/>
+                </div>
+                <div class="span1" style="margin-left:5px">
+                    <label>Proyecto:</label>
+                    <input type="text" class="input-block-level" ng-model="presupuestoSigaf.partida_proy"/>
+                </div>
+                <div class="span1" style="margin-left:5px">
+                    <label>Actividad:</label>
+                    <input type="text" class="input-block-level" ng-model="presupuestoSigaf.partida_act"/>
+                </div>
+                <div class="span1" style="margin-left:5px">
+                    <label>Obra:</label>
+                    <input type="text" class="input-block-level" ng-model="presupuestoSigaf.partida_obra"/>
+                </div>
+                <div class="span1" style="margin-left:5px">
+                    <label>FuentFin:</label>
+                    <input type="text" class="input-block-level" ng-model="presupuestoSigaf.partida_ff"/>
+                </div>
+                <div class="span1" style="margin-left:5px">
+                    <label>Moneda:</label>
+                    <input type="text" class="input-block-level" ng-model="presupuestoSigaf.partida_mon"/>
+                </div>
+                <div class="span1" style="margin-left:5px">
+                    <label>Inciso:</label>
+                    <input type="text" class="input-block-level" ng-model="presupuestoSigaf.partida_inc"/>
+                </div>
+                <div class="span1" style="margin-left:5px">
+                    <label>Principal:</label>
+                    <input type="text" class="input-block-level" ng-model="presupuestoSigaf.partida_pri"/>
+                </div>
+                <div class="span1" style="margin-left:5px">
+                    <label>Parcial:</label>
+                    <input type="text" class="input-block-level" ng-model="presupuestoSigaf.partida_par"/>
+                </div>
+                <div class="span1" style="margin-left:5px">
+                    <label>Ubic Geo:</label>
+                    <input type="text" class="input-block-level" ng-model="presupuestoSigaf.partida_ubg"/>
+                </div>
+                <button class="btn" style="margin-left:5px;margin-top:20px" ng-click="agregarPSigaf(presupuestoSigaf)"><i class="icon-plus"></i></button>
+            </div>
+            
+            <div ng-repeat="o in obra.presupuestoSigaf" ng-controller="PresupuestoSigafCtrl">
+                <div class="row-fluid">
+                    <div class="span1">
+                        <label>Ejercicio:</label>
+                        <input type="text" class="input-block-level" ng-disabled="!editando" ng-model="o.ejercicio"/>
+                    </div>
+                    <div class="span1" style="margin-left:5px">
+                        <label>Jurisdic:</label>
+                        <input type="text" class="input-block-level" ng-disabled="!editando" ng-model="o.partida_jur"/>
+                    </div>
+                    <div class="span1" style="margin-left:5px">
+                        <label>Entidad:</label>
+                        <input type="text" class="input-block-level" ng-disabled="!editando" ng-model="o.partida_ent"/>
+                    </div>
+                    <div class="span1" style="margin-left:5px">
+                        <label>Programa:</label>
+                        <input type="text" class="input-block-level" ng-disabled="!editando" ng-model="o.partida_pr"/>
+                    </div>
+                    <div class="span1" style="margin-left:5px">
+                        <label>Proyecto:</label>
+                        <input type="text" class="input-block-level" ng-disabled="!editando" ng-model="o.partida_proy"/>
+                    </div>
+                    <div class="span1" style="margin-left:5px">
+                        <label>Actividad:</label>
+                        <input type="text" class="input-block-level" ng-disabled="!editando" ng-model="o.partida_act"/>
+                    </div>
+                    <div class="span1" style="margin-left:5px">
+                        <label>Obra:</label>
+                        <input type="text" class="input-block-level" ng-disabled="!editando" ng-model="o.partida_obra"/>
+                    </div>
+                    <div class="span1" style="margin-left:5px">
+                        <label>FuentFin:</label>
+                        <input type="text" class="input-block-level" ng-disabled="!editando" ng-model="o.partida_ff"/>
+                    </div>
+                    <div class="span1" style="margin-left:5px">
+                        <label>Moneda:</label>
+                        <input type="text" class="input-block-level" ng-disabled="!editando" ng-model="o.partida_mon"/>
+                    </div>
+                    <div class="span1" style="margin-left:5px">
+                        <label>Inciso:</label>
+                        <input type="text" class="input-block-level" ng-disabled="!editando" ng-model="o.partida_inc"/>
+                    </div>
+                    <div class="span1" style="margin-left:5px">
+                        <label>Principal:</label>
+                        <input type="text" class="input-block-level" ng-disabled="!editando" ng-model="o.partida_pri"/>
+                    </div>
+                    <div class="span1" style="margin-left:5px">
+                        <label>Parcial:</label>
+                        <input type="text" class="input-block-level" ng-disabled="!editando" ng-model="o.partida_par"/>
+                    </div>
+                    <div class="span1" style="margin-left:5px">
+                        <label>Ubic Geo:</label>
+                        <input type="text" class="input-block-level" ng-disabled="!editando" ng-model="o.partida_ubg"/>
+                    </div>
+                </div>
+            </div>
+            <hr style="margin-top:10px;margin-bottom:10px">
+            <div class="row-fluid">
+                <div class="span2">
+                    <label>Prioridad:</label>
+                    <select ui-select2 type="text" class="input-block-level" ng-model="obra.relevancia" ng-options="i._id as i.nombre for i in relevancias track by i._id | orderBy:'nombre'">
+                        <option ng-disabled="true" value="">{{relevanciaObra.nombre}}</option>
+                    </select>
+                </div>
+                <div class="span2" style="margin-left:5px">
+                    <label>Criticidad:</label>
+                    <select ui-select2 type="text" class="input-block-level" ng-model="obra.criticidad" ng-options="i._id as i.nombre for i in criticidades track by i._id | orderBy:'nombre'">
+                        <option ng-disabled="true" value="">{{criticidadObra.nombre}}</option>
+                    </select>
+                </div>
+                <div class="span2" style="margin-left:5px">
+                    <label>Alcance:</label>
+                    <select ui-select2 type="text" class="input-block-level" ng-model="obra.alcance" ng-options="i._id as i.nombre for i in alcances track by i._id| orderBy:'nombre'">
+                        <option ng-disabled="true" value="">{{alcanceObra.nombre}}</option>
+                    </select>
+                </div>
+                <div class="span2" style="margin-left:5px">
+                    <label>Segmento Etario:</label>
+                    <select ui-select2 type="text" class="input-block-level" ng-model="obra.segmento_etario" ng-options="i._id as i.nombre for i in segmentos track by i._id | orderBy:'nombre'">
+                        <option ng-disabled="true" value="">{{obra.segmento_etario.nombre}}</option>
+                    </select>
+                </div>
+                <div class="span2" style="margin-left:5px">
+                    <label>Ciudadanos Afectados:</label>
+                    <input type="text" class="input-block-level" ng-model="obra.ciudadanos"/>
+                </div>
+                <div class="span2" style="margin-left:5px">
+                    <label>Metros Cuadrados:</label>
+                    <input type="text" class="input-block-level" placeholder="Metros cuadrados" ng-model="obra.metros"/>
+                </div>
+            </div>
+            
+            <div class="row-fluid">
+                <div class="span12">
+                    <h4>Descripciones
+                        <div class="pull-right">
+                            <a class="btn btn-link" ng-click="agregarDescrAlcance()"><i class="icon-plus"></i></a>
+                        </div>
+                    </h4>
+                </div>
+            </div>
+            <div class="container-fluid">
+                <div ng-hide="obra.descripcionesAlcance.length">No se ha cargado ninguna descripción aún</div>
+                <div ng-repeat="o in reverse(obra.descripcionesAlcance)" style="min-height:40px;margin-bottom:20px" ng-show="obra.descripcionesAlcance.length">
+                    <div class="row-fluid">
+                        <div class="span1 pull-right">
+                            <button type="button" ng-click="eliminarElemento(obra.descripcionesAlcance,o)" style="margin-top:20px" class="btn btn-danger pull-right" ng-if="editando"><i class="icon-trash icon-white"></i></button>
+                        </div>
+                        <div class="span2" style="margin-left:0px">
+                            <label>Quien:</label>
+                            <input type="text" class="input-block-level" value="{{contactoPorId(o.quien).apellidos}} {{contactoPorId(o.quien).nombre}}" ng-disabled="true"/>
+                        </div>
+                        <div class="span2" style="margin-left:5px">
+                            <label>Cuando:</label>
+                            <input type="text" class="input-block-level" date ng-model="o.cuando" ng-disabled="true"/>
+                        </div>
+                        <div class="span12" style="margin-left:0px">
+                            <textarea class="input-block-level" style="height:75px" type="text" ng-disabled="true" ng-model="o.descripcion"/>
+                        </div>
+                    </div>
+                    <hr style="margin-top:5px;margin-bottom:5px"/>
+                </div>
+            </div>
+            <div class="row-fluid">
+                <funcion-hitos tipo=imgDoc donde=obra.fotosAlcance botonImg=agregarImagenes('',obra.fotosAlcance,false,'alcance') botonDoc=agregarDocumentos('alcance') docDonde=obra.documentosAlcance></funcion-hitos>
+            </div>
+        </div>
+        
+        <div ng-show="tab == 'comunicacion'">
+            <div class="row-fluid">
+                <div class="span2 btn-group" style="width:130px" data-toggle="buttons-radio">
+                    <label>Inaugurable:</label>
+                    <button class="btn" ng-class="(obra.inaugurable == 'si') && 'active btn-info'" ng-click="obra.inaugurable = (obra.inaugurable == 'si' ? '' : 'si')" style="padding-left: 26px; padding-right: 26px;">Si</button>
+                    <button class="btn" ng-class="(obra.inaugurable == 'no') && 'active btn-info'" ng-click="obra.inaugurable = (obra.inaugurable == 'no' ? '' : 'no')" style="padding-left: 26px; padding-right: 26px;">No</button>
+                </div>
+                <div class="span2 btn-group" style="width:130px" data-toggle="buttons-radio" style="margin-left:5px">
+                    <label>Visitable:</label>
+                    <button class="btn" ng-class="(obra.visitable == 'si') && 'active btn-info'" ng-click="obra.visitable = (obra.visitable == 'si' ? '' : 'si')" style="padding-left: 26px; padding-right: 26px;">Si</button>
+                    <button class="btn" ng-class="(obra.visitable == 'no') && 'active btn-info'" ng-click="obra.visitable = (obra.visitable == 'no' ? '' : 'no')" style="padding-left: 26px; padding-right: 26px;">No</button>
+                </div>
+                <div class="span2 btn-group" style="width:130px" data-toggle="buttons-radio" style="margin-left:5px">
+                    <label>Comunicable:</label>
+                    <div class="btn-group" style="margin-bottom: 8px" data-toggle="buttons-radio">
+                        <button class="btn" ng-class="(obra.comunicable == 'si') && 'active btn-info'" ng-click="obra.comunicable = (obra.comunicable == 'si' ? '' : 'si')" style="padding-left: 26px; padding-right: 26px;">Si</button>
+                        <button class="btn" ng-class="(obra.comunicable == 'no') && 'active btn-info'" ng-click="obra.comunicable = (obra.comunicable == 'no' ? '' : 'no')" style="padding-left: 26px; padding-right: 26px;">No</button>
+                    </div>
+                </div>
+                <div class="span2 btn-group" style="width:130px" data-toggle="buttons-radio" style="margin-left:5px">
+                    <label>Participable:</label>
+                    <div class="btn-group" style="margin-bottom: 8px" data-toggle="buttons-radio">
+                        <button class="btn" ng-class="(obra.participable == 'si') && 'active btn-info'" ng-click="obra.participable = (obra.participable == 'si' ? '' : 'si')" style="padding-left: 26px; padding-right: 26px;">Si</button>
+                        <button class="btn" ng-class="(obra.participable == 'no') && 'active btn-info'" ng-click="obra.participable = (obra.participable == 'no' ? '' : 'no')" style="padding-left: 26px; padding-right: 26px;">No</button>
+                    </div>
+                </div>
+                <div class="span2">
+                    <label>Inicio Estimado:</label>
+                    <input type="text" date placeholder="Fecha" ng-model="obra.fec_inicio"/>
+                </div>
+                <div class="span2">
+                    <label>Fin Estimado:</label>
+                    <input type="text" date placeholder="Fecha" ng-model="obra.fec_fin"/>
+                </div>
+                <div class="span2">
+                    <label>Inauguración Estimada:</label>
+                    <input type="text" date placeholder="Fecha" ng-model="obra.fec_inauguracion"/>
+                </div>
+            </div>
+            <hr style="margin-top:5px;margin-bottom:5px"/>
+            
+            <div class="row-fluid">
+                <div class="span12" style="margin-left:0px">
+                    <div class="span7" style="margin-left:0px">
+                        <h4>Detalles de comunicación
+                        <div class="card-actions pull-right" style="margin: 0; padding: 0">
+                            <a class="btn btn-link" ng-click="agregarDetaComunicacion()" style="margin-right:35px"><i class="icon-plus"></i></a>
+                        </div></h4>
+                        <div class="card-body">
+                            <div ng-hide="obra.detallesComunicacion.length">No se ha cargado ningun detalle aún</div>
+                            <div ng-repeat="o in reverse(obra.detallesComunicacion)" style="clear:both; min-height: 40px; margin-top: 20px; margin-bottom: 20px" ng-show="obra.detallesComunicacion.length">
+                                <div class="pull-right" style="display: inline-block; margin-bottom: 10px">
+                                    <button type="button" ng-click="eliminarElemento(obra.detallesComunicacion,o)" style="margin-left: 10px; margin-right: 5px; margin-top: 20px;" class="btn btn-danger"><i class="icon-trash icon-white"></i> Eliminar</button>
+                                </div>
+                                <div class="span3" style="margin-left:0px">
+                                    <label>Quien:</label>
+                                    <input type="text" class="input-block-level" value="{{contactoPorId(o.quien).apellidos}} {{contactoPorId(o.quien).nombre}}" ng-disabled="true"/>
+                                </div>
+                                <div class="span3" style="margin-left:5px">
+                                    <label>Cuando:</label>
+                                    <input type="text" class="input-block-level" date ng-model="o.cuando" ng-disabled="true"/>
+                                </div>
+                                <div class="span12" style="margin-left:0px">
+                                    <textarea type="text" class="input-block-level" style="height:75px" ng-disabled="true" ng-model="o.detalle"/>
+                                </div>
+                                <div class="span12" style="margin-left:0px">
+                                    <hr style="margin-top:5px;margin-bottom:5px">
+                                </div>
+                            </div>
+                            <hr ng-if="!obra.detallesComunicacion.length" style="margin-top:5px; margin-bottom:5px"/>
+                        </div>
+                    </div>
+                    
+                    <div class="span5" style="margin-left: 0px">
+                        <h4>Detalles de ubicación
+                        <div class="card-actions pull-right" style="margin: 0; padding: 0">
+                            <a class="btn btn-link" ng-click="agregarUbiComunicacion()" style="margin-right: 25px;"><i class="icon-plus"></i></a>
+                        </div></h4>
+                        <div class="card-body">
+                            <div ng-hide="obra.ubicacionesComunicacion.length">No se ha cargado ninguna ubicación aún</div>
+                            <div ng-repeat="u in obra.ubicacionesComunicacion" style="clear:both; min-height: 40px; margin-top: 20px; margin-bottom: 20px">
+                                <div class="pull-right" style="display: inline-block; margin-right: 0px; margin-bottom: 10px">
+                                    <button type="button" ng-click="eliminarElemento(obra.ubicacionesComunicacion,u)" style="margin-left: 10px; margin-right: 5px; margin-top: 20px;" class="btn btn-danger"><i class="icon-trash icon-white"></i>Eliminar</button>
+                                </div>
+                                <div class="span3" style="margin-left:0px">Quien:<br> 
+                                    <input type="text" class="input-block-level" value="{{contactoPorId(u.quien).apellidos}} {{contactoPorId(u.quien).nombre}}" ng-disabled="true"/>
+                                </div>
+                                <div class="span3" style="margin-left:5px">Cuando:<br> 
+                                    <input type="text" class="input-block-level" date data-date-format="dd/mm/yyyy" ng-model="u.cuando" ng-disabled="true"/>
+                                </div>
+                                <div class="span12" style="margin-left:0px">
+                                    <textarea type="text" class="input-block-level" style="height:75px" ng-disabled="true" ng-model="u.detalle"/>
+                                </div>
+                                <div class="span12" style="margin-left:0px">
+                                    <hr style="margin-top:5px;margin-bottom:5px">
+                                </div>
+                            </div>
+                            <hr ng-if="!obra.ubicacionesComunicacion.length" style="margin-top:5px; margin-bottom:5px"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row-fluid">
+                <funcion-hitos tipo=imgDoc donde=obra.fotos imgDonde='comunicacion' botonImg=agregarImagenes('',obra.fotos,false,'comunicacion') botonDoc=agregarDocumentos('comunicacion') docDonde=obra.documentos></funcion-hitos>
+            </div>
+        </div>
+        
+        <div ng-show="tab == 'estado'">
+            <div class="row-fluid">
+                <div class="span12">
+                    <div class="span2" style="margin-top:5px">
+                        <label>Estado:</label>
+                        <select class="input-block-level" placeholder="Estado" ui-select2 type="text" ng-model="obra.estado">
+                            <option value=""></option>
+                            <option value=""></option>
+                            <option ng-repeat="e in estados | orderBy: 'nombre'" value="{{e._id}}">{{e.nombre}}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <hr style="margin-top:10px;margin-bottom:10px"/>
+            
+            <div class="row-fluid">
+                <h4>Comentarios
+                    <div class="card-actions pull-right" style="margin: 0; padding: 0">
+                        <a class="btn btn-link" ng-click="agregarComEstado()"><i class="icon-plus"></i></a>
+                    </div>
+                </h4>
+                <div class="card-body">
+                    <div ng-hide="obra.comentariosEstado.length">No se ha cargado ningun comentario aún</div>
+                    <div ng-repeat="o in reverse(obra.comentariosEstado)" style="clear:both; min-height: 40px; margin-top: 20px; margin-bottom: 20px" ng-show="obra.comentariosEstado.length">
+                        <div class="pull-left" style="display: inline-block; margin-right: 10px; margin-bottom: 10px">
+                            <button ng-show="o.tipoComentario == 'solicitada'" type="button" class="btn disabled btn-info">Solicitada</button>
+                            <button ng-show="o.tipoComentario == 'propuesta'" type="button" class="btn disabled btn-info">Propuesta</button>
+                            <button ng-show="o.tipoComentario == 'aprobada'" type="button" class="btn disabled btn-info">Aprobada (Iniciativa)</button>
+                            <button type="button" ng-show="o.tipoComentario == 'pospuesta'" class="btn disabled btn-info">Sin Financiamiento</button>
+                            <button type="button" ng-show="o.tipoComentario == 'rechazada'" class="btn disabled btn-info">Rechazada</button>
+                            <button type="button" ng-show="o.tipoComentario == 'aprobado'" class="btn disabled btn-info">Aprobado (Obra)</button>
+                            <button type="button" ng-show="o.tipoComentario == 'final'" class="btn disabled btn-info">Final</button>
+                        </div>
+                        <button type="button" ng-click="eliminarElemento(obra.comentariosEstado,o)" class="btn btn-danger pull-right"><i class="icon-trash icon-white"></i>Eliminar</button>
+                        <textarea type="text" rows="3" style="width:99%" ng-disabled="true" ng-model="o.comentario"/>
+                        <div class="span3" style="margin-left:0px">
+                            <label>Quien:</label>
+                            <input type="text" class="input-block-level" value="{{contactoPorId(o.quien).apellidos}} {{contactoPorId(o.quien).nombre}}" ng-disabled="true"/>
+                        </div>
+                        <div class="span2" style="margin-left:5px">
+                            <label>Cuando:</label>
+                            <input type="text" class="input-block-level" date ng-model="o.cuando" ng-disabled="true"/>
+                        </div>
+                        <div class="span12" style="margin-left:0px">
+                            <hr style="margin-top:5px;margin-bottom:0px"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row-fluid">
+                <!--Imagenes y documentos-->
+                <funcion-hitos tipo=imgDoc donde=obra.fotosEstado botonImg=agregarImagenes('',obra.fotosEstado,false,'estado') botonDoc=agregarDocumentos('estado') docDonde=obra.documentosEstado></funcion-hitos>
+            </div>
+            
+            <!--<div class="row-fluid">-->
+            <!--    <div class="span5" style="margin-left:70px">-->
+            <!--        <h4>Imágenes-->
+            <!--            <div class="card-actions pull-right" style="margin: 0; padding: 0">-->
+            <!--                <a class="btn btn-link" ng-click="agregarImagenes('',obra.fotosEstado,false)"><i class="icon-plus"></i></a>-->
+            <!--            </div>-->
+            <!--        </h4>-->
+            <!--        <div ng-if="!obra.fotosEstado.length">No se ha cargardo ninguna imagen aún</div>-->
+            <!--        <a ng-repeat="f in obra.fotosEstado" data-toggle="modal" ng-click="abrirModal('#fotosE_{{$index}}')" href="" class="thumbnail" style="display:inline-block">-->
+            <!--            <img src="/file/{{f.fotoId}}" width="128" height="96">-->
+            <!--        </a>-->
+            <!--        <div ng-repeat="f in obra.fotosEstado" id="fotosE_{{$index}}" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">-->
+            <!--            <div class='modal-header'>-->
+            <!--                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>-->
+            <!--            </div>-->
+            <!--            <div class='modal-content'>-->
+            <!--                <img src="/file/{{f.fotoId}}"><br>-->
+            <!--                <div class="btn-group" style="margin-bottom: 8px" data-toggle="buttons-radio">-->
+            <!--                    <button class="btn" ng-if="(f.tipoFoto == 'antes')" ng-class="(f.tipoFoto == 'antes') && 'active btn-info'" ng-click="f.tipoFoto = 'antes'">Antes</button>-->
+            <!--                    <button class="btn" ng-if="(f.tipoFoto == 'durante')" ng-class="(f.tipoFoto == 'durante') && 'active btn-info'" ng-click="f.tipoFoto = 'durante'">Durante</button>-->
+            <!--                    <button class="btn" ng-if="(f.tipoFoto == 'despues')" ng-class="(f.tipoFoto == 'despues') && 'active btn-info'" ng-click="f.tipoFoto = 'despues'">Despues</button>-->
+            <!--                    <button class="btn" ng-if="(f.tipoFoto == 'maqueta')" ng-class="(f.tipoFoto == 'maqueta') && 'active btn-info'" ng-click="f.tipoFoto = 'maqueta'">Maqueta</button>-->
+            <!--                    <button class="btn" ng-if="(f.tipoFoto == 'render')" ng-class="(f.tipoFoto == 'render') && 'active btn-info'" ng-click="f.tipoFoto = 'render'">Render</button>-->
+            <!--                    <button class="btn" ng-if="(f.tipoFoto == 'dibujo')" ng-class="(f.tipoFoto == 'dibujo') && 'active btn-info'" ng-click="f.tipoFoto = 'dibujo'">Dibujo</button>-->
+            <!--                </div>-->
+            <!--                <label class="checkbox pull-right">-->
+            <!--                    <input type="checkbox" ng-model="f.principal"> Usar como principal-->
+            <!--                </label>-->
+            <!--                <br>-->
+            <!--                <span ng-if="f.nombre"> Nombre: {{f.nombre}}<br></span>-->
+            <!--                <span ng-if="f.fecha"> Fecha: {{f.fecha}}<br></span>-->
+            <!--                <span ng-if="f.resolucion"> Resolucion: {{f.resolucion}}px por {{f.resolucion2}}px<br></span>-->
+            <!--                <span ng-if="f.fuente"> Fuente: {{contactoPorId(f.fuente).apellidos}} {{contactoPorId(f.fuente).nombre}}<br></span>-->
+            <!--                <span ng-if="f.tags"> Tags: {{f.tags}}<br></span>-->
+            <!--                <span ng-if="f.descripcion"> Descripción: {{f.descripcion}}<br></span>-->
+            <!--            </div>-->
+            <!--        </div>-->
+            <!--    </div>-->
+                
+            <!--    <div class="span5" style="margin-left:70px">-->
+            <!--        <h4>Documentos-->
+            <!--            <div class="card-actions pull-right" style="margin: 0; padding: 0">-->
+            <!--                <a class="btn btn-link" ng-click="agregarDocumentos('estado')"><i class="icon-plus"></i></a>-->
+            <!--            </div>-->
+            <!--        </h4>-->
+            <!--        <div ng-if="!obra.documentosEstado.length">No se ha cargardo ningun documento aún</div>-->
+            <!--        <div ng-repeat="d in obra.documentosEstado">-->
+            <!--            <a data-toggle="modal" ng-click="abrirModal('#documentosE_{{$index}}')" href="">{{d.nombre}}</a> (<a href="/file/{{d.archivoId}}" target="_blank">Descargar</a>)<br>-->
+            <!--        </div>-->
+            <!--        <div ng-repeat="d in obra.documentosEstado" id="documentosE_{{$index}}" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">-->
+            <!--            <div class='modal-header'>-->
+            <!--                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>-->
+            <!--            </div>-->
+            <!--            <div class='modal-content'>-->
+            <!--                <span style="display: inline-block"> Nombre:<br> -->
+            <!--                    <input class="span4" type="text" placeholder="Nombre del documento" ng-disabled="true" ng-model="d.nombre"/>-->
+            <!--                </span>-->
+            <!--                <span style="display: inline-block"> Fecha:<br> -->
+            <!--                    <input class="span2" type="text" date placeholder="Fecha" ng-disabled="true" ng-model="d.fecha"/>-->
+            <!--                </span>-->
+            <!--                <span style="display: inline-block"> Version:<br> -->
+            <!--                    <input class="span2" type="text" placeholder="Version del documento" ng-disabled="true" ng-model="d.version"/>-->
+            <!--                </span>-->
+            <!--                <span style="display: inline-block"> Fuente:<br> -->
+            <!--                    <div class="input-append">-->
+            <!--                        <input class="span3" type="text" placeholder="Fuente del documento" ng-disabled="true" value="{{contactoPorId(d.fuente).apellidos}} {{contactoPorId(d.fuente).nombre}}">-->
+            <!--                    </div>-->
+            <!--                </span>-->
+            <!--                <span style="display: inline-block"> Tipo:<br> -->
+            <!--                    <input class="span2" type="text" placeholder="DOC, XLS, PPT, etc" ng-disabled="true" ng-model="d.tipo"/>-->
+            <!--                </span>-->
+            <!--                <span style="display: inline-block"> Autor:<br> -->
+            <!--                    <input class="span4" type="text" placeholder="Autor del documento" ng-disabled="true" ng-model="d.autor"/>-->
+            <!--                </span>-->
+            <!--                <span style="display: inline-block"> Tags:<br> -->
+            <!--                    <input class="span5" type="text" placeholder="Separados por coma" ng-disabled="true" ng-model="d.tags"/>-->
+            <!--                </span>-->
+            <!--                <span style="display: inline-block"> Descripción:<br> -->
+            <!--                    <textarea style="height:80px; width:530px" placeholder="Descripción del documento" type="text" ng-disabled="true" ng-model="d.descripcion"/>-->
+            <!--                </span>-->
+            <!--            </div>-->
+            <!--        </div>-->
+            <!--    </div>-->
+            <!--</div>-->
+        </div>
+    </div>
+</div>

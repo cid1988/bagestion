@@ -1,0 +1,16 @@
+<div class="card span12" style="padding-top: 10px; margin-top: 0px;">
+  <h3 class="card-heading simple">
+    Proyectos</h3>
+  <div class="card-body" style="padding: 0; margin-top: 0; border-bottom: 0">
+    <ul class="nav nav-list">
+      <li ng-repeat="p in tabCtrl.proyectos|filter:{idObjOperativo:tabCtrl.filtro.objOperativo._id} | orderBy:ordenNumerico">
+        <a style="font-size: 18px" href="javascript:" ng-click="tabCtrl.filtro.proyecto = p">
+        <strong class="pull-right" ng-if="p.codIdentificacion">{{p.codIdentificacion}}</strong>
+        {{p.nombre}}</a>
+      </li>
+      <li ng-if="!(tabCtrl.proyectos|filter:{idObjOperativo:tabCtrl.filtro.objOperativo._id}).length" class="text-center" style="padding-top: 10px; padding-bottom: 10px;">
+        <em>No hay ningún proyecto</em>
+      </li>
+    </ul>
+  </div>
+</div>

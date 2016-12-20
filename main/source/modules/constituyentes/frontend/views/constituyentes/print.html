@@ -1,0 +1,166 @@
+<script type "text/javascript" src="/templates/constituyentes/h2c.js"></script>
+<style type="text/css">
+    body {
+        background-image: none !important;
+    }
+    input.disabled, input[disabled] {
+        background-color: #ffffff;
+    }
+</style>
+
+<a class="btn btn-info btn-large no-print" href="javascript:window.print()"
+ng-show="printReady"><i class="icon-print icon-white"></i> Imprimir</a>
+<span class="no-print" style="padding: 10px; margin-right: 90px; display: inline-block; float: right;" ng-style="{'background-color': '#a6eca6'}">Piense antes de imprimir. Ahorrar papel es cuidar nuestro Medio Ambiente. Ley Nº 2736.</span>
+<h3>Constituyentes</h3>
+    <div id="map" openlayers current-tool="espaciosVista.currentTool" ol-extent="espaciosVista.extent" ol-style="espaciosVista.style" ol-selected-indexes="espaciosVista.selectedIndexes" style="width: 660px; height: 400px; float: left; position: relative; left: 15px"
+    ol-features="espaciosVista.features" ng-model="espaciosVista"></div>
+<div style="float: left; margin: 20px;">
+    <h4 style="margin-top: 0px;">Referencias:</h4>
+    <div ng-repeat="s in situaciones | orderBy:'-total'">
+        <span style="display: inline-block; width: 10px; height: 10px" ng-style="{'background-color': s.color}">&nbsp;</span>
+        <a href="/constituyentes?situacion={{s.nombre}}" style="color:#404040">{{s.nombre}}: </a>
+        <span class="pull-right">{{s.total}} ({{porcentaje(s.total,todosEspacios.length)}}%)</span>
+    </div>
+    <div style="margin-top: 7px;">
+        <a href="/constituyentes" style="color:#404040; font-size:16px">Total: </a>
+        <span class="pull-right">{{todosEspacios.length}}</span>
+        <br />
+        <br />
+        <div class="progress">
+            <div class="bar bar-success" style="font-size: 14px; width: {{porcentaje(enProgreso,todosEspacios.length)}}%;">{{porcentaje(enProgreso,todosEspacios.length)}}%</div>
+        </div>
+    </div>
+</div>
+</div>
+<div ng-repeat="e in espacios">
+    <hr />
+    <div style="clear: both; padding-top: 16px; padding-bottom: 16px;">
+        <span style="display: inline-block">Tipo:
+            <br />
+            <input type="text" ng-model="e.tipo" disabled="disabled" />
+        </span>
+        <span style="display: inline-block">Situación:
+            <br />
+            <input type="text" ng-model="e.situacion" disabled="disabled" />
+        </span>
+        <span style="display: inline-block">Estado:
+            <br />
+            <input type="text" class="span4" ng-model="e.estado" disabled="disabled"
+            />
+        </span>
+        <span style="display: inline-block">Traspaso AUSA:
+            <br />
+            <input type="text" ng-model="e.trasp_ausa" disabled="disabled" />
+        </span>
+        <span style="display: inline-block" class="pull-right">Última modificación:
+            <br />
+            <input class="span2" type="text" disabled="disabled" ng-model="e.fechaUltimaModificacion"
+            />
+        </span>
+        <span style="display: inline-block">Calle:
+            <br />
+            <input class="span3" type="text" disabled="disabled" ng-model="e.calle"
+            />
+        </span>
+        <span style="display: inline-block">Altura:
+            <br />
+            <input class="span1" type="text" disabled="disabled" ng-model="e.altura"
+            />
+        </span>
+        <span style="display: inline-block">Otras alturas:
+            <br />
+            <input class="span2" type="text" disabled="disabled" ng-model="e.otras_alturas"
+            />
+        </span>
+        <span style="display: inline-block">Vivienda:
+            <br />
+            <input class="span2" type="text" disabled="disabled" ng-model="e.vivienda"
+            />
+        </span>
+        <span style="display: inline-block">Circuscripción:
+            <br />
+            <input class="span2" type="text" disabled="disabled" ng-model="e.circuscripcion"
+            />
+        </span>
+        <span style="display: inline-block">Manzana:
+            <br />
+            <input class="span2" type="text" disabled="disabled" ng-model="e.manzana"
+            />
+        </span>
+        <span style="display: inline-block">Parcela:
+            <br />
+            <input class="span2" type="text" disabled="disabled" ng-model="e.parcela"
+            />
+        </span>
+        <span style="display: inline-block">Sección:
+            <br />
+            <input class="span2" type="text" disabled="disabled" ng-model="e.seccion"
+            />
+        </span>
+        <span style="display: inline-block">Unidad Funcional:
+            <br />
+            <input class="span2" type="text" disabled="disabled" ng-model="e.unidad_funcional"
+            />
+        </span>
+        <span style="display: inline-block">Piso:
+            <br />
+            <input class="span2" type="text" disabled="disabled" ng-model="e.piso"
+            />
+        </span>
+        <span style="display: inline-block">Departamento:
+            <br />
+            <input class="span2" type="text" disabled="disabled" ng-model="e.departamento"
+            />
+        </span>
+        <h5>Procuración:</h5>
+        <span style="display: inline-block">Afectación:
+            <br />
+            <input class="span2" type="text" disabled="disabled" ng-model="e.afectacion"
+            />
+        </span>
+        <span style="display: inline-block">Autos:
+            <br />
+            <input class="span3" type="text" disabled="disabled" ng-model="e.autos"
+            />
+        </span>
+        <span style="display: inline-block">Estado Procesal:
+            <br />
+            <input class="span3" type="text" disabled="disabled" ng-model="e.estado_procesal"
+            />
+        </span>
+        <span style="display: inline-block">Juzgado:
+            <br />
+            <input class="span3" type="text" disabled="disabled" ng-model="e.juzgado"
+            />
+        </span>
+        <span style="display: inline-block">Inscripción:
+            <br />
+            <input class="span2" type="text" disabled="disabled" ng-model="e.inscripcion"
+            />
+        </span>
+        <span style="display: inline-block">Lanzamiento:
+            <br />
+            <input class="span3" type="text" disabled="disabled" ng-model="e.lanzamiento"
+            />
+        </span>
+        <h4>Fotos</h4>
+        <div ng-hide="e.fotos.length">No se ha cargardo ninguna foto aún</div>
+        <img ng-repeat="f in e.fotos"
+        style="margin: 10px" src="/file/{{f}}" width="512" height="384">
+        <div>
+            <h4>Observaciones:</h4>
+            <div ng-hide="e.observaciones.length">No se ha cargardo ninguna observación aún</div>
+                        <div ng-repeat="o in e.observaciones"
+            style="clear:both; min-height: 40px; margin-top: 20px; margin-bottom: 20px">
+                <div class="pull-right" style="display: inline-block">
+                    <button ng-show="o.tipoObservacion == 'relevamiento'" type="button"
+                    class="btn disabled btn-info">Relevamiento</button>
+                    <button type="button" ng-show="o.tipoObservacion == 'otra'"
+                    class="btn disabled btn-info">Otra</button>
+                    
+                </div>
+                <p>{{o.observaciones}}</p>
+                <div ng-show="o.proximoHito"><br />Proximo hito: {{o.fechaProximoHito}}</div>
+        </div>
+    </div>
+</div>

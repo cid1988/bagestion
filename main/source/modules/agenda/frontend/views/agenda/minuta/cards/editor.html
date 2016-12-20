@@ -1,0 +1,130 @@
+<style type="text/css">
+    .wysihtml5-sandbox {
+        border: 0 !important;
+        padding: 0 !important;
+    }
+    
+    ul.wysihtml5-toolbar li a[title="Insert image"] { display: none; }
+    ul.wysihtml5-toolbar li a[title="Insert link"] { display: none; }
+    ul.wysihtml5-toolbar li.dropdown ul.dropdown-menu li a[data-wysihtml5-command-value="h1"] { display: none; }
+    ul.wysihtml5-toolbar li.dropdown ul.dropdown-menu li a[data-wysihtml5-command-value="h2"] { display: none; }
+    ul.wysihtml5-toolbar li.dropdown ul.dropdown-menu li a[data-wysihtml5-command-value="h3"] { display: none; }
+    ul.wysihtml5-toolbar li.dropdown ul.dropdown-menu li a[data-wysihtml5-command-value="h5"] { display: none; }
+
+    .temario {
+        font-size: 16px !important;
+        font-family: Arial !important;
+        line-height: 90% !important;
+    }
+
+    .temario ul {
+        line-height: 18px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        padding-left: 15px;
+    }
+
+    .temario h6 {
+        font-size:14px !important;
+        line-height: 12px;
+        margin-top: 1em;
+        margin-bottom: 1em;
+    }
+    
+    .temario  li {
+        line-height: 20px;
+    }
+    
+    .wysihtml5-toolbar:nth-child(2) 
+    {
+        display: none;
+    }
+    .wysihtml5-toolbar:nth-child(3) 
+    {
+        display: none;
+    }
+    .wysihtml5-toolbar:nth-child(4) 
+    {
+        display: none;
+    }
+    .wysihtml5-toolbar:nth-child(5) 
+    {
+        display: none;
+    }
+</style>
+
+<div class="card animated fadeInDown" ng-controller="AgendaNotaMinutaCtrl" style="min-height: 672px;">
+    <div class="card-actions pull-right" style="padding: 0; margin: 0; margin-right: 20px" ng-show="editando">
+        <div class="btn-group">
+         <a ng-click="cancelarCambios()" type="button" class="btn btn-link" ng-disabled="!cambios">
+                <i class="icon-undo"></i>
+            </a>
+            <a ng-click="guardarNota()" type="button" class="btn btn-link" ng-disabled="!cambios">
+                <i class="icon-ok icon-white"></i> Guardar
+            </a>
+        </div>
+    </div>
+    <div ng-hide="enviado">
+        <h3 class="card-heading simple no-print">Minuta de Reunión</h3>
+        <br>
+        <div style="margin-left: 20px; margin-right: 20px;">
+            <textarea user-input-emits="html-changed" ng-show="editando" placeholder="Esta minuta está vacía" rich-text-editor rows="4" style=" width: 100%; height: 500px" ng-model="html"></textarea>
+            <div ng-hide="editando" style="min-height: 500px;margin-top: 10px;margin-right: 5px;margin-left: 0px;" class="temario" compile="minuta.html"></div>
+        </div>
+    </div>
+    <div ng-show="enviado">
+        <div class="card-actions pull-right" style="margin-top: 0; padding-top: 0">
+            <div class="btn-group">
+                <a ng-click="cancelarEnvio()" type="button" class="btn btn-link">
+                    <i class="icon-remove"></i>
+                </a>
+                <a ng-click="enviar()" type="button" class="btn btn-link">
+                    <i class="icon-envelope"></i>
+                </a>
+            </div>
+        </div>
+        <h3 class="card-heading simple">Enviar Compromisos</h3>
+        <div class="card-body">
+            <table class="table table-condensed table-no-border">
+                <tr>
+                    <th style="border-top:none">Para:</th>
+                    <td style="width: 100%;border-top:none">
+                        <span>
+                            {{para}}
+                        </span>
+                    </td>
+                </tr>
+    
+                <tr>
+                    <th>
+                        Asunto:
+                    </th>
+                    <td colspan="2">
+                        Compromisos de Reunion de Seguimiento - {{agenda.nombre}}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3" style="padding-top: 15px;">
+                        <textarea rich-text-editor rows="4" style=" width: 100%; height: 180px;margin-bottom: 50px;" ng-model="encabezado"></textarea>
+                        <table border="1" class="table table-bordered" style="margin-left: 0px;margin-right: 10px;margin-top: 10px;font-size: 14px !important;">
+                            <tr bgcolor= "#FFFFFF">
+                                <th><a style="display: inline-block; color:#404040;">Tareas Comprometidas</a></th>
+                                <th><a style="display: inline-block; color:#404040;">Nombre y Apellido</a></th>
+                                <th><a style="display: inline-block; color:#404040;">Área / Cargo</a></th>
+                                <th><a style="display: inline-block; color:#404040;">Fecha</a></th>
+                            </tr>
+                            <tr ng-repeat="o in minuta.compromisos" bgcolor= "#FFFFFF">
+                                <td><div><b ng-hide="!o.tema">{{temaPorId(o.tema).nombre}}</b> <b ng-show="!o.tema">{{o.titulo}}</b> <br> {{o.tarea}}</div></td>
+                                <td><div ng-repeat="u in o.responsables" style="margin-top: 0px; margin-bottom: 0px">{{contactoPorId(u).apellidos}} {{contactoPorId(u).nombre}}<br></div></td>
+                                <td><div ng-repeat="u in o.responsables" style="margin-top: 0px; margin-bottom: 0px">{{siglaPorId(u).sigla}}<br></div></td>
+                                <td><div>{{o.fecha}}</div></td>
+                            </tr>
+                        </table>
+                        - {{minuta.usuario}} ({{minuta.fecha}})
+                    </td>
+                </tr>
+            </table>    
+        </div>
+    </div>
+</div>
+

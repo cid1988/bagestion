@@ -1,0 +1,19 @@
+<div class="well modal"  ng-controller="cambiarContrasennaCtrl" style="margin-left:0px; left:27%; top:20%;">
+    <h3 align="center">Cambiar clave</h3>
+        <div align="center">
+            <form>
+                <div class="controls-group">
+                    <label>Usuario:</label>
+                    <input type="text" disabled class="input-large" ng-model="usuario.username"/>
+                </div>
+                <div class="controls-group">
+                    <label>Nueva clave:</label>
+                    <input type="password" class="input-large" ng-model="nuevaContrasenna" autofocus placeholder="contraseña" required minlength="3"/>
+                    <label>Repita clave:</label>
+                    <input type="password" class="input-large" ng-model="nuevaRepetidaContrasenna" required minlength="3" ng-style="set_style"/>
+                </div> 
+            
+                <input class="btn btn-primary" type="submit" value="Cambiar clave" onkeypress="save()" ng-click="save()"/>
+            </form>
+        </div>
+</div>

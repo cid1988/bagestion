@@ -1,0 +1,242 @@
+<style>
+    .hijo{
+        padding:5px 0 0 0!important;
+        margin-left: 50px
+    }
+    .hijo:nth-child(2n+1){
+        background-color:#F5F1F1;
+    }
+    .hijo:nth-child(2n),.hijo:nth-child(2n+1)>div:last-child{
+        background-color:white;
+    }
+    .card-body>div{
+        margin-left:0 !important;
+    }
+    #titulo{
+         margin-bottom: 10px; 
+         padding-top: 3px; 
+         padding-bottom: 3px; 
+         text-align: center; 
+         background-color: gainsboro;
+    }
+    .margenes{
+        margin:0 5px !important;
+    }
+    .unHR{
+        height:1px;
+        margin-top: 5px;
+        margin-bottom: 0;
+        border-top-width: 0 !important;
+        border-left-width: 0;
+        border-right-width: 0;
+        border: 1px solid #B3ACAC;
+    }
+    .sinMargen{
+        margin-left:0;
+    }
+    .conMargen{
+        margin-left:50px;
+    }
+    .sinFondo{
+        color: #3B3537;
+        cursor: pointer;
+        border-color: transparent;
+        -webkit-border-radius: 0;
+        -moz-border-radius: 0;
+        border-radius: 0;
+        background-color: transparent;
+        background-image: none;
+        -webkit-box-shadow: none;
+        -moz-box-shadow: none;
+        box-shadow: none;
+    }
+    a [class*="icon-"]{
+        display:inline-block !important;
+    }
+    .iconoPequenno{
+        vertical-align: middle;
+        font-size: 9px;
+        margin-bottom: 3px;
+        display:inline-block !important
+    }
+    #compromisos{
+        margin-left: 35px; 
+        text-align: left;
+    }
+    #compromisos>div{
+        margin-bottom: 4px;
+    }
+    #compromisos>div>a{
+        margin-right: 40px; 
+        color:#3B3537;
+    }
+    .btn-group:last-child{
+        padding-left: 0px; 
+        padding-right: 0px;
+    }
+</style>
+<div class="card" ng-controller="Temas">
+    <h3 class="card-heading simple">EDTe (Estructura de Descomposición de Temas)
+        <a type="button" class="btn btn-link pull-right" href="/temas/nuevo" ng-if=hasPermission('temas.editar') ><i class="icon-plus"></i></a>
+        <a type="button" class="btn btn-link pull-right" href="/temas/todos/print"><i class="icon-print"></i></a>
+        <a type="button" class="btn btn-link pull-right" href="#" ng-click="ponerNivel()" ng-if=hasPermission('temas.editar') style="margin-right: 100px;">&nbsp;</a></h3>
+        <a type="button" class="btn btn-link pull-right" href="#" ng-click="sacarEliminados()" ng-if=hasPermission('temas.editar') style="margin-right: 0px;">&nbsp;</a></h3>
+    <div class="card-body" style="margin-bottom: 20px;">
+        <div id="titulo">
+            <a class="btn btn-link" data-toggle="collapse" data-target="#compromisos">
+            {{compromisos.length}} Compromisos pendientes de pasar a Tema
+            </a>
+            <div id="compromisos" class="collapse">
+                <div ng-repeat="c in compromisos">
+                    {{temaPorId(c.tema).nombre}} - {{c.tarea}}
+                    <a type="button" class="pull-right" href="/temas/nuevo?minuta={{c.minuta}}&index={{c.index}}" ng-if=hasPermission('temas.editar') ><i class="icon-plus"></i> Agregar</a>
+                </div>
+            </div>
+        </div>
+        <div class="row hijo" ng-repeat="t in temas | filter:filtroPrimeros">
+            <div class="btn-group pull-right">
+                <a type="button" class="btn sinFondo no-print" href="/temas/{{t._id}}?tab=temarios" ng-if="(temariosTema[t._id] > 0) && (hasPermission('temas.editar'))">{{temariosTema[t._id]}} Temario<span ng-if="temariosTema[t._id] > 1">s</span></a>
+                <a type="button" class="btn sinFondo no-print" href="/temas/{{t._id}}?tab=compromisos" ng-if="(compromisosTema[t._id] > 0) && (hasPermission('temas.editar'))">{{compromisosTema[t._id]}} Compromiso<span ng-if="compromisosTema[t._id] > 1">s</span></a>
+                <a type="button" class="btn sinFondo no-print margenes" href="/temas/{{t._id}}" ng-if=hasPermission('temas.editar') ><i class="icon-zoom-in"></i> Ver detalle</a>
+                <a type="button" ng-if="t.tieneHijos==1" class="btn sinFondo no-print" href="/temas/{{t._id}}/print"><i class="icon-print"></i></a>
+            </div>
+            
+            <span ng-switch on="t.tieneHijos">
+                <span ng-switch-when="1" ng-init="padre=true">
+                    <a class="btn btn-link" data-toggle="collapse" data-target="#primeros_{{t._id}}" ng-click="padre=!padre;">
+                        <i ng-class="padre==true ? 'icon-chevron-right' : 'icon-chevron-down'"></i>     {{t.nombre}}
+                    </a> 
+                    <hr class="unHR" ng-class="padre==true ? 'sinMargen' : 'conMargen'">
+                </span>
+                <span ng-switch-default>
+                    <a  class="btn sinFondo" style="display:inline-block">
+                        <i class="icon-circle iconoPequenno"></i>     {{t.nombre}}
+                    </a>
+                    <hr class="unHR" class="sinMargen">
+                </span>
+            </span>
+            
+            <div id="primeros_{{t._id}}" class="collapse">
+                <div ng-repeat="r in temas | filter:{temaSuperior:t._id}" class="hijo">
+                    <div class="btn-group pull-right">
+                        <a type="button" class="btn sinFondo no-print" href="/temas/{{r._id}}?tab=temarios" ng-if="(temariosTema[r._id] > 0) && (hasPermission('temas.editar'))">{{temariosTema[r._id]}} Temario<span ng-if="temariosTema[r._id] > 1">s</span></a>
+                        <a type="button" class="btn sinFondo no-print" href="/temas/{{r._id}}?tab=compromisos" ng-if="(compromisosTema[r._id] > 0) && (hasPermission('temas.editar'))">{{compromisosTema[r._id]}} Compromiso<span ng-if="compromisosTema[r._id] > 1">s</span></a>
+                        <a type="button" class="btn sinFondo no-print margenes" href="/temas/{{r._id}}" ng-if=hasPermission('temas.editar') ><i class="icon-zoom-in"></i> Ver detalle</a>
+                        <a type="button" ng-if="r.tieneHijos==1" class="btn sinFondo no-print" href="/temas/{{r._id}}/print"><i class="icon-print"></i></a>
+                    </div>
+
+                    <span ng-switch on="r.tieneHijos">
+                        <span ng-switch-when="1" ng-init="hijoOlvidado=true">
+                            <a class="btn btn-link" data-toggle="collapse" data-target="#segundos_{{r._id}}" ng-click="hijoOlvidado=!hijoOlvidado">
+                              <i ng-class="hijoOlvidado==true ? 'icon-chevron-right' : 'icon-chevron-down'"></i>     {{r.nombre}}
+                            </a>
+                            <hr class="unHR" ng-class="hijoOlvidado==true ? 'sinMargen' : 'conMargen'">
+                        </span>
+                        <span ng-switch-default>
+                            <a  class="btn sinFondo" style="display:inline-block">
+                                <i class="icon-circle iconoPequenno"></i>     {{r.nombre}}
+                            </a>
+                            <hr class="unHR" class="sinMargen">
+                        </span>
+                    </span>
+
+                    <div id="segundos_{{r._id}}" class="collapse">
+                        <div ng-repeat="p in temas | filter:{temaSuperior:r._id}" class="hijo">
+                            <div class="btn-group pull-right">
+                                <a type="button" class="btn sinFondo no-print" href="/temas/{{p._id}}?tab=temarios" ng-if="(temariosTema[p._id] > 0) && (hasPermission('temas.editar'))">{{temariosTema[p._id]}} Temario<span ng-if="temariosTema[p._id] > 1">s</span></a>
+                                <a type="button" class="btn sinFondo no-print" href="/temas/{{p._id}}?tab=compromisos" ng-if="(compromisosTema[p._id] > 0) && (hasPermission('temas.editar'))">{{compromisosTema[p._id]}} Compromiso<span ng-if="compromisosTema[p._id] > 1">s</span></a>
+                                <a type="button" class="btn sinFondo no-print margenes" href="/temas/{{p._id}}" ng-if=hasPermission('temas.editar') ><i class="icon-zoom-in"></i> Ver detalle</a>
+                                <a type="button" ng-if="p.tieneHijos==1" class="btn sinFondo no-print" href="/temas/{{p._id}}/print"><i class="icon-print"></i></a>
+                            </div>
+                            
+                            <span ng-switch on="p.tieneHijos">
+                                <span ng-switch-when="1">
+                                        <a class="btn btn-link" data-toggle="collapse" data-target="#terceros_{{p._id}}" ng-init="hijo1=true" ng-click="hijo1=!hijo1">
+                                          <i ng-class="hijo1==true ? 'icon-chevron-right' : 'icon-chevron-down'"></i>     {{p.nombre}}
+                                        </a>
+                                    <hr class="unHR" ng-class="hijo1==true ? 'sinMargen' : 'conMargen'">
+                                </span>
+                                <span ng-switch-default>
+                                    <a  class="btn sinFondo" style="display:inline-block">
+                                        <i class="icon-circle iconoPequenno"></i>     {{p.nombre}}
+                                    </a>
+                                    <hr class="unHR" class="sinMargen">
+                                </span>
+                            </span>
+
+                            <div id="terceros_{{p._id}}" class="collapse">
+                                <div ng-repeat="q in temas | filter:{temaSuperior:p._id}" class="hijo">
+                                    <div class="btn-group pull-right">
+                                        <a type="button" class="btn sinFondo no-print" href="/temas/{{q._id}}?tab=temarios" ng-if="(temariosTema[q._id] > 0) && (hasPermission('temas.editar'))">{{temariosTema[q._id]}} Temario<span ng-if="temariosTema[q._id] > 1">s</span></a>
+                                        <a type="button" class="btn sinFondo no-print" href="/temas/{{q._id}}?tab=compromisos" ng-if="(compromisosTema[q._id] > 0) && (hasPermission('temas.editar'))">{{compromisosTema[q._id]}} Compromiso<span ng-if="compromisosTema[q._id] > 1">s</span></a>
+                                        <a type="button" class="btn sinFondo no-print margenes" href="/temas/{{q._id}}" ng-if=hasPermission('temas.editar') ><i class="icon-zoom-in"></i> Ver detalle</a>
+                                        <a type="button" ng-if="q.tieneHijos==1" class="btn sinFondo no-print" href="/temas/{{q._id}}/print"><i class="icon-print"></i></a>
+                                    </div>
+                                    
+                                    <span ng-switch on="q.tieneHijos">
+                                        <span ng-switch-when="1">
+                                            <a class="btn btn-link" data-toggle="collapse" data-target="#cuartos_{{q._id}}" ng-init="hijo2=true" ng-click="hijo2=!hijo2">
+                                              <i ng-class="hijo2==true ? 'icon-chevron-right' : 'icon-chevron-down'"></i>     {{q.nombre}}
+                                            </a>
+                                            <hr class="unHR" ng-class="hijo2==true ? 'sinMargen' : 'conMargen'">
+                                        </span>
+                                        <span ng-switch-default>
+                                            <a  class="btn sinFondo" style="display:inline-block">
+                                                <i class="icon-circle iconoPequenno"></i>     {{q.nombre}}
+                                            </a>
+                                            <hr class="unHR" class="sinMargen">
+                                        </span>
+                                    </span>
+
+                                    <div id="cuartos_{{q._id}}" class="collapse">
+                                        <div ng-repeat="u in temas | filter:{temaSuperior:q._id}" class="hijo">
+                                            <div class="btn-group pull-right">
+                                                <a type="button" class="btn sinFondo no-print" href="/temas/{{u._id}}?tab=temarios" ng-if="(temariosTema[u._id] > 0) && (hasPermission('temas.editar'))">{{temariosTema[u._id]}} Temario<span ng-if="temariosTema[u._id] > 1">s</span></a>
+                                                <a type="button" class="btn sinFondo no-print" href="/temas/{{u._id}}?tab=compromisos" ng-if="(compromisosTema[u._id] > 0) && (hasPermission('temas.editar'))">{{compromisosTema[u._id]}} Compromiso<span ng-if="compromisosTema[u._id] > 1">s</span></a>
+                                                <a type="button" class="btn sinFondo no-print margenes" href="/temas/{{u._id}}" ng-if=hasPermission('temas.editar') ><i class="icon-zoom-in"></i> Ver detalle</a>
+                                                <a type="button" ng-if="u.tieneHijos==1" class="btn sinFondo no-print" href="/temas/{{u._id}}/print"><i class="icon-print"></i></a>
+                                            </div>
+                                            <span ng-switch on="u.tieneHijos">
+                                                <span ng-switch-when="1">
+                                                    <a class="btn btn-link" data-toggle="collapse" data-target="#quintos_{{u._id}}" ng-init="hijo3=true" ng-click="hijo3=!hijo3">
+                                                      <i ng-class="hijo3==true ? 'icon-chevron-right' : 'icon-chevron-down'"></i>      {{u.nombre}}
+                                                    </a>
+                                                    <hr class="unHR" ng-class="hijo3==true ? 'sinMargen' : 'conMargen'">
+                                                </span>
+                                                <span ng-switch-default>
+                                                    <a  class="btn sinFondo" style="display:inline-block">
+                                                        <i class="icon-circle iconoPequenno"></i>     {{u.nombre}}
+                                                    </a>
+                                                    <hr class="unHR" class="sinMargen">
+                                                </span>
+                                            </span>
+
+                                            <div id="quintos_{{u._id}}" class="collapse">
+                                                <div ng-repeat="x in temas | filter:{temaSuperior:u._id}" class="hijo">
+                                                    <a class="btn btn-link" data-toggle="collapse" data-target="#sextos_{{x._id}}">
+                                                     <i class="icon-circle"></i>      {{x.nombre}}
+                                                    </a>
+                                                    <div class="btn-group pull-right">
+                                                        <a type="button" class="btn sinFondo no-print" href="/temas/{{x._id}}?tab=temarios" ng-if="(temariosTema[x._id] > 0) && (hasPermission('temas.editar'))">{{temariosTema[x._id]}} Temario<span ng-if="temariosTema[x._id] > 1">s</span></a>
+                                                        <a type="button" class="btn sinFondo no-print" href="/temas/{{x._id}}?tab=compromisos" ng-if="(compromisosTema[x._id] > 0) && (hasPermission('temas.editar'))">{{compromisosTema[x._id]}} Compromiso<span ng-if="compromisosTema[x._id] > 1">s</span></a>
+                                                        <a type="button" class="btn sinFondo no-print margenes" href="/temas/{{x._id}}" ng-if=hasPermission('temas.editar') ><i class="icon-zoom-in"></i> Ver detalle</a>
+                                                        <a type="button" ng-if="x.tieneHijos==1" class="btn sinFondo no-print" href="/temas/{{x._id}}/print"><i class="icon-print"></i></a>
+                                                    </div>
+                                                    <hr class="unHR" class="sinMargen">
+                                                    <div id="sextos_{{x._id}}" class="collapse hijo">
+                                                    
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row-fluid" ng-show="!temas.length">No hay ningun tema.</div>
+    </div>
+</div>

@@ -1,0 +1,88 @@
+<style>
+    .table {
+        border: 0;
+    }
+    .table th, .table td {
+        padding: 8px;
+        line-height: 20px;
+        text-align: left;
+        vertical-align: middle;
+        border: 0;
+    }
+    .table th {
+        background-color: #dddddd !important;
+    }
+</style>
+
+<div ng-controller="IDGCtrl" class="card">
+    <div class="card-actions pull-right no-print" style="margin: 0; padding: 0">
+        <input placeholder="Nombre..." type="text" ng-model="filtro.nombre" title="Nombre" style="width:150px;margin-bottom: 22px;"/>
+        <div style="margin-left: 0px; display: inline-block;width: 290px;">
+            <select ui-select2 type="text" ng-model="filtro.jurisdiccion" class="span2" title="Jurisdiccion" style="width: 290px;">
+                <option value="">Todas las jurisdicciones...</option>
+                <option ng-repeat="e in organigrama" value="{{e._id}}">{{e.nombreCompleto}}</option>
+            </select>
+        </div>
+        <div style="margin-left: 0px; display: inline-block; ">
+            <select ui-select2 type="text" ng-model="filtro.fuente" class="span2" title="Fuente" style="width:230px;">
+                <option value="">Todas las fuentes...</option>
+                <option value="Reunión de Seguimiento (RS)">Reunión de Seguimiento (RS)</option>
+                <option value="Reunión Específica (RE)">Reunión Específica (RE)</option>
+                <option value="Referente Prensa Jurisdicción (RPJ)">Referente Prensa Jurisdicción (RPJ)</option>
+                <option value="Requerimiento Puntual (RP)">Requerimiento Puntual (RP)</option>
+                <option value="Reunión de Coordinación (RC)">Reunión de Coordinación (RC)</option>
+                <option value="Plan Operativo Anual (POA)">Plan Operativo Anual (POA)</option>
+                <option value="Otras Fuentes (especificar)">Otras Fuentes (especificar)</option>
+                <option value="Creación DGCONTG">Creación DGCONTG</option>
+            </select>
+        </div>
+        <div style="margin-left: 0px; display: inline-block; ">
+            <select ui-select2 type="text" ng-model="filtro.tipo" class="span2" title="Tipo" style="width:200px;">
+                <option value="">Todas las tipos...</option>
+                <option value="Documento Word (.doc)">Documento Word (.doc)</option>
+                <option value="Presentación Powerpoint (.ppt)">Presentación Powerpoint (.ppt)</option>
+                <option value="Planilla Excel (.xls)">Planilla Excel (.xls)</option>
+                <option value="Documento PDF (.pdf)">Documento PDF (.pdf)</option>
+                <option value="Mail">Mail</option>
+                <option value="Project">Project</option>
+                <option value="Bizagi">Bizagi</option>
+                <option value="Otros">Otros</option>
+            </select>
+        </div>
+        <div style="margin-left: 0px; display: inline-block;">
+            <select ui-select2 type="text" ng-model="filtro.tema" class="span2" title="Tema" style="width: 230px;" >
+                <option value="">Todas los temas...</option>
+                <option ng-repeat="i in temasFiltrados" value="{{i._id}}">{{i.nombre}}</option>
+            </select>
+        </div>
+        <a href="/idg/nuevo" class="btn btn-link pull-right" style="margin-right: 10px;margin-bottom: 0px;margin-left: 10px;" ng-if=hasPermission('idg.editar') ><i class="icon-plus"></i> </a>
+    </div>
+    
+    <h2 class="card-heading simple">IDG<a href="" ng-click="traerPresentacionesORM()" style="color: white;">.</a></h2>
+    <div class="card-body" style="padding-left: 0px; padding-right: 0px; padding-bottom: 0px;">
+        <div class="form-horizontal" name="form" style="margin-left:50px; padding-top: 16px; clear: both">
+            <div class="row" style="padding-bottom: 10px;">
+                <div class="span3" style="display: table-cell"><a href="#" style="display: inline-block; color:#404040;">Nombre:</a></div>
+                <div class="span3" style="display: table-cell"><a href="#" style="display: inline-block; color:#404040;">Jurisdicción:</a></div>
+                <div class="span3" style="display: table-cell"><a href="#" style="display: inline-block; color:#404040;">Fuente:</a></div>
+                <div class="span2" style="display: table-cell"><a href="#" style="display: inline-block; color:#404040;">Tipo:</a></div>
+                <div class="span2" style="display: table-cell"><a href="#" style="display: inline-block; color:#404040;">Fecha:</a></div>
+            </div>
+        </div>
+        
+        <ul class="nav nav-list" >
+            <li ng-repeat="i in archivos | orderBy:'fechaMiliseg' | filter:filtro">
+                <a style="font-size: 12px;" href="/idg/{{i._id}}">
+                <span class="span3">{{i.nombre}}</span>
+                <span class="span3">{{organigramaPorId(i.jurisdiccion).nombreCompleto}}</span>
+                <span class="span3">{{i.fuente}}</span>
+                <span class="span2">{{i.tipo}}</span>
+                <span class="span2">{{i.fecha}}<i ng-if="i.procesado" class="icon-ok pull-right" title="Procesado" style="height: 16px;line-height: 17px;"></i></span>
+               </a>
+            </li>
+            <li ng-if="!archivos.length" class="text-center">
+                <em>No hay cargas aún</em>
+            </li>
+        </ul>
+    </div>
+</div>

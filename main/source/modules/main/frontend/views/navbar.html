@@ -1,0 +1,16 @@
+<div class="navbar navbar-inverse">
+    <div class="navbar-inner">
+        <div class="pull-right" ng-include="'/views/auth/navbar-user.html'" />
+        
+        <a class="brand" href="/"><img src="/views/BA_blanco.png" width="63">Gestión</a>
+        <ul class="nav">
+            <li  ng-class="{active: state.current.section == 'apps'}">
+                <a href="/apps">Apps</a>
+            </li>
+        </ul>
+        
+        <div class="pull-right" ui-view="navbar-extra-right"></div>
+        
+        <div ui-view="navbar-extra-left"></div>
+    </div>
+</div>

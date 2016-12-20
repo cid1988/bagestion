@@ -1,0 +1,30 @@
+<div ng-controller="IntervencionesCtrl">
+    <div class="container">
+        <div class="row">
+            <div class="well span3">
+                <!-- Panel izquierdo -->
+                <div class="control-group" style="display: block; margin-top:15px">
+                    <div class="controls">
+                        <input placeholder="Buscar por..." type="text" class="input-large search-query span3" ng-model="filtro.titulo"/>
+                    </div>
+                </div>
+                <a class="btn no-print span2" style="margin-top: 10px;" href="/intervenciones/nueva" ng-hide="!puedeModificar()"><i class="icon-plus"></i> Nueva intervención</a>
+            </div>
+            <div class="well span8">
+                <div class="row-fluid" style="margin-bottom: 10px;"
+                	ng-repeat="i in intervenciones | filter:filtro">
+            		<div class="span4">
+            			{{i.titulo}}
+            		</div>
+            		<div class="span5">
+            			{{i.calle}} {{i.altura}}
+            		</div>
+            		<a href="/intervenciones/{{i._id}}" class="btn btn-link pull-right"><i class="icon-zoom-in"></i> Ver detalle</a>
+            	</div>
+            	<div class="row-fluid" ng-show="!intervenciones.length">
+            		No hay ninguna intervención
+            	</div>
+            </div>
+        </div>
+    </div>
+</div>

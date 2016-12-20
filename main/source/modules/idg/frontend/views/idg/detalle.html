@@ -1,0 +1,289 @@
+<script>
+    $(document).ready(function() { $("#e1").select2(); });
+    $(document).ready(function() { $("#e2").select2(); });
+    $(document).ready(function() { $("#e3").select2(); });
+    $(document).ready(function() { $("#e4").select2(); });
+    $(document).ready(function() { $("#e13").select2(); });
+    $(document).ready(function() { $("#e14").select2(); });
+    $(document).ready(function() { $("#e15").select2(); });
+    $(document).ready(function() { $("#e16").select2(); });
+</script>
+
+<style>
+    .control-group {
+      margin-bottom: 10px !important;
+    }
+</style>
+
+
+
+<div ng-controller="IDGDetalleCtrl" class="card" >
+    <a ng-show="editando" ng-click="guardar()" href="/idg" class="btn btn-link no-underline pull-right" style="margin-right: 20px;"><i class="icon-ok"></i> Guardar</a>
+    <a ng-show="!editando" ng-click="editar()"  class="btn btn-link pull-right no-underline" style="margin-right: 20px; margin-top:0%;margin-bottom:0%;" ng-if=hasPermission('idg.editar')><i class="icon-edit icon-white"></i> Editar</a>
+    <a ng-show="editando" ng-click="eliminar(false)" class="btn btn-link pull-right no-underline" style="margin-right: 20px; margin-top:0%;margin-bottom:0%;" ng-if="(hasPermission('idg.editar') && (!archivo.minutaId))"><i class="icon-trash icon white"></i> Eliminar</a>
+    <a href="/idg/imprimir/{{archivo._id}}" class="btn btn-link pull-right no-underline" style="margin-right: 20px; margin-top:0%;margin-bottom:0%;"><i class="icon-print icon white"></i> Imprimir</a>
+    <h3 class="card-heading simple">IDG - Detalle<span ng-show="archivo.nombre">&nbsp de {{archivo.nombre}} <span ng-show="archivo.apellido">{{archivo.apellido}}</span></span></h3>
+    <div class="card-body " style="margin-top: 0px;margin-bottom: 10px;">
+        <div class="card-body" style="padding-bottom: 0px;">
+            <form class="form-horizontal" style="margin-bottom: 0px !important;" autocomplete="on">
+                <div class="row">
+                    <div class="span6">
+                        <form class="form-horizontal" style="margin-bottom: 0px !important;">
+                            <div class="control-group" style="margin-left: 10px;margin-bottom: 0px;">
+                                <div class="control-group">
+                                    <label class="control-label">Nombre:</label>
+                                    <div class="controls">
+                                        <input class="span3" type="text" placeholder="Nombre" ng-disabled="!editando" ng-model="archivo.nombre" />
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">Tipo:</label>
+                                    <div class="controls">
+                                        <select type="text" id="e4" ng-model="archivo.tipo" class="span3" ng-disabled="!editando">
+                                            <option ng-disabled="true" value="">{{archivo.tipo}}</option>
+                                            <option value="Documento Word (.doc)">Documento Word (.doc)</option>
+                                            <option value="Presentación Powerpoint (.ppt)">Presentación Powerpoint (.ppt)</option>
+                                            <option value="Planilla Excel (.xls)">Planilla Excel (.xls)</option>
+                                            <option value="Documento PDF (.pdf)">Documento PDF (.pdf)</option>
+                                            <option value="Mail">Mail</option>
+                                            <option value="Project">Project</option>
+                                            <option value="Bizagi">Bizagi</option>
+                                            <option value="Otros">Otros</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">Fecha:</label>
+                                    <div class="controls">
+                                        <input class="span3" type="text" date ng-disabled="!editando" ng-model="archivo.fecha" />
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">Autor:</label>
+                                    <div class="controls">
+                                        <input class="span3" type="text" placeholder="Autor/Interlocutor/Referente Jurisdicción" ng-disabled="!editando" ng-model="archivo.autor" />
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">Tema:</label>
+                                    <div class="controls">
+                                        <select id="e1"  class="span3" type="text" ng-model="archivo.tema" ng-disabled="!editando" ng-options="i._id as i.nombre for i in temasFiltrados" >
+                                            <option ng-disabled="true" value="">{{temaPorId(archivo.tema).nombre}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">Descripción:</label>
+                                    <div class="controls">
+                                        <textarea class="span3" type="text" rows="4" placeholder="Descripción" ng-disabled="!editando" ng-model="archivo.descripcion"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="span6">
+                        <form class="form-horizontal" style="margin-bottom: 0px !important;">
+                            <div class="control-group" style="margin-left: 10px;margin-bottom: 0px;">
+                                <div class="control-group">
+                                    <label class="control-label">Referente DGCONTG:</label>
+                                    <div class="controls">
+                                        <input class="span3" type="text" ng-model="archivo.referente" placeholder="Referente DGCONTG" ng-disabled="!editando" />
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">Fuente:</label>
+                                    <div class="controls">
+                                        <select type="text" id="e2" ng-model="archivo.fuente" class="span3" ng-disabled="!editando">
+                                            <option ng-disabled="true" value="">{{archivo.fuente}}</option>
+                                            <option value="Reunión de Seguimiento (RS)">Reunión de Seguimiento (RS)</option>
+                                            <option value="Reunión Específica (RE)">Reunión Específica (RE)</option>
+                                            <option value="Referente Prensa Jurisdicción (RPJ)">Referente Prensa Jurisdicción (RPJ)</option>
+                                            <option value="Requerimiento Puntual (RP)">Requerimiento Puntual (RP)</option>
+                                            <option value="Reunión de Coordinación (RC)">Reunión de Coordinación (RC)</option>
+                                            <option value="Plan Operativo Anual (POA)">Plan Operativo Anual (POA)</option>
+                                            <option value="Otras Fuentes (especificar)">Otras Fuentes (especificar)</option>
+                                            <option value="Creación DGCONTG">Creación DGCONTG</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">Vencimiento:</label>
+                                    <div class="controls">
+                                        <input class="span3" type="text" date ng-disabled="!editando" ng-model="archivo.vencimiento" />
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">Jurisdicción:</label>
+                                    <div class="controls">
+                                        <select class="span3" type="text" id="e3" placeholder="Jurisdicción" ng-model="archivo.jurisdiccion" ng-disabled="!editando" ng-options="i._id as i.nombreCompleto for i in organigrama | orderBy:'nombre'">
+                                            <option value="" ng-disabled="true">{{organigramaPorId(archivo.jurisdiccion).nombreCompleto}}</option>
+                                        </select>
+                                        
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">Tags:</label>
+                                    <div class="controls">
+                                        <input class="span3" type="email" placeholder="Tags" ng-disabled="!editando" ng-model="archivo.tags"/>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">Procesado:</label>
+                                    <div class="controls">
+                                        <button class="btn btn-success" ng-if="archivo.procesado" ng-disabled="!editando" ng-click="cambiarEstado()"> Sí </button>
+                                        <button class="btn btn-danger" ng-if="!archivo.procesado" ng-disabled="!editando" ng-click="cambiarEstado()"> No </button>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">Archivo:</label>
+                                    <div class="controls">
+                                        <a class="btn" ng-if="archivo.archivoId" href="/file/{{archivo.archivoId}}" download="{{archivo.nombre}}" target="_blank">Descargar</a><br>
+                                        <!--<div style="width: 274px" fine-uploader destination="'/upload/'"  placeholder="'Examinar'" ng-show="editando" uploaded="uploaded" ></div>--> 
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                </form>
+                <form class="form-horizontal">
+                <div class="row">
+                    <h3 class="card-heading simple"> Datos BA Facts 
+                        <a class="pull-right btn btn-link" ng-click="agregarBaFacts()" ng-if="editando"><i class="icon-plus"></i> Agregar</a>    
+                    </h3>
+                    <table class="span12 table table-striped" style="margin-left:80px;">
+                        <thead>
+                            <td><strong>Valor</strong></td>
+                            <td><strong>Magnitud</strong></td>
+                            <td><strong>Concepto</strong></td>
+                            <td><strong>Fuente</strong></td>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="i in listaBaFacts">
+                                <td>{{i.valor}}</td>
+                                <td>{{i.magnitud}}</td>
+                                <td>{{i.concepto}}</td>
+                                <td>{{i.fuente}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </form>
+        </div>
+    </div> 
+    
+    <!-- Modal Eliminar-->
+    <div id="confirmarEliminar" class="modal hide fade">
+        <div class="modal-header">
+            <h3><i>¿Está seguro de borrar el  elemento ? </i></h3>
+        </div>
+        
+        <div class="modal-footer">
+            <button class="btn btn-success icon-ok" data-dismiss="modal" ng-click="eliminar(true)"></button>
+            <button class="btn btn-danger icon-remove" data-dismiss="modal" ng-click="ocultarBorrarElemento()"></button>
+        </div>
+    </div>
+    
+    <!-- Modal Agregar BA FACTS -->
+    <div id="agregarBaFacts" class="modal hide fade">
+        <div class="modal-header card-heading simple">
+            <h3>BA Facts</h3> 
+        </div>
+        <div class="modal-body">
+           <form class="form-horizontal">
+                <div class="row">
+                    <div>
+                            <div class="control-group" style="padding-top:15px;">
+                                <label class="control-label">Valor:</label>
+                                <div class="controls">
+                                    <input class="span3" type="text" placeholder="Sin valor" ng-disabled="!editando" ng-model="fact.valor" />
+                                </div>
+                            </div>
+                    		<div class="control-group">
+                                <label class="control-label">Magnitud:</label>
+                                <div class="controls">
+                                    <input class="span3" type="text" placeholder="Sin magnitud" ng-disabled="!editando" ng-model="fact.magnitud" />
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">Concepto:</label>
+                                <div class="controls">
+                                    <input  type="text" ng-disabled="!editando" placeholder="Sin concepto" ng-model="fact.concepto" />
+                                </div>
+                            </div>
+                    		<div class="control-group">
+                                <label class="control-label">Periodo:</label>
+                                <div class="controls">
+                                    <input class="span3" type="text" placeholder="Sin periodo" ng-disabled="!editando" ng-model="fact.periodo" />
+                                </div>
+                            </div>
+                            <div class="control-group" style="margin-top: 20px;">
+                                <label class="control-label">Segmentación:</label>
+                                <div class="controls">
+                                    <select class="span3" id="e14" type="text" ng-model="fact.segmentacion" ng-disabled="!editando">
+                                        <option value="">{{fact.segmentacion}}</option>
+                                        <option value="CABA">CABA</option>
+                                        <option value="GCABA">GCABA</option>
+                                        <option value="Gestión">Gestión</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="control-group" style="padding-top:15px;">
+                                <label class="control-label">Visibilidad:</label>
+                                <div class="controls">
+                                    <select class="span3" id="e15" type="text" ng-model="fact.visibilidad" ng-disabled="!editando" >
+                                        <option value="">{{fact.visibilidad}}</option>
+                                        <option value="publico">Publico</option>
+                                        <option value="privado">Privado</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">Tags:</label>
+                                <div class="controls">
+                                    <input class="span3" type="text" ng-disabled="!editando" placeholder="Sin tags" ng-model="fact.tags" />
+                                </div>
+                            </div>
+                            <div class="control-group" style="margin-bottom: 0px;">
+                                <label class="control-label">Temas:</label>
+                                <div class="controls">
+                                    <select ui-select2 class="span3" ng-disabled="!editando" type="text" ng-model="dataTema" ng-options="i._id as i.nombre for i in temas | filter: mostrarTema">
+                                        <option ng-disabled="true" value=""></option>
+                                    </select>
+                                    <button class="btn" style="margin-bottom:0px; margin-left: 5px" ng-disabled="!editando" ng-click="agregarTema(dataTema)"><i class="icon-plus"></i></button>
+                                </div>
+                            </div>
+                            <div class="control-group" ng-repeat="t in fact.temas" style="margin-bottom: 0px;">
+                                <div class="controls">
+                                    <input  type="text" ng-disabled="true" value="{{temaPorId(t).nombre}}" />
+                                    <a href="#" style="margin-left: 10px" ng-show="editando" ng-click="eliminarListaElem(t, fact.temas)"><i class="icon-trash"></i></a>
+                                </div>
+                            </div>
+                            <div class="control-group" >
+                                <label class="control-label">Fecha:</label>
+                                <div class="controls">
+                                    <input class="span3" type="text" date placeholder="Sin fecha" ng-disabled="!editando" ng-model="fact.fecha" />
+                                </div>
+                            </div>
+                    		<div class="control-group" >
+                                <label class="control-label">Vencimiento:</label>
+                                <div class="controls">
+                                    <input class="span3" type="text" date placeholder="Sin vencimiento" ng-disabled="!editando" ng-model="fact.vencimiento" />
+                                </div>
+                            </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <div class="span3" >
+                <a class="btn btn-success" data-dismiss="modal" ng-click="guardarBaFact()"> Agregar BA Facts</a>
+                <a class="btn btn-danger " data-dismiss="modal"> Cancelar </a>    
+            </div>
+        </div>  
+        
+    </div>
+</div>
+
+
+

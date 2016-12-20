@@ -1,0 +1,9 @@
+<div ng-controller="RegularizacionDominialCtrl">
+    <div class="btn-group pull-right" style="margin-right: 7px">
+        <a class="btn btn-link" style="margin-left: 10px" ng-if="hasPermission('regularizacionDominial.edicion')" href="/regularizacionDominial/reportetodos"> Reporte Completo</a>
+        <a class="btn btn-link" style="margin-left: 10px" ng-if="hasPermission('regularizacionDominial.edicion')" href="/regularizacionDominial/reporte"> Reporte Accesos</a>
+        <a class="btn btn-link" target="_blank" style="margin-left: 10px" href="/api/regularizacionDominial-csv/download">
+            <i class="icon-download-alt"></i> Descargar CSV</a>
+        <!-- <a class="btn btn-link" style="margin-left: 10px" ng-click="$root.$broadcast('print')"><i class="icon-print icon-white"></i> Imprimir</a> -->
+    </div>
+</div>

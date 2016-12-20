@@ -1,0 +1,238 @@
+/* Reset */
+ 
+html, body, div, span, applet, object, iframe,h1, h2, h3, h4, h5, h6, p, blockquote, pre,a, abbr, acronym, address, big, cite, code,del, dfn, em, img, ins, kbd, q, s, samp,small, strike, strong, sub, sup, tt, var,b, u, i, center,dl, dt, dd, ol, ul, li,fieldset, form, label, legend,table, caption, tbody, tfoot, thead, tr, th, td,article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary,time, mark, audio, video { border: 0; font-size: 100%; font: inherit; vertical-align: baseline;}
+
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section { display: block; }
+ 
+html{ overflow: auto; }
+html, body{ height: 100%; }
+body{ font: 14px Gotham, Helvetica, sans-serif; color: #333;}
+h1, p{ padding-bottom: 5px;  font: 20px Gotham, Helvetica, sans-serif; color: #333; font-weight: 600;}
+a{ text-decoration: none; }
+ 
+/* End Reset */
+ 
+/* Content */
+ 
+#wrapper{ width: 100%; margin: 0 auto; overflow: hidden; height: auto; min-height: 100%; }
+section.content{
+    background-color: #FFFFFF;
+    border: none;
+    /*padding: 10px;*/
+    margin:  0 0 58px 0;
+}
+section.content h1{ font-size: 18px; font-weight: bold; text-align: center; }
+ 
+/* End Content */
+ 
+/* Footer */
+ 
+#footer{
+    margin-top:-52;
+    width: 100%;
+    height: 50px;
+    background-color: rgb(255,212,0);
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+    
+}
+ 
+/* End Footer */
+
+.borde_redondeado_simple_0100 
+{-moz-border-radius-topleft:0px;
+-moz-border-radius-topright:10px;
+-moz-border-radius-bottomleft:0px;
+-moz-border-radius-bottomright:0px;
+
+-webkit-border-top-left-radius:0px;
+-webkit-border-top-right-radius:10px;
+-webkit-border-bottom-left-radius:0px;
+-webkit-border-bottom-right-radius:0px;
+
+/* Otros estilos */ 
+border:0px;
+/*background:#eee;*/
+width:100%;
+/*padding:5px;*/
+    }
+
+.borde_redondeado_asimetrico_1001 
+{-moz-border-radius-topleft:10px;
+-moz-border-radius-topright:0px;
+-moz-border-radius-bottomleft:0px;
+-moz-border-radius-bottomright:10px;
+
+-webkit-border-top-left-radius:10px;
+-webkit-border-top-right-radius:0px;
+-webkit-border-bottom-left-radius:0px;
+-webkit-border-bottom-right-radius:10px;
+
+/* Otros estilos */ 
+border:0px;
+/*background:#eee;*/
+width:100%;
+padding:5px;
+    }
+    
+.borde_redondeado_asimetrico_1110 
+{-moz-border-radius-topleft:10px;
+-moz-border-radius-topright:10px;
+-moz-border-radius-bottomleft:10px;
+-moz-border-radius-bottomright:0px;
+
+-webkit-border-top-left-radius:10px;
+-webkit-border-top-right-radius:10px;
+-webkit-border-bottom-left-radius:10px;
+-webkit-border-bottom-right-radius:0px;
+
+/* Otros estilos */ 
+border:0px;
+/*background:#eee;*/
+width:804px;
+padding:2px;
+    }
+    
+.asimetrico_1110_generico
+{-moz-border-radius-topleft:10px;
+-moz-border-radius-topright:10px;
+-moz-border-radius-bottomleft:10px;
+-moz-border-radius-bottomright:0px;
+
+-webkit-border-top-left-radius:10px;
+-webkit-border-top-right-radius:10px;
+-webkit-border-bottom-left-radius:10px;
+-webkit-border-bottom-right-radius:0px;
+
+    }
+
+.asimetrico_1010_generico
+{-moz-border-radius-topleft:10px;
+-moz-border-radius-topright:0px;
+-moz-border-radius-bottomleft:10px;
+-moz-border-radius-bottomright:0px;
+
+-webkit-border-top-left-radius:10px;
+-webkit-border-top-right-radius:0px;
+-webkit-border-bottom-left-radius:10px;
+-webkit-border-bottom-right-radius:0px;
+
+    }
+    
+ td.asimetrico_1010_generico:hover {color:White; background-color: #666666 !important;}
+ 
+.asimetrico_0101_generico
+{-moz-border-radius-topleft:0px;
+-moz-border-radius-topright:10px;
+-moz-border-radius-bottomleft:0px;
+-moz-border-radius-bottomright:10px;
+
+-webkit-border-top-left-radius:0px;
+-webkit-border-top-right-radius:10px;
+-webkit-border-bottom-left-radius:0px;
+-webkit-border-bottom-right-radius:10px;
+
+    }
+
+div.indicadorEstado
+{-moz-border-radius-topleft:9px;
+-moz-border-radius-topright:9px;
+-moz-border-radius-bottomleft:9px;
+-moz-border-radius-bottomright:9px;
+
+-webkit-border-top-left-radius:9px;
+-webkit-border-top-right-radius:9px;
+-webkit-border-bottom-left-radius:9px;
+-webkit-border-bottom-right-radius:9px;
+background-color: #CCCCCC;
+border: 1px solid #CCCCCC;
+width:17px;
+height:17px;
+padding:0px;
+    }
+
+.selectorPrincipal {
+width: 750px;
+padding: 0px;
+font-size: 20px;
+font-weight: 600;
+border: none;
+height: 30px;
+background-color:#ccc;
+background: url('/views/rdg/flechaAbajo.png') no-repeat right #cccccc;
+-moz-appearance: none;
+ -webkit-appearance: none;
+ appearance: none;
+}
+
+.selectorSecundario {
+width: 550px;
+padding: 0px;
+font-size: 20px;
+font-weight: 600;
+border: none;
+height: 30px;
+background-color:#ccc;
+background: url('/views/rdg/flechaAbajo.png') no-repeat right #cccccc;
+-moz-appearance: none;
+ -webkit-appearance: none;
+ appearance: none;
+}
+
+div.header
+{ 
+  width: 100%;
+  margin:0 auto;
+  /*background-image: url('../../ElementosGraficos/fdo_header1010x102.jpg');
+  background-repeat: no-repeat;
+  background-attachment: inherit;
+  background-position: left 5px top;*/
+ }
+ 
+ div.contenido
+{
+    width: 98%;
+    height: 480px;
+    vertical-align: middle;
+    padding-left: 20px;
+    margin: 20 auto;
+    overflow: auto;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    
+}
+ 
+/* div.footer
+{ 
+  width: 1010px;
+  margin: auto;
+  bottom: 0px;
+  background-image: url('../../ElementosGraficos/fdo_footer990x92.jpg');
+  background-repeat: no-repeat;
+  background-attachment: inherit;
+  background-position: left 15px top;
+  height: 92px;
+ }
+ 
+ /* Let's get this party started */
+::-webkit-scrollbar {
+    width: 12px;
+}
+ 
+/* Track */
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    background: rgba(198,198,197,0.8); 
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+}
+::-webkit-scrollbar-thumb:window-inactive {
+	background: rgba(255,0,0,0.4); 
+}

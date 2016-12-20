@@ -1,0 +1,96 @@
+<script>
+    $(document).ready(function() { $("#e1").select2(); });
+</script>
+<div class="card body" style="margin-top: 0px;padding-top: 0px;" ng-controller="GestionDeContenidosAdminNuevoCtrl">
+    <div style="margin-bottom: 0px">
+        <ul class="breadcrumb" style="margin-bottom: 0px;">
+          <li><a href="/gestiondecontenidos/administracion" style="color:#404040;">Gestion de la información</a> <span class="divider">/</span></li>
+          <li class="active">Nuevo</li>
+        </ul>
+    </div>
+    <h2 style="margin-top: 15px; margin-left: 15px; margin-bottom: 0px;">Nueva Reunion 
+        <a ng-click="guardar()" href="/gestiondecontenidos/administracion" class="btn btn-link pull-right" style="margin-right: 20px;"><i class="icon-ok icon-white"></i></a>
+    </h2>
+    <hr style="margin-top: 8px;margin-bottom: 20px;border-top-width: 5px;border-bottom-width: 1px;">
+    <div class="card-body" style="margin-top: 0px;margin-bottom: 10px;">
+        <div class="row" style="padding-bottom: 0px;">
+            
+            <form class="form-horizontal" style="margin-bottom: 0px !important;">
+                
+                <div class="control-group" style="margin-left: 50px;margin-bottom: 0px;">
+                
+                    <div class="control-group">
+                        <label class="control-label">Titulo:</label>
+                        <div class="controls">
+                            <input class="span3" type="text" placeholder="Sin Titulo" ng-model="gestionDeLaInformacion.titulo" />
+                        </div>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label class="control-label">Tipo de Pieza:</label>
+                        <div class="controls">
+                            <select class="span3" ui-select2 type="text" ng-model="gestionDeLaInformacion.tipoPieza">
+                                <option value="tipo1">Gestión</option>
+                                <option value="tipo2">E</option>
+                                <option value="tipo3">iGestiòn</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label class="control-label">Tema:</label>
+                        <div class="controls">
+                            <input class="span3" type="text" placeholder="Sin Tema" ng-model="gestionDeLaInformacion.tema" />
+                        </div>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label class="control-label">Jurisdiccion:</label>
+                        <div class="controls">
+                            <select id="e1" class="span3" style="margin-right: 110px;" type="text" ng-model="gestionDeLaInformacion.jurisdiccion" ng-options="i._id as i.nombreCompleto for i in jurisdicciones | orderBy:'nombreCompleto'">
+                                <option ng-disabled="true" value="">{{jurisdiccionPorId(gestionDeLaInformacion.jurisdiccion).nombreCompleto}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="control-group" style="margin-bottom: 5px;"  ng-show="gestionDeLaInformacion.tipoPieza!='tipo3'">
+                        <label class="control-label">Relacionados:</label>
+                        <div class="controls">                                                      <!-- Trae el titulo de _id  -->
+                            <select ui-select2 class="span6" type="text" ng-model="relacion" ng-options="i._id as i.titulo for i in piezas">
+                                <option ng-disabled="true" value=""></option>
+                            </select>
+                            <button class="btn" style="margin-bottom:10px; margin-left: 5px" ng-click="agregarRelacion(relacion)"><i class="icon-plus"></i></button>
+                        </div>
+                    </div>
+                    <div class="control-group" ng-repeat="t in gestionDeLaInformacion.archivosRelacionados" style="margin-bottom: 0px;">
+                        <div class="controls">
+                            <input class="span6" type="text" ng-disabled="true" value="{{archivoPorId(t).titulo}}" />
+                            <a href="#" style="margin-left: 10px" ng-click="eliminarListaElem(t, gestionDeLaInformacion.archivosRelacionados)"><i class="icon-trash"></i></a>
+                        </div>
+                    </div>
+                    
+                    <div class="control-group" style="margin-top: 10px;">
+                        <label class="control-label">Fecha:</label>
+                        <div class="controls">
+                            <input class="span3" type="text" date ng-model="gestionDeLaInformacion.fecha" />
+                        </div>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label class="control-label">Vencimiento:</label>
+                        <div class="controls">
+                            <input class="span3" type="text" date ng-model="gestionDeLaInformacion.vencimiento" />
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div style="width: 300px" fine-uploader destination="'/upload/'"placeholder="'Examinar'" uploaded="uploaded"></div>
+                    </div>
+                    
+                </div>
+                
+            </form>
+            
+        </div>
+    </div>
+</div>

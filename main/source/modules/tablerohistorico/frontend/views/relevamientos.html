@@ -1,0 +1,54 @@
+<div ng-controller="HistoricoRelevamientosCtrl">
+<style>
+
+.semaforo-verde {
+	background-color: #0f0;
+}
+.semaforo-rojo {
+	background-color: #f00;
+}
+</style>
+
+	<select class="span2" ui-select2 type="text" ng-model="filtro.anio">
+        <option value="2013">2013</option>
+        <option value="2012">2012</option>
+        <option value="2011">2011</option>
+        <option value="2010">2010</option>
+        <option value="2009">2009</option>
+        <option value="2008">2008</option>
+    </select>
+
+	<select class="span6" ui-select2 type="text" ng-model="filtro.idDependencia">
+        <option ng-repeat="d in dependencias" value="{{d.id}}">{{d.dependencia}}</option>
+    </select>
+
+	<select class="span6" ui-select2 type="text" ng-model="filtro.idEstrategia">
+        <option ng-repeat="e in estrategias" value="{{e.estrategiaid}}">{{e.descripcion}}</option>
+    </select>
+
+    <select class="input-block-level no-print" ui-select2 type="text" ng-model="filtro.idObjetivo">
+        <option ng-repeat="o in objetivos" value="{{o.id}}">{{o.objetivo}}</option>
+    </select>
+
+
+    <table class="table table-bordered" style="background-color: #fff">
+	  <tbody>
+	  	<tr ng-repeat="p in proyectos" ng-class="{ 'semaforo-verde': p.codigocolor==1,'semaforo-rojo': p.codigocolor==3 }">
+	  		<td>{{p.proyecto}}</td>
+	  		<td>
+		      <!-- <div class="animate-switch-container"
+		        ng-switch on="p.codigocolor">
+		          <div class="semaforo-blanco" ng-switch-when="0">Blanco</div>
+		          <div class="semaforo-verde" ng-switch-when="1">Verde</div>
+		          <div class="semaforo-amarillo" ng-switch-when="2">Amarillo</div>
+		          <div class="semaforo-rojo" ng-switch-when="3">Rojo</div>
+		          <div class="semaforo-negro" ng-switch-when="4">Negro</div>
+		          <div class="semaforo-azul" ng-switch-when="5">Azul</div>
+		      </div> -->
+	  		</td>
+	  	</tr>
+	  </tbody>
+	</table>
+
+
+</div>

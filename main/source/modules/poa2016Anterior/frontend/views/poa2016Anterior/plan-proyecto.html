@@ -1,0 +1,248 @@
+<script>
+    $(document).ready(function() { $("#e1").select2(); });
+</script>
+
+<div ng-controller="POAEditarProyectoAnteriorCtrl">
+    <div class="card span12" style="padding-top: 10px; margin-top: 0px;">
+      <h3 class="card-heading simple">
+      <span class="btn-group pull-right">
+        <a ng-click="volver()" class="btn btn-default"><i class="icon icon-arrow-up"></i> Volver</a>
+        <a ng-if="activada" ng-click="cancelar()" class="btn btn-default"><i class="icon icon-undo"></i> Cancelar</a>
+      </span>
+      <span class="pull-right" style="margin-right: 10px;margin-left: 20px;">Proyecto</span>
+      <strong style="margin-right: 1em">{{tabCtrl.filtro.proyecto.nombre}}</strong></h3>
+      <div class="card-body" style="margin-bottom: 20px;">
+        <form class="form-horizontal">
+          <div class="control-group" style="width: 975px; display: inline-block;margin-bottom: 0px;">
+            <label class="control-label">Nombre:</label>
+            <div class="controls" style="margin-right: 20px;">
+              <input type="text"  ng-disabled="!activada" ng-model="proyecto.nombre" style="width: 100%;">
+            </div>
+          </div>
+          <div class="btn-group">
+            <button class="btn" ng-class="{'active btn-info': proyecto.validado}" ng-click="proyecto.validado = !proyecto.validado" ng-disabled="!activada">Validado</button>
+            <button class="btn" ng-class="{'active btn-info': proyecto.aprobado}" ng-click="proyecto.aprobado = !proyecto.aprobado" ng-disabled="!activada || !hasPermission('poa.administrador')">Aprobado</button>
+          </div>
+        </form>
+        <form class="form-horizontal">
+          <div class="control-group">
+            <label class="control-label">Descripción:</label>
+            <div class="controls" style="margin-right: 20px;">
+              <textarea ng-disabled="!activada" ng-model="proyecto.descripcion" style="width: 100%; resize: vertical" rows="3"></textarea>
+            </div>
+          </div>
+        </form>
+        <form class="form-inline">
+            <label style="width: 162px; text-align: right; padding-right: 14px;">Dependencia:</label>
+            <select type="text" id="e1" ng-model="proyecto.dependencia" ng-disabled="!activada" style="width: 300px" ng-options="i._id as i.nombreCompleto for i in organigrama | orderBy:'nombreCompleto'">
+                <option ng-disabled="true" value="">{{organigramaPorId(proyecto.dependencia).nombreCompleto}}</option>
+            </select>
+            <label style="width: 140px; text-align: right; padding-right: 14px;">Cód. Identificación:</label>
+            <input type="text" ng-disabled="!activada" ng-model="proyecto.codIdentificacion" style="width: 70px;" />
+            <label style="width: 170px; text-align: right; padding-right: 5px;">¿Proyecto de inversión?:</label>
+            <input type="checkbox" ng-disabled="!activada" ng-model="proyecto.proyectoInversion" ng-change="tabCtrl.filtro.proyecto.proyectoInversion=proyecto.proyectoInversion" />
+            <!-- <label style="width: 190px; text-align: right; padding-right: 14px;">Proyecto preexistente?:</label>
+            <input type="checkbox" ng-disabled="!activada" ng-model="proyecto.proyectoPreexistente" />
+            <label style="width: 160px; text-align: right; padding-right: 14px;">Código preexistente:</label>
+            <input type="text" ng-disabled="!activada" ng-model="proyecto.codPreexistente" style="width: 100px;" /> -->
+            <label style="width: 160px; text-align: right; padding-right: 5px;">Proyecto Cancelado:</label>
+            <input type="checkbox" ng-disabled="!activada" ng-model="proyecto.cancelado" />
+        </form>
+        <form class="form-inline">
+          <label style="width: 162px; text-align: right; padding-right: 14px;">Indicador:</label>
+          <input type="text" ng-disabled="!activada" ng-model="proyecto.metaProducto" style="width: 280px;" />
+          <label style="width: 150px; text-align: right; padding-right: 14px;">Meta:</label>
+          <input type="number" ng-disabled="!activada" ng-model="proyecto.metaCuantificacion" style="width: 120px;"/>
+            <label style="width: 80px; text-align: right; padding-right: 14px;">Etapa:</label>
+            <select type="text" ng-model="proyecto.etapaProyecto" ng-disabled="!activada" style="width: 200px">
+                <option ng-disabled="true" value="">{{proyecto.etapaProyecto}}</option>
+                <option value="Diseño Inicial">Diseño Inicial</option>
+                <option value="Diseño Finalizado">Diseño Finalizado</option>
+                <option value="Licitación">Licitación</option>
+                <option value="Ejecución">Ejecución</option>
+                <option value="Piloto">Piloto</option>
+            </select>
+        </form>
+      </div>
+    </div>
+    
+    
+    <div class="card span12" style="padding-top: 10px; margin-top: 0px;">
+      <h3 class="card-heading simple">Partida Presupuestaria</h3>
+      <div class="card-body">
+        <div class="control-group" ng-show="activada" style="display: inline-block;margin-bottom: 0px;margin-left: 30px;">
+            <span style="display: inline-block"> Año:<br /> 
+                <input style="width:51px" type="text" ng-disabled="!activada" ng-model="data.anio" />
+            </span>
+            <span style="display: inline-block"> Jurisd:<br /> 
+                <input style="width:51px" type="text" ng-disabled="!activada" ng-model="data.jurisdiccion" />
+            </span>
+            <span style="display: inline-block"> Entidad:<br /> 
+                <input style="width:51px" type="text" ng-disabled="!activada" ng-model="data.entidad" />
+            </span>
+            <span style="display: inline-block"> Programa:<br /> 
+                <input style="width:51px" type="text" ng-disabled="!activada" ng-model="data.programa" />
+            </span>
+            <span style="display: inline-block"> Proyecto:<br /> 
+                <input style="width:51px" type="text" ng-disabled="!activada" ng-model="data.proyecto" />
+            </span>
+            <span style="display: inline-block"> Actividad:<br /> 
+                <input style="width:51px" type="text" ng-disabled="!activada" ng-model="data.actividad" />
+            </span>
+            <span style="display: inline-block"> Obra:<br /> 
+                <input style="width:51px" type="text" ng-disabled="!activada" ng-model="data.obra" />
+            </span>
+            <span style="display: inline-block"> Fuente Fin:<br /> 
+                <input style="width:51px" type="text" ng-disabled="!activada" ng-model="data.fuenteFinanciamiento" />
+            </span>
+            <span style="display: inline-block"> Moneda:<br /> 
+                <input style="width:51px" type="text" ng-disabled="!activada" ng-model="data.moneda" />
+            </span>
+            <span style="display: inline-block"> Inciso:<br /> 
+                <input style="width:51px" type="text" ng-disabled="!activada" ng-model="data.inciso" />
+            </span>
+            <span style="display: inline-block"> Principal:<br /> 
+                <input style="width:51px" type="text" ng-disabled="!activada" ng-model="data.principal" />
+            </span>
+            <span style="display: inline-block"> Parcial:<br /> 
+                <input style="width:51px" type="text" ng-disabled="!activada" ng-model="data.parcial" />
+            </span>
+            <span style="display: inline-block"> Ubic.Geo:<br /> 
+                <input style="width:51px" type="text" ng-disabled="!activada" ng-model="data.ubicacionGeografica" />
+            </span>
+            <span style="display: inline-block"> Total:<br /> 
+                <input type="checkbox" ng-disabled="!activada" ng-model="data.total" style="margin-bottom: 20px;margin-left: 10px; margin-top: 8px;"/>
+            </span>
+            <a ng-disabled="!activada" class="btn pull-right" ng-click="agregarPartida(data)" title="Agregar..." style="padding-left: 0px; padding-right: 0px;margin-top: 19px;margin-left: 15px;"><i class="icon-save"></i></a>
+        </div>
+        
+        <div ng-repeat="o in proyecto.partidas" style="margin-bottom: 0px;margin-left: 30px;" ng-controller="PresupuestoSigafPOACtrl">
+            <hr style="margin-top: 3px; margin-bottom: 8px;">
+            <div style="margin-bottom: 0px">
+                <span style="display: inline-block"> Año:<br /> 
+                    <input style="width:51px" type="text" disabled ng-model="o.anio" />
+                </span>
+                <span style="display: inline-block"> Jurisd:<br /> 
+                    <input style="width:51px" type="text" disabled ng-model="o.jurisdiccion" />
+                </span>
+                <span style="display: inline-block"> Entidad:<br /> 
+                    <input style="width:51px" type="text" disabled ng-model="o.entidad" />
+                </span>
+                <span style="display: inline-block"> Programa:<br />
+                    <input style="width:51px" type="text" disabled ng-model="o.programa" />
+                </span>
+                <span style="display: inline-block"> Proyecto:<br />
+                    <input style="width:51px" type="text" disabled ng-model="o.proyecto" />
+                </span>
+                <span style="display: inline-block"> Actividad:<br />
+                    <input style="width:51px" type="text" disabled ng-model="o.actividad" />
+                </span>
+                <span style="display: inline-block"> Obra:<br /> 
+                    <input style="width:51px" type="text" disabled ng-model="o.obra" />
+                </span>
+                <span style="display: inline-block"> Fuente Fin:<br /> 
+                    <input style="width:51px" type="text" disabled ng-model="o.fuenteFinanciamiento" />
+                </span>
+                <span style="display: inline-block"> Moneda:<br /> 
+                    <input style="width:51px" type="text" disabled ng-model="o.moneda" />
+                </span>
+                <span style="display: inline-block"> Inciso:<br /> 
+                    <input style="width:51px" type="text" disabled ng-model="o.inciso" />
+                </span>
+                <span style="display: inline-block"> Principal:<br />
+                    <input style="width:51px" type="text" disabled ng-model="o.principal" />
+                </span>
+                <span style="display: inline-block"> Parcial:<br />
+                    <input style="width:51px" type="text" disabled ng-model="o.parcial" />
+                </span>
+                <span style="display: inline-block"> Ubic.Geo:<br /> 
+                    <input style="width:51px" type="text" disabled ng-model="o.ubicacionGeografica" />
+                </span>
+                <span style="display: inline-block"> Total:<br /> 
+                    <input type="checkbox" disabled ng-model="o.total" style="margin-bottom: 20px;margin-left: 10px; margin-top: 8px;margin-right: 10px;" />
+                </span>
+                <button class="btn btn-link" ng-show="activada" ng-click="eliminarListaElem(o, proyecto.partidas)" style="margin-bottom: 14px;"><i class="icon-trash"></i></button><br>
+                <span style="display: inline-block;margin-left: 74px;">Definitivo: <br /> 
+                    <input style="width:100px" type="text" disabled ng-model="sigaf.definitivo" />
+                </span>
+                <span style="display: inline-block">Devengado: <br /> 
+                    <input style="width:100px" type="text" disabled ng-model="sigaf.devengado" />
+                </span>
+                <span style="display: inline-block">Pagado: <br /> 
+                    <input style="width:100px" type="text" disabled ng-model="sigaf.pagado" />
+                </span>
+                <span style="display: inline-block">Preventivo: <br /> 
+                    <input style="width:100px" type="text" disabled ng-model="sigaf.preventivo" />
+                </span>
+                <span style="display: inline-block">Restringido: <br /> 
+                    <input style="width:100px" type="text" disabled ng-model="sigaf.restringido" />
+                </span>
+                <span style="display: inline-block">Vigente: <br /> 
+                    <input style="width:100px" type="text" disabled ng-model="sigaf.vigente" />
+                </span>
+            </div>
+        </div>
+        <hr style="margin-top: 10px;margin-bottom: 10px;">
+        <form class="form-inline" style="margin-top: 15px;">
+            <label style="width: 162px; text-align: right; padding-right: 14px;">Prioridad Ministerial:</label>
+            <select type="text" ng-model="proyecto.prioridadMinisterial" ng-disabled="!activada" style="width: 180px">
+                <option ng-disabled="true" value="">{{proyecto.prioridadMinisterial}}</option>
+                <option value="Alta">Alta</option>
+                <option value="Media">Media</option>
+                <option value="Baja">Baja</option>
+            </select>
+            <label style="width: 175px; text-align: right; padding-right: 14px;">Presupuesto Solicitado:</label>
+            <input type="text" ng-disabled="!activada" ng-model="proyecto.presupuestoSolicitado" style="width: 110px;" />
+            <label style="width: 150px; text-align: right; padding-right: 14px;">Presupuesto Gestión:</label>
+            <input type="text" ng-disabled="!activada" ng-model="proyecto.presupuestoGestion" style="width: 110px;" />
+        </form>
+        <form class="form-inline">
+            <label style="width: 162px; text-align: right; padding-right: 14px;" ng-if="hasPermission('poa.administrador')">Prioridad Jefatura:</label>
+            <select type="text" ng-model="proyecto.prioridadJefatura" ng-disabled="!activada" style="width: 180px" ng-if="hasPermission('poa.administrador')">
+                <option ng-disabled="true" value="">{{proyecto.prioridadJefatura}}</option>
+                <option value="A+">A+</option>
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+                <option value="No prioritario">No prioritario</option>
+            </select>
+          <label style="width: 175px; text-align: right; padding-right: 14px;">Fecha de inicio:</label>
+          <input type="text" ng-disabled="!activada" ng-model="proyecto.fechaInicio" date style="width: 110px;" />
+          <label style="width: 150px; text-align: right; padding-right: 14px;">Fecha de fin:</label>
+          <input type="text" ng-disabled="!activada" ng-model="proyecto.fechaFin" date style="width: 110px;" />
+        </form>
+      </div>
+    </div>
+    
+    <div class="card span12" style="padding-top: 10px; margin-top: 0px;padding-bottom: 15px;" ng-if="hasPermission('poa.administrador')">
+      <h3 class="card-heading simple">Etiquetas y Temas</h3>
+      <div class="card-body">
+        <div class="span5">
+            <form class="form-inline" style="margin-bottom: 5px;">
+                <label style="width: 60px; text-align: right; padding-right: 14px;">Etiquetas:</label>
+                <select ui-select2 ng-disabled="!activada" style="width: 390px;" type="text" ng-model="dataEtiqueta" ng-options="i._id as i.nombre for i in etiquetas | filter: filtroEtiqueta" ng-click="agregarEtiqueta(dataEtiqueta)"></select>
+            </form>
+            <form class="form-inline" style="margin-bottom: 0px;margin-left: 78px;">
+                <div class="btn-group" ng-repeat="e in proyecto.etiquetas" style="margin-bottom: 5px;margin-left: 0px;margin-right: 5px;">
+                    <button class="btn active">{{etiquetaPorId(e).nombre}}</button>
+                    <button class="btn active" ng-show="activada" ng-click="eliminarListaElem(e, proyecto.etiquetas)"><i class="icon-remove"></i></button>
+                </div>
+            </form>
+        </div>
+        <div class="span6">
+            <form class="form-inline" style="margin-bottom: 5px;">
+                <label style="width: 70px; text-align: right; padding-right: 14px;">Temas:</label>
+                <select ui-select2 style="width: 430px;" ng-disabled="!activada" type="text" ng-model="dataTema" ng-options="i._id as i.nombre for i in temas | filter: mostrarTema">
+                    <option ng-disabled="true" value=""></option>
+                </select>
+                <button class="btn" style="margin-bottom:0px; margin-left: 5px" ng-disabled="!activada" ng-click="agregarTema(dataTema)"><i class="icon-ok"></i></button>
+            </form>
+            <form class="form-inline" ng-repeat="t in proyecto.temas" style="margin-bottom: 0px;">
+                <label style="width: 70px; text-align: right; padding-right: 14px;"></label>
+                <input style="width: 412px;" type="text" ng-disabled="true" value="{{temaPorId(t).nombre}}" />
+                <a href="#" style="margin-left: 10px" ng-show="activada" ng-click="eliminarListaElem(t, proyecto.temas)"><i class="icon-trash"></i></a>
+            </form>
+        </div>
+      </div>
+    </div>
+</div>

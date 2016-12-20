@@ -1,0 +1,20 @@
+<div ng-controller="NuevoFuncionarioCtrl">
+    <div class="well span9 offset2">
+    <a ng-click="guardar()" class="btn btn-success pull-right" type="button"><i class="icon-ok icon-white"></i> Guardar</a>
+    <h3 style="margin-top: 0px;">Nuevo</h3>
+    <br />
+        <form class="form-horizontal">
+        
+        	<div class="control-group">
+        		<forminput ng-model="funcionario.nombre" placeholder="Sin nombre" title="Nombre" />
+        		<forminput ng-model="funcionario.reparticion" placeholder="Sin repartición" title="Repartición" />
+        		<formselect ng-model="funcionario.jurisdiccion" source="jurisdicciones" placeholder="Seleccionar" title="Jurisdiccion" span="5" />
+                <forminput ng-model="funcionario.direccion" placeholder="Sin dirección" title="Dirección" />
+                <forminput ng-model="funcionario.telefono" placeholder="Sin teléfono" title="Teléfono" />
+                <forminput ng-model="funcionario.email" placeholder="Sin e-mail" title="E-mail" />
+            </div>
+        
+        	<hr />
+        </form>
+    </div>
+</div>

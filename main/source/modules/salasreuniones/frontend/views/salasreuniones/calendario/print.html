@@ -1,0 +1,115 @@
+<style>
+    .no-border, .no-border > th, .no-border > td {
+        border: none;
+    }
+    .tablaPrint th, .tablaPrint td {
+        padding-top:1px;
+        padding-bottom:1px;
+        border:1px solid #CACACA;
+    }
+</style>
+
+<div class="card span12" style="border:0px" ng-controller="SalasReunionesPrint as controller">
+    
+    <a class="btn pull-right no-print" ng-click="imprimir()" ><i class="icon-print"></i> Imprimir</a>
+    <a class="btn pull-right no-print" href="/salasreuniones" ><i class="icon-arrow-left"></i> Volver</a>
+    
+    <table class="table tablaPrint table-bordered" style="margin-bottom: 10px;">
+        <tr>
+            <td width="48%">
+                <img src="/views/orm/reunion/escudo.png" width="60px" style="float: left; margin-right: 10px" />
+                <b>Buenos Aires Ciudad</b>
+                <br>Jefatura de Gabinete de ministros
+                <br>SS de Planeamiento y Control de Gestión
+                <br>DG Control de Gestión</td>
+            <td width="52%" style="text-align: right; vertical-align: top; white-space: nowrap">
+                <h3 style="margin-top: 0px; margin-bottom: 0px;">
+                Salas de Reuniones<br>
+                Reserva de {{sala.nombre}}</h3>
+            </td>
+        </tr>
+        <tr ng-if="instancia.titulo">
+            <td colspan="2">
+                <h3 style="margin-top: 0px; margin-bottom: 0px;text-align:center">
+                {{instancia.titulo}}</h3></td>
+        </tr>
+    </table>
+    <table class="table tablaPrint table-bordered" style="background-color: white;margin-bottom: 10px;">
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Hora Inicio</th>
+                <th>Hora Fin</th>
+                <th>Usuario</th>
+                <th>Interno</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{instancia.fecha}}</td>
+                <td style="text-align:center">{{instancia.desdeHora}}</td>
+                <td style="text-align:center">{{instancia.hastaHora}}</td>
+                <td>{{instancia.usuario}}</td>
+                <td>{{instancia.interno}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table tablaPrint table-bordered" style="background-color: white;margin-bottom: 10px;">
+        <thead>
+            <tr>
+                <th>Dueño</th>
+                <th>Mail</th>
+                <th>Telefono Directo</th>
+                <th>Conmutador</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{contactoPorId(instancia.duenio).apellidos}}, {{contactoPorId(instancia.duenio).nombre}}</td>
+                <td>{{valorCorreo(contactoPorId(instancia.duenio))}}</td>
+                <td style="text-align:center">{{valorTelefono(contactoPorId(instancia.duenio))}}</td>
+                <td style="text-align:center">{{valorConmutador(contactoPorId(instancia.duenio))}} </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table tablaPrint table-bordered" style="background-color: white;margin-bottom: 10px;">
+        <thead>
+            <tr>
+                <th>Cantidad de asistentes</th>
+                <th>Visitas Externas</th>
+                <th>Requerimientos</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{instancia.asistentes}}</td>
+                <td><div ng-repeat="t in instancia.visitasExternas">{{contactoPorId(t).apellidos}}, {{contactoPorId(t).nombre}}</div><br></td>
+                <td><div ng-if="instancia.notebook">- Notebook<br></div>
+                    <div ng-if="instancia.lcd">- LCD<br></div>
+                    <div ng-if="instancia.telefonoConferencia">- Telefono Conferencia<br></div>
+                    <div ng-if="instancia.proyector">- Proyector<br></div>
+                    <div ng-if="instancia.pantalla">- Pantalla<br></div>
+                    <div ng-if="instancia.videoconferencia">- Videoconferencia<br></div>
+                    <div ng-if="instancia.sillasAdicionales">- Sillas Adicionales ({{instancia.cantSillasAdicionales}})<br></div>
+                    <div ng-if="instancia.rotafolio">- Rotafolio<br></div>
+                    <div ng-if="instancia.mesaAuxiliar">- Mesa Auxiliar<br></div>
+                    <div ng-if="instancia.catering">- Catering</div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table tablaPrint table-bordered" style="background-color: white;margin-bottom: 10px;">
+        <thead>
+            <tr>
+                <th>Observaciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{instancia.observaciones}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <span class="pull-right">Impreso el {{hora}} hs</span>
+    <span ng-if="instancia.creada">Ultima modificacion de fecha/horario: {{instancia.creada}} hs</span>
+</div>

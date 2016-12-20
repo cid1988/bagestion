@@ -1,0 +1,49 @@
+
+<div class="card span12" ng-controller="UPEJOLEditarHitoCtrl" style="padding-top: 10px; margin-top: 0px;">
+  <h3 class="card-heading simple">
+  <span class="btn-group pull-right">
+    <a ng-click="volver()" class="btn btn-default"><i class="icon icon-arrow-up"></i> Volver</a>
+    <a ng-if="activada" ng-click="cancelar()" class="btn btn-default"><i class="icon icon-undo"></i> Cancelar</a>
+    <a ng-if="activada" ng-click="eliminar()" class="btn btn-default"><i class="icon icon-trash"></i> Eliminar</a>
+    <a ng-if="activada" ng-click="guardar()" class="btn btn-default"><i class="icon icon-save"></i> Guardar</a>
+    <a ng-if="!activada" ng-click="activar()" class="btn btn-default" ng-show="permisoHito()"><i class="icon icon-edit"></i> Modificar</a>
+  </span>
+  <span class="pull-right" style="margin-right: 10px;margin-left: 20px;">Hito</span>
+  <strong style="margin-right: 1em">{{tabCtrl.filtro.hito.nombre}}</strong></h3>
+  <div class="card-body">
+    <form class="form-inline">
+      <label style="width: 162px; text-align: right; padding-right: 14px;">Nombre:</label>
+      <input type="text" ng-disabled="!activada" ng-model="hito.nombre" style="width: 700px;" />
+      <label style="width: 50px; text-align: right; padding-right: 14px;">Orden:</label>
+      <input type="text" ng-disabled="!activada" ng-model="hito.orden" style="width: 50px;"/>
+    </form>
+    <form class="form-inline">
+      <label style="width: 162px; text-align: right; padding-right: 14px;">Fecha Planificada:</label>
+      <input type="text" ng-disabled="!activada" ng-model="hito.fechaPlanificada" date style="width: 90px;" />
+      <label style="width: 130px; text-align: right; padding-right: 14px;">Fecha Estimada:</label>
+      <input type="text" ng-disabled="!activada" ng-model="hito.fechaEstimada" date style="width: 90px;" />
+      <label style="width: 100px; text-align: right; padding-right: 14px;">Fecha Real:</label>
+      <input type="text" ng-disabled="!activada" ng-model="hito.fechaReal" style="width: 90px;" date />
+      <label style="width: 100px; text-align: right; padding-right: 14px;">Cumplida:</label>
+      <input type="checkbox" ng-disabled="!activada" ng-model="hito.cumplida" />
+      <label style="width: 100px; text-align: right; padding-right: 14px;">Cancelada:</label>
+      <input type="checkbox" ng-disabled="!activada" ng-model="hito.cancelada" />
+    </form>
+    <form class="form-inline" style="margin-bottom: 10px;">
+      <label style="width: 162px; text-align: right; padding-right: 14px;">Sub Hitos:</label>
+      <input type="text" ng-disabled="!activada" ng-model="dataSHito.texto" style="width: 700px;" />
+      <button class="btn" style="margin-bottom:0px; margin-left: 5px" ng-disabled="!activada" ng-click="agregarSub(dataSHito)"><i class="icon-ok"></i></button>
+    </form>
+    <form class="form-inline" ng-repeat="i in hito.subhitos" style="margin-bottom: 2px;">
+      <label style="width: 162px; text-align: right; padding-right: 14px;"></label>
+      <input type="text" ng-disabled="!activada" ng-model="i.texto" style="width: 700px;" />
+      <input type="checkbox" ng-disabled="!activada" ng-model="i.check" />
+      <button class="btn btn-link" style="margin-bottom:0px; margin-left: 25px" ng-show="activada" ng-click="eliminarListaElem(i, hito.subhitos)"><i class="icon-trash"></i></button>
+    </form>
+    
+    <div id="ganttChart"></div>
+	<br/><br/>
+	<div id="eventMessage"></div>
+  </div>
+</div>
+

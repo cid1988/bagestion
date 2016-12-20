@@ -1,0 +1,10 @@
+<div ng-controller="ORMCalendarioNavbarCtrl">
+    <div class="btn-group pull-right" style="margin-right: 7px">
+        <a class="btn btn-link" ng-hide="editando" ng-click="$root.$broadcast('start-edit')" ng-if=hasPermission('agenda.editar') >
+            <i class="icon-edit"></i>&nbsp;Activar edición</a>
+        <a class="btn btn-link" ng-hide="!editando" ng-click="$root.$broadcast('stop-edit')">
+            <i class="icon-edit"></i>&nbsp;Cerrar edición</a>
+        <i class="icon-spinner icon-spin" ng-show="trabajando"></i>
+    </div>
+
+</div>

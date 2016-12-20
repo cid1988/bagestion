@@ -1,0 +1,75 @@
+<style>
+    .select2-container .select2-choice span{
+        font-size: 14px;
+    }
+</style>
+
+<div ng-controller="SalasRegistroCtrl">
+
+    <div class="card" style="overflow-y: auto; overflow-x: hidden;top: 80px;bottom: 12px;right: 20px;left: 20px;margin-top: 0px;margin-bottom: 0px;">
+        <div class="card-body" style="margin-top: 0px;overflow-y:auto">
+            
+            <h3 class="card-heading simple">Registro Salas
+                <select ui-select2 class="pull-right" style="margin-right:20px;margin-bottom:20px;" type="text" ng-model="filtroPiso" >
+                    <option value="" style="font-size:14px;">Todas</option>
+                    <option value="SS" style="font-size:14px;">SS</option>
+                    <option value="PB" style="font-size:14px;">PB</option>
+                    <option value="1" style="font-size:14px;">1</option>
+                    <option value="2" style="font-size:14px;">2</option>
+                </select>
+            </h3>
+            <br>
+            
+            <div ng-repeat="s in salas | orderBy:'desdeDate' && 'tipo' | filter: funcion " style="font-size: x-large; margin-top: 8px; margin-bottom: 8px;" ng-hide="s.apagado">
+               <hr style="margin-top: 5px; margin-bottom: 5px;">
+               <button type="button" style="margin-bottom: 0px;font-size: 20px;height: 75px;width: 25%" class="btn btn-large btn-info">{{s.nombre}}</button>
+               <table class="span pull-right" style="margin-bottom: 0px;height: 75px;width: 72%" class="btn btn-large btn-info">
+                   <tr ng-repeat="i in instancias | orderBy:'desdeDate' | filter:{sala:s._id} " style="font-size: x-large; margin-top: 8px; margin-bottom: 8px;" ng-show="(($index == 0) || ($index == 1))">
+                        <td style="width:220px"><b>{{i.desdeHora}}hs a {{i.hastaHora}}hs</b></td>
+                        <td>{{i.titulo}} ({{contactoPorId(i.duenio).nombre}} {{contactoPorId(i.duenio).apellidos}})</td>
+                        <td style="width:110px"><i class="icon-phone"></i> {{i.interno}}</td>
+                        <td style="width:75px"><i class="icon-user"></i> {{i.asistentes}}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--<div ng-controller="SalasReunionesCateringCtrl">
+    <div class="span13">
+        <div class="card" style="margin-bottom: 10px;">
+            <div class="card-actions pull-right" style="margin: 0px 20px 0  0 ; padding: 0">
+                <div class="controls" style="min-width: 250px; display: inline-block; margin-bottom: 7px; margin-right: 10px">
+                    <select ui-select2="tipoSalaSelect2" style="width:100%" type="text" ng-model="filtro.tipo" placeholder="">
+                        <option value="">Todas</option>
+                        <option ng-repeat="i in salas" value="{{i.tipo}}">{{i.nombre}}</option>
+                    </select>
+                </div>
+        
+                <div class="btn-group" ng-show="editando">
+                    <a ng-click="revertToOriginal();cancelarReprogramacion()"
+                    type="button" class="btn btn-link" ng-disabled="!huboReporogramacion()">
+                        <i class="icon-undo"></i>
+                    </a>
+                    <a ng-click="applyChanges();guardarReporogramacion()" 
+                    type="button" class="btn btn-link" ng-disabled="!huboReporogramacion()">
+                        <i class="icon-ok icon-white"></i>
+                    </a>
+                </div>
+            </div>
+            <h3 class="card-heading simple">Calendario de Catering en Salas de Reuniones</h3>
+            <div style="margin-left: 20px; margin-right: 20px; margin-top: 16px" class="calendar"
+            fullcalendar calendar-object="calendar" ng-model="calendar"></div>
+            <div style="margin: 20px">
+                <span style="background-color: {{salaResaltada && colorSala(salaResaltada)}}; width: 20px; height: 20px; display: inline-block">&nbsp;</span>
+                <span>{{salaResaltada.nombre}}</span><span ng-if="instanciaResaltada.titulo"> - {{instanciaResaltada.titulo}}</span>&nbsp;
+                <div class="pull-right">
+                    <img ng-repeat="pId in instanciaResaltada.participantes | keysArray:star" ng-init="p = instanciaResaltada.participantes[pId]" class="img-circle" ng-show="contactosPorId[pId].foto" ng-class="{'gray-border': p.star}"
+                    style="width: 25px; height: 25px" ng-src="/api/upload/{{contactosPorId[pId].foto}}"
+                    />
+                </div>
+            </div>
+        </div>
+    </div> 
+</div>-->

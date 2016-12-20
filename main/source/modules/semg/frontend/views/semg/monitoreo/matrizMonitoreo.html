@@ -1,0 +1,162 @@
+<style>
+    .table {border: 0;}
+    .table td {
+        padding: 8px;
+        line-height: 20px;
+        text-align: left;
+        border: 0;
+        vertical-align: middle;
+    }
+    .table th {vertical-align: middle !important;}
+    th:nth-child(2){
+        padding: 8px;
+        line-height: 20px;
+        text-align: left;
+        border: 0;
+        vertical-align: middle;
+    }
+    .table td {
+      border-left: 1px solid #cecece;
+      border-right: 1px solid #cecece;
+    }
+    .nada{background-color:#FFEBEE;}
+    .val{background-color:#FFFDE7;}
+    .apr{background-color:#DCEDC8;}
+    .paddingGrilla{padding:5px;}
+    .lineaYcolor{
+        display: inline-block; 
+        color:#404040;
+    }
+    .inline>*{display:inline-block;}
+    .letra{
+        font-size: 14px;
+        color: #333333;
+    }
+    a.lineaYcolor:hover {
+        text-decoration: none;
+        color: #404040;
+    }
+    .sinOverflow{overflow-y:hidden;}
+    .tablaMeses>div{
+        width:39px;
+        display:inline-block;
+    }
+    .rotar{
+        display: block; 
+        -webkit-transform: rotate(-90deg); 
+        -moz-transform: rotate(-90deg);
+    }
+    .llego{background-color:#4CAF50;}
+    .falta{background-color:#BDBDBD;}
+    .noPadding{padding:0 !important;}
+    input,select{border-radius:3px !important;}
+    input:focus,select:focus{border-color:#26C6DA !important;}
+    .rojo{background-color:#EF5350;}
+    .verde{background-color:#66BB6A;}
+    .amarillo{background-color:#FFEE58;}
+    .gris{background-color:#78909C;}
+    .cuadrado{
+        height:25px;
+        width:25px;
+        border-radius:25px;
+        margin:auto;
+    }
+    .nvtooltip{display:none !important;}
+
+    #meta:hover{
+        background-color:#1976D2 !important;
+    }
+</style>
+<div class="card body noPadding" ng-controller="MatrizSEMGCtrl">
+    <table class="table table-striped" style="margin:0">
+            <thead>
+                <tr>
+                    <th colspan="11" class="noPadding">
+                        <div class="card-actions no-print noPadding" style="padding-bottom:10px !important">
+                            <h2 class="card-heading simple" style="border:none">Formulación de Matriz de Indicadores {{anio}}<br>
+                                <span>{{organigramaPorId(jurisdic).nombre}}</span>
+                                <span> - Total de Indicadores: {{filtrados.length}}</span>
+                                <div class="pull-right" style="font-size:0.7em !important">
+                                    <select ui-select2 ng-model="filtro.dependencia" placeholder="Jurisdicciones" ng-show="jurisdic=='todas'">
+                                        <option value="">Todas las Jurisdicciones</option>
+                                        <option ng-repeat="i in organigrama | orderBy:'nombre'" value="{{i.idOrmOrganigrama}}">{{i.nombre}}</option>
+                                    </select>
+                                    <input style="margin-bottom:0" placeholder="Buscar por Indicador..." type="text" ng-model="filtro.indicadorImpacto" autofocus/>
+                                </div>
+                            </h2>
+                        </div>
+                    </th>
+                </tr>
+                <tr style="background-color:#BDBDBD">
+                    <th><a ng-click="orden = 'objetivoImpacto';" href="#" class="lineaYcolor" style="margin-left: 25px;">Objetivo Impacto</a></th>
+                    <th><a ng-click="orden = 'objetivoMinisterial'" href="#" class="lineaYcolor">Objetivo Ministerial</a></th>
+                    <th><a ng-click="orden = 'indicadorImpacto'" href="#" class="lineaYcolor">Nombre del Indicador</a></th>
+                    <th><a ng-click="orden = 'metrica'" href="#" class="lineaYcolor">Métrica</a></th>
+                    <th><a ng-click="orden = 'frecuencia'" href="#" class="lineaYcolor">Frecuencia</a></th>
+                    <th><a ng-click="orden = 'peso'" href="#" class="lineaYcolor">Peso</a></th>
+                    <th><a ng-click="orden = 'unidad2'" href="#" class="lineaYcolor">Unidad {{anio-2}}</a></th>
+                    <th><a ng-click="orden = 'unidad1'" href="#" class="lineaYcolor">Unidad {{anio-1}}</a></th>
+                    <th><a ng-click="orden = 'metaAnio'" href="#" class="lineaYcolor">Meta {{anio}}</a></th>
+                    <th><a style="text-align: center;" class="lineaYcolor">Estado</a></th>
+                    <th></th>
+                </tr> 
+            </thead>
+            <tbody>
+                <tr data-ng-repeat="i in filtrados = (indicadores | filter:filtro)" ng-style="{'border-top' : estiloImpacto}">
+                    <td>
+                        <span>{{impactoPorId(i.objetivoImpacto).nombre || "Sin Objetivo Impacto"}}</span>
+                    </td>
+                    <td ng-style="{'border-top' : estiloMinisterial}">
+                        <span>{{ministerialPorId(i.objetivoMinisterial).nombre || "Sin Objetivo Ministerial"}}</span>
+                    </td>
+                    <td>
+                        <div>{{i.indicadorImpacto}}</div>
+                    </td>
+                    <td ng-style="{'border-top' : estiloMinisterial}">
+                        <div>{{i.metrica}}</div>
+                    </td>
+                    <td ng-style="{'border-top' : estiloMinisterial}">
+                        <div>{{i.frecuencia}}</div>
+                    </td>
+                    <td ng-style="{'border-top' : estiloMinisterial}">
+                        <div ng-if="i.peso">{{i.peso}}</div> 
+                        <span style="color: #c73e38;font-weight: 600; font-size: large;" ng-if="campoVacio(i.peso)">-</span>
+                    </td>
+                    <td ng-style="{'border-top' : estiloMinisterial}">
+                        <div>{{i.unidad2}} 
+                            <span style="color: #c73e38;font-weight: 600; font-size: large;" ng-if="(diferenciaUnidades(i.unidad3, i.unidad2) || campoVacio(i.unidad2))">-</span>
+                        </div>
+                    </td>
+                    <td ng-style="{'border-top' : estiloMinisterial}">
+                        <div>{{i.unidad1}} 
+                            <span style="color: #c73e38;font-weight: 600; font-size: large;" ng-if="(diferenciaUnidades(i.unidad2, i.unidad1) || campoVacio(i.unidad1))">-</span>
+                        </div>
+                    </td>
+                    <td ng-style="{'border-top' : estiloMinisterial}">
+                        <div>{{i.metaAnio}}</div>
+                    </td>
+                    <td ng-style="{'border-top' : estiloMinisterial}">
+                        <div class="cuadrado" ng-class="ultimoMesEditado(anio,i.matrizDependencia)" title="Ultimo indicador validado">
+                            
+                        </div>
+                    </td>
+                    <td ng-style="{'border-top' : estiloMinisterial}">
+                        <div> <!--{{i._id}}-->
+                            <a class="btn btn-link" type="button" href="/semg/matrizMonitoreo/{{anio}}/{{i._id}}" title="Editar el indicador"><i class="icon-edit"></i></a>
+                            <a class="btn btn-link" type="button" href="#" ng-click="verGrafico(i)" title="Grafico del indicador"><i class="icon-align-left" style="display:inline-block; transform: rotate(270deg);"></i></a>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    <div id="verGrafico" id="verGrafico" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true" style="height: 400px !important;width: 720px !important;margin-left: -360px !important;">
+        <div class="modal-header" style="padding-bottom: 10px;">
+            <button class="close" data-dismiss="modal" href="#">&times;</button> 
+            <h3>Grafico de {{data.nombre}}</h3>
+        </div>
+        
+        <div class="modal-body" id="grafico" style="overflow:hidden !important">
+            <nvd3 options="options" data="data" style="widht:560px !important;"></nvd3>
+        </div>
+    </div>
+</div>

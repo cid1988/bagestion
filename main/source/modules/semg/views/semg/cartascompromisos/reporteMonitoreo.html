@@ -1,0 +1,219 @@
+<style>
+    .table {
+        border: 0;
+    }
+    .table th, .table td {
+        padding: 4px;
+        line-height: 20px;
+        text-align: left;
+        border: 0;
+        vertical-align: middle;
+    }
+    .table th {
+        background-color: #dddddd !important;
+    }
+    .table td {
+      border-left: 1px solid #cecece;
+      border-right: 1px solid #cecece;
+    }
+    .nav-list > li > div,
+    .nav-list .nav-header {
+      padding: 9px 18px;
+      margin-top: 1px;
+      overflow: hidden;
+      font-size: 14px;
+      line-height: 1.4;
+      color: #737373;
+      text-overflow: ellipsis;
+      text-shadow: none;
+      background-color: #ffffff;
+      border-left: 2px solid transparent;
+      -webkit-transition: border 0.218s;
+         -moz-transition: border 0.218s;
+           -o-transition: border 0.218s;
+              transition: border 0.218s;
+    }
+    
+    .nav-list > li > div:hover,
+    .nav-list > li > div:focus,
+    .nav-list > .active > div,
+    .nav-list > .active > div:hover,
+    .nav-list > .active > div:focus {
+      color: #262626;
+      text-shadow: none;
+      background-color: #f5f5f5;
+      border-color: #427fed;
+    }
+    
+    .nav-list > li > div,
+    .nav-list .nav-header {
+      margin-right: -15px;
+      margin-left: -15px;
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+    }
+    
+    .nav-list > li > div {
+      padding: 3px 15px;
+    }
+    
+    .nav-list > .active > div,
+    .nav-list > .active > div:hover,
+    .nav-list > .active > div:focus {
+      color: #ffffff;
+      text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
+      background-color: #3B3537;
+    }
+    
+    a:link {
+        color: #737373;
+    }
+    
+    a:visited {
+        color: #737373;
+    }
+    
+    a:hover {
+        color: #262626;
+    }
+    
+    a:active {
+        color: #737373;
+    }
+</style>
+<div class="card body" style="margin-top: 0px;padding-top: 0px;" ng-controller="CartaSEMGMonitoreoCtrl">
+    <div style="margin-bottom: 0px" class="no-print">
+        <ul class="breadcrumb" style="margin-bottom: 0px;">
+          <li><a href="/semg/cartascompromisos/{{anio}}" style="color:#404040;">Cartas Compromiso {{anio}}</a> <span class="divider">/</span></li>
+          <li class="active">Reporte de Monitoreo</li>
+        </ul>
+    </div>
+    <div class="card-actions pull-right no-print" style="margin: 0; padding: 0">
+        <div style="margin-right: 10px; display: inline-block;">
+            <input class="span3" type="text" ng-model="filtro.nombreCompleto" placeholder="Buscar por nombre.." style="margin-bottom: 0px;" />
+        </div>
+    </div>
+    <h3 class="card-heading simple">
+        Reporte de Monitoreo de Cartas Compromiso {{anio}}
+    </h3>
+    <div style="margin-top: 0px;padding-left: 30px;padding-right: 30px;">
+        <div ng-repeat="i in monitoreos" ng-show="i.compromisos">
+            <h3 style="margin-top: 30px;">{{organigramaPorId(cartaPorId(i.carta).jurisdiccion).nombreCompleto}} - <span ng-if="!cartaPorId(i.carta).dependencia">{{cartaPorId(i.carta).titulo}}</span><span ng-if="cartaPorId(i.carta).dependencia">{{organigramaPorId(cartaPorId(i.carta).dependencia).nombreCompleto}}</span></h3>
+            <h4 style="margin-top: 0px; margin-bottom: 10px;font-size: 15px;">2) En base a los avances alcanzados hasta el momento, ¿presenta la jurisdicción uno o más compromisos cuya metas planificadas estén en riesgo de no alcanzarse para el final del período Diciembre {{anio}}?</h4>
+            <div class="control-group" ng-repeat="t in i.compromisos" style="margin-bottom: 0px;margin-left: 20px;margin-right: 20px;">
+                <div class="controls">
+                    <div style="margin-top: 0px; margin-bottom: 10px; font-weight: 600;">{{t.compromiso}}</div>
+                    <table border="1" class="table table-striped">
+                        <tr bgcolor= "#FFFFFF">
+                            <th width="30%">Factores de organización interna</th>
+                            <th width="10%">Si / No</th>
+                            <th width="45%">Profundicen</th>
+                            <th width="15%" style="font-size: 10px;">Numeren los que más dificultaron el alcance de las metas</th>
+                        </tr> 
+                        <tr>
+                            <td>a. Presupuesto (asignación o ejecución del presupuesto)</td>
+                            <td>
+                                <span ng-show="t.presupuesto.valor == 'si'">Si</span>
+                                <span ng-show="t.presupuesto.valor == 'no'">No</span>
+                            </td>
+                            <td>{{t.presupuesto.comentario}}</td>
+                            <td>{{t.presupuesto.importancia}}</td>
+                        </tr>
+                        <tr>
+                            <td>b. Infraestructura (tecnología o espacio físico)</td>
+                            <td>
+                                <span ng-show="t.infraestructura.valor == 'si'">Si</span>
+                                <span ng-show="t.infraestructura.valor == 'no'">No</span>
+                            </td>
+                            <td>{{t.infraestructura.comentario}}</td>
+                            <td>{{t.infraestructura.importancia}}</td>
+                        </tr>
+                        <tr>
+                            <td>c. Personal (cantidad o capacitación)</td>
+                            <td>
+                                <span ng-show="t.personal.valor == 'si'">Si</span>
+                                <span ng-show="t.personal.valor == 'no'">No</span>
+                            </td>
+                            <td>{{t.personal.comentario}}</td>
+                            <td>{{t.personal.importancia}}</td>
+                        </tr>
+                        <tr>
+                            <td>d. Acceso a la información (fuentes y recursos)</td>
+                            <td>
+                                <span ng-show="t.accesoInfo.valor == 'si'">Si</span>
+                                <span ng-show="t.accesoInfo.valor == 'no'">No</span>
+                            </td>
+                            <td>{{t.accesoInfo.comentario}}</td>
+                            <td>{{t.accesoInfo.importancia}}</td>
+                        </tr>
+                        <tr>
+                            <td>e. Coordinación del equipo</td>
+                            <td>
+                                <span ng-show="t.coordinacionEquipo.valor == 'si'">Si</span>
+                                <span ng-show="t.coordinacionEquipo.valor == 'no'">No</span>
+                            </td>
+                            <td>{{t.coordinacionEquipo.comentario}}</td>
+                            <td>{{t.coordinacionEquipo.importancia}}</td>
+                        </tr>
+                        <tr bgcolor= "#FFFFFF">
+                            <th>Factores de coordinación interministerial o externos</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr> 
+                        <tr>
+                            <td>a. Coordinación vertical (con otras jurisdicciones de distinta jerarquía)</td>
+                            <td>
+                                <span ng-show="t.coordinacionVertical.valor == 'si'">Si</span>
+                                <span ng-show="t.coordinacionVertical.valor == 'no'">No</span>
+                            </td>
+                            <td>{{t.coordinacionVertical.comentario}}</td>
+                            <td>{{t.coordinacionVertical.importancia}}</td>
+                        </tr>
+                        <tr>
+                            <td>b. Coordinación horizontal (con otras jurisdicciones de igual jerarquía)</td>
+                            <td>
+                                <span ng-show="t.coordinacionHorizontal.valor == 'si'">Si</span>
+                                <span ng-show="t.coordinacionHorizontal.valor == 'no'">No</span>
+                            </td>
+                            <td>{{t.coordinacionHorizontal.comentario}}</td>
+                            <td>{{t.coordinacionHorizontal.importancia}}</td>
+                        </tr>
+                        <tr>
+                            <td>c. Coordinación con actores externos al GCBA</td>
+                            <td>
+                                <span ng-show="t.coordinacionActores.valor == 'si'">Si</span>
+                                <span ng-show="t.coordinacionActores.valor == 'no'">No</span>
+                            </td>
+                            <td>{{t.coordinacionActores.comentario}}</td>
+                            <td>{{t.coordinacionActores.importancia}}</td>
+                        </tr>
+                        <tr>
+                            <th>Otros ¿Cúales?</th>
+                            <th>
+                                <span ng-show="t.otros.valor == 'si'">Si</span>
+                                <span ng-show="t.otros.valor == 'no'">No</span>
+                            </th>
+                            <th>{{t.otros.comentario}}</th>
+                            <th>{{t.otros.importancia}}</th>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <h4 style="margin-top: 20px; margin-bottom: 10px;font-size: 15px;">3) En lo que resta del año, ¿la jurisdicción va a implementar alguna medida o acción correctiva para alcanzar las metas propuestas?</h4>
+            <div style="margin-left: 20px; margin-right: 20px;" ng-if="i.medidaAccion">
+                <table border="1" class="table table-striped">
+                    <tr>
+                        <th>Compromiso</th>
+                        <th>Acción</th>
+                    </tr>
+                    <tr ng-repeat="t in i.medidaAccion">
+                        <td>{{t.compromiso}}</td>
+                        <td>{{t.texto}}</td>
+                    </tr>
+                </table>
+            </div>
+            <h4 style="margin-top: 20px; margin-bottom: 10px;font-size: 15px;">4) Este espacio está destinado para cualquier comentario, consulta y/o sugerencia que desde la jurisdicción tengan.</h4>
+            <div style="margin-left: 20px; margin-right: 20px; font-weight: 600;">{{i.sugerencias}}</div>
+        </div>
+    </div>
+</div>

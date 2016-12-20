@@ -1,0 +1,8 @@
+<div ng-controller="CrucesFerroviariosCtrl">
+    <div class="btn-group pull-right" style="margin-right: 7px">
+        <a ng-click="$root.$broadcast('volver')" class="btn btn-link"><i class="icon-list"></i> Ver listado</a>
+        <a class="btn btn-link" target="_blank" style="margin-left: 10px" href="/api/crucesFerroviarios-csv/download">
+            <i class="icon-download-alt"></i> Descargar CSV</a>
+        <a class="btn btn-link" style="margin-left: 10px" ng-click="$root.$broadcast('print')"><i class="icon-print icon-white"></i> Imprimir</a>
+    </div>
+</div>

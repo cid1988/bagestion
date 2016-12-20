@@ -1,0 +1,5 @@
+<ul class="nav">
+    <li ng-class="{'active': state.current.section == 'poa'}"><a  ng-href="/poa">POA</a></li>
+    <li ng-class="{'active': state.current.section == 'rdg'}" ng-if="hasPermission('poa.verTodos')"><a  ng-href="/poa/rdg" onClick="window.open(this.href, this.target, 'width=1400,height=750'); return false;" target="_blank">RDG</a></li>
+    <li ng-class="{'active': state.current.section == 'rdp'}" ng-if="hasPermission('poa.verTodos')"><a  ng-href="/poa/rdp" onClick="window.open(this.href, this.target, 'width=1400,height=750'); return false;" target="_blank">RDP</a></li>
+</ul>

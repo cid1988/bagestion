@@ -1,0 +1,1 @@
+exports = module.exports = ['/scripts/controllers/orm-reunion-old.js', '/scripts/controllers/orm-minuta-old.js', '/scripts/controllers/orm-temario-old.js', '/scripts/controllers/orm-old.js', '/scripts/controllers/orm-minuta-old.js'];

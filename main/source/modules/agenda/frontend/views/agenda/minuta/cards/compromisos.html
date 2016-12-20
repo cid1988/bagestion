@@ -1,0 +1,124 @@
+<style type="text/css">
+     .sinPaddingLR{
+          padding-left: 0; 
+          padding-right: 0;    
+     }
+     .comentario{
+          margin-right: 20px;
+          margin-bottom: 5px;
+          word-wrap: break-word;
+     }
+     .enLinea{
+          display:inline-block;
+     }
+     .sinMarginTB{
+          margin-top:0;
+          margin-bottom:0;
+     }
+     .sinMargin{
+          margin:0;
+     }
+     .card-footer{
+          overflow:hidden; 
+          padding-bottom:15px;
+          width:95%;
+     }
+     .enLinea>input{
+          margin-bottom:0;
+     }
+     #responsables{
+          width:95%;
+     }
+     #responsables>div{
+          margin-bottom: 5px;
+          margin-left: 5px;
+     }
+</style>
+<div ng-controller="AgendaNotaMinutaCtrl">
+     <div class="card animated fadeInDown" ng-if="agregarComentario">
+          <div class="card-heading simple">
+               <h3 class="sinMarginTB">Agregar Compromiso
+                    <div class="btn-group pull-right" data-toggle="buttons-radio">
+                         <button class="btn" ng-class="(!tema) && 'active btn-info'" ng-click="tema=false">Tema</button>
+                         <button class="btn" ng-class="(tema) && 'active btn-info'" ng-click="tema=true">Título</button>
+                    </div>
+               </h3>
+          </div>
+          <div class="card-body">
+               <div class="control-group enLinea" ng-hide="tema==true" style="width:70%">
+                    <label class="control-label">Tema:</label>
+                    <select class="input-block-level" ui-select2 type="text" ng-model="data.tema" ng-options="i._id as i.nombre for i in temas | orderBy:'nombre' | filter: mostrarTema">
+                         <option ng-disabled="true" value="">{{data.tema.nombre}}</option>
+                    </select>
+               </div>
+               <div ng-show="tema==true" class="control-group enLinea" style="width:70%; margin-bottom:10px">
+                    <label class="control-label">Titulo:</label>
+                    <input type="text" class="input-block-level" placeholder="Si no existe tema" ng-model="data.titulo" />
+               </div>
+               <div style="width:28%" class="control-group enLinea">
+                    <label class="control-label">Fecha:</label>
+                    <input type="text" date placeholder="Fecha" ng-model="data.fecha" class="input-block-level"/>
+               </div>
+               <div class="control-group enLinea" style="width:70%">
+                    <label class="control-label">Responsables:</label>
+                    <select class="input-block-level" ui-select2 type="text" ng-model="responsable" ng-options="i._id as i.apellidos + ' ' + i.nombre for i in contactos | orderBy:'apellidos'">
+                         <option ng-disabled="true" value="">{{responsable.apellidos}} {{responsable.nombre}}</option>
+                    </select>
+               </div>
+               <div style="width:28%" class="enLinea">
+                    <a href="#" class="btn sinPaddingLR" style="width:100%" ng-click="data.responsables.push(responsable); responsable=''">Agregar</a>
+               </div>
+               <div id="responsables">
+                    <div class="btn-group" ng-repeat="o in data.responsables">
+                         <button class="btn active"><strong>{{contactoPorId(o).apellidos}} {{contactoPorId(o).nombre}}</strong></button>
+                         <button class="btn active"ng-click="eliminarElemento(data.responsables,o)"><i class="icon-remove"></i></button>
+                    </div>
+          
+               </div>
+               <div class="control-group">
+                    <label class="control-label">Tarea: </label>
+                    <textarea rows="5" style="width:95%; resize:none" type="text"ng-model="data.tarea" placeholder="Tarea comprometida"/>
+               </div>
+          </div>
+          <div class="card-footer">
+               <div class="pull-right">
+                    <a href="#" class="btn" ng-click="agregarComentario=false">Cancelar</a>
+                    <a href="#" class="btn btn-info" ng-click="agregarCompromiso(true, data)">Agregar compromiso</a>
+               </div>
+          </div>
+     </div>
+     
+     <!-- Comienzo comentarios -->
+     <div class="card animated fadeInDown">
+          <div class="card-actions pull-right" style="padding: 0; margin: 0; margin-right: 10px" ng-show="editando">
+               <div class="btn-group">
+                    <a ng-click="agregarCompromiso(false)" type="button" class="btn btn-link"><i class="icon-plus"></i></a>
+               </div>
+          </div>
+          <h3 class="card-heading simple">Compromisos</h3>
+          <div class="card-body">
+               <div ng-hide="minuta.compromisos.length" style="margin-bottom: 15px;">No se ha cargardo ningun compromiso aún</div>
+                    <div ng-repeat="o in minuta.compromisos"style="clear:both; min-height: 40px; margin-top: 10px; margin-bottom: 10px" ng-show="minuta.compromisos.length">
+                         <div class="btn-group pull-right enLinea sinMarginTB">
+                              <a class="btn btn-link sinPaddingLR" ng-click="editarCompro(false, o)" ng-if="editando"><i class="icon-edit"></i></a>
+                              <a class="btn btn-link sinPaddingLR" ng-click="eliminarElemento(minuta.compromisos,o)" ng-if="editando"><i class="icon-trash icon-white"></i></a>
+                              <a class="btn btn-link sinPaddingLR" ng-click="subir(o)"  ng-if="editando"><i class="icon-chevron-up"></i></a>
+                              <a class="btn btn-link sinPaddingLR" ng-click="bajar(o)" ng-if="editando"><i class="icon-chevron-down"></i></a>
+                         </div>
+                         <span class="comentario enLinea" ng-hide="!o.tema"><b>Tema: </b>{{temaPorId(o.tema).nombre}}</span>
+                         <span class="comentario enLinea" ng-show="!o.tema"><b>Título: </b>{{o.titulo}}</span>
+                         <span class="enLinea"><b>Fecha: </b>{{o.fecha}}</span>
+                         <br>
+                         <span class="comentario"><b>Responsables:</b>
+                              <div ng-repeat="u in o.responsables" class="enLinea sinMarginTB">
+                                   {{contactoPorId(u).apellidos}} {{contactoPorId(u).nombre}},&nbsp
+                              </div>
+                         </span>
+                         <br>
+                         <span class="comentario"><b>Tarea:</b>{{o.tarea}}</span>
+                         <hr style="margin-top: 10px; margin-bottom: 10px;"/>
+                    </div>
+     	     </div>
+          </div>
+     </div>
+</div>

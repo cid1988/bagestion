@@ -1,0 +1,377 @@
+<style>
+    .table {
+        border: 0;
+    }
+    .table th, .table td {
+        padding: 8px;
+        line-height: 20px;
+        text-align: left;
+        vertical-align: middle;
+        border-left: 1px solid #999999;
+    }
+    .table th {
+        background-color: #dddddd !important;
+        border: 1px solid #999999;
+    }
+</style>
+
+<div class="card body" style="margin-top: 0px;padding-top: 0px;margin-bottom: 5px;" ng-controller="CartaSEMGNuevoCtrl" ng-init="variable='noGuardo'">
+    <script>
+        window.onunload = window.onbeforeunload = function()
+        {
+            var porId=document.getElementById("nombre").value;
+            alert(porId);
+            if(porId==="guardo")
+            {
+                porId="guardo";
+                window.close();
+            }
+            else
+            {
+                return "Ud esta abandonando este sitio sin guardar, los cambios no se guardaran.";
+            }
+        };
+    </script>
+    <input type="text" value="{{variable}}" id="nombre" ng-show="false">
+    <div style="margin-bottom: 10px">
+        <ul class="breadcrumb" style="margin-bottom: 0px;">
+          <li><a href="/semg/cartascompromisos/{{anio}}" style="color:#404040;">Cartas Compromiso {{anio}}</a> <span class="divider">/</span></li>
+          <li class="active">Nuevo</li>
+        </ul>
+    </div>
+    <a ng-click="guardar();variable='guardo';" href="/semg/cartascompromisos/{{anio}}" class="btn btn-link pull-right" style="margin-right: 20px;"><i class="icon-ok icon-white"></i></a>
+    
+    <h3 class="card-heading simple" style="padding-left: 10px; font-size:14px;padding-right: 0px;height: 45px;margin-bottom: 10px;">
+        Nueva Carta Compromiso
+    </h3>
+    <div class="row" style="padding-bottom: 0px;margin-bottom: 5px;">
+        <div class="span6">
+            <form class="form-horizontal" style="margin-bottom: 0px !important;">
+                <div class="control-group" style="margin-left: 10px;margin-bottom: 0px;">
+                    <div class="control-group">
+                        <label class="control-label">Jurisdicción:</label>
+                        <div class="controls">
+                            <select class="span4" ui-select2 type="text" ng-show="hasPermission('semg.editar')" ng-model="carta.jurisdiccion" ng-options="i._id as i.nombreCompleto for i in organigrama | filter:{ministerio:true} | orderBy:'nombreCompleto'"></select>
+                            <input class="span4" type="text" ng-disabled="true" ng-hide="hasPermission('semg.editar')" value="{{organigramaPorId(carta.jurisdiccion).nombreCompleto}}" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Subsecretaría:</label>
+                        <div class="controls">
+                            <select class="span4" ui-select2 type="text" ng-model="carta.subsecretaria" ng-options="i._id as i.nombreCompleto for i in organigrama | orderBy:'nombreCompleto'"></select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Dirección:</label>
+                        <div class="controls">
+                            <select class="span4" ui-select2 type="text" ng-model="carta.dependencia" ng-options="i._id as i.nombreCompleto for i in organigrama | orderBy:'nombreCompleto'"></select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Servicios:</label>
+                        <div class="controls">
+                            <select class="span3" ui-select2 type="text" ng-model="carta.servicio">
+                                <option value="Servicios al ciudadano">Servicios al ciudadano</option>
+                                <option value="Servicios internos">Servicios internos</option>
+                                <option value="Servicios al ciudadano / Servicios internos">Servicios al ciudadano / Servicios internos</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group" style="margin-bottom: 5px;" ng-show="hasPermission('semg.editar')">
+                        <label class="control-label">Temas:</label>
+                        <div class="controls">
+                            <select ui-select2 class="span3" type="text" ng-model="dataTema" ng-options="i._id as i.nombre for i in temas | filter: mostrarTema">
+                                <option ng-disabled="true" value=""></option>
+                            </select>
+                            <button class="btn" style="margin-bottom:10px; margin-left: 5px" ng-click="agregarTema(dataTema)"><i class="icon-ok"></i></button>
+                        </div>
+                    </div>
+                    <div class="control-group" ng-repeat="t in carta.temas" style="margin-bottom: 0px;" ng-show="hasPermission('semg.editar')">
+                        <div class="controls">
+                            <input class="span3" type="text" ng-disabled="true" value="{{temaPorId(t).nombre}}" />
+                            <a href="#" style="margin-left: 10px" ng-click="eliminarListaElem(t, carta.temas)"><i class="icon-trash"></i></a>
+                        </div>
+                    </div>
+                    <!-- <div class="control-group">
+                        <label class="control-label">Responsable:</label>
+                        <div class="controls">
+                            <select class="span4" ui-select2 type="text" ng-model="carta.responsable" ng-options="i._id as i.apellidos + ' ' + i.nombre for i in contactos | orderBy:'apellidos'"></select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Nuestros servicios y trámites:</label>
+                        <div class="controls">
+                            <textarea rows="4" class="span4" type="text" placeholder="Sin servicios y trámite" ng-model="carta.serviciosTramites"></textarea>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Como medimos el compromiso de RESULTADO:</label>
+                        <div class="controls">
+                            <textarea rows="4" class="span4" type="text" placeholder="Sin medición de compromiso de resultado" ng-model="carta.compromisoResultado"></textarea>
+                        </div>
+                    </div> -->
+                </div>
+            </form>
+        </div>
+        <div class="span6">
+            <form class="form-horizontal" style="margin-bottom: 0px !important;">
+                <div class="control-group" style="margin-left: 0px;">
+                    <label class="control-label">Estado:</label>
+                    <div class="controls">
+                        <button class="btn" ng-hide="carta.aprobado" ng-click="carta.aprobado = true" ng-disabled="!user.importante" style="width: 290px;">Pendiente de Aprobación por el Ministro</button>
+                        <button class="btn btn-success" ng-show="carta.aprobado" ng-click="carta.aprobado = false" ng-disabled="!user.importante" style="width: 290px;">Aprobado por el Ministro</button>
+                        <button class="btn" ng-hide="carta.validado" ng-click="carta.validado = true" ng-disabled="!hasPermission('semg.editar')" style="width: 290px;">Pendiente de Validación por DGPLE</button>
+                        <button class="btn btn-success" ng-show="carta.validado" ng-click="carta.validado = false" ng-disabled="!hasPermission('semg.editar')" style="width: 290px;">Validado por DGPLE</button>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Responsable Carga:</label>
+                    <div class="controls">
+                        <select ui-select2 class="span3" type="text" ng-model="carta.responsableCarga" ng-options="i._id as i.apellidos + ' ' + i.nombre for i in contactos | orderBy:'apellidos'">
+                            <option value=""></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Responsable Aprobación:</label>
+                    <div class="controls">
+                        <select ui-select2 class="span3" type="text" ng-model="carta.responsableValidacion" ng-options="i._id as i.apellidos + ' ' + i.nombre for i in contactos | orderBy:'apellidos'">
+                            <option value=""></option>
+                        </select>
+                    </div>
+                </div>
+                <!-- <div class="control-group">
+                    <label class="control-label">Medida/Unidad:</label>
+                    <div class="controls">
+                        <input class="span3" type="text" placeholder="Sin medida/unidad" ng-model="carta.medidaUnidad" />
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Fuente de Información:</label>
+                    <div class="controls">
+                        <input class="span4" type="text" placeholder="Sin fuente" ng-model="carta.fuente" />
+                    </div>
+                </div> -->
+            </form>
+        </div>
+        <div class="span" style="margin-top: 15px;margin-left: 40px;">
+            <h4 style="margin-left: 30px;">Compromisos
+            <a class="btn btn-link pull-right" href="#" ng-click="agregarCompro(false)" style="margin-right: 20px;"><i class="icon-plus"></i> Agregar Compromiso</a></h4>
+            <div style="margin-right: 20px;margin-left: 30px;">
+                <table border="1" class="table table-striped">
+                    <tr bgcolor= "#FFFFFF">
+                        <th style="text-align: center;" rowspan="2">Nro</th>
+                        <th style="text-align: center;" rowspan="2">Servicio o Tramite</th>
+                        <th style="text-align: center;" rowspan="2">Destinatario</th>
+                        <th style="text-align: center;" colspan="2">Estándar de calidad</th>
+                        <th style="text-align: center;" rowspan="2">Justificación</th>
+                        <th style="text-align: center;" rowspan="2">Indicador</th>
+                        <th style="text-align: center;" rowspan="2" ng-hide="((carta.jurisdiccion=='5232029e2e9735061300001f') || (carta.jurisdiccion=='522e177ae5fd3d320e000041') || (carta.dependencia=='522e0594e5fd3d320e000027'))">Meta {{anio-1}}</th>
+                        <th style="text-align: center;" rowspan="2" ng-hide="((carta.jurisdiccion=='5232029e2e9735061300001f') || (carta.jurisdiccion=='522e177ae5fd3d320e000041') || (carta.dependencia=='522e0594e5fd3d320e000027'))">Meta {{anio}}</th>
+                        <th style="text-align: center;" colspan="2" ng-show="((carta.jurisdiccion=='5232029e2e9735061300001f') || (carta.jurisdiccion=='522e177ae5fd3d320e000041') || (carta.dependencia=='522e0594e5fd3d320e000027'))">Meta</th>
+                        <th style="text-align: center;" rowspan="2">Requerimientos para que el usuario pueda hacer uso del servicios o trámite</th>
+                        <th style="text-align: center;" rowspan="2">Responsable</th>
+                        <th style="text-align: center;" rowspan="2">Fuente de Información</th>
+                        <th rowspan="2"></th>
+                    </tr>
+                    <tr bgcolor= "#FFFFFF">
+                        <th style="text-align: center;">¿Cómo medimos la calidad?</th>
+                        <th style="text-align: center;">Unidad de medida</th>
+                        <th style="text-align: center;" ng-show="((carta.jurisdiccion=='5232029e2e9735061300001f') || (carta.jurisdiccion=='522e177ae5fd3d320e000041') || (carta.dependencia=='522e0594e5fd3d320e000027'))">Semestre 1</th>
+                        <th style="text-align: center;" ng-show="((carta.jurisdiccion=='5232029e2e9735061300001f') || (carta.jurisdiccion=='522e177ae5fd3d320e000041') || (carta.dependencia=='522e0594e5fd3d320e000027'))">Semestre 2</th>
+                    </tr>
+                    <tr ng-repeat="t in carta.compromisos">
+                        <td><div>{{$index+1}}</div></td>
+                        <td><div>{{t.serviciosTramites}}</div></td>
+                        <td><div>{{t.destinatario}}</div></td>
+                        <td><div>{{t.compromisoResultado}}</div></td>
+                        <td><div>{{t.medidaUnidad}}</div></td>
+                        <td><div>{{t.justificacion}}</div></td>
+                        <td><div>{{t.indicador}}</div></td>
+                        <td ng-hide="((carta.jurisdiccion=='5232029e2e9735061300001f') || (carta.jurisdiccion=='522e177ae5fd3d320e000041') || (carta.dependencia=='522e0594e5fd3d320e000027'))"><div>{{t.metaAnterior}}</div></td>
+                        <td ng-hide="((carta.jurisdiccion=='5232029e2e9735061300001f') || (carta.jurisdiccion=='522e177ae5fd3d320e000041') || (carta.dependencia=='522e0594e5fd3d320e000027'))"><div>{{t.metaAnio}}</div></td>
+                        <td ng-show="((carta.jurisdiccion=='5232029e2e9735061300001f') || (carta.jurisdiccion=='522e177ae5fd3d320e000041') || (carta.dependencia=='522e0594e5fd3d320e000027'))"><div>{{t.semestre1}}</div></td>
+                        <td ng-show="((carta.jurisdiccion=='5232029e2e9735061300001f') || (carta.jurisdiccion=='522e177ae5fd3d320e000041') || (carta.dependencia=='522e0594e5fd3d320e000027'))"><div>{{t.semestre2}}</div></td>
+                        <td><div>{{t.procedimiento}}</div></td>
+                        <td><div>{{t.responsable}}</div></td>
+                        <td><div>{{t.fuente}}</div></td>
+                        <td style="border-right-color: #999999;">
+                            <div class="btn-group">
+                                <a class="btn btn-link pull-right" href="#" ng-click="editarCompromiso(t)" title="Editar compromiso" style="margin-left: 0px;padding-left: 0px;padding-right: 0px;"><i class="icon-edit"></i></a><br>
+                                <a class="btn btn-link pull-right" href="#" ng-click="eliminarListaElem(t, carta.compromisos)" title="Eliminar compromiso" style="margin-left: 0px;padding-left: 0px;padding-right: 0px;"><i class="icon-trash"></i></a>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    
+    <div id="nuevoCompromiso" class="modal hide fade" style="top: 10px;">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3>Nuevo Compromiso</h3>
+        </div>
+        <div class="modal-body">
+            <form class="form-horizontal" style="margin-bottom: 0px !important;">
+                <div class="control-group" style="margin-left: 40px;">
+                    <div class="control-group span6" style="margin-left: 0px; margin-right: 8px; margin-bottom: 0px;width: 488px;">
+                        <label style="margin-bottom: 0px">Nuestros servicios y trámites:</label>
+                        <input class="span3" type="text" ng-model="data.serviciosTramites" style="margin-bottom: 0px;width: 473px;" />
+                    </div>
+                    <div class="control-group span3" style="margin-left: 0px; margin-right: 8px; margin-bottom: 0px;width: 488px;">
+                        <label style="margin-bottom: 0px">Destinatario:</label>
+                        <select class="span3" type="text" ng-model="data.destinatario" style="margin-bottom: 0px;">
+                            <option value="Gobierno">Gobierno</option>
+                            <option value="Organizaciones/Empresas/Instituciones">Organizaciones/Empresas/Instituciones</option>
+                            <option value="Ciudadanos">Ciudadanos</option>
+                            <option value="Ciudadanos con determinadas características">Ciudadanos con determinadas características</option>
+                        </select>
+                        <input class="span2" type="text" ng-show="data.destinatario=='Ciudadanos con determinadas características'" placeholder="Especificar cuales" ng-model="data.destinatarioCaracte" style="margin-bottom: 0px;width: 196px;" />
+                    </div>
+                    <h4 style="margin-top: 115px;margin-bottom: 5px;">Estándar de calidad:</h4>
+                    <div class="control-group span4" style="margin-left: 0px; margin-right: 8px; margin-bottom: 0px;width: 335px;">
+                        <label style="margin-bottom: 0px">¿Cómo medimos la calidad?:</label>
+                        <input class="span4" type="text" ng-model="data.compromisoResultado" style="margin-bottom: 0px;width: 320px;" />
+                    </div>
+                    <div class="control-group span2" style="margin-left: 0px; margin-right: 8px; margin-bottom: 0px;width: 145px;">
+                        <label style="margin-bottom: 0px">Unidad de medida:</label>
+                        <input class="span2" type="text" ng-model="data.medidaUnidad" style="margin-bottom: 0px;width: 130px;" />
+                    </div>
+                    <div class="control-group span3" style="margin-left: 0px; margin-right: 8px; margin-bottom: 0px;width: 265px;margin-top: 10px;">
+                        <label style="margin-bottom: 0px">Justificación:</label>
+                        <input class="span3" type="text" ng-model="data.justificacion" style="margin-bottom: 0px;width: 250px;" />
+                    </div>
+                    <div class="control-group span3" style="margin-left: 0px; margin-right: 8px; margin-bottom: 0px;width: 215px;margin-top: 10px;">
+                        <label style="margin-bottom: 0px">Indicador:</label>
+                        <input class="span3" type="text" ng-model="data.indicador" style="margin-bottom: 0px;width: 200px;" />
+                    </div>
+                    <h4 style="margin-top: 130px;margin-bottom: 5px;" ng-show="((carta.jurisdiccion=='5232029e2e9735061300001f') || (carta.jurisdiccion=='522e177ae5fd3d320e000041') || (carta.dependencia=='522e0594e5fd3d320e000027'))">Meta:</h4>
+                    <div class="control-group span3" style="margin-left: 0px; margin-right: 8px; margin-bottom: 0px;width: 240px;" ng-show="((carta.jurisdiccion=='5232029e2e9735061300001f') || (carta.jurisdiccion=='522e177ae5fd3d320e000041') || (carta.dependencia=='522e0594e5fd3d320e000027'))">
+                        <label style="margin-bottom: 0px">Semestre 1:</label>
+                        <input class="span3" type="text" ng-model="data.semestre1" style="margin-bottom: 0px;width: 225px;" />
+                    </div>
+                    <div class="control-group span3" style="margin-left: 0px; margin-right: 8px; margin-bottom: 0px;width: 240px;" ng-show="((carta.jurisdiccion=='5232029e2e9735061300001f') || (carta.jurisdiccion=='522e177ae5fd3d320e000041') || (carta.dependencia=='522e0594e5fd3d320e000027'))">
+                        <label style="margin-bottom: 0px">Semestre 2:</label>
+                        <input class="span3" type="text" ng-model="data.semestre2" style="margin-bottom: 0px;width: 225px;" />
+                    </div>
+                    <div class="control-group span4" style="margin-left: 0px; margin-right: 8px; margin-bottom: 0px;width: 215px;margin-top: 10px;" ng-hide="((carta.jurisdiccion=='5232029e2e9735061300001f') || (carta.jurisdiccion=='522e177ae5fd3d320e000041') || (carta.dependencia=='522e0594e5fd3d320e000027'))">
+                        <label style="margin-bottom: 0px">Meta {{anio}}:</label>
+                        <input class="span4" type="text" ng-model="data.metaAnio" style="margin-bottom: 0px;width: 200px;" />
+                    </div>
+                    <div class="control-group span2" style="margin-left: 0px; margin-right: 8px; margin-bottom: 0px;width: 265px;margin-top: 10px;">
+                        <label style="margin-bottom: 0px">Responsable:</label>
+                        <input class="span2" type="text" ng-model="data.responsable" style="margin-bottom: 0px;width: 250px;" />
+                    </div>
+                    <div class="control-group span4" style="margin-left: 0px; margin-right: 8px; margin-bottom: 0px;width: 488px;margin-top: 10px;">
+                        <label style="margin-bottom: 0px">Procedimiento para que el usuario pueda hacer uso del servicios o trámite:</label>
+                        <input class="span4" type="text" ng-model="data.procedimiento" style="margin-bottom: 0px;width: 473px;" />
+                    </div>
+                    <div class="control-group span2" style="margin-left: 0px; margin-right: 8px; margin-bottom: 0px;width: 488px;margin-top: 10px;">
+                        <label style="margin-bottom: 0px">Fuente de Información:</label>
+                        <select class="span2" type="text" ng-model="data.fuente" style="margin-bottom: 0px;">
+                            <option value="Manual">Manual</option>
+                            <option value="Informático">Informático</option>
+                        </select>
+                        <input class="span2" type="text" ng-show="data.fuente=='Informático'" placeholder="Especificar el software" ng-model="data.fuenteInformatico" style="margin-bottom: 0px;" />
+                    </div>
+                    <div class="control-group span2" style="margin-left: 0px; margin-right: 8px; margin-bottom: 0px;width: 490px;margin-top: 10px;">
+                        <label style="margin-bottom: 0px">¿Posee encuestas de satisfacción al ciudadano para este trámite? 
+                        <select class="span1" type="text" ng-model="data.encuestas" style="margin-bottom: 0px;margin-left: 10px;">
+                            <option value="Si">Si</option>
+                            <option value="No">No</option>
+                        </select></label>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer" style="padding-top: 0px;">
+            <a href="#" class="btn pull-right" data-dismiss="modal">Cancelar</a>
+            <a href="#" class="btn btn-info pull-right" data-dismiss="modal" ng-click="agregarCompro(true)" style="margin-right: 10px;">Agregar</a>
+        </div>
+    </div>
+    
+    <div id="editarCompromiso" class="modal hide fade" style="top: 10px;">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3>Edición de Compromiso</h3>
+        </div>
+        <div class="modal-body">
+            <form class="form-horizontal" style="margin-bottom: 0px !important;">
+                <div class="control-group" style="margin-left: 40px;">
+                    <div class="control-group span6" style="margin-left: 0px; margin-right: 8px; margin-bottom: 0px;width: 488px;">
+                        <label style="margin-bottom: 0px">Nuestros servicios y trámites:</label>
+                        <input class="span3" type="text" ng-model="comproEdit.serviciosTramites" style="margin-bottom: 0px;width: 473px;" />
+                    </div>
+                    <div class="control-group span3" style="margin-left: 0px; margin-right: 8px; margin-bottom: 0px;width: 488px;">
+                        <label style="margin-bottom: 0px">Destinatario:</label>
+                        <select class="span3" type="text" ng-model="comproEdit.destinatario" style="margin-bottom: 0px;">
+                            <option value="Gobierno">Gobierno</option>
+                            <option value="Organizaciones/Empresas/Instituciones">Organizaciones/Empresas/Instituciones</option>
+                            <option value="Ciudadanos">Ciudadanos</option>
+                            <option value="Ciudadanos con determinadas características">Ciudadanos con determinadas características</option>
+                        </select>
+                        <input class="span2" type="text" ng-show="comproEdit.destinatario=='Ciudadanos con determinadas características'" placeholder="Especificar cuales" ng-model="comproEdit.destinatarioCaracte" style="margin-bottom: 0px;width: 196px;" />
+                    </div>
+                    <h4 style="margin-top: 115px;margin-bottom: 5px;">Estándar de calidad:</h4>
+                    <div class="control-group span4" style="margin-left: 0px; margin-right: 8px; margin-bottom: 0px;width: 335px;">
+                        <label style="margin-bottom: 0px">¿Cómo medimos la calidad?:</label>
+                        <input class="span4" type="text" ng-model="comproEdit.compromisoResultado" style="margin-bottom: 0px;width: 320px;" />
+                    </div>
+                    <div class="control-group span2" style="margin-left: 0px; margin-right: 8px; margin-bottom: 0px;width: 145px;">
+                        <label style="margin-bottom: 0px">Unidad de medida:</label>
+                        <input class="span2" type="text" ng-model="comproEdit.medidaUnidad" style="margin-bottom: 0px;width: 130px;" />
+                    </div>
+                    <div class="control-group span3" style="margin-left: 0px; margin-right: 8px; margin-bottom: 0px;width: 265px;margin-top: 10px;">
+                        <label style="margin-bottom: 0px">Justificación:</label>
+                        <input class="span3" type="text" ng-model="comproEdit.justificacion" style="margin-bottom: 0px;width: 250px;" />
+                    </div>
+                    <div class="control-group span3" style="margin-left: 0px; margin-right: 8px; margin-bottom: 0px;width: 215px;margin-top: 10px;">
+                        <label style="margin-bottom: 0px">Indicador:</label>
+                        <input class="span3" type="text" ng-model="comproEdit.indicador" style="margin-bottom: 0px;width: 200px;" />
+                    </div>
+                    <h4 style="margin-top: 130px;margin-bottom: 5px;" ng-show="((carta.jurisdiccion=='5232029e2e9735061300001f') || (carta.jurisdiccion=='522e177ae5fd3d320e000041') || (carta.dependencia=='522e0594e5fd3d320e000027'))">Meta:</h4>
+                    <div class="control-group span3" style="margin-left: 0px; margin-right: 8px; margin-bottom: 0px;width: 240px;" ng-show="((carta.jurisdiccion=='5232029e2e9735061300001f') || (carta.jurisdiccion=='522e177ae5fd3d320e000041') || (carta.dependencia=='522e0594e5fd3d320e000027'))">
+                        <label style="margin-bottom: 0px">Semestre 1:</label>
+                        <input class="span3" type="text" ng-model="comproEdit.semestre1" style="margin-bottom: 0px;width: 225px;" />
+                    </div>
+                    <div class="control-group span3" style="margin-left: 0px; margin-right: 8px; margin-bottom: 0px;width: 240px;" ng-show="((carta.jurisdiccion=='5232029e2e9735061300001f') || (carta.jurisdiccion=='522e177ae5fd3d320e000041') || (carta.dependencia=='522e0594e5fd3d320e000027'))">
+                        <label style="margin-bottom: 0px">Semestre 2:</label>
+                        <input class="span3" type="text" ng-model="comproEdit.semestre2" style="margin-bottom: 0px;width: 225px;" />
+                    </div>
+                    <div class="control-group span4" style="margin-left: 0px; margin-right: 8px; margin-bottom: 0px;width: 215px;margin-top: 10px;" ng-hide="((carta.jurisdiccion=='5232029e2e9735061300001f') || (carta.jurisdiccion=='522e177ae5fd3d320e000041') || (carta.dependencia=='522e0594e5fd3d320e000027'))">
+                        <label style="margin-bottom: 0px">Meta {{anio}}:</label>
+                        <input class="span4" type="text" ng-model="comproEdit.metaAnio" style="margin-bottom: 0px;width: 200px;" />
+                    </div>
+                    <div class="control-group span2" style="margin-left: 0px; margin-right: 8px; margin-bottom: 0px;width: 265px;margin-top: 10px;">
+                        <label style="margin-bottom: 0px">Responsable:</label>
+                        <input class="span2" type="text" ng-model="comproEdit.responsable" style="margin-bottom: 0px;width: 250px;" />
+                    </div>
+                    <div class="control-group span4" style="margin-left: 0px; margin-right: 8px; margin-bottom: 0px;width: 488px;margin-top: 10px;">
+                        <label style="margin-bottom: 0px">Procedimiento para que el usuario pueda hacer uso del servicios o trámite:</label>
+                        <input class="span4" type="text" ng-model="comproEdit.procedimiento" style="margin-bottom: 0px;width: 473px;" />
+                    </div>
+                    <div class="control-group span2" style="margin-left: 0px; margin-right: 8px; margin-bottom: 0px;width: 488px;margin-top: 10px;">
+                        <label style="margin-bottom: 0px">Fuente de Información:</label>
+                        <select class="span2" type="text" ng-model="comproEdit.fuente" style="margin-bottom: 0px;">
+                            <option value="Manual">Manual</option>
+                            <option value="Informático">Informático</option>
+                        </select>
+                        <input class="span2" type="text" ng-show="comproEdit.fuente=='Informático'" placeholder="Especificar el software" ng-model="comproEdit.fuenteInformatico" style="margin-bottom: 0px;" />
+                    </div>
+                    <div class="control-group span2" style="margin-left: 0px; margin-right: 8px; margin-bottom: 0px;width: 490px;margin-top: 10px;">
+                        <label style="margin-bottom: 0px">¿Posee encuestas de satisfacción al ciudadano para este trámite? 
+                        <select class="span1" type="text" ng-model="comproEdit.encuestas" style="margin-bottom: 0px;margin-left: 10px;">
+                            <option value="Si">Si</option>
+                            <option value="No">No</option>
+                        </select></label>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer" style="padding-top: 0px;">
+            <a href="#" class="btn pull-right" data-dismiss="modal">Cerrar</a>
+        </div>
+    </div>
+</div>

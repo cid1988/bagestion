@@ -1,0 +1,833 @@
+<script>
+    $(document).ready(function() { $("#e2").select2(); });
+    $(document).ready(function() { $("#e6").select2(); });
+    $(document).ready(function() { $("#e7").select2(); });
+    $(document).ready(function() { $("#e8").select2(); });
+    $(document).ready(function() { $("#e9").select2(); });
+    $(document).ready(function() { $("#e10").select2(); });
+    $(document).ready(function() { $("#e11").select2(); });
+</script>
+
+<div ng-controller="DetalleRegularizacionDominialCtrl">
+<div class="card span12" style="padding-left: 20px;padding-bottom: 20px;">
+    <div class="card-actions pull-right" style="margin: 0; padding: 0">
+        <a class="btn btn-link no-print" ng-if="editando" ng-click="guardar()"><i class="icon-ok"></i></a>
+        <a class="btn btn-link no-print" ng-if="editando" href="/regularizacionDominial"><i class="icon-remove"></i></a>
+        <a class="btn btn-link no-print" ng-if="!editando" ng-click="eliminarRegularizacion()" ng-show="permisoResponsable()"><i class="icon-trash"></i></a>
+        <a class="btn btn-link no-print" ng-if="!editando" href="/regularizacionDominial"><i class="icon-undo"></i></a>
+        <a class="btn btn-link no-print" ng-hide="editando" ng-click="modificar()" ng-if="(hasPermission('regularizacionDominial.edicion') || permisoPestana)"><i class="icon-edit"></i></a>
+    </div>
+    <h3 class="card-heading simple" style="font-size:14px;padding-left: 0px;height: 45px;margin-bottom: 10px;">
+        <ul id="myTab" class="nav nav-pills">
+            <li ng-class="{'active': tab == 'identificacion'}"><a href="#" ng-click="tab='identificacion'; tienePermiso(dominio.responsableDominio, hasPermission('regularizacionDominial.edicionIdentificacion'))" data-toggle="tab">Identificación</a></li>
+            <li ng-class="{'active': tab == 'caracteristicas'}"><a href="#" ng-click="tab='caracteristicas'; tienePermiso(dominio.responsableCaracteristicas, hasPermission('regularizacionDominial.edicionCaracteristicas'))" data-toggle="tab">Caracteristicas</a></li>
+            <li ng-class="{'active': tab == 'gestion'}"><a href="#" ng-click="tab='gestion'; tienePermiso(dominio.responsableHicimos, hasPermission('regularizacionDominial.edicionHicimos'))" data-toggle="tab">Gestion</a></li>
+            <li ng-class="{'active': tab == 'consolidacion'}"><a href="#" ng-click="tab='consolidacion'; tienePermiso(dominio.responsableConsolidacion, hasPermission('regularizacionDominial.edicionConsolidacion'))" data-toggle="tab">Consolidación</a></li>
+            <li ng-class="{'active': tab == 'regularizacion'}"><a href="#" ng-click="tab='regularizacion'; tienePermiso(dominio.responsableRegularizacion, hasPermission('regularizacionDominial.edicionRegularizacion'))" data-toggle="tab">Regularización</a></li>
+            <li ng-class="{'active': tab == 'responsables'}"><a href="#" ng-click="tab='responsables'; tienePermiso(dominio.responsableResponsables, hasPermission('regularizacionDominial.edicionResponsables'))" data-toggle="tab">Responsables</a></li>
+            <li ng-class="{'active': tab == 'archivos'}"><a href="#" ng-click="tab='archivos'; tienePermiso(dominio.responsableArchivos, hasPermission('regularizacionDominial.edicionArchivos'))" data-toggle="tab">Archivos</a></li>
+        </ul>
+    </h3>
+    
+    <div ng-show="tab == 'identificacion'">
+        <span style="display: inline-block"> Denominacion:<br /> 
+            <input class="span8" type="text" ng-model="dominio.denominacion" ng-disabled="!editando" placeholder="Sin denominacion" />
+        </span>
+        <span style="display: inline-block"> Numero:<br /> 
+            <input class="span2" type="text" ng-model="dominio.numero" ng-disabled="!editando" placeholder="Sin numero" />
+        </span>
+        <hr style="margin-top:5px; margin-bottom:5px"/>
+        <h4>Tipo y Objetivo</h4>
+        <span style="display: inline-block"> Tipo:<br /> 
+            <input type="text" class="span4" data-provide="typeahead" data-items="4" ng-model="dominio.tipo" ng-disabled="!editando" id="tipo-typeahead" placeholder="Sin tipo especificado" data-source={{tiposNombres}} >
+        </span>
+        <span style="display: inline-block"> Regularización:<br /> 
+            <div class="btn-group" style="margin-bottom: 8px" data-toggle="buttons-radio">
+                <button class="btn" ng-class="(dominio.regularizacion == true) && 'active btn-info'" ng-disabled="!editando"
+                ng-click="dominio.regularizacion = true" style="padding-left: 26px; padding-right: 26px;">Si</button>
+                <button class="btn" ng-class="(dominio.regularizacion == false) && 'active btn-info'" ng-disabled="!editando"
+                ng-click="dominio.regularizacion = false" style="padding-left: 26px; padding-right: 26px;">No</button>
+            </div>
+        </span>
+        <span style="display: inline-block"> Prioridad:<br /> 
+            <input type="text" class="span2" data-provide="typeahead" data-items="4" ng-model="dominio.prioridad" ng-disabled="!editando" id="tipo-typeahead" placeholder="Sin prioridad" data-source={{prioridades}} >
+        </span>
+        <span style="display: inline-block"> Segmento:<br /> 
+            <input class="span3" type="text" ng-model="dominio.segmento" ng-disabled="!editando" placeholder="Sin segmento" />
+        </span>
+        <hr style="margin-top:5px; margin-bottom:5px"/>
+        <h4>Ubicacion</h4>
+        <span style="display: inline-block"> UTIU:<br /> 
+            <input class="span4" type="text" ng-model="dominio.utiu" ng-disabled="!editando" placeholder="Sin UTIU" />
+        </span>
+        <span style="display: inline-block"> Barrio:<br /> 
+            <input type="text" class="span4" data-provide="typeahead" data-items="4" ng-model="dominio.barrio" ng-disabled="!editando" id="barrio-typeahead" placeholder="Sin barrio especificado" data-source={{barriosNombres}} >
+        </span>
+        <span style="display: inline-block"> Comuna:<br /> 
+            <input type="text" class="span4" data-provide="typeahead" data-items="4" ng-model="dominio.comuna" ng-disabled="!editando" id="comuna-typeahead" placeholder="Sin comuna especificada" data-source={{comunasNombres}} >
+        </span>
+        <br>
+        <span style="display: inline-block"> Poligono de Calles:<br /> 
+            <input type="text" class="span4" data-provide="typeahead" data-items="4" ng-model="dataCalle.calle" ng-disabled="!editando" id="calle-typeahead" placeholder="Sin calle especificada" data-source={{calles}} >
+            <button class="btn" style="margin-bottom:10px; margin-left: 5px" ng-show="editando" ng-click="agregarCalle(dataCalle)"><i class="icon-plus"></i></button>
+            <div ng-repeat="c in dominio.poligonoCalles">
+                <div style="display: inline-block; margin-right: 10px">
+                    <span style="display: inline-block">
+                        <input class="span4" type="text" ng-model="c" ng-disabled="true" style="margin-bottom: 0px;" />
+                    </span>
+                </div>
+                <a href="#" style="margin-right: 10px" ng-click="eliminarListaElem(c, dominio.poligonoCalles)"><i class="icon-trash"></i></a>
+            </div>
+        </span>
+        <hr style="margin-top:5px; margin-bottom:5px"/>
+        <div class="control-group span5" style="margin-left: 0px; margin-right: 5px; margin-bottom: 0px;">
+            <label style="margin-bottom: 0px">Temas:</label>
+            <select ui-select2 class="span4" type="text" ng-model="dataTema" ng-disabled="!editando" ng-options="i._id as i.nombre for i in temas | filter: mostrarTema">
+                <option ng-disabled="true" value=""></option>
+            </select>
+            <button class="btn" style="margin-bottom:10px; margin-left: 5px" ng-disabled="!editando" ng-click="agregarTema(dataTema)"><i class="icon-plus"></i></button>
+        </div>
+        <div class="control-group span5" style="margin-left: 0px; margin-right: 5px; margin-bottom: 0px;">
+            <label style="margin-bottom: 0px">Responsables de carga de Dominio:</label>
+            <select class="span4" ng-disabled="!(editando && permisoResponsable())" placeholder="Sin responsable" ui-select2 type="text" ng-model="dataRespon">
+                <option ng-disabled="true" value=""></option>
+                <option ng-repeat="c in contactos | orderBy: 'apellidos'" value="{{c._id}}">{{c.apellidos}} {{c.nombre}}</option>
+            </select>
+            <button class="btn" ng-disabled="!(editando && permisoResponsable())" style="margin-bottom:10px; margin-left: 5px" ng-click="agregarResponsable(dataRespon)"><i class="icon-plus"></i></button>
+        </div>
+        <div class="span5" style="margin-left: 0px;">
+            <div class="control-group" ng-repeat="t in dominio.temas" style="margin-left: 0px; margin-right: 5px;margin-bottom: 0px;">
+                <input class="span4" type="text" ng-disabled="true" value="{{temaPorId(t).nombre}}" style="margin-bottom: 0px;" />
+                <a href="#" style="margin-left: 10px" ng-click="eliminarListaElem(t, dominio.temas)"><i class="icon-trash"></i></a>
+            </div>
+        </div>
+        <div class="span5" style="margin-left: 5px;">
+            <div class="control-group" ng-repeat="c in dominio.responsableDominio" style="margin-left: 0px; margin-right: 5px;margin-bottom: 0px;">
+                <input class="span4" type="text" ng-disabled="true" value="{{contactoPorId(c).apellidos}} {{contactoPorId(c).nombre}}" style="margin-bottom: 0px;" />
+                <a href="#" style="margin-left: 10px" ng-show="(editando && permisoResponsable())" ng-click="eliminarListaElem(c, dominio.responsableDominio)"><i class="icon-trash"></i></a>
+            </div>
+        </div>
+    </div>
+    
+    <div ng-show="tab == 'caracteristicas'">
+        <span style="display: inline-block"> Denominacion:<br /> 
+            <input class="span8" type="text" ng-model="dominio.denominacion" ng-disabled="true" placeholder="Sin denominacion" />
+        </span>
+        <span style="display: inline-block"> Numero:<br /> 
+            <input class="span2" type="text" ng-model="dominio.numero" ng-disabled="true" placeholder="Sin numero" />
+        </span>
+        <hr style="margin-top:5px; margin-bottom:5px"/>
+        <h4>Vinculos</h4>
+        <span style="display: inline-block"> Población:<br /> 
+            <div class="input-append">
+              <input class="span2" type="text" ng-model="dominio.poblacion" ng-disabled="!editando" style="width: 203px;" placeholder="Sin poblacion" />
+              <button class="btn" ng-click="verPoblacion()" type="button"><i class="icon-info-sign"></i></button>
+            </div>
+        </span>
+        <span style="display: inline-block"> Superficie:<br /> 
+            <input class="span3" type="text" ng-model="dominio.superficie" ng-disabled="!editando" placeholder="Sin superficie" />
+        </span>
+        <span style="display: inline-block"> Superficie Total Usig:<br /> 
+            <input class="span3" type="text" ng-model="superficieTotalUsig" ng-disabled="true" placeholder="Sin Superficie Total Usig" />
+        </span>
+        <span style="display: inline-block"> Origen (Solo Complejos):<br /> 
+            <input class="span3" type="text" ng-model="dominio.origen" ng-disabled="!editando" placeholder="Sin origen" />
+        </span>
+        <span style="display: inline-block"> Manzanas:<br /> 
+            <input class="span3" type="text" value="{{contarManzanas('todos')}}" ng-disabled="true" placeholder="Sin manzanas" />
+        </span>
+        <span style="display: inline-block"> Parcelas:<br /> 
+            <input class="span3" type="text" value="{{dominio.smp.length}}" ng-disabled="true" placeholder="Sin parcelas" />
+        </span>
+        <span style="display: inline-block"> Hogares:<br /> 
+            <input class="span3" type="text" value="{{contarHogares('todos')}}" ng-disabled="true" placeholder="Sin Hogares" />
+            <button class="btn" ng-click="agregarSMPModal()" type="button" style="margin-bottom: 10px; margin-right: 20px;"><i class="icon-plus"></i> Agregar SMP</button>
+        </span>
+        <hr style="margin-top:5px; margin-bottom:5px"/>
+        <div class="control-group span7" style="margin-left: 0px; margin-right: 5px;margin-bottom: 0px;">
+            <label style="margin-bottom: 0px">Responsables de carga de Caracteristicas:</label>
+            <select class="span4" placeholder="Sin responsable" ng-disabled="!(editando && permisoResponsable())" ui-select2 type="text" ng-model="dataResponCarac">
+                <option value=""></option>
+                <option ng-repeat="c in contactos | orderBy: 'apellidos'" value="{{c._id}}">{{c.apellidos}} {{c.nombre}}</option>
+            </select>
+            <button class="btn" style="margin-bottom:10px; margin-left: 5px" ng-disabled="!(editando && permisoResponsable())" ng-click="agregarResponsableCarac(dataResponCarac)"><i class="icon-plus"></i></button>
+            
+            <div class="control-group" ng-repeat="c in dominio.responsableCaracteristicas" style="margin-left: 0px; margin-right: 5px;margin-bottom: 0px;">
+                <input class="span4" type="text" ng-disabled="true" value="{{contactoPorId(c).apellidos}} {{contactoPorId(c).nombre}}" style="margin-bottom: 0px;" />
+                <a href="#" style="margin-left: 10px" ng-show="(editando && permisoResponsable())" ng-click="eliminarListaElem(c, dominio.responsableCaracteristicas)"><i class="icon-trash"></i></a>
+            </div>
+        </div>
+        <div class="control-group span5" style="margin-left: 0px;margin-top: 0px;">
+            <h4>Fotos Usig</h4>
+            <div ng-repeat="s in dominio.smp" style="display: inline-block;">
+                <div ng-controller="ConsultarSMPCtrl" style="display: inline-block;">
+                    <a data-toggle="modal" ng-show="dataUsig.info.info_alfanumerica.superficie_total"
+                     ng-click="abrirModalImagenUsig(s.seccion, s.manzana, s.parcela)" class="thumbnail" style="display:inline-block">
+                        <img src="http://fotos.usig.buenosaires.gob.ar//getFoto?smp={{s.seccion}}-{{s.manzana}}-{{s.parcela}}" width="128" height="96">
+                    </a>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="control-group span4" style="margin-left: 0px; margin-right: 5px">
+            <label style="margin-bottom: 0px">Estado:</label>
+            <select class="input-block-level" ng-disabled="!editando" placeholder="Sin estado" id="e2" type="text" ng-model="dominio.estado">
+                <option ng-disabled="true" value="">{{dominio.estado}}</option>
+                <option value="Escriturable">Escriturable</option>
+                <option value="No Escriturable">No Escriturable</option>
+                <option value="Completo">Completo</option>
+            </select>
+        </div> -->
+    </div>
+    
+    <div ng-show="tab == 'gestion'">
+        <span style="display: inline-block"> Denominacion:<br /> 
+            <input class="span8" type="text" ng-model="dominio.denominacion" ng-disabled="true" placeholder="Sin denominacion" />
+        </span>
+        <span style="display: inline-block"> Numero:<br /> 
+            <input class="span2" type="text" ng-model="dominio.numero" ng-disabled="true" placeholder="Sin numero" />
+        </span>
+        <hr style="margin-top:5px; margin-bottom:5px"/>
+        <div class="control-group span2" style="margin-left: 0px; margin-right: 8px; margin-bottom: 0px;width: 155px;">
+            <label style="margin-bottom: 0px">Proyecto:</label>
+            <input class="span2" type="text" ng-disabled="!editando" ng-model="dataH.proyecto" style="margin-bottom: 0px;width: 140px;" />
+        </div>
+        <div class="control-group span3" style="margin-left: 0px; margin-right: 8px; margin-bottom: 0px;width: 315px;">
+            <label style="margin-bottom: 0px">Descripcion Meta:</label>
+            <input class="span4" type="text" ng-disabled="!editando" ng-model="dataH.descripcionMeta" style="margin-bottom: 0px;width: 300px;" />
+        </div>
+        <div class="control-group span1" style="margin-left: 0px; margin-right: 8px; margin-bottom: 0px;">
+            <label style="margin-bottom: 0px">Cantidad:</label>
+            <input class="span1" type="text" ng-disabled="!editando" ng-model="dataH.cantidad" style="margin-bottom: 0px;" />
+        </div>
+        <div class="control-group span1" style="margin-left: 0px; margin-right: 8px; margin-bottom: 0px;">
+            <label style="margin-bottom: 0px">Unidad:</label>
+            <input class="span1" type="text" ng-disabled="!editando" ng-model="dataH.unidad" style="margin-bottom: 0px;" />
+        </div>
+        <div class="control-group span1" style="margin-left: 0px; margin-right: 5px; margin-bottom: 0px;width: 120px;">
+            <label style="margin-bottom: 0px">Jurisdiccion:</label>
+            <select class="span1" placeholder="Sin Jurisdiccion" ng-disabled="!editando" ui-select2 type="text" ng-model="dataH.jurisdiccion" style="width: 120px;">
+                <option value="">Sin Jurisdiccion</option>
+                <option ng-repeat="e in dependencias | orderBy: 'orden'" value="{{e._id}}">{{e.sigla}}</option>
+            </select>
+        </div>
+        <div class="control-group span1" style="margin-left: 0px; margin-right: 8px; margin-bottom: 0px;width: 80px;">
+            <label style="margin-bottom: 0px">Inicio:</label>
+            <input class="span1" type="text" date ng-disabled="!editando" ng-model="dataH.fechaInicio" style="margin-bottom: 0px;width: 65px;" />
+        </div>
+        <div class="control-group span2" style="margin-left: 0px; margin-right: 8px; margin-bottom: 0px;">
+            <label style="margin-bottom: 0px">Fin:</label>
+            <input class="span1" type="text" date ng-disabled="!editando" ng-model="dataH.fechaFin" style="margin-bottom: 0px;width: 65px;" />
+            <button class="btn" style="margin-bottom:0px; margin-left: 5px" ng-disabled="!editando" ng-click="agregarHicimos(dataH)"><i class="icon-plus"></i></button>
+        </div>
+        <div class="control-group span12" ng-repeat="t in dominio.hicimos" style="margin-left: 0px; margin-right: 5px;margin-bottom: 0px;">
+            <input class="span2" type="text" ng-disabled="true" ng-model="t.proyecto" style="margin-bottom: 0px;width: 140px;margin-right: 1px;" />
+            <input class="span4" type="text" ng-disabled="true" ng-model="t.descripcionMeta" style="margin-bottom: 0px;width: 300px;margin-right: 1px;" />
+            <input class="span1" type="text" ng-disabled="true" ng-model="t.cantidad" style="margin-bottom: 0px;" />
+            <input class="span1" type="text" ng-disabled="true" ng-model="t.unidad" style="margin-bottom: 0px;" />
+            <input class="span1" type="text" ng-disabled="true" value="{{organigramaPorId(t.jurisdiccion).sigla}}" style="margin-bottom: 0px;width: 103px;" />
+            <input class="span1" type="text" ng-disabled="!editando" ng-model="t.fechaInicio" date style="margin-bottom: 0px;width: 65px;margin-right: 1px;" />
+            <input class="span1" type="text" ng-disabled="!editando" ng-model="t.fechaFin" date style="margin-bottom: 0px;width: 65px;" />
+            <button class="btn" style="margin-bottom:0px; margin-left: 5px" ng-click="comentario(t)" title="Comentario..." ng-class="{'btn-info': t.comentario}"><i class="icon-comment"></i></button>
+            <a href="#" style="margin-left: 10px" ng-show="editando" ng-click="eliminarListaElem(t, dominio.hicimos)"><i class="icon-trash"></i></a>
+        </div>
+        
+        <div class="control-group span9" style="margin-left: 0px; margin-right: 5px;margin-bottom: 0px;margin-top: 20px;">
+        <hr style="margin-top:5px; margin-bottom:5px"/>
+            <label style="margin-bottom: 0px">Responsables de carga de Gestion:</label>
+            <select class="span4" placeholder="Sin responsable" ng-disabled="!(editando && permisoResponsable())" ui-select2 type="text" ng-model="dataResponHici">
+                <option value=""></option>
+                <option ng-repeat="c in contactos | orderBy: 'apellidos'" value="{{c._id}}">{{c.apellidos}} {{c.nombre}}</option>
+            </select>
+            <button class="btn" style="margin-bottom:10px; margin-left: 5px" ng-disabled="!(editando && permisoResponsable())" ng-click="agregarResponsableHici(dataResponHici)"><i class="icon-plus"></i></button>
+        </div>
+        <div class="span9" style="margin-left: 0px;">
+            <div class="control-group" ng-repeat="c in dominio.responsableHicimos" style="margin-left: 0px; margin-right: 5px;margin-bottom: 0px;">
+                <input class="span4" type="text" ng-disabled="true" value="{{contactoPorId(c).apellidos}} {{contactoPorId(c).nombre}}" style="margin-bottom: 0px;" />
+                <a href="#" style="margin-left: 10px" ng-show="(editando && permisoResponsable())" ng-click="eliminarListaElem(c, dominio.responsableHicimos)"><i class="icon-trash"></i></a>
+            </div>
+        </div>
+    </div>
+    
+    <div ng-show="tab == 'consolidacion'">
+        <span style="display: inline-block"> Denominacion:<br /> 
+            <input class="span8" type="text" ng-model="dominio.denominacion" ng-disabled="true" placeholder="Sin denominacion" />
+        </span>
+        <span style="display: inline-block"> Numero:<br /> 
+            <input class="span2" type="text" ng-model="dominio.numero" ng-disabled="true" placeholder="Sin numero" />
+        </span>
+        <hr style="margin-top:5px; margin-bottom:5px"/>
+        <h4>No Consolidado</h4>
+        <!-- <span style="display: inline-block"> Población:<br /> 
+            <div class="input-append">
+              <input class="span3" type="text" ng-model="dominio.poblacionNC" ng-disabled="!editando" style="width: 303px;" placeholder="Sin poblacion" />
+              <button class="btn" ng-click="verPoblacionNC()" type="button"><i class="icon-info-sign"></i></button>
+            </div>
+        </span>
+        <span style="display: inline-block"> Poblacion %:<br /> 
+            <input class="span4" type="text" ng-model="dominio.poblacionPorNC" ng-disabled="!editando" placeholder="Sin poblacion %" />
+        </span>
+        <span style="display: inline-block"> Superficie:<br /> 
+            <input class="span4" type="text" ng-model="dominio.superficieNC" ng-disabled="!editando" placeholder="Sin Superficie" />
+        </span> --> 
+        <span style="display: inline-block"> Manzanas:<br /> 
+            <input class="span3" type="text" value="{{contarManzanas('NC')}}" ng-disabled="true" placeholder="Sin manzanas" />
+        </span>
+        <span style="display: inline-block"> Parcelas:<br /> 
+            <input class="span3" type="text" value="{{contarParcelas('NC')}}" ng-disabled="true" placeholder="Sin Parcelas" />
+        </span>
+        <span style="display: inline-block"> Hogares:<br /> 
+            <input class="span3" type="text" value="{{contarHogares('NC')}}" ng-disabled="true" placeholder="Sin Hogares" />
+            <button class="btn" ng-click="marcarSMPModal('NC')" type="button" style="margin-bottom: 10px; margin-right: 20px;"><i class="icon-ok"></i> Marcar SMP</button>
+        </span>
+        <hr style="margin-top:5px; margin-bottom:5px"/>
+        <h4>Consolidado</h4>
+        <!-- <span style="display: inline-block"> Población:<br /> 
+            <div class="input-append">
+              <input class="span3" type="text" ng-model="dominio.poblacionC" ng-disabled="!editando" style="width: 303px;" placeholder="Sin poblacion" />
+              <button class="btn" ng-click="verPoblacionC()" type="button"><i class="icon-info-sign"></i></button>
+            </div>
+        </span>
+        <span style="display: inline-block"> Poblacion %:<br /> 
+            <input class="span4" type="text" ng-model="dominio.poblacionPorC" ng-disabled="!editando" placeholder="Sin poblacion %" />
+        </span>
+        <span style="display: inline-block"> Superficie:<br /> 
+            <input class="span4" type="text" ng-model="dominio.superficieC" ng-disabled="!editando" placeholder="Sin Superficie" />
+        </span> --> 
+        <span style="display: inline-block"> Manzanas:<br /> 
+            <input class="span3" type="text" value="{{contarManzanas('C')}}" ng-disabled="true" placeholder="Sin manzanas" />
+        </span>
+        <span style="display: inline-block"> Parcelas:<br /> 
+            <input class="span3" type="text" value="{{contarParcelas('C')}}" ng-disabled="true" placeholder="Sin Parcelas" />
+        </span>
+        <span style="display: inline-block"> Hogares:<br /> 
+            <input class="span3" type="text" value="{{contarHogares('C')}}" ng-disabled="true" placeholder="Sin Hogares" />
+            <button class="btn" ng-click="marcarSMPModal('C')" type="button" style="margin-bottom: 10px; margin-right: 20px;"><i class="icon-ok"></i> Marcar SMP</button>
+        </span>
+        <hr style="margin-top:5px; margin-bottom:5px"/>
+        <h4>Vivienda Social</h4>
+        <!-- <span style="display: inline-block"> Población:<br /> 
+            <div class="input-append">
+              <input class="span3" type="text" ng-model="dominio.poblacionVS" ng-disabled="!editando" style="width: 303px;" placeholder="Sin poblacion" />
+              <button class="btn" ng-click="verPoblacionVS()" type="button"><i class="icon-info-sign"></i></button>
+            </div>
+        </span>
+        <span style="display: inline-block"> Poblacion %:<br /> 
+            <input class="span4" type="text" ng-model="dominio.poblacionPorVS" ng-disabled="!editando" placeholder="Sin poblacion %" />
+        </span>
+        <span style="display: inline-block"> Superficie:<br /> 
+            <input class="span4" type="text" ng-model="dominio.superficieVS" ng-disabled="!editando" placeholder="Sin Superficie" />
+        </span> --> 
+        <span style="display: inline-block"> Manzanas:<br /> 
+            <input class="span3" type="text" value="{{contarManzanas('VS')}}" ng-disabled="true" placeholder="Sin manzanas" />
+        </span>
+        <span style="display: inline-block"> Parcelas:<br /> 
+            <input class="span3" type="text" value="{{contarParcelas('VS')}}" ng-disabled="true" placeholder="Sin Parcelas" />
+        </span>
+        <span style="display: inline-block"> Hogares:<br /> 
+            <input class="span3" type="text" value="{{contarHogares('VS')}}" ng-disabled="true" placeholder="Sin Hogares" />
+            <button class="btn" ng-click="marcarSMPModal('VS')" type="button" style="margin-bottom: 10px; margin-right: 20px;"><i class="icon-ok"></i> Marcar SMP</button>
+        </span>
+        <hr style="margin-top:5px; margin-bottom:5px"/>
+        <div class="control-group span8" style="margin-left: 0px; margin-right: 5px; margin-bottom:0px">
+            <label style="margin-bottom: 0px">Responsables de carga de Consolidacion:</label>
+            <select class="span4" placeholder="Sin responsable" ng-disabled="!(editando && permisoResponsable())" ui-select2 type="text" ng-model="dataResponConso">
+                <option value="">Sin responsable</option>
+                <option ng-repeat="c in contactos | orderBy: 'apellidos'" value="{{c._id}}">{{c.apellidos}} {{c.nombre}}</option>
+            </select>
+            <button class="btn" style="margin-bottom:10px; margin-left: 5px" ng-disabled="!(editando && permisoResponsable())" ng-click="agregarResponsableConso(dataResponConso)"><i class="icon-plus"></i></button>
+        </div>
+        <div class="span5" style="margin-left: 0px;">
+            <div class="control-group" ng-repeat="c in dominio.responsableConsolidacion" style="margin-left: 0px; margin-right: 5px;margin-bottom: 0px;">
+                <input class="span4" type="text" ng-disabled="true" value="{{contactoPorId(c).apellidos}} {{contactoPorId(c).nombre}}" style="margin-bottom: 0px;" />
+                <a href="#" style="margin-left: 10px" ng-show="(editando && permisoResponsable())" ng-click="eliminarListaElem(c, dominio.responsableConsolidacion)"><i class="icon-trash"></i></a>
+            </div>
+        </div>
+    </div>
+    
+    <div ng-show="tab == 'regularizacion'">
+        <span style="display: inline-block"> Denominacion:<br /> 
+            <input class="span8" type="text" ng-model="dominio.denominacion" ng-disabled="true" placeholder="Sin denominacion" />
+        </span>
+        <span style="display: inline-block"> Numero:<br /> 
+            <input class="span2" type="text" ng-model="dominio.numero" ng-disabled="true" placeholder="Sin numero" />
+        </span>
+        <hr style="margin-top:5px; margin-bottom:5px"/>
+        <h4>En Proceso de Regularización</h4>
+        <!-- <span style="display: inline-block"> Población:<br /> 
+            <div class="input-append">
+              <input class="span3" type="text" ng-model="dominio.poblacionPR" ng-disabled="!editando" style="width: 303px;" placeholder="Sin poblacion" />
+              <button class="btn" ng-click="verPoblacionPR()" type="button"><i class="icon-info-sign"></i></button>
+            </div>
+        </span>
+        <span style="display: inline-block"> Poblacion %:<br /> 
+            <input class="span4" type="text" ng-model="dominio.poblacionPorPR" ng-disabled="!editando" placeholder="Sin poblacion %" />
+        </span>
+        <span style="display: inline-block"> Superficie:<br /> 
+            <input class="span4" type="text" ng-model="dominio.superficiePR" ng-disabled="!editando" placeholder="Sin Superficie" />
+        </span> -->
+        <span style="display: inline-block"> Manzanas:<br /> 
+            <input class="span3" type="text" value="{{contarManzanas('PR')}}" ng-disabled="true" placeholder="Sin manzanas" />
+        </span>
+        <span style="display: inline-block"> Parcelas:<br /> 
+            <input class="span3" type="text" value="{{contarParcelas('PR')}}" ng-disabled="true" placeholder="Sin Parcelas" />
+        </span>
+        <span style="display: inline-block"> Hogares:<br /> 
+            <input class="span3" type="text" value="{{contarHogares('PR')}}" ng-disabled="true" placeholder="Sin Hogares" />
+            <button class="btn" ng-click="marcarSMPModal('PR')" type="button" style="margin-bottom: 10px; margin-right: 20px;"><i class="icon-ok"></i> Marcar SMP</button>
+        </span>
+        <hr style="margin-top:5px; margin-bottom:5px"/>
+        <h4>Regularizado</h4>
+        <!-- <span style="display: inline-block"> Población:<br /> 
+            <div class="input-append">
+              <input class="span3" type="text" ng-model="dominio.poblacionR" ng-disabled="!editando" style="width: 303px;" placeholder="Sin poblacion" />
+              <button class="btn" ng-click="verPoblacionR()" type="button"><i class="icon-info-sign"></i></button>
+            </div>
+        </span>
+        <span style="display: inline-block"> Poblacion %:<br /> 
+            <input class="span4" type="text" ng-model="dominio.poblacionPorR" ng-disabled="!editando" placeholder="Sin poblacion %" />
+        </span>
+        <span style="display: inline-block"> Superficie:<br /> 
+            <input class="span4" type="text" ng-model="dominio.superficieR" ng-disabled="!editando" placeholder="Sin Superficie" />
+        </span> -->
+        <span style="display: inline-block"> Manzanas:<br /> 
+            <input class="span3" type="text" value="{{contarManzanas('R')}}" ng-disabled="true" placeholder="Sin manzanas" />
+        </span>
+        <span style="display: inline-block"> Parcelas:<br /> 
+            <input class="span3" type="text" value="{{contarParcelas('R')}}" ng-disabled="true" placeholder="Sin Parcelas" />
+        </span>
+        <span style="display: inline-block"> Hogares:<br /> 
+            <input class="span3" type="text" value="{{contarHogares('R')}}" ng-disabled="true" placeholder="Sin Hogares" />
+            <button class="btn" ng-click="marcarSMPModal('R')" type="button" style="margin-bottom: 10px; margin-right: 20px;"><i class="icon-ok"></i> Marcar SMP</button>
+        </span>
+        <hr style="margin-top:5px; margin-bottom:5px"/>
+        <h4>Relocalización</h4>
+        <span style="display: inline-block"> Judicial:<br /> 
+            <div class="btn-group" style="margin-bottom: 8px" data-toggle="buttons-radio">
+                <button class="btn" ng-class="(dominio.judicial == true) && 'active btn-info'" ng-disabled="!editando"
+                ng-click="dominio.judicial = true" style="padding-left: 26px; padding-right: 26px;">Si</button>
+                <button class="btn" ng-class="(dominio.judicial == false) && 'active btn-info'" ng-disabled="!editando"
+                ng-click="dominio.judicial = false" style="padding-left: 26px; padding-right: 26px;">No</button>
+            </div>
+        </span>
+        <span style="display: inline-block"> Plan Urbanización:<br /> 
+            <div class="btn-group" style="margin-bottom: 8px" data-toggle="buttons-radio">
+                <button class="btn" ng-class="(dominio.planUrbanizacion == true) && 'active btn-info'" ng-disabled="!editando"
+                ng-click="dominio.planUrbanizacion = true" style="padding-left: 26px; padding-right: 26px;">Si</button>
+                <button class="btn" ng-class="(dominio.planUrbanizacion == false) && 'active btn-info'" ng-disabled="!editando"
+                ng-click="dominio.planUrbanizacion = false" style="padding-left: 26px; padding-right: 26px;">No</button>
+            </div>
+        </span>
+        <span style="display: inline-block"> Hogares:<br /> 
+            <input class="span3" type="text" ng-model="dominio.hogaresRelocalizacion" ng-disabled="!editando" placeholder="Sin Hogares" />
+        </span>
+        <hr style="margin-top:5px; margin-bottom:5px"/>
+        <div class="control-group span8" style="margin-left: 0px; margin-right: 5px; margin-bottom:0px">
+            <label style="margin-bottom: 0px">Responsables de carga de Regularizacion:</label>
+            <select class="span4" placeholder="Sin responsable" ng-disabled="!(editando && permisoResponsable())" ui-select2 type="text" ng-model="dataResponRegu">
+                <option value="">Sin responsable</option>
+                <option ng-repeat="c in contactos | orderBy: 'apellidos'" value="{{c._id}}">{{c.apellidos}} {{c.nombre}}</option>
+            </select>
+            <button class="btn" style="margin-bottom:10px; margin-left: 5px" ng-disabled="!(editando && permisoResponsable())" ng-click="agregarResponsableRegu(dataResponRegu)"><i class="icon-plus"></i></button>
+        </div>
+        <div class="span5" style="margin-left: 0px;">
+            <div class="control-group" ng-repeat="c in dominio.responsableRegularizacion" style="margin-left: 0px; margin-right: 5px;margin-bottom: 0px;">
+                <input class="span4" type="text" ng-disabled="true" value="{{contactoPorId(c).apellidos}} {{contactoPorId(c).nombre}}" style="margin-bottom: 0px;" />
+                <a href="#" style="margin-left: 10px" ng-show="(editando && permisoResponsable())" ng-click="eliminarListaElem(c, dominio.responsableRegularizacion)"><i class="icon-trash"></i></a>
+            </div>
+        </div>
+    </div>
+    
+    <div ng-show="tab == 'responsables'">
+        <span style="display: inline-block"> Denominacion:<br /> 
+            <input class="span8" type="text" ng-model="dominio.denominacion" ng-disabled="true" placeholder="Sin denominacion" />
+        </span>
+        <span style="display: inline-block"> Numero:<br /> 
+            <input class="span2" type="text" ng-model="dominio.numero" ng-disabled="true" placeholder="Sin numero" />
+        </span>
+        <hr style="margin-top:5px; margin-bottom:5px"/>
+        <h4>Responsables</h4>
+        <div class="control-group span4" style="margin-left: 0px; margin-right: 5px">
+            <label style="margin-bottom: 0px">Infraestructura:</label>
+            <select class="input-block-level" ng-disabled="!editando" placeholder="Sin Infraestructura" id="e6" type="text" ng-model="dominio.infraestructura">
+                <option ng-disabled="true" value="">{{organigramaPorId(dominio.infraestructura).nombreCompleto}}</option>
+                <option ng-repeat="e in dependencias | orderBy: 'orden'" value="{{e._id}}">{{e.nombreCompleto}}</option>
+            </select>
+        </div>
+        <div class="control-group span4" style="margin-left: 0px; margin-right: 5px">
+            <label style="margin-bottom: 0px">Dominio Catastral:</label>
+            <select class="input-block-level" ng-disabled="!editando" placeholder="Sin Dominio Catastral" id="e7" type="text" ng-model="dominio.dominio">
+                <option ng-disabled="true" value="">{{organigramaPorId(dominio.dominio).nombreCompleto}}</option>
+                <option ng-repeat="e in dependencias | orderBy: 'orden'" value="{{e._id}}">{{e.nombreCompleto}}</option>
+            </select>
+        </div>
+        <div class="control-group span4" style="margin-left: 0px; margin-right: 5px">
+            <label style="margin-bottom: 0px">Regularización:</label>
+            <select class="input-block-level" ng-disabled="!editando" placeholder="Sin Regularización" id="e8" type="text" ng-model="dominio.regularizacionTexto">
+                <option ng-disabled="true" value="">{{organigramaPorId(dominio.regularizacionTexto).nombreCompleto}}</option>
+                <option ng-repeat="e in dependencias | orderBy: 'orden'" value="{{e._id}}">{{e.nombreCompleto}}</option>
+            </select>
+        </div>
+        <div class="control-group span4" style="margin-left: 0px; margin-right: 5px">
+            <label style="margin-bottom: 0px">Social:</label>
+            <select class="input-block-level" ng-disabled="!editando" placeholder="Sin Social" id="e9" type="text" ng-model="dominio.social">
+                <option ng-disabled="true" value="">{{organigramaPorId(dominio.social).nombreCompleto}}</option>
+                <option ng-repeat="e in dependencias | orderBy: 'orden'" value="{{e._id}}">{{e.nombreCompleto}}</option>
+            </select>
+        </div>
+        <div class="control-group span4" style="margin-left: 0px; margin-right: 5px">
+            <label style="margin-bottom: 0px">Relocalización:</label>
+            <select class="input-block-level" ng-disabled="!editando" placeholder="Sin Relocalización" id="e10" type="text" ng-model="dominio.relocalizacion">
+                <option ng-disabled="true" value="">{{organigramaPorId(dominio.relocalizacion).nombreCompleto}}</option>
+                <option ng-repeat="e in dependencias | orderBy: 'orden'" value="{{e._id}}">{{e.nombreCompleto}}</option>
+            </select>
+        </div>
+        <!-- <div class="control-group span4" style="margin-left: 0px; margin-right: 5px">
+            <label style="margin-bottom: 0px">Fuente:</label>
+            <select class="input-block-level" ng-disabled="!editando" placeholder="Sin Fuente" id="e11" type="text" ng-model="dominio.fuente">
+                <option ng-disabled="true" value="">{{organigramaPorId(dominio.fuente).nombreCompleto}}</option>
+                <option ng-repeat="e in dependencias | orderBy: 'orden'" value="{{e._id}}">{{e.nombreCompleto}}</option>
+            </select>
+        </div> --> 
+        <div class="control-group span8" style="margin-left: 0px; margin-right: 5px; margin-bottom:0px">
+            <hr style="margin-top:5px; margin-bottom:5px"/>
+            <label style="margin-bottom: 0px">Responsables de carga de Responsables:</label>
+            <select class="span4" placeholder="Sin responsable" ng-disabled="!(editando && permisoResponsable())" ui-select2 type="text" ng-model="dataResponRespon">
+                <option value="">Sin responsable</option>
+                <option ng-repeat="c in contactos | orderBy: 'apellidos'" value="{{c._id}}">{{c.apellidos}} {{c.nombre}}</option>
+            </select>
+            <button class="btn" style="margin-bottom:10px; margin-left: 5px" ng-disabled="!(editando && permisoResponsable())" ng-click="agregarResponsableRespon(dataResponRespon)"><i class="icon-plus"></i></button>
+        </div>
+        <div class="span5" style="margin-left: 0px;">
+            <div class="control-group" ng-repeat="c in dominio.responsableResponsables" style="margin-left: 0px; margin-right: 5px;margin-bottom: 0px;">
+                <input class="span4" type="text" ng-disabled="true" value="{{contactoPorId(c).apellidos}} {{contactoPorId(c).nombre}}" style="margin-bottom: 0px;" />
+                <a href="#" style="margin-left: 10px" ng-show="(editando && permisoResponsable())" ng-click="eliminarListaElem(c, dominio.responsableResponsables)"><i class="icon-trash"></i></a>
+            </div>
+        </div>
+    </div>
+    
+    <div ng-show="tab == 'archivos'">
+        <span style="display: inline-block"> Denominacion:<br /> 
+            <input class="span8" type="text" ng-model="dominio.denominacion" ng-disabled="true" placeholder="Sin denominacion" />
+        </span>
+        <span style="display: inline-block"> Numero:<br /> 
+            <input class="span2" type="text" ng-model="dominio.numero" ng-disabled="true" placeholder="Sin numero" />
+        </span>
+        <hr style="margin-top:5px; margin-bottom:5px"/>
+        <h4>Archivos</h4>
+        <!-- <button class="btn" data-placement="bottom" ng-show="editando"
+        ng-click="punto()" ng-class="{'btn-inverse active disabled':dominiosVista.currentTool == 'point'}">
+            <i class="icon-map-marker" ng-class="{'icon-white': dominiosVista.currentTool == 'point'}"></i>
+        </button>
+        <button class="btn" data-placement="bottom" ng-show="editando"
+        ng-click="mover()" ng-class="{'btn-inverse active disabled':dominiosVista.currentTool == 'pan'}">
+            <i class="icon-move" ng-class="{'icon-white': dominiosVista.currentTool == 'pan'}"></i>
+        </button>
+        <div style="width: 95%; height: 500px; background-color:
+        #fff" id="map" ng-model="dominiosVista" openlayers ng-model="dominiosVista" markers="dominiosVista.markers"
+        features="dominiosVista.features" ol-extent="dominiosVista.extent" ol-selected-indexes="dominiosVista.selectedIndexes"
+        ol-style="dominiosVista.style" current-tool="dominiosVista.currentTool"></div> -->
+        
+        <div class="span4" style="margin-left: 10px;">
+            <h4>Imagenes
+            <div class="card-actions pull-right" style="margin: 0; padding: 0">
+                <a class="btn btn-link" ng-click="agregarFotografia()" ng-if="editando"><i class="icon-plus"></i></a>
+            </div></h4>
+            <div ng-if="!dominio.fotos.length">No se ha cargardo ninguna imagen aún</div>
+            <a ng-repeat="f in dominio.fotos" data-toggle="modal" 
+            ng-click="abrirModal('#fotosS_{{$index}}')" href="" class="thumbnail" style="display:inline-block">
+                <img src="/file/{{f.fotoId}}" width="128" height="96">
+            </a>
+        </div>
+        <div class="span4" style="margin-left: 10px;">
+            <h4>Documentos Normativa
+            <div class="card-actions pull-right" style="margin: 0; padding: 0">
+                <a class="btn btn-link" ng-click="agregarDocumentacionNorm()" ng-if="editando"><i class="icon-plus"></i></a>
+            </div></h4>
+            <div ng-if="!dominio.documentosNormativa.length">No se ha cargardo ningun documento aún</div>
+            <div ng-repeat="d in dominio.documentosNormativa">
+                <a data-toggle="modal" ng-click="abrirModal('#documentosE_{{$index}}')" href="">{{d.nombre}}</a> (<a href="/file/{{d.archivoId}}" target="_blank">Descargar</a>)<br>
+            </div>
+        </div>
+        <div class="span4" style="margin-left: 10px;">
+            <h4>Documentos Judicial
+            <div class="card-actions pull-right" style="margin: 0; padding: 0">
+                <a class="btn btn-link" ng-click="agregarDocumentacionJudi()" ng-if="editando"><i class="icon-plus"></i></a>
+            </div></h4>
+            <div ng-if="!dominio.documentosJudicial.length">No se ha cargardo ningun documento aún</div>
+            <div ng-repeat="d in dominio.documentosJudicial">
+                <a data-toggle="modal" ng-click="abrirModal('#documentosE_{{$index}}')" href="">{{d.nombre}}</a> (<a href="/file/{{d.archivoId}}" target="_blank">Descargar</a>)<br>
+            </div>
+        </div>
+        <!-- 
+        <h4>Fotos</h4>
+        <div ng-hide="dominio.fotos.length">No se ha cargardo ninguna foto aún</div>
+        <a ng-repeat="f in dominio.fotos"
+        data-toggle="lightbox" href="javascript:$('#fotos_{{$index}}').lightbox()"
+        class="thumbnail" style="display:inline-block">
+
+            <img src="/file/{{f}}" width="128" height="96">
+
+        </a>
+        <div ng-repeat="f in dominio.fotos" id="fotos_{{$index}}"
+        class="lightbox hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class='lightbox-header'>
+                <button type="button" class="close" data-dismiss="lightbox" aria-hidden="true">&times;</button>
+            </div>
+            <div class='lightbox-content'>
+                <img src="/file/{{f}}">
+            </div>
+        </div>
+        <div style="width: 300px" fine-uploader destination="'/upload/'" ng-show="editando"
+        placeholder="'Subir foto'" uploaded="uploaded"></div>
+        <div> -->
+        <br>
+        <hr class="span11" style="margin-top:25px; margin-bottom:10px;"/>
+        <div class="control-group span8" style="margin-left: 0px; margin-right: 5px; margin-bottom:0px">
+            <label style="margin-bottom: 0px">Responsables de carga de Archivos:</label>
+            <select class="span4" placeholder="Sin Responsables" ng-disabled="!(editando && permisoResponsable())" ui-select2 type="text" ng-model="dataResponArchi">
+                <option value="">Sin responsable</option>
+                <option ng-repeat="c in contactos | orderBy: 'apellidos'" value="{{c._id}}">{{c.apellidos}} {{c.nombre}}</option>
+            </select>
+            <button class="btn" style="margin-bottom:10px; margin-left: 5px" ng-disabled="!(editando && permisoResponsable())" ng-click="agregarResponsableArchi(dataResponArchi)"><i class="icon-plus"></i></button>
+        </div>
+        <div class="span5" style="margin-left: 0px;">
+            <div class="control-group" ng-repeat="c in dominio.responsableArchivos" style="margin-left: 0px; margin-right: 5px;margin-bottom: 0px;">
+                <input class="span4" type="text" ng-disabled="true" value="{{contactoPorId(c).apellidos}} {{contactoPorId(c).nombre}}" style="margin-bottom: 0px;" />
+                <a href="#" style="margin-left: 10px" ng-show="(editando && permisoResponsable())" ng-click="eliminarListaElem(c, dominio.responsableArchivos)"><i class="icon-trash"></i></a>
+            </div>
+        </div>
+    </div>
+</div>
+    
+    
+<div id="datosPoblacion" class="modal hide fade">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>Poblacion: {{dominio.poblacion}}</h3>
+    </div>
+    <div class="modal-body">
+        <span style="display: inline-block"> Censo:<br />
+            <input class="span3" type="text" ng-model="dominio.poblacionCenso" ng-disabled="!editando" placeholder="Sin censo" />
+        </span>
+        <span style="display: inline-block"> Proyeccion:<br />
+            <input class="span3" type="text" ng-model="dominio.poblacionProyeccion" ng-disabled="!editando" placeholder="Sin proyeccion" />
+        </span>
+        <span style="display: inline-block"> Fecha Censo:<br />
+            <input class="span2" type="text" ng-model="dominio.poblacionFechaCenso" date ng-disabled="!editando" placeholder="Sin fecha de censo" />
+        </span>
+        <span style="display: inline-block"> Fecha Ultima Proyeccion:<br />
+            <input class="span2" type="text" ng-model="dominio.poblacionFechaProyeccion" date ng-disabled="!editando" placeholder="Sin fecha de proyeccion" />
+        </span>
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="btn pull-right" data-dismiss="modal">Cerrar</a>
+    </div>
+</div> 
+    
+<div id="datosPoblacionNC" class="modal hide fade">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>Poblacion (No Consolidado): {{dominio.poblacionNC}}</h3>
+    </div>
+    <div class="modal-body">
+        <span style="display: inline-block"> Censo:<br />
+            <input class="span3" type="text" ng-model="dominio.poblacionNCCenso" ng-disabled="!editando" placeholder="Sin censo" />
+        </span>
+        <span style="display: inline-block"> Proyeccion:<br />
+            <input class="span3" type="text" ng-model="dominio.poblacionNCProyeccion" ng-disabled="!editando" placeholder="Sin proyeccion" />
+        </span>
+        <span style="display: inline-block"> Fecha Censo:<br />
+            <input class="span2" type="text" ng-model="dominio.poblacionNCFechaCenso" date ng-disabled="!editando" placeholder="Sin fecha de censo" />
+        </span>
+        <span style="display: inline-block"> Fecha Ultima Proyeccion:<br />
+            <input class="span2" type="text" ng-model="dominio.poblacionNCFechaProyeccion" date ng-disabled="!editando" placeholder="Sin fecha de proyeccion" />
+        </span>
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="btn pull-right" data-dismiss="modal">Cerrar</a>
+    </div>
+</div> 
+    
+<div id="datosPoblacionC" class="modal hide fade">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>Poblacion (Consolidado): {{dominio.poblacionC}}</h3>
+    </div>
+    <div class="modal-body">
+        <span style="display: inline-block"> Censo:<br />
+            <input class="span3" type="text" ng-model="dominio.poblacionCCenso" ng-disabled="!editando" placeholder="Sin censo" />
+        </span>
+        <span style="display: inline-block"> Proyeccion:<br />
+            <input class="span3" type="text" ng-model="dominio.poblacionCProyeccion" ng-disabled="!editando" placeholder="Sin proyeccion" />
+        </span>
+        <span style="display: inline-block"> Fecha Censo:<br />
+            <input class="span2" type="text" ng-model="dominio.poblacionCFechaCenso" date ng-disabled="!editando" placeholder="Sin fecha de censo" />
+        </span>
+        <span style="display: inline-block"> Fecha Ultima Proyeccion:<br />
+            <input class="span2" type="text" ng-model="dominio.poblacionCFechaProyeccion" date ng-disabled="!editando" placeholder="Sin fecha de proyeccion" />
+        </span>
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="btn pull-right" data-dismiss="modal">Cerrar</a>
+    </div>
+</div> 
+    
+<div id="datosPoblacionVS" class="modal hide fade">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>Poblacion (Vivienda Social): {{dominio.poblacionVS}}</h3>
+    </div>
+    <div class="modal-body">
+        <span style="display: inline-block"> Censo:<br />
+            <input class="span3" type="text" ng-model="dominio.poblacionVSCenso" ng-disabled="!editando" placeholder="Sin censo" />
+        </span>
+        <span style="display: inline-block"> Proyeccion:<br />
+            <input class="span3" type="text" ng-model="dominio.poblacionVSProyeccion" ng-disabled="!editando" placeholder="Sin proyeccion" />
+        </span>
+        <span style="display: inline-block"> Fecha Censo:<br />
+            <input class="span2" type="text" ng-model="dominio.poblacionVSFechaCenso" date ng-disabled="!editando" placeholder="Sin fecha de censo" />
+        </span>
+        <span style="display: inline-block"> Fecha Ultima Proyeccion:<br />
+            <input class="span2" type="text" ng-model="dominio.poblacionVSFechaProyeccion" date ng-disabled="!editando" placeholder="Sin fecha de proyeccion" />
+        </span>
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="btn pull-right" data-dismiss="modal">Cerrar</a>
+    </div>
+</div> 
+    
+<div id="datosPoblacionPR" class="modal hide fade">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>Poblacion (En Proceso de Regularizacion): {{dominio.poblacionPR}}</h3>
+    </div>
+    <div class="modal-body">
+        <span style="display: inline-block"> Censo:<br />
+            <input class="span3" type="text" ng-model="dominio.poblacionPRCenso" ng-disabled="!editando" placeholder="Sin censo" />
+        </span>
+        <span style="display: inline-block"> Proyeccion:<br />
+            <input class="span3" type="text" ng-model="dominio.poblacionPRProyeccion" ng-disabled="!editando" placeholder="Sin proyeccion" />
+        </span>
+        <span style="display: inline-block"> Fecha Censo:<br />
+            <input class="span2" type="text" ng-model="dominio.poblacionPRFechaCenso" date ng-disabled="!editando" placeholder="Sin fecha de censo" />
+        </span>
+        <span style="display: inline-block"> Fecha Ultima Proyeccion:<br />
+            <input class="span2" type="text" ng-model="dominio.poblacionPRFechaProyeccion" date ng-disabled="!editando" placeholder="Sin fecha de proyeccion" />
+        </span>
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="btn pull-right" data-dismiss="modal">Cerrar</a>
+    </div>
+</div> 
+    
+<div id="datosPoblacionR" class="modal hide fade">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>Poblacion (Relocalizacion): {{dominio.poblacionR}}</h3>
+    </div>
+    <div class="modal-body">
+        <span style="display: inline-block"> Censo:<br />
+            <input class="span3" type="text" ng-model="dominio.poblacionRCenso" ng-disabled="!editando" placeholder="Sin censo" />
+        </span>
+        <span style="display: inline-block"> Proyeccion:<br />
+            <input class="span3" type="text" ng-model="dominio.poblacionRProyeccion" ng-disabled="!editando" placeholder="Sin proyeccion" />
+        </span>
+        <span style="display: inline-block"> Fecha Censo:<br />
+            <input class="span2" type="text" ng-model="dominio.poblacionRFechaCenso" date ng-disabled="!editando" placeholder="Sin fecha de censo" />
+        </span>
+        <span style="display: inline-block"> Fecha Ultima Proyeccion:<br />
+            <input class="span2" type="text" ng-model="dominio.poblacionRFechaProyeccion" date ng-disabled="!editando" placeholder="Sin fecha de proyeccion" />
+        </span>
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="btn pull-right" data-dismiss="modal">Cerrar</a>
+    </div>
+</div>    
+    
+<div id="comentarioGestion" class="modal hide fade">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>Comentario de: {{data.proyecto}}</h3>
+    </div>
+    <div class="modal-body">
+        <textarea class="span5" type="text" ng-disabled="!editando" placeholder="Sin comentario" ng-model="data.comentario" style="width: 520px;" rows="5"></textarea>
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="btn pull-right" data-dismiss="modal">Cerrar</a>
+    </div>
+</div> 
+    
+<div id="agregarSMP" class="modal hide fade">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>Agregar SMP</h3>
+    </div>
+    <div class="modal-body" style="overflow-y: scroll; overflow-x: hidden; height: 350px;">
+        <div class="control-group span1" style="margin-left: 0px; margin-right: 8px; margin-bottom: 0px;">
+            <label style="margin-bottom: 0px">Seccion:</label>
+            <input class="span1" type="text" ng-disabled="!editando" ng-model="dataSMP.seccion" style="margin-bottom: 0px;" />
+        </div>
+        <div class="control-group span1" style="margin-left: 0px; margin-right: 8px; margin-bottom: 0px;">
+            <label style="margin-bottom: 0px">Manzana:</label>
+            <input class="span1" type="text" ng-disabled="!editando" ng-model="dataSMP.manzana" style="margin-bottom: 0px;" />
+        </div>
+        <div class="control-group span1" style="margin-left: 0px; margin-right: 8px; margin-bottom: 0px;">
+            <label style="margin-bottom: 0px">Parcela:</label>
+            <input class="span1" type="text" ng-disabled="!editando" ng-model="dataSMP.parcela" style="margin-bottom: 0px;" />
+        </div>
+        <div class="control-group span2" style="margin-left: 0px; margin-right: 8px; margin-bottom: 0px;">
+            <label style="margin-bottom: 0px">Hogares:</label>
+            <input class="span1" type="text" ng-disabled="!editando" ng-model="dataSMP.hogares" style="margin-bottom: 0px;" />
+            <button class="btn" style="margin-bottom:0px; margin-left: 5px" ng-disabled="!editando" ng-click="agregarSMP(dataSMP)"><i class="icon-plus"></i></button>
+        </div>
+        <div class="control-group span5" ng-repeat="t in dominio.smp" style="margin-left: 0px; margin-right: 5px;margin-bottom: 0px;">
+            <input class="span1" type="text" ng-disabled="true" ng-model="t.seccion" style="margin-bottom: 0px;" />
+            <input class="span1" type="text" ng-disabled="true" ng-model="t.manzana" style="margin-bottom: 0px;" />
+            <input class="span1" type="text" ng-disabled="true" ng-model="t.parcela" style="margin-bottom: 0px;" />
+            <input class="span1" type="text" ng-disabled="true" ng-model="t.hogares" style="margin-bottom: 0px;" />
+            <a href="#" style="margin-left: 10px" ng-show="editando" ng-click="eliminarListaElem(t, dominio.smp)"><i class="icon-trash"></i></a>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="btn pull-right" data-dismiss="modal">Cerrar</a>
+    </div>
+</div>  
+    
+<div id="marcarSMP" class="modal hide fade">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>Marcar SMP</h3>
+    </div>
+    <div class="modal-body" style="overflow-y: scroll; overflow-x: hidden; height: 350px;">
+        <div class="control-group span5" ng-repeat="t in dominio.smp" style="margin-left: 0px; margin-right: 5px;margin-bottom: 0px;">
+            <input class="span1" type="text" ng-disabled="true" ng-model="t.seccion" style="margin-bottom: 0px;" />
+            <input class="span1" type="text" ng-disabled="true" ng-model="t.manzana" style="margin-bottom: 0px;" />
+            <input class="span1" type="text" ng-disabled="true" ng-model="t.parcela" style="margin-bottom: 0px;" />
+            <input class="span1" type="text" ng-disabled="true" ng-model="t.hogares" style="margin-bottom: 0px;" />
+            <button class="btn" ng-class="{'btn-info': (t.instancia=='NC')}" ng-click="t.instancia='NC'" ng-show="((nc && editando) || (t.instancia=='NC'))" ng-disabled="(!nc && (t.instancia=='NC'))">NC</button>
+            <button class="btn" ng-class="{'btn-info': (t.instancia=='C')}" ng-click="t.instancia='C'" ng-show="((c && editando) || (t.instancia=='C'))" ng-disabled="(!c && (t.instancia=='C'))">C</button>
+            <button class="btn" ng-class="{'btn-info': (t.instancia=='VS')}" ng-click="t.instancia='VS'" ng-show="((vs && editando) || (t.instancia=='VS'))" ng-disabled="(!vs && (t.instancia=='VS'))">VS</button>
+            <button class="btn" ng-class="{'btn-info': (t.instancia=='PR')}" ng-click="t.instancia='PR'" ng-show="((pr && editando) || (t.instancia=='PR'))" ng-disabled="(!pr && (t.instancia=='PR'))">PR</button>
+            <button class="btn" ng-class="{'btn-info': (t.instancia=='R')}" ng-click="t.instancia='R'" ng-show="((r && editando) || (t.instancia=='R'))" ng-disabled="(!r && (t.instancia=='R'))">R</button>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="btn pull-right" data-dismiss="modal">Cerrar</a>
+    </div>
+</div>  
+
+<div id="confirmarEliminar" class="modal hide fade">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>Eliminar Regularizacion Dominial</h3>
+    </div>
+    <div class="modal-body">
+        <p>Está a un paso de eliminar el Dominio</p>
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="btn btn-info" data-dismiss="modal">Conservar el registro</a>
+        <a href="#" class="btn btn-danger" data-dismiss="modal" ng-click="eliminarRegularizacion(true)">Eliminar</a>
+    </div>
+</div>
+</div>
+

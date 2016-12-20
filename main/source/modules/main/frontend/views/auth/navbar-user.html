@@ -1,0 +1,35 @@
+<style>
+    a.dropdown-toggle.btn:hover {
+      background-position: 0 0;
+    }
+    a.dropdown-toggle.btn.btn-inverse {
+        color: white;
+        height: 24px;
+        min-height: 27px;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+</style>
+
+<div ng-controller="NavbarAuthCtrl" >
+    <div class="btn-group" ng-hide="isLoggedIn">
+    <a href="/login" class="btn btn-link"><i class="icon-user"></i>&nbsp;Login</a>
+    </div>
+    
+    <ul class="nav pull-right" ng-show="isLoggedIn">
+        <li class="dropdown">
+            <a style="margin-top: 7px; margin-bottom: 0; margin-left: 0;" class="dropdown-toggle btn btn-inverse" data-toggle="dropdown"><i class="icon-user"></i>&nbsp;{{username}}</a>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                <li><a href="/cambiarContrasenna"><i class="icon-lock"></i>&nbsp;Cambiar Contraseña</a></li>
+                <li><a href="#" ng-click="editarUsuario()"><i class="icon-user"></i>&nbsp;Editar perfil</a></li>
+            </ul>
+        </li>
+    </ul>
+    
+    <div class="btn-group" ng-show="isLoggedIn" >
+        <button class="btn btn-primary" ng-click="logout()" onclick="window.location.href='/'">
+            <i class="icon-off icon-white"></i>
+        </button>
+    </div>
+</div>
+<!--icon-sunglasses-->

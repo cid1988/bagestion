@@ -1,0 +1,295 @@
+<div class="card">
+    <div class="container-fluid">
+        <h3 class="card-heading simple" style="padding-left: 0px; font-size:14px;padding-right: 0px;height: 45px;margin-bottom: 10px;">
+            <ul class="nav nav-pills">
+                <li ng-class="{'active': tab == 'Resumen General'}">
+                    <a ng-click="tab='Resumen General'" href="#" data-toggle="tab">Resumen General</a>
+                </li>
+                <li ng-class="{'active': tab == 'Anexo ABC Comunas'}">
+                    <a ng-click="tab='Anexo ABC Comunas'" href="#" data-toggle="tab">Anexo ABC Comunas</a>
+                </li>
+                <select class="width: 20%;input-block-level pull-right" style="margin-bottom: 0px" placeholder="Listado de presentaciones" ui-select2 type="text" ng-model="obras.presentaciones">
+                    <option value=""></option>
+                    <option value="diaHoy2">Actual</option>
+                    <option ng-repeat="e in presentaciones" ng-click="tab='abriro'" value="{{e._id}}">{{formatoFecha(e.fechaAgregado)}}</option>
+                </select>
+                <a ng-show="hasPermission('obras.desarrollador')" class="btn no-print pull-right" style="margin-right:5px" ng-click="guardarTabla()"> Guardar</a>
+            </ul>
+        </h3>
+        
+        <div ng-if="tab == 'Resumen General'">
+            <select class="input-block-level pull-right" style="margin-bottom: 0px; width: 20%" placeholder="Buscar por segmento" ui-select2 type="text" ng-model="filtro.orden1">
+                <option value=""></option>
+                <option value="">Todos</option>
+                <option ng-repeat="e in ordenes" value="{{e._id}}">{{e.nombre}}</option>
+            </select>
+            
+            <!--<div class="card-actions pull-right" style="margin: 0; padding: 0">
+                <input placeholder="Buscar por Nombre..." style="margin-bottom: 0px" type="text" class="span2" ng-model="filtro.nombre"/>
+                <input class="span2" style="margin-bottom: 0px" type="text" placeholder="Buscar por coordenadas" ng-model="filtro.coordenadas"/>
+                <input placeholder="Buscar por presentación..." style="margin-bottom: 0px" type="text" class="span2" ng-model="filtro.orden2"/>
+            </div>-->
+            
+            <h3 class="card-heading simple">Resumen General - 
+                <span ng-hide="listado.fechaAgregado">{{diaHoy2}}</span><span ng-show="listado.fechaAgregado">{{formatoFecha(listado.fechaAgregado)}}</span>
+                <!--<div class="control-group pull-right" style="display: block;">
+                    <div class="controls">
+                        <input placeholder="Nombre" type="text" class="input-block-level search-query" ng-model="filtro.nombre"/>
+                    </div>
+                </div>-->
+            </h3>
+            <table border="1" class="table table-bordered">
+                <tr bgcolor= "#FFFFFF">
+                    <th><a ng-click="orden = 'nombre'" href="#" style="display: inline-block; color:#404040;">PRIORIDAD</a></th>
+                    <th><a ng-click="orden = 'tipo'" href="#" style="display: inline-block; color:#404040;">COMUNA</a></th>
+                    <th style="text-align:center !important"><a ng-click="orden = 'cantidad'" href="#" style="display: inline-block; color:#404040;">TÍTULO</a></th>
+                    <th style="text-align:center !important"><a ng-click="orden = 'participantes'" href="#" style="display: inline-block; color:#404040;">DESCRIPCIÓN</a></th>
+                    <th style="text-align:center !important"><a ng-click="orden = 'llamados'" href="#" style="display: inline-block; color:#404040;">ESTADO</a></th>
+                    <th style="text-align:center !important"><a ng-click="orden = 'cantAsistencia'" href="#" style="display: inline-block; color:#404040;">RESPONSABLE</a></th>
+                    <th style="text-align:center !important"><a ng-click="orden = 'cantLlamados'" href="#" style="display: inline-block; color:#404040;">MONTO</a></th>
+                </tr>
+                
+                <div ng-show="!mostrar">
+                    <tr ng-repeat="i in listado | orderBy: [seg,'coordenadas','orden2'] | filter: filtro" ng-hide="(seg(i) == '9500')" bgcolor= "#FFFFFF">
+                        <td style="text-align:center !important">
+                            {{prioridadPorId(i.relevancia).nombre}}
+                		</div>
+                        <td style="text-align:center !important">
+                            {{comunaPorId(i.comuna).numero}}
+                		</td>
+                        <td style="text-align:center !important">
+                            {{i.nombre}}
+                		</td>
+                        <td style="text-align:center !important" ng-repeat="o in reverse(i.detallesComunicacion[i.detallesComunicacion.length - 1])">
+                    		{{o.detalle}}
+                		</td>
+                        <td style="text-align:center !important" ng-repeat="o in reverse(i.comentariosEstado[i.comentariosEstado.length - 1])">
+                            {{estadoPorId(i.estado).nombre}}
+                		</td>
+                        <td style="text-align:center !important">
+                    		{{jurisdiccionPorId(i.jurisdiccion).nombreCompleto}}
+                		</td>
+                        <td style="text-align:center !important">
+                            {{formatMonto(montoCsv(i.nombrar[i.nombrar.length-1]))}}
+                		</td>
+                	</tr>
+            	</div>
+            	
+            	<div ng-show="mostrar">
+                    <tr ng-repeat="i in listado.presentacion | orderBy: [seg,'coordenadas','orden2'] | filter: filtro" ng-hide="(seg(i) == '9500')" bgcolor= "#FFFFFF">
+                        <td style="text-align:center !important">
+                            {{prioridadPorId(i.relevancia).nombre}}
+                		</div>
+                        <td style="text-align:center !important">
+                            {{comunaPorId(i.comuna).numero}}
+                		</td>
+                        <td style="text-align:center !important">
+                            {{i.nombre}}
+                		</td>
+                        <td style="text-align:center !important" ng-repeat="o in reverse(i.detallesComunicacion[i.detallesComunicacion.length - 1])">
+                    		{{o.detalle}}
+                		</td>
+                        <td style="text-align:center !important" ng-repeat="o in reverse(i.comentariosEstado[i.comentariosEstado.length - 1])">
+                            {{i.estado.nombre}}
+                		</td>
+                        <td style="text-align:center !important">
+                    		{{jurisdiccionPorId(i.jurisdiccion).nombreCompleto}}
+                		</td>
+                        <td style="text-align:center !important">
+                            {{formatMonto(montoCsv(i.nombrar[i.nombrar.length-1]))}}
+                		</td>
+                	</tr>
+            	</div>
+            </table>
+        </div>
+        
+        <div ng-if="tab == 'Anexo ABC Comunas'">
+            <!--<div class="input-block-level" style="width: 150px; margin-bottom: 0px">
+                <div class="controls">
+                    <input placeholder="Atención Ciudadana" disabled type="text" class="input-block-level search-query pull-right" ng-model="filtro.nombre"/>
+                </div>
+            </div>-->
+            <h3 class="card-heading simple">Anexo ABC Comunas - 
+                <span ng-hide="listado.fechaAgregado">{{diaHoy2}}</span><span ng-show="listado.fechaAgregado">{{formatoFecha(listado.fechaAgregado)}}</span>
+                <!--<div class="control-group pull-right" style="display: block;">
+                    <div class="controls">
+                        <input placeholder="Nombre..." type="text" class="input-block-level search-query" ng-model="filtro.nombre"/>
+                    </div>
+                </div>-->
+                <input placeholder="Atención Ciudadana" disabled type="text" class="pull-right" style="width:20%" ng-model="filtro.nombre"/>
+            </h3>
+            <table border="1" class="table table-bordered">
+                <tr bgcolor= "#FFFFFF">
+                    <th><a ng-click="orden = 'nombre'" href="#" style="display: inline-block; color:#404040;">PRIORIDAD</a></th>
+                    <th style="text-align:center !important"><a ng-click="orden = ''" href="#" style="display: inline-block; color:#404040;">TÍTULO</a></th>
+                    <th style="text-align:center !important"><a ng-click="orden = ''" href="#" style="display: inline-block; color:#404040;">UBICACIÓN</a></th>
+                    <th style="text-align:center !important"><a ng-click="orden = ''" href="#" style="display: inline-block; color:#404040;">DEPENDENCIA</a></th>
+                    <th style="text-align:center !important"><a ng-click="orden = ''" href="#" style="display: inline-block; color:#404040;">PROYECTO</a></th>
+                    <th style="text-align:center !important"><a ng-click="orden = ''" href="#" style="display: inline-block; color:#404040;">CONTRATO</a></th>
+                    <th style="text-align:center !important"><a ng-click="orden = ''" href="#" style="display: inline-block; color:#404040;">INICIO</a></th>
+                    <th style="text-align:center !important"><a ng-click="orden = ''" href="#" style="display: inline-block; color:#404040;">FIN</a></th>
+                    <th style="text-align:center !important"><a ng-click="orden = ''" href="#" style="display: inline-block; color:#404040;">MONTO</a></th>
+                </tr>
+                
+                <div ng-show="!mostrar">
+                    <tr ng-repeat="i in listado | orderBy: ['coordenadas','orden2'] | filter: filtro" ng-show="(seg(i) == '775')" bgcolor= "#FFFFFF">
+                        <td style="text-align:center !important">
+                            {{prioridadPorId(i.relevancia).nombre}}
+                		</div>
+                        <td style="text-align:center !important">
+                            {{i.nombre}}
+                		</td>
+                        <td ng-repeat="o in reverse(i.ubicacionesComunicacion[i.ubicacionesComunicacion.length - 1])">
+                            {{o.detalle}}
+                        </td>
+                        <td style="text-align:center !important">
+                            {{jurisdiccionPorId(i.dependencia).nombreCompleto}}
+                        </td>
+                        <td style="text-align:center !important" ng-repeat="o in reverse(i.comentariosEstado[i.comentariosEstado.length - 1])">
+                            {{proyectosCsv(i.proyectos[i.proyectos.length-1])}}
+                		</td>
+                        <td style="text-align:center !important">
+                            {{proyectosCsv(i.contratos[i.contratos.length-1])}}
+                		</td>
+                        <td style="text-align:center !important">
+                            {{proyectosCsv(i.inicios[i.inicios.length-1])}}
+                        </td>
+                        <td style="text-align:center !important">
+                            {{proyectosCsv(i.final[i.final.length-1])}}
+                        </td>
+                        <td style="text-align:center !important">
+                            {{formatMonto(montoCsv(i.nombrar[i.nombrar.length-1]))}}
+                        </td>
+                    </tr>
+                </div>
+                
+                <div ng-show="mostrar">
+                    <tr ng-repeat="i in listado.presentacion | orderBy: ['coordenadas','orden2'] | filter: filtro" ng-show="(seg(i) == '9500')" bgcolor= "#FFFFFF">
+                        <td style="text-align:center !important">
+                            {{prioridadPorId(i.relevancia).nombre}}
+                		</div>
+                        <td style="text-align:center !important">
+                            {{i.nombre}}
+                		</td>
+                        <td ng-repeat="o in reverse(i.ubicacionesComunicacion[i.ubicacionesComunicacion.length - 1])">
+                            {{o.detalle}}
+                        </td>
+                        <td style="text-align:center !important" ng-repeat="o in reverse(i.comentariosEstado[i.comentariosEstado.length - 1])">
+                            {{proyectosCsv(i.proyectos[i.proyectos.length-1])}}
+                		</td>
+                        <td style="text-align:center !important">
+                            {{proyectosCsv(i.contratos[i.contratos.length-1])}}
+                		</td>
+                        <td style="text-align:center !important">
+                            {{proyectosCsv(i.inicios[i.inicios.length-1])}}
+                        </td>
+                        <td style="text-align:center !important">
+                            {{proyectosCsv(i.final[i.final.length-1])}}
+                        </td>
+                    </tr>
+                </div>
+            </table>
+            
+            
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+<!--
+<div>
+    <div class="card-actions pull-right" style="margin: 0; padding: 0">
+        <a class="btn no-print" ng-click="guardarTabla()"> Guardar</a>
+        <input placeholder="Buscar por Nombre..." style="margin-bottom: 0px" type="text" class="span2" ng-model="filtro.nombre"/>
+        <select class="width: 20%;input-block-level" style="margin-bottom: 0px" placeholder="Listado de presentaciones" ui-select2 type="text" ng-model="obras.presentaciones">
+            <option value=""></option>
+            <option value="diaHoy2">Actual</option>
+            <option ng-repeat="e in presentaciones" ng-click="tab='abriro'" value="{{e._id}}">{{e.fechaAgregado}}</option>
+        </select>
+        <select class="width: 20%;input-block-level" style="margin-bottom: 0px" placeholder="Buscar por segmento" ui-select2 type="text" ng-model="filtro.orden1">
+            <option value=""></option>
+            <option value="">Todos</option>
+            <option ng-repeat="e in ordenes" value="{{e._id}}">{{e.nombre}}</option>
+        </select>
+        <input class="span2" style="margin-bottom: 0px" type="text" placeholder="Buscar por coordenadas" ng-model="filtro.coordenadas"/>
+        <input placeholder="Buscar por presentación..." style="margin-bottom: 0px" type="text" class="span2" ng-model="filtro.orden2"/>
+    </div>
+    
+    <h3 class="card-heading simple">Obras - <span ng-hide="listado.fechaAgregado">{{diaHoy2}}</span><span ng-show="listado.fechaAgregado">{{listado.fechaAgregado}}</span></h3>
+    <table border="1" class="table table-bordered">
+        <tr bgcolor= "#FFFFFF">
+            <th><a ng-click="orden2 = 'relevancia'" href="#" style="display: inline-block; color:#404040;">P</a></th>
+            <th><a ng-click="orden2 = 'comuna'" href="#" style="display: inline-block; color:#404040;">Com</a></th>
+            <th><a ng-click="orden2 = 'nombre'" href="#" style="display: inline-block; color:#404040;">Título</a></th>
+            <th>Nombre largo</th>
+            <th>Descripción</th>
+            <th>Ubicación</th>
+            <th>Segmento</th>
+            <th><a ng-click="orden2 = 'estado._id'" href="#" style="display: inline-block; color:#404040;">Estado</a></th>
+            <th><a ng-click="orden2 = 'estado._id'" href="#" style="display: inline-block; color:#404040;">Descripcion</a></th>
+            <th>Responsable</th>
+            <th>Dependencia</th>
+            <th>$ MM</th>
+            <th>Proyecto</th>
+            <th>Contrato</th>
+            <th>Inicio</th>
+            <th>Fin</th>
+            <th>Segmento</th>
+            <th>Coordenadas</th>
+            <th>Presentación</th>
+        </tr>
+        
+        <div ng-show="!mostrar">
+            <tr ng-repeat="i in listado | orderBy: [seg,'coordenadas','orden2'] | filter: filtro" bgcolor= "#FFFFFF">
+                <td>{{prioridadPorId(i.relevancia).nombre}}</td>
+                <td>{{comunaPorId(i.comuna).numero}}</td>
+                <td>{{i.nombre}}</td>
+                <td>{{i.nombre_largo}}</td>
+                <td ng-repeat="o in reverse(i.detallesComunicacion[i.detallesComunicacion.length - 1])"><div style="width: 500px;">{{o.detalle}}</div></td>
+                <td ng-repeat="o in reverse(i.ubicacionesComunicacion[i.ubicacionesComunicacion.length - 1])"><div ng-show="{{o.detalle}}" style="width: 300px;">{{o.detalle}}</div></td>
+                <td>{{segmentoPorId(i.orden1).nombre}}</td>
+                <td ng-repeat="o in reverse(i.comentariosEstado[i.comentariosEstado.length - 1])">{{i.estado.nombre}}</td>
+                <td ng-repeat="o in reverse(i.comentariosEstado[i.comentariosEstado.length - 1])"><div style="width: 750px;">{{o.comentario}}</div></td>
+                <td>{{jurisdiccionPorId(i.jurisdiccion).nombreCompleto}}</td>
+                <td>{{dependenciaPorId(i.dependencia).nombreCompleto}}</td>
+                <td>{{formatMonto(montoCsv(i.nombrar[i.nombrar.length-1]))}}</td>
+                <td>{{proyectosCsv(i.proyectos[i.proyectos.length-1])}}</td>
+                <td>{{proyectosCsv(i.contratos[i.contratos.length-1])}}</td>
+                <td>{{proyectosCsv(i.inicios[i.inicios.length-1])}}</td>
+                <td>{{proyectosCsv(i.final[i.final.length-1])}}</td>
+                <td>{{segmentoPorId(i.orden1).orden}}</td>
+                <td>{{i.coordenadas}}</td>
+                <td>{{i.orden2}}</td>
+            </tr>
+        </div>
+        
+        <div ng-show="mostrar">
+            <tr ng-repeat="i in listado.presentacion | orderBy: [seg,'coordenadas','orden2'] | filter: filtro" bgcolor= "#FFFFFF">
+                <td>{{prioridadPorId(i.relevancia).nombre}}</td>
+                <td>{{comunaPorId(i.comuna).numero}}</td>
+                <td>{{i.nombre}}</td>
+                <td>{{i.nombre_largo}}</td>
+                <td ng-repeat="o in reverse(i.detallesComunicacion[i.detallesComunicacion.length - 1])"><div style="width: 500px;">{{o.detalle}}</div></td>
+                <td ng-repeat="o in reverse(i.ubicacionesComunicacion[i.ubicacionesComunicacion.length - 1])"><div ng-show="{{o.detalle}}" style="width: 300px;">{{o.detalle}}</div></td>
+                <td>{{segmentoPorId(i.orden1).nombre}}</td>
+                <td ng-repeat="o in reverse(i.comentariosEstado[i.comentariosEstado.length - 1])">{{i.estado.nombre}}</td>
+                <td ng-repeat="o in reverse(i.comentariosEstado[i.comentariosEstado.length - 1])"><div style="width: 750px;">{{o.comentario}}</div></td>
+                <td>{{jurisdiccionPorId(i.jurisdiccion).nombreCortoOrganigrama}}</td>
+                <td>{{dependenciaPorId(i.dependencia).nombreCortoOrganigrama}}</td>
+                <td>{{formatMonto(montoCsv(i.nombrar[i.nombrar.length-1]))}}</td>
+                <td>{{proyectosCsv(i.proyectos[i.proyectos.length-1])}}</td>
+                <td>{{proyectosCsv(i.contratos[i.contratos.length-1])}}</td>
+                <td>{{proyectosCsv(i.inicios[i.inicios.length-1])}}</td>
+                <td>{{proyectosCsv(i.final[i.final.length-1])}}</td>
+                <td>{{segmentoPorId(i.orden1).orden}}</td>
+                <td>{{i.coordenadas}}</td>
+                <td>{{i.orden2}}</td>
+            </tr>
+        </div>
+    </table>
+</div>-->

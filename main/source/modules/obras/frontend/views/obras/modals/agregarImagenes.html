@@ -1,0 +1,57 @@
+<div class="modal-header" style="padding-bottom: 0px">
+    <h3>Agregar Imagen</h3>
+</div>
+<div class="modal-body">
+    <span style="display: inline-block; margin-top: 15px">
+        <div class="btn-group" style="margin-bottom: 8px" data-toggle="buttons-radio">
+            <button class="btn" ng-class="(data.tipoFoto == 'antes') && 'active btn-info'" ng-click="data.tipoFoto = 'antes'">Antes</button>
+            <button class="btn" ng-class="(data.tipoFoto == 'durante') && 'active btn-info'" ng-click="data.tipoFoto = 'durante'">Durante</button>
+            <button class="btn" ng-class="(data.tipoFoto == 'despues') && 'active btn-info'" ng-click="data.tipoFoto = 'despues'">Despues</button>
+            <button class="btn" ng-class="(data.tipoFoto == 'maqueta') && 'active btn-info'" ng-click="data.tipoFoto = 'maqueta'">Maqueta</button>
+            <button class="btn" ng-class="(data.tipoFoto == 'render') && 'active btn-info'" ng-click="data.tipoFoto = 'render'">Render</button>
+            <button class="btn" ng-class="(data.tipoFoto == 'dibujo') && 'active btn-info'" ng-click="data.tipoFoto = 'dibujo'">Dibujo</button>
+        </div>
+        <label ng-show="datos.donde == 'comunicacion'" style="margin-right: 0px" class="checkbox pull-right">
+            <input type="checkbox" ng-model="data.presentacion"> Presentación de obra
+        </label>
+        <label ng-show="datos.donde == 'comunicacion'" class="checkbox pull-right">
+            <input type="checkbox" ng-model="data.fichaRelevamiento"> Ficha de relevamiento
+        </label>
+        <div style="display: inline-block"> Nombre:<br /> 
+            <input class="span4" type="text" placeholder="Nombre de la imagen" ng-model="data.nombre" />
+        </div>
+        <span style="display: inline-block"> Fecha:<br /> 
+            <input class="span2" type="text" date placeholder="Fecha" ng-model="data.fecha" />
+        </span>
+        <div class="control-group span3" style="margin-left: 0px; margin-bottom: 0px; margin-right: 5px; margin-bottom: 10px">
+            <label style="margin-bottom: 1px;">Fuente:</label>
+            <select class="input-block-level" ui-select2 type="text" ng-model="data.fuente" ng-options="i._id as i.apellidos + ' ' + i.nombre for i in contactos | orderBy:'apellidos'">
+                <option ng-disabled="true" value="">{{data.fuente.apellidos}} {{data.fuente.nombre}}</option>
+            </select>
+        </div>
+        <button class="btn" data-placement="bottom" style="margin-top: 1px;margin-bottom: 10px;" ng-click="crearContacto()"><i class="icon-book"></i></button>
+        <span style="display: inline-block"> Resolucion:<br /> 
+            <input class="span1" type="text" placeholder="px" ng-model="data.resolucion" />
+            <input class="span1" type="text" placeholder="px" ng-model="data.resolucion2" />
+        </span>
+        <span style="display: inline-block"> Tags:<br />
+            <input class="span4" type="text" placeholder="Separados por coma" ng-model="data.tags" />
+        </span>
+        <span style="display: inline-block"> Descripción:<br /> 
+            <textarea style="height:20px; width:530px" type="text" ng-model="data.descripcion" placeholder="Descripción de la imagen" />
+        </span>
+        <div style="width: 300px" fine-uploader destination="'/upload/'" placeholder="'Examinar'" uploaded="uploaded"></div>
+        <!--<div ng-show="data.presentacion && datos.donde == 'comunicacion'">-->
+        <div ng-show="datos.donde == 'comunicacion' && data.presentacion">
+            <label>Presentación de obra</label>
+            <button style="margin-bottom: 2px" ng-class="{'btn-info active': o.foto1}" ng-click="o.foto1 = !o.foto1;data.foto1=true" type="button" class="btn">1</button>
+            <button style="margin-bottom: 2px" ng-class="{'btn-info active': o.foto2}" ng-click="o.foto2 = !o.foto2;data.foto2=true" type="button" class="btn">2</button><br>
+            <button style="margin-bottom: 2px" ng-class="{'btn-info active': o.foto3}" ng-click="o.foto3 = !o.foto3;data.foto3=true" type="button" class="btn">3</button>
+            <button style="margin-bottom: 2px" ng-class="{'btn-info active': o.foto4}" ng-click="o.foto4 = !o.foto4;data.foto4=true" type="button" class="btn">4</button>
+        </div>
+    </span>
+</div>
+<div class="modal-footer">
+    <a href="#" class="btn" data-dismiss="modal">Cancelar</a>
+    <a href="#" class="btn btn-info" data-dismiss="modal" ng-click="agregarImagenes(data, datos.parametro, true, datos.donde)">Agregar Imagen</a>
+</div>

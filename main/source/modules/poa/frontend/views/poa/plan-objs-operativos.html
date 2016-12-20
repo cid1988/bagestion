@@ -1,0 +1,20 @@
+<div class="card span12" style="padding-top: 10px; margin-top: 0px;">
+  <h3 class="card-heading simple">
+    <span class="pull-right input-append" ng-controller="POANuevoObjOperativoCtrl" ng-show="permisoOperativo()">
+      <input type="text" ng-model="nuevo.nombre" placeholder="Agregar..." />
+      <a ng-click="crear()" ng-disabled="!nuevo.nombre" class="btn btn-default"><i class="icon icon-plus"></i></a>
+    </span>
+    Objetivos operativos</h3>
+  <div class="card-body" style="padding: 0; margin-top: 0; border-bottom: 0">
+    <ul class="nav nav-list">
+      <li ng-repeat="o in tabCtrl.objsOperativos|filter:{idObjMinisterial:tabCtrl.filtro.objMinisterial._id} | orderBy:ordenNumerico">
+        <a style="font-size: 18px" href="javascript:" ng-click="tabCtrl.filtro.objOperativo = o">
+        <strong ng-if="o.codIdentificacion" class="pull-right">{{o.codIdentificacion}}</strong>
+        {{o.nombre}}</a>
+      </li>
+      <li ng-if="!(tabCtrl.objsOperativos|filter:{idObjMinisterial:tabCtrl.filtro.objMinisterial._id}).length" class="text-center" style="padding-top: 10px; padding-bottom: 10px;">
+        <em>No hay ningún objetivo operativo</em>
+      </li>
+    </ul>
+  </div>
+</div>

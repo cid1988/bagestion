@@ -1,0 +1,59 @@
+<style>
+    .table {
+        border: 0;
+    }
+    .table th, .table td {
+        padding: 8px;
+        line-height: 20px;
+        text-align: left;
+        vertical-align: middle;
+        border: 0;
+    }
+    .table th {
+        background-color: #dddddd !important;
+    }
+    a:link{ color: #3B3537; text-decoration: none}
+    a:active{ color: #3B3537; text-decoration: none}
+    a:visited{ color: #3B3537; text-decoration: none}
+    a:hover{ color: #3B3537; text-decoration: underline}
+</style>
+
+<div class="container">
+    <div class="span12 card" style="padding-top: 10px; margin-top: 0px;margin-left: 0px;">
+      <h3 class="card-heading simple">{{nombrePlan}} - Obras de {{jurisdiccionPOA.nombre}}
+        <a class="btn pull-right" href="/poa/plan/{{anio}}/{{etapa}}" title="Volver al plan"><i class="icon-arrow-left"></i> Volver</a></h3>
+      <div class="card-body" style="padding: 0; margin-top: 0; border-bottom: 0">
+        <table border="1" class="table table-striped" >
+            <tr bgcolor= "#FFFFFF">
+                <th><div style="margin-left: 20px;">Nombre</div></th>
+                <th><center>Proyecto</center></th>
+                <th><center>Contrato</center></th>
+                <th><center>Inicio</center></th>
+                <th><center>Fisico</center></th>
+                <th><center>Final</center></th>
+                <th><center>Plan {{anio}}</center></th>
+            </tr>
+            <tr ng-repeat="o in obras" bgcolor="#FFFFFF">
+                <td><div style="margin-left: 20px;"><a href="/obras/{{o._id}}">{{o.nombre}}</a></div></td>
+                <td><div style="text-align: center;">{{o.proyectos[o.proyectos.length-1].fecha}}</div></td>
+                <td><div style="text-align: center;">{{o.contratos[o.contratos.length-1].fecha}}</div></td>
+                <td><div style="text-align: center;">{{o.inicios[o.inicios.length-1].fecha}}</div></td>
+                <td><div style="text-align: center;"><span ng-hide="o.fisico[o.fisico.length-1].avance">0</span>{{o.fisico[o.fisico.length-1].avance}}%</div></td>
+                <td><div style="text-align: center;">{{o.final[o.final.length-1].fecha}}</div></td>
+                <td><center><div class="btn-group">
+                      <button ng-click="o.enPlanSiguiente = 'Si';guardar(o)" class="btn" ng-class="{'active btn-success': o.enPlanSiguiente == 'Si'}">Si</button>
+                      <button ng-click="o.enPlanSiguiente = 'No';guardar(o)" class="btn" ng-class="{'active btn-danger': o.enPlanSiguiente == 'No'}">No</button>
+                      <button ng-click="o.enPlanSiguiente = 'N/A';guardar(o)" class="btn" ng-class="{'active btn-warning': o.enPlanSiguiente == 'N/A'}">N/A</button>
+                    </div></center>
+                </td>
+            </tr>
+        </table>
+            
+        <ul class="nav nav-list">
+          <li ng-if="!obras.length" class="text-center">
+            <em>No hay ninguna obra asociada a esta jurisdicción</em>
+          </li>
+        </ul>
+      </div>
+    </div>
+</div>

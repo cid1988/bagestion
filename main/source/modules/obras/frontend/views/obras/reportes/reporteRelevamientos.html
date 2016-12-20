@@ -1,0 +1,226 @@
+<div class="card" style="border:0px;padding-left: 20px;padding-right: 20px;padding-bottom: 20px;">
+<a class="btn pull-right no-print" ng-click="imprimir()" style="padding-left: 0px; padding-right: 0px;"><i class="icon-print"></i></a>
+    <h3 ng-init="tab='reporteRelevamientos'" class="card-heading simple" style="padding-left: 0px; font-size:14px;padding-right: 0px;height: 45px;margin-bottom: 10px;">
+        <ul class="nav nav-pills no-print">
+            <li ng-class="{'active': tab == 'Reporte relevamientos'}">
+                <a ng-click="tab='reporteRelevamientos'" href="#" data-toggle="tab">Informe de Relevamientos</a>
+            </li>
+            <li ng-class="{'active': tab == 'Reporte obras'}">
+                <a ng-click="tab='reporteObras'" href="#" data-toggle="tab">Reporte obras</a>
+            </li>
+            <li ng-class="{'active': tab == 'Reporte Hitos Proyectos'}">
+                <a ng-click="tab='reporteUltimo'" href="#" data-toggle="tab">Reporte Hitos Proyectos</a>
+            </li>
+            <li ng-class="{'active': tab == 'tabGraficos'}">
+                <a ng-click="tab='tabGraficos'" href="#" data-toggle="tab">Gráficos</a>
+            </li>
+        </ul>
+    </h3>
+    
+    <div ng-if="tab == 'reporteRelevamientos'">
+        <h3 class="card-heading simple">Informe de Relevamientos {{fecha}} de {{ano}}</h3>
+        <table border="1" class="table table-bordered">
+            <tr bgcolor= "#FFFFFF">
+                <th><a ng-click="orden = 'nombre'" href="#" style="display: inline-block; color:#404040;"></a></th>
+                <th style="text-align:center !important"><a ng-click="orden = 'Sanción'" href="#" style="display: inline-block; color:#404040;">ESTIMADOS</a></th>
+                <th style="text-align:center !important"><a ng-click="orden = 'Restringido'" href="#" style="display: inline-block; color:#404040;">REALIZADOS</a></th>
+                <th style="text-align:center !important"><a ng-click="orden = 'Preventivo'" href="#" style="display: inline-block; color:#404040;">CONCUERDA</a></th>
+                <th style="text-align:center !important"><a ng-click="orden = 'Preventivo'" href="#" style="display: inline-block; color:#404040;">NO CONCUERDA</a></th>
+                <th style="text-align:center !important"><a ng-click="orden = 'Preventivo'" href="#" style="display: inline-block; color:#404040;">RETARGETS</a></th>
+            </tr>
+            
+        	<tr bgcolor= "#FFFFFF">
+                <td style="text-align:center !important">
+                    INICIO
+        		</td>
+        		<td style="text-align:center !important">
+                    {{contadorEstimados}}
+        		</td>
+        		<td style="text-align:center !important">
+                    {{contadorRealizados}}
+        		</td>
+        		<td style="text-align:center !important">
+                    {{contadorConcuerda}}
+        		</td>
+        		<td style="text-align:center !important">
+                    {{contadorNoConcuerda}}
+        		</td>
+        		<td style="text-align:center !important">
+                    {{retargetsInicios}}
+        		</td>
+        	</tr>
+        	<tr bgcolor= "#FFFFFF">
+                <td style="text-align:center !important">
+                    AVANCE
+        		</td>
+        		<td style="text-align:center !important">
+                    {{inicios(o).avances}}
+        		</td>
+        	</tr>
+        	<tr bgcolor= "#FFFFFF">
+                <td style="text-align:center !important">
+                    FINAL
+        		</td>
+        		<td style="text-align:center !important">
+                    {{contadorEstimadosFinal}}
+        		</td>
+        		<td style="text-align:center !important">
+                    {{contadorRealizadosFinal}}
+        		</td>
+        		<td style="text-align:center !important">
+                    {{contadorConcuerdaFinal}}
+        		</td>
+        		<td style="text-align:center !important">
+                    {{contadorNoConcuerdaFinal}}
+        		</td>
+        		<td style="text-align:center !important">
+                    <b>{{retargetsFinal}}</b>
+        		</td>
+        	</tr>
+        	<tr bgcolor= "#FFFFFF">
+                <td style="text-align:center !important">
+                    TOTAL
+        		</td>
+        		<td style="text-align:center !important">
+                    <b>{{totalEstimados}}</b>
+        		</td>
+        		<td style="text-align:center !important">
+                    <b>{{totalRealizados}}</b>
+        		</td>
+        		<td style="text-align:center !important">
+                    <b>{{totalConcuerda}}</b>
+        		</td>
+        		<td style="text-align:center !important">
+                    <b>{{totalNoConcuerda}}</b>
+        		</td>
+        		<td style="text-align:center !important">
+                    <b>{{totalRetargets}}</b>
+        		</td>
+        	</tr>
+        </table>
+    </div>
+    
+    <div ng-if="tab == 'reporteObras'" ng-controller="reporteObrasCtrl">
+        <table border="1" class="table table-bordered">
+            <tr bgcolor= "#FFFFFF">
+                <th style="text-align:center !important"><a ng-click="orden = ''" href="#" style="display: inline-block; color:#404040;">NOMBRE OBRA</a></th>
+                <th style="text-align:center !important"><a ng-click="orden = ''" href="#" style="display: inline-block; color:#404040;">TIPO</a></th>
+                <th style="text-align:center !important"><a ng-click="orden = ''" href="#" style="display: inline-block; color:#404040;">ESTADO</a></th>
+                <th style="text-align:center !important"><a ng-click="orden = ''" href="#" style="display: inline-block; color:#404040;">FECHA</a></th>
+                <th style="text-align:center !important"><a ng-click="orden = ''" href="#" style="display: inline-block; color:#404040;">FECHA AGREGADO</a></th>
+                <th style="text-align:center !important"><a ng-click="orden = ''" href="#" style="display: inline-block; color:#404040;">USUARIO</a></th>
+            </tr>
+            <tr ng-repeat="a in array">
+                <td>{{a.nombre}}</td>
+                <td>{{a.tipo}}</td>
+                <td>{{a.estado}}</td>
+                <td>{{a.fecha}}</td>
+                <td>{{a.fechaAgregado}}</td>
+                <td>{{a.usuario}}</td>
+            </tr>
+            <!--<tr ng-repeat="o in obras">-->
+            <!--    <td>{{o.nombre}}</td>-->
+            <!--    <td style="text-align:center !important">-->
+            <!--        <div ng-repeat="r in o.iniciosRel">-->
+            <!--            {{r.relevamiento}}-->
+            <!--        </div>-->
+            <!--    </td>-->
+            <!--    <td style="text-align:center !important">-->
+            <!--        <div ng-repeat="r in o.iniciosRel">-->
+            <!--            {{funcion(r)}}-->
+            <!--        </div>-->
+            <!--    </td>-->
+            <!--    <td style="text-align:center !important">-->
+            <!--        <div ng-repeat="r in o.iniciosRel">-->
+            <!--            {{normalizarFecha(r.fechaAgregado)}}-->
+            <!--        </div>-->
+            <!--    </td>-->
+            <!--    <td style="text-align:center !important">-->
+            <!--        <div ng-repeat="r in o.iniciosRel">-->
+            <!--            {{r.usuario}}-->
+            <!--        </div>-->
+            <!--    </td>-->
+                
+                
+            <!--    <td style="text-align:center !important">-->
+            <!--        <div ng-repeat="r in o.finalRel">-->
+            <!--            {{r.relevamiento}}-->
+            <!--        </div>-->
+            <!--    </td>-->
+            <!--    <td style="text-align:center !important">-->
+            <!--        <div ng-repeat="r in o.finalRel">-->
+            <!--            {{funcion(r)}}-->
+            <!--        </div>-->
+            <!--    </td>-->
+            <!--    <td style="text-align:center !important">-->
+            <!--        <div ng-repeat="r in o.finalRel">-->
+            <!--            {{normalizarFecha(r.fechaAgregado)}}-->
+            <!--        </div>-->
+            <!--    </td>-->
+            <!--    <td style="text-align:center !important">-->
+            <!--        <div ng-repeat="r in o.finalRel">-->
+            <!--            {{r.usuario}}-->
+            <!--        </div>-->
+            <!--    </td>-->
+            <!--</tr>-->
+        </table>
+    </div>
+    
+    <div ng-if="tab == 'tabGraficos'">
+        <div ng-controller="graficosCtrl" ng-init="cargar()">
+            <div class="row-fluid">
+                <div class="span4">
+                    <label>Jurisdicción:</label>
+                    <select class="input-block-level" style="width:100%" placeholder="Jurisdiccion" ui-select2 type="text" ng-model="filtroJurisdiccion">
+                        <option value=""></option>
+                        <option value=""></option>
+                        <option ng-repeat="e in organigrama | orderBy: 'nombreCompleto'" value="{{e._id}}">{{e.nombreCompleto}}</option>
+                    </select>
+                </div>
+                <div class="span4">
+                    <label>Impacto:</label>
+                    <select class="input-block-level" style="width:100%" placeholder="Impacto" ui-select2 type="text" ng-model="filtroImpacto">
+                        <option value=""></option>
+                        <option value=""></option>
+                        <option ng-repeat="e in impactos" value="{{e._id}}">{{e.nombre}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row-fluid">
+                <div class="span4">
+                    <h3>Obras por año</h3>
+                    <div class="modal-body" id="grafico" style="overflow:hidden !important;position: absolute">
+                        <nvd3 options="options" data="obrasPorAnio" style="widht:560px !important;"></nvd3>
+                    </div>
+                </div>
+                <div class="span4">
+                    <h3>Obras por Estado</h3>
+                    <div class="modal-body" id="grafico" style="overflow:hidden !important;position: absolute">
+                        <nvd3 options="options" data="obrasPorEstado" style="widht:560px !important;"></nvd3>
+                    </div>
+                </div>
+                <div class="span4">
+                    <h3>Obras final por mes</h3>
+                    <div class="modal-body" id="grafico" style="overflow:hidden !important">
+                        <nvd3 options="optionsBarras" data="datosBarra" style="widht:560px !important;"></nvd3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div ng-if="tab == 'reporteUltimo'" ng-controller="reporteHitosProyectosCtrl">
+        <table border="1" class="table table-bordered">
+            <tr bgcolor= "#FFFFFF">
+                <th style="text-align:center !important"><a ng-click="orden = ''" href="#" style="display: inline-block; color:#404040;">NOMBRE OBRA</a></th>
+                <th style="text-align:center !important"><a ng-click="orden = ''" href="#" style="display: inline-block; color:#404040;">FECHA ULTIMO HITO</a></th>
+                <th style="text-align:center !important"><a ng-click="orden = ''" href="#" style="display: inline-block; color:#404040;">CANT. CUENTA</a></th>
+            </tr>
+            <tr ng-repeat="a in obras | filter:orden1=='530e58d3968a4c0ac4d9ce82' | filter:estado">
+                <td>{{a.nombre}}</td>
+                <td>{{ultimaFecha(a)}}</td>
+                <td>{{cantCuentas(a)}}</td>
+            </tr>
+        </table>
+    </div>
+</div>

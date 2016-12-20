@@ -1,0 +1,55 @@
+<style>
+.modal {
+    width: 80%;
+    left: 8%;
+    margin-left: 0px;
+    top: 30px;
+}
+</style>
+<div class="modal-header" style="padding-bottom: 10px;">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h3>Compromisos de {{organigramaPorId(areaSeleccionada.jurisdiccion).nombreCompleto}}</h3>
+</div>
+<div class="modal-body" style="overflow-y: scroll; overflow-x: hidden; height: 400px;margin-top: 10px;">
+    <div style="display: inline-block; width: 100%;">
+        <a class="btn btn-link pull-right" ng-click="agregarCompromiso(data)" style="margin-right: 10px;margin-top: 20px;"><i class="icon-plus"></i> Agregar</a>
+        <div class="control-group span4" style="margin-left: 0px; margin-bottom: 0px; margin-right: 0px; margin-bottom: 10px">
+            <label style="margin-bottom: 1px;">Iniciativa:</label>
+            <select class="input-block-level" ui-select2 type="text" ng-model="data.iniciativa" ng-options="i._id as i.nombreProyecto for i in planes | orderBy:orden | filter:{areaResponsable:areaSeleccionada.jurisdiccion}">
+                <option value=""></option>
+            </select>
+        </div>
+        <div class="control-group span3" style="margin-left: 0px; margin-bottom: 0px; margin-right: 0px; margin-bottom: 10px">
+            <label style="margin-bottom: 1px;">Responsable:</label>
+            <select class="input-block-level" ui-select2 type="text" ng-model="data.responsable" ng-options="i._id as i.nombreCompleto for i in organigrama | orderBy:'nombreCompleto'">
+                <option value=""></option>
+            </select>
+        </div>
+    </div>
+    <span style="display: inline-block"> Avances:<br /> 
+        <textarea style="height:60px; width:430px" placeholder="Avances" type="text"
+        ng-model="data.avances" />
+    </span>
+    <span style="display: inline-block"> Compromisos y Próximos Pasos:<br /> 
+        <textarea style="height:60px; width:430px" placeholder="Compromisos" type="text"
+        ng-model="data.compromisos" />
+    </span>
+    <hr style="margin-top: 5px; margin-bottom: 5px;">
+    <div ng-hide="areaSeleccionada.compromisos.length">No se ha cargardo ningun compromiso aún</div>
+    <table border="1" class="table table-striped" ng-show="areaSeleccionada.compromisos.length">
+        <tr bgcolor= "#FFFFFF">
+            <th width="15%"><center>Iniciativa</center></th>
+            <th width="15%"><center>Responsable</center></th>
+            <th width="35%"><center>Avances</center></th>
+            <th width="30%"><center>Compromisos y Próximos Pasos</center></th>
+            <th width="5%"></th>
+        </tr>
+        <tr ng-repeat="o in areaSeleccionada.compromisos">
+            <td width="15%">{{iniciativaPorId(o.iniciativa).nombreProyecto}}</td>
+            <td width="15%">{{organigramaPorId(o.responsable).nombreCompleto}}</td>
+            <td width="35%">{{o.avances}}</td>
+            <td width="30%">{{o.compromisos}}</td>
+            <td width="5%"><button type="button" ng-click="eliminarElementoArea(areaSeleccionada.compromisos,o)" style="margin-left: 10px" class="btn btn-link"><i class="icon-trash"></i></button></td>
+        </tr>
+    </table>
+</div>

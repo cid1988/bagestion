@@ -1,0 +1,23 @@
+
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>Usuarios</h3>
+    </div>
+    <div class="modal-body" style="height: 400px;">
+        <h4>Usuarios que pueden ver la lista:</h4>
+        <div ng-repeat="usu in listaSeleccionada.usuarios">
+			- {{ usu }}
+		</div>
+		<br>
+		<div class="control-group span3" style="margin-left: 0px; margin-bottom: 0px; margin-right: 0px; margin-bottom: 10px;">
+            <label style="margin-bottom: 1px;">Agregar usuario:</label>
+            <select class="input-block-level" ui-select2 type="text" ng-model="nuevoUsuario" ng-options="i.username for i in users | orderBy:'username'">
+                <option value="">Seleccionar</option>
+            </select>
+        </div>
+            <a href="#" class="btn" ng-click="agregarUsuario(nuevoUsuario.username)" style="display: inline-block;margin-top: 20px;"><i class="icon-plus"></i></a>
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="btn" data-dismiss="modal">Cancelar</a>
+        <a href="#" class="btn btn-info" data-dismiss="modal" ng-click="showUsers(true)">Guardar</a>
+    </div>
